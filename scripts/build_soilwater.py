@@ -1,6 +1,6 @@
 """Eau dans le sol : humidité du sol, excédent hydrique (recharge) et indice relatif de nappe, à partir de données réelles.
 
-Données : pluie CHIRPS mensuelle (1981-aujourd'hui), évapotranspiration de référence FAO-56 d'ERA5-Land (Open-Meteo, 2011-2020),
+Données : pluie CHIRPS mensuelle (1981-aujourd'hui), évapotranspiration de référence FAO-56 d'ERA5-Land (Open-Meteo, 2016-2020),
 texture et carbone organique du sol (SoilGrids 2.0, ISRIC), occupation du sol (ESA WorldCover 2021).
 Méthodes publiées : voir scripts/soilwater_core.py (Saxton & Rawls 2006, NRCS NEH-4, FAO-56, Thornthwaite & Mather 1957, scores normaux).
 Résultats :
@@ -28,10 +28,10 @@ import soilwater_core as C
 from common import country_data_dir, country_docs_dir, grid_dir, load_config, load_grid, read_units, save_grid, write_json
 
 SOIL_LAYERS = [("0-5cm", 5), ("5-15cm", 10), ("15-30cm", 15), ("30-60cm", 30), ("60-100cm", 40)]
-ET0_YEARS = (2011, 2020)
+ET0_YEARS = (2016, 2020)
 STATUS: dict = {"steps": {}, "limits": [
     "Bilan mensuel : le ruissellement réel dépend de l'intensité journalière de la pluie, non représentée ici.",
-    "Évapotranspiration de référence (gazon) sans coefficient cultural ; climatologie 2011-2020 d'ERA5-Land, pas de variation d'une année à l'autre.",
+    "Évapotranspiration de référence (gazon) sans coefficient cultural ; climatologie 2016-2020 d'ERA5-Land, pas de variation d'une année à l'autre.",
     "Texture du sol de SoilGrids (250 m) : les sols ferrallitiques argileux sont plus perméables que leur texture ne l'indique.",
     "Niveau statique : indice relatif seulement, faute de mesures de puits ; l'indice est une approximation de la recharge, pas un niveau mesuré.",
 ]}
@@ -122,6 +122,8 @@ def read_et0_points(lons, lats, cache_path, max_batches=150, batch=4, pause=1.0)
     """ET0 mensuelle moyenne (mm/mois) d'ERA5-Land (Open-Meteo, archive) pour des points ; cache reprenable. Retourne dict (lon, lat) -> 12 valeurs ou None."""
     import openmeteo as om
     cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
+    if cache.get("_years") != list(ET0_YEARS):      # période différente : on repart de zéro pour garder une climatologie homogène
+        cache = {"_years": list(ET0_YEARS)}
     keys = [f"{lo:.2f},{la:.2f}" for lo, la in zip(lons, lats)]
     todo = [k for k in keys if k not in cache]
     done = 0
@@ -140,7 +142,7 @@ def read_et0_points(lons, lats, cache_path, max_batches=150, batch=4, pause=1.0)
             d = pd.DataFrame(item["daily"])
             d["date"] = pd.to_datetime(d["time"])
             d = d.dropna()
-            if len(d) < 3000:
+            if len(d) < 0.9 * 365 * (ET0_YEARS[1] - ET0_YEARS[0] + 1):
                 continue
             mon = d.groupby([d.date.dt.year, d.date.dt.month]).et0_fao_evapotranspiration.sum()      # mm par mois
             clim = mon.groupby(level=1).mean()
