@@ -1,61 +1,55 @@
-"""Vérifie depuis GitHub Actions quelles sources de données sont joignables et ce qu'elles contiennent (résultat en annotations)."""
+"""Sondage de sources depuis GitHub Actions : le résultat est écrit dans data/_probe.txt (lisible dans le dépôt)."""
 import json
 import sys
 
 import requests
 
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
+out = []
 
 
 def note(msg):
     print(msg)
-    print("::notice::" + msg.replace("\n", " ")[:900])
+    out.append(msg)
 
 
-def get_range(url, extra=None):
-    h = dict(UA, Range="bytes=0-1023")
-    h.update(extra or {})
+def pkg(name):
     try:
-        r = requests.get(url, headers=h, timeout=60, allow_redirects=True, stream=True)
-        note(f"GET {url[-60:]} -> {r.status_code} total={r.headers.get('content-range') or r.headers.get('content-length')} type={r.headers.get('content-type')}")
+        p = requests.get("https://data.humdata.org/api/3/action/package_show", params={"id": name}, headers=UA, timeout=60).json()["result"]
+        note(f"== {name} | maj {p.get('last_modified','')[:10]} | licence {p.get('license_title')} | {p.get('title')}")
+        for x in p["resources"]:
+            note(f"   - {x['name']} [{x['format']}] {x.get('size')} {x['url']}")
     except Exception as e:
-        note(f"GET {url[-60:]} ECHEC {e}")
+        note(f"== {name} ECHEC {e}")
 
 
-for u in ["https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_af_shp.zip",
-          "https://data.hydrosheds.org/file/HydroBASINS/standard/hybas_af_lev06_v1c.zip",
-          "https://www.hydrosheds.org/products/hydrorivers",
-          "https://zenodo.org/api/records?q=HydroRIVERS&size=3",
-          "https://overpass-api.de/api/status",
-          "https://source.coop/",
-          "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_rivers_lake_centerlines.zip"]:
-    get_range(u, {"Referer": "https://www.hydrosheds.org/"} if "hydrosheds" in u else None)
+for n in ["hrp-projects-mdg", "iati-mdg", "hotosm_mdg_waterways", "mdg-ibtracs-tropical-storm-tracks", "cod-ab-mdg"]:
+    pkg(n)
 
-for q in ["hydrosheds madagascar", "madagascar rivers", "madagascar watershed basins", "madagascar groundwater boreholes", "madagascar flood extent historical", "madagascar cyclone track affected"]:
-    try:
-        r = requests.get("https://data.humdata.org/api/3/action/package_search", params={"q": q, "rows": 6}, headers=UA, timeout=60)
-        res = r.json()["result"]
-        note(f"HDX '{q}' : {res['count']} : " + " | ".join(f"{p['name']}" for p in res["results"][:6]))
-    except Exception as e:
-        note(f"HDX '{q}' ECHEC {e}")
-
-for name in ["hrp-projects-mdg", "iati-mdg"]:
-    try:
-        r = requests.get("https://data.humdata.org/api/3/action/package_show", params={"id": name}, headers=UA, timeout=60)
-        p = r.json()["result"]
-        note(f"HDX {name} : " + " | ".join(f"{x['name']} [{x['format']}] {x['url'][-70:]}" for x in p["resources"][:6]))
-    except Exception as e:
-        note(f"HDX {name} ECHEC {e}")
-
-try:
-    r = requests.get("https://api.hpc.tools/v1/public/fts/flow", params={"countryISO3": "MDG", "year": 2022, "limit": 1, "groupby": "cluster"}, headers=UA, timeout=60)
-    note("FTS cluster : " + r.text[:400])
-except Exception as e:
-    note(f"FTS ECHEC {e}")
-for u in ["https://api.reliefweb.int/v1/reports?appname=makyclimat&limit=1", "https://reliefweb.int/api/v1/disasters?appname=rwint-user-0&limit=1"]:
+for u, label in [("https://api.hpc.tools/v1/public/fts/flow?countryISO3=MDG&year=2022&limit=2&groupby=cluster", "FTS cluster"),
+                 ("https://api.hpc.tools/v1/public/fts/flow?countryISO3=MDG&year=2022&limit=2", "FTS flow"),
+                 ("https://api.hpc.tools/v2/public/plan/country/MDG", "plans")]:
     try:
         r = requests.get(u, headers=UA, timeout=60)
-        note(f"ReliefWeb {u[:50]} -> {r.status_code} {r.text[:150]!r}")
+        note(f"== {label} {r.status_code} {r.text[:1500]}")
     except Exception as e:
-        note(f"ReliefWeb ECHEC {e}")
+        note(f"== {label} ECHEC {e}")
+
+for q in ["madagascar cyclone", "madagascar floods", "madagascar drought", "madagascar displaced idp", "madagascar cholera", "madagascar food security ipc"]:
+    try:
+        res = requests.get("https://data.humdata.org/api/3/action/package_search", params={"q": q, "rows": 8}, headers=UA, timeout=60).json()["result"]
+        note(f"== HDX '{q}' ({res['count']}) : " + " | ".join(p["name"] for p in res["results"]))
+    except Exception as e:
+        note(f"== HDX '{q}' ECHEC {e}")
+
+for u in ["https://copernicus-dem-90m.s3.amazonaws.com/Copernicus_DSM_COG_30_S20_00_E047_00_DEM/Copernicus_DSM_COG_30_S20_00_E047_00_DEM.tif",
+          "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S20_00_E047_00_DEM/Copernicus_DSM_COG_10_S20_00_E047_00_DEM.tif",
+          "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S21E045_Map.tif"]:
+    try:
+        r = requests.get(u, headers=dict(UA, Range="bytes=0-1023"), timeout=60, stream=True)
+        note(f"== GET {u[-55:]} -> {r.status_code} {r.headers.get('content-range')}")
+    except Exception as e:
+        note(f"== GET {u[-55:]} ECHEC {e}")
+
+open("data/_probe.txt", "w", encoding="utf-8").write("\n".join(out))
 sys.exit(0)
