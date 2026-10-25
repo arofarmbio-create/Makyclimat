@@ -71,7 +71,7 @@ def build(data: list[dict], units: pd.DataFrame) -> tuple[pd.DataFrame, list[str
     by_name = {norm(n): p for p, n in zip(reg.pcode, reg.name)}
     # certaines régions ont été regroupées dans l'enquête : un libellé DHS peut couvrir plusieurs de nos régions
     # libellés regroupés ou mal orthographiés dans l'enquête (relevés dans les données DHS)
-    alias = {"vatovavyfitovinany": ["vatovavy", "fitovinany"], "anamoronimania": ["amoronimania"], "vakinankarata": ["vakinankaratra"]}
+    alias = {"vatovavyfitovinany": ["vatovavy", "fitovinany"], "anamoroniimania": ["amoronimania"], "vakinankarata": ["vakinankaratra"]}
     df = pd.DataFrame(data)
     if df.empty:
         return pd.DataFrame(columns=["pcode", "indicateur", "valeur", "date", "source"]), ["aucune donnée DHS"]

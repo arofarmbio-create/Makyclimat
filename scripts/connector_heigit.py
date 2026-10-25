@@ -9,7 +9,7 @@ Indicateurs (district ; les régions sont déduites par moyenne pondérée par l
   rai_pct           indice d'accès rural (part de la population rurale à moins de 2 km d'une route revêtue), calcul HeiGIT
   pop_no_hosp_2h    personnes à plus de 2 h d'un hôpital (nombre, non hérité par les sous-zones)
 Exposition aux crues (fichier MDG_ADM2_flood_exposure.csv, par district) pour deux périodes de retour, 10 ans (crue fréquente) et 100 ans (crue rare),
-hauteur d'eau d'au moins 30 cm : part des terres cultivées, des écoles, des hôpitaux et des centres de santé de base inondés ; nombre d'écoles, d'hôpitaux
+hauteur d'eau d'au moins 30 cm : part des écoles, des hôpitaux et des centres de santé de base inondés ; nombre d'écoles, d'hôpitaux
 et de centres de santé touchés ; enfants de moins de 5 ans touchés (identifiants crue_rp10_* et crue_rp100_*).
 Limites : un réseau OpenStreetMap incomplet sous-estime l'accès ; temps théoriques (hors saison des pluies, état réel des routes, pannes de bac) ; l'indice d'accès rural ne compte que les routes revêtues, donc il est bas là où les pistes en terre sont les seules routes.
 Sortie : data/<pays>/external/heigit.csv (pcode, indicateur, valeur, date, source). Usage : python scripts/connector_heigit.py --country mdg
@@ -67,7 +67,8 @@ def build(access: pd.DataFrame, demo: pd.DataFrame, coping: pd.DataFrame | None 
 
 
 FLOOD_RP = (10, 100)
-FLOOD_PCT = {"crops_30cm_croppct": "cultures_pct", "education_30cm_pct": "ecoles_pct", "hospitals_30cm_pct": "hopitaux_pct", "primary_healthcare_30cm_pct": "csb_pct"}
+# la couche « terres cultivées » du fichier HeiGIT est vide (0 partout, vérifié) : elle n'est pas publiée, pour ne pas laisser croire à « 0 % de cultures inondées »
+FLOOD_PCT = {"education_30cm_pct": "ecoles_pct", "hospitals_30cm_pct": "hopitaux_pct", "primary_healthcare_30cm_pct": "csb_pct"}
 FLOOD_COUNT = {"education_30cm_count": "ecoles_nb", "hospitals_30cm_count": "hopitaux_nb", "primary_healthcare_30cm_count": "csb_nb", "children_u5_30cm": "enfants5"}
 
 

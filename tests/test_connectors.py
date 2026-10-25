@@ -335,7 +335,7 @@ def test_flood_exposure() -> None:
                        "RP100_hospitals_30cm_pct": [0, 0], "RP100_primary_healthcare_30cm_pct": [12, 0], "RP100_children_u5_30cm": [34736, 4540]})
     d = CH.build_flood(fl)
     g = lambda pc, ind: float(d[(d.pcode == pc) & (d.indicateur == ind)].valeur.iloc[0])
-    check("crues : part des terres cultivées inondées, RP100", g("MG11117", "crue_rp100_cultures_pct") == 12.0)
+    check("crues : part des écoles inondées, RP100, et couche cultures non publiée (vide à la source)", g("MG11117", "crue_rp100_ecoles_pct") == 11.0 and not d.indicateur.str.contains("cultures").any())
     check("crues : écoles touchées (nombre) et enfants de moins de 5 ans", g("MG11117", "crue_rp100_ecoles_nb") == 13 and g("MG11119", "crue_rp100_enfants5") == 4540)
     check("crues : colonnes absentes ignorées, pourcentages dans [0, 100]", d.valeur.notna().all() and d[d.indicateur.str.endswith("_pct")].valeur.between(0, 100).all())
     defs = {i["id"]: i for i in __import__("common").load_yaml("indicators.yml")["indicators"]}

@@ -440,18 +440,6 @@ indicators:
     frequency: Ponctuelle
     status: active
   # ---------------- EXPOSITION AUX CRUES (HeiGIT) ----------------
-  - id: crue_rp10_cultures_pct
-    label: "Part des terres cultivées inondées, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (valeur du district)"
-    unit: "%"
-    format: pct
-    aggregate: none
-    inherit: down
-    sectors: [agriculture, food_security, drr]
-    sdg: ["11.5", "13.1"]
-    national: [axe1, eau]
-    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
-    frequency: Ponctuelle
-    status: active
   - id: crue_rp10_ecoles_pct
     label: "Part des écoles inondées, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (valeur du district)"
     unit: "%"
@@ -527,18 +515,6 @@ indicators:
     format: int
     aggregate: sum
     sectors: [health, nutrition, drr, wash]
-    sdg: ["11.5", "13.1"]
-    national: [axe1, eau]
-    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
-    frequency: Ponctuelle
-    status: active
-  - id: crue_rp100_cultures_pct
-    label: "Part des terres cultivées inondées, crue centennale (rare), hauteur d'eau d'au moins 30 cm (valeur du district)"
-    unit: "%"
-    format: pct
-    aggregate: none
-    inherit: down
-    sectors: [agriculture, food_security, drr]
     sdg: ["11.5", "13.1"]
     national: [axe1, eau]
     source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
