@@ -37,7 +37,20 @@ def heigit():
     note(df[df.indicateur.str.startswith("crue_rp100")].groupby("indicateur").valeur.describe().round(1).to_string())
 
 
+def crops():
+    import io
+    import pandas as pd
+    import requests
+    base = "https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/"
+    f = pd.read_csv(io.BytesIO(requests.get(base + "MDG_ADM2_flood_exposure.csv", timeout=120).content))
+    for rp in (10, 100, 500):
+        for c in (f"RP{rp}_crops_30cm_km2", f"RP{rp}_crops_30cm_areapct", f"RP{rp}_crops_30cm_croppct"):
+            note(f"== {c} : somme {f[c].sum():.1f}, max {f[c].max():.2f}, non nuls {int((f[c] > 0).sum())}")
+    d = pd.read_csv(io.BytesIO(requests.get(base + "MDG_ADM2_demographics.csv", timeout=120).content))
+    note(f"== demographics colonnes : {list(d.columns)}")
+
+
 attempt("DHS", dhs)
-attempt("HeiGIT crues", heigit)
+attempt("Crues cultures", crops)
 open("data/_probe.txt", "w", encoding="utf-8").write("\n".join(out))
 sys.exit(0)

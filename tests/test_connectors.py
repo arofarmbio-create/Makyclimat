@@ -356,11 +356,14 @@ def test_dhs() -> None:
         {"IndicatorId": "WS_SRCE_P_IMP", "CharacteristicCategory": "Total", "CharacteristicLabel": "Total", "SurveyYear": 2021, "Value": 55.0},    # ligne nationale ignorée
         {"IndicatorId": "WS_TLET_H_IMP", "CharacteristicCategory": "Region", "CharacteristicLabel": n0, "SurveyYear": 2021, "Value": 12.0},    # identifiant candidat de repli
         {"IndicatorId": "CN_NUTS_C_HA2", "CharacteristicCategory": "Region", "CharacteristicLabel": n0, "SurveyYear": 2021, "Value": None},      # valeur absente
+        {"IndicatorId": "RH_DELP_C_DHF", "CharacteristicCategory": "Region", "CharacteristicLabel": n0, "SurveyYear": 2021, "Value": 30.0, "IsPreferred": 1},
+        {"IndicatorId": "RH_DELP_C_DHF", "CharacteristicCategory": "Region", "CharacteristicLabel": n0, "SurveyYear": 2021, "Value": 99.0, "IsPreferred": 0},   # autre dénominateur
     ]
     df, log = CD.build(data, units)
     g = lambda ind: df[(df.pcode == regs.pcode.iloc[0]) & (df.indicateur == ind)]
     check("DHS : enquête la plus récente, nom de région normalisé", len(g("dhs_eau_amelioree")) == 1 and float(g("dhs_eau_amelioree").valeur.iloc[0]) == 45.5)
     check("DHS : identifiant de repli utilisé, lignes non régionales et valeurs absentes ignorées", len(g("dhs_toilettes_amel")) == 1 and len(g("dhs_retard_croissance")) == 0)
+    check("DHS : série préférée seulement (pas de doublon par région)", len(g("dhs_accouch_formation")) == 1 and float(g("dhs_accouch_formation").valeur.iloc[0]) == 30.0)
     check("DHS : région sans correspondance signalée dans le journal", any("sans correspondance" in x and "inconnue" in x for x in log))
     defs = {i["id"]: i for i in __import__("common").load_yaml("indicators.yml")["indicators"]}
     check("DHS : indicateurs définis, repris par les sous-zones", set(CD.SPECS) <= set(defs) and all(defs[i].get("inherit") == "down" for i in CD.SPECS))

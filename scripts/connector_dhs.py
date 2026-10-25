@@ -70,11 +70,15 @@ def build(data: list[dict], units: pd.DataFrame) -> tuple[pd.DataFrame, list[str
     reg = units[units.level == 1][["pcode", "name"]]
     by_name = {norm(n): p for p, n in zip(reg.pcode, reg.name)}
     # certaines régions ont été regroupées dans l'enquête : un libellé DHS peut couvrir plusieurs de nos régions
-    alias = {"vatovavyfitovinany": ["vatovavy", "fitovinany"]}
+    # libellés regroupés ou mal orthographiés dans l'enquête (relevés dans les données DHS)
+    alias = {"vatovavyfitovinany": ["vatovavy", "fitovinany"], "anamoronimania": ["amoronimania"], "vakinankarata": ["vakinankaratra"]}
     df = pd.DataFrame(data)
     if df.empty:
         return pd.DataFrame(columns=["pcode", "indicateur", "valeur", "date", "source"]), ["aucune donnée DHS"]
     df = df[(df.CharacteristicCategory == "Region") & (df.Value.notna())]
+    if "IsPreferred" in df.columns:      # certains indicateurs existent pour plusieurs dénominateurs : on garde la série « préférée » de la DHS
+        pref = df[df.IsPreferred == 1]
+        df = pref if len(pref) else df
     rows, unmatched = [], set()
     for ind, cands in SPECS.items():
         got = None
@@ -88,7 +92,7 @@ def build(data: list[dict], units: pd.DataFrame) -> tuple[pd.DataFrame, list[str
             continue
         c, d = got
         year = int(d.SurveyYear.max())
-        d = d[d.SurveyYear == year]
+        d = d[d.SurveyYear == year].drop_duplicates(subset=["CharacteristicLabel"])
         n = 0
         for lab, v in zip(d.CharacteristicLabel, d.Value):
             keys = alias.get(norm(lab), [norm(lab)])
