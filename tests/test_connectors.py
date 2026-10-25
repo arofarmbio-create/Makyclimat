@@ -271,7 +271,34 @@ def test_population_grid() -> None:
     shutil.rmtree(tmp, ignore_errors=True)
 
 
+def test_heigit() -> None:
+    import connector_heigit as CH
+    import compute_metrics as CM
+    from common import read_units
+    units = read_units("demo")
+    d2 = units[units.level == 2].pcode.tolist()[:2]
+    access = pd.DataFrame({"ADM2_PCODE": d2, "access_pop_hospitals_1h": [600, 200], "access_pop_hospitals_2h": [900, 300], "access_pop_primary_healthcare_1h": [800, 250],
+                           "access_pop_education_5km": [950, 100]})
+    demo = pd.DataFrame({"ADM2_PCODE": d2, "total_pop": [1000, 400]})
+    coping = pd.DataFrame({"ADM2_PCODE": d2, "RAI_total_pop": [21.6, 0.0]})
+    df = CH.build(access, demo, coping)
+    g = lambda pc, ind: float(df[(df.pcode == pc) & (df.indicateur == ind)].valeur.iloc[0])
+    check("HeiGIT : part à moins d'1 h d'un hôpital", g(d2[0], "acc_hosp_1h_pct") == 60.0 and g(d2[1], "acc_hosp_1h_pct") == 50.0)
+    check("HeiGIT : personnes à plus de 2 h d'un hôpital", g(d2[0], "pop_no_hosp_2h") == 100 and g(d2[1], "pop_no_hosp_2h") == 100)
+    check("HeiGIT : accès rural repris tel quel", g(d2[0], "rai_pct") == 21.6)
+    check("HeiGIT : pourcentages dans [0, 100]", df[df.indicateur.str.endswith("_pct")].valeur.between(0, 100).all())
+    defs = {i["id"]: i for i in __import__("common").load_yaml("indicators.yml")["indicators"]}
+    direct = {pc: {r.indicateur: r.valeur for r in df[df.pcode == pc].itertuples()} for pc in d2}
+    out = CM.aggregate_external(units, direct, defs)
+    kid = units[(units.level == 3) & (units.parent == d2[0])].pcode.iloc[0]
+    reg = units[units.pcode == d2[0]].parent.iloc[0]
+    check("héritage : la commune reprend la valeur du district (indicateur « inherit: down »)", out.get(kid, {}).get("acc_hosp_1h_pct") == 60.0)
+    check("pas d'héritage pour un nombre de personnes", "pop_no_hosp_2h" not in out.get(kid, {}))
+    check("région : moyenne pondérée par la population des districts", reg in out and "acc_hosp_1h_pct" in out[reg])
+
+
 if __name__ == "__main__":
+    test_heigit()
     test_forecast_and_floods()
     test_hapi()
     test_population_grid()

@@ -390,3 +390,63 @@ indicators:
     source: USDA-NRCS NEH-4 ; groupe hydrologique déduit de la texture SoilGrids ; occupation du sol WorldCover
     frequency: Ponctuelle
     status: active
+  # ---------------- ACCESSIBILITÉ (HeiGIT / OpenStreetMap, niveau district) ----------------
+  - id: acc_hosp_1h_pct
+    label: Population à moins d'1 h d'un hôpital (valeur du district)
+    unit: "% de la population"
+    format: pct
+    aggregate: popmean
+    inherit: down
+    sectors: [health, nutrition, logistics, drr]
+    sdg: ["3.8"]
+    national: [axe1, sante]
+    source: "HeiGIT GAIA (WorldPop, OpenStreetMap) via HDX ; temps théoriques sur le réseau routier OSM"
+    frequency: Ponctuelle (mise à jour par HeiGIT)
+    status: active
+  - id: acc_phc_1h_pct
+    label: Population à moins d'1 h d'un centre de santé de base (valeur du district)
+    unit: "% de la population"
+    format: pct
+    aggregate: popmean
+    inherit: down
+    sectors: [health, nutrition, logistics]
+    sdg: ["3.8"]
+    national: [axe1, sante]
+    source: HeiGIT GAIA (WorldPop, OpenStreetMap) via HDX
+    frequency: Ponctuelle
+    status: active
+  - id: acc_edu_5km_pct
+    label: Population à moins de 5 km d'une école (valeur du district)
+    unit: "% de la population"
+    format: pct
+    aggregate: popmean
+    inherit: down
+    sectors: [education, logistics]
+    sdg: ["4.1", "4.a"]
+    national: [axe1, education]
+    source: HeiGIT GAIA (WorldPop, OpenStreetMap) via HDX
+    frequency: Ponctuelle
+    status: active
+  - id: rai_pct
+    label: Accès rural aux routes praticables (population rurale à moins de 2 km d'une route toute saison, valeur du district)
+    unit: "% de la population rurale"
+    format: pct
+    aggregate: popmean
+    inherit: down
+    sectors: [logistics, food_security, health, drr]
+    sdg: ["9.1"]
+    national: [axe1]
+    source: "HeiGIT GAIA (indice d'accès rural, définition Banque mondiale) via HDX ; réseau OpenStreetMap, souvent incomplet en zone rurale"
+    frequency: Ponctuelle
+    status: active
+  - id: pop_no_hosp_2h
+    label: Personnes à plus de 2 h d'un hôpital
+    unit: personnes
+    format: int
+    aggregate: sum
+    sectors: [health, nutrition, logistics, drr]
+    sdg: ["3.8"]
+    national: [axe1, sante]
+    source: HeiGIT GAIA (WorldPop, OpenStreetMap) via HDX
+    frequency: Ponctuelle
+    status: active

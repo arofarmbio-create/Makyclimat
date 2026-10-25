@@ -132,6 +132,15 @@ def aggregate_external(units: pd.DataFrame, direct: dict, defs: dict) -> dict:
                 else:
                     v = sum(x for x, _ in vals) / len(vals)
                 allv.setdefault(parent, {})[ind] = v
+    # héritage vers le bas : les indicateurs « inherit: down » (valeur connue à un niveau large) sont attribués aux sous-zones sans valeur propre
+    for ind in ids:
+        if defs[ind].get("inherit") != "down":
+            continue
+        for lv in (1, 2, 3):
+            for _, r in units[units.level == lv + 1].iterrows():
+                par = r["parent"]
+                if ind not in allv.get(r["pcode"], {}) and ind in allv.get(par, {}):
+                    allv.setdefault(r["pcode"], {})[ind] = allv[par][ind]
     return allv
 
 

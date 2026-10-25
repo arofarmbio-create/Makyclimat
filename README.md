@@ -177,3 +177,7 @@ La carte « Priorités de réponse » classe les zones de la vue (région, distr
 ## Qui fait quoi où
 
 La carte « Qui fait quoi où » croise, pour les zones prioritaires de la vue, les sept secteurs humanitaires principaux et le nombre d'organisations qui déclarent une activité (3W/4W importés, avec les filtres de « Historique et réponse »). Case « vide » : aucune déclaration ; orange : 3 organisations ou plus (seuil de lecture, à vérifier : chevauchement ou complémentarité). Elle liste aussi les principaux partenaires et exporte le détail (zone, secteur, organisation, année, bénéficiaires) en CSV.
+
+## Accessibilité (HeiGIT via HDX)
+
+`scripts/connector_heigit.py` lit les indicateurs de risque de HeiGIT (Université de Heidelberg, données ouvertes sur HDX, produits à partir de WorldPop et OpenStreetMap) : part de la population à moins d'1 h d'un hôpital ou d'un centre de santé de base, à moins de 5 km d'une école, indice d'accès rural aux routes, et nombre de personnes à plus de 2 h d'un hôpital. La valeur est calculée par district ; les régions sont déduites par moyenne pondérée par la population et les communes et fokontany reprennent la valeur de leur district (indiqué dans les libellés). Limites : temps théoriques, réseau OpenStreetMap incomplet en zone rurale, pas d'état réel des routes en saison des pluies.

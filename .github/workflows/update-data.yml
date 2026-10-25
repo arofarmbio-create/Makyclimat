@@ -49,6 +49,9 @@ jobs:
           HAPI_APP_IDENTIFIER: ${{ secrets.HAPI_APP_IDENTIFIER }}
         run: |
           python scripts/connector_hapi.py --country "$COUNTRY" || echo "HAPI indisponible, indicateurs externes non mis à jour"
+      - name: Accessibilité aux services et aux routes (HeiGIT via HDX) — ignorée en cas d'indisponibilité
+        run: |
+          python scripts/connector_heigit.py --country "$COUNTRY" || echo "HeiGIT indisponible, indicateurs d'accessibilité non mis à jour"
       - name: État actuel d'El Niño / La Niña (indice ONI)
         run: |
           python scripts/connector_enso.py || echo "ONI indisponible, état ENSO non mis à jour"
