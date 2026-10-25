@@ -243,3 +243,70 @@ indicators:
     source: CHIRPS v2.0 et ONI (NOAA CPC), corrélation de Pearson
     frequency: Annuelle
     status: active
+  # ---------------- HYDROLOGIE DE TERRAIN (calculé depuis le MNT Copernicus, workflow « 5 - Hydrologie ») ----------------
+  - id: hand_lt5_pct
+    label: Part du territoire à moins de 5 m au-dessus d'un cours d'eau (susceptibilité topographique à l'inondation)
+    unit: "% de la surface"
+    format: pct
+    aggregate: none
+    sectors: [drr, shelter, wash, health, agriculture]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "Copernicus GLO-90, HAND (Rennó 2008) calculé par MakyClimat ; indicateur de susceptibilité, pas une carte de crue"
+    frequency: Ponctuelle
+    status: active
+  - id: hand_lt15_pct
+    label: Part du territoire à moins de 15 m au-dessus d'un cours d'eau
+    unit: "% de la surface"
+    format: pct
+    aggregate: none
+    sectors: [drr, shelter, wash, agriculture]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: Copernicus GLO-90, HAND calculé par MakyClimat
+    frequency: Ponctuelle
+    status: active
+  - id: slope_mean_pct
+    label: Pente moyenne du terrain
+    unit: "%"
+    format: float
+    aggregate: none
+    sectors: [drr, agriculture, logistics]
+    sdg: ["13.1", "15.3"]
+    national: [axe1]
+    source: Copernicus GLO-90 (maille ~550 m, la pente locale est sous-estimée)
+    frequency: Ponctuelle
+    status: active
+  - id: slope_gt30_pct
+    label: Part du territoire en pente de plus de 30 % (susceptibilité aux glissements)
+    unit: "% de la surface"
+    format: pct
+    aggregate: none
+    sectors: [drr, agriculture, logistics]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: Copernicus GLO-90, calcul MakyClimat (indicateur de susceptibilité)
+    frequency: Ponctuelle
+    status: active
+  - id: elev_mean_m
+    label: Altitude moyenne
+    unit: m
+    format: int
+    aggregate: none
+    sectors: [agriculture, health, drr]
+    sdg: ["13.1"]
+    national: [axe1]
+    source: Copernicus GLO-90
+    frequency: Ponctuelle
+    status: active
+  - id: river_max_km2
+    label: Plus grande surface drainée par un cours d'eau de la zone
+    unit: km²
+    format: int
+    aggregate: none
+    sectors: [drr, wash]
+    sdg: ["6.4", "13.1"]
+    national: [eau]
+    source: Copernicus GLO-90, accumulation d'écoulement calculée par MakyClimat
+    frequency: Ponctuelle
+    status: active

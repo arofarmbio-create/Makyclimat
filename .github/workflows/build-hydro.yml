@@ -1,0 +1,33 @@
+name: 5 - Hydrologie (rivières, bassins, terrain)
+
+# Calcule rivières, bassins versants, HAND et pente depuis le MNT Copernicus GLO-90 (accès libre), puis les indicateurs par fokontany.
+# À lancer une fois (le terrain ne change pas), puis seulement si les limites changent.
+on:
+  workflow_dispatch:
+    inputs:
+      country:
+        description: "Code du pays"
+        default: "mdg"
+
+permissions:
+  contents: write
+
+jobs:
+  hydro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+      - name: Hydrologie de terrain
+        run: python scripts/build_hydro.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Enregistrer dans le dépôt
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add docs/data data
+          git diff --cached --quiet || (git commit -m "Hydrologie de terrain : rivières, bassins, HAND, pente" && git pull --rebase origin main && git push)

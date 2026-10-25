@@ -76,3 +76,10 @@ flood:
   return_levels: [2, 5, 20]         # débit de rivière dépassant la crue de 2, 5 ou 20 ans
   min_q2_m3s: 5                     # petits cours d'eau ignorés (débit de crue de 2 ans < 5 m3/s)
   history_start: 1984
+
+# --- Hydrologie de terrain (MNT Copernicus GLO-90, workflow « 5 - Hydrologie ») ---
+hydro:
+  res_deg: 0.005          # ~550 m
+  stream_min_km2: 100     # un cours d'eau commence à 100 km² drainés
+  basin_min_km2: 500      # grands bassins versants
+  subbasin_min_km2: 300   # sous-bassins (jonctions)

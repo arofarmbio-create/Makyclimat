@@ -29,9 +29,13 @@ def fill_and_route(dem: np.ndarray, sea: np.ndarray):
     flat_sea = sea.ravel()
     zf = z.ravel()
     heap = []
-    for i in np.where(flat_sea)[0]:
+    # on n'amorce que les cellules de mer qui touchent la terre (les autres n'influencent rien) : bien plus rapide
+    from scipy import ndimage
+    coast = sea & ndimage.binary_dilation(~sea, structure=np.ones((3, 3), dtype=bool))
+    for i in np.where(coast.ravel())[0]:
         seen[i] = True
         heap.append((zf[i], int(i)))
+    seen[flat_sea] = True   # la mer ne sera jamais « découverte » depuis la terre
     # les bords du domaine qui ne sont pas de la mer sont aussi des exutoires
     edge = np.zeros((h, w), dtype=bool)
     edge[0, :] = edge[-1, :] = edge[:, 0] = edge[:, -1] = True
@@ -169,3 +173,13 @@ def reaches(ds: np.ndarray, stream: np.ndarray, acc: np.ndarray, order: np.ndarr
         if len(path) >= 2:
             out.append(([xy(i) for i in path], float(acc[path[-1]]), int(order[path[0]])))
     return out
+
+
+def subbasin_terminals(ds: np.ndarray, sea_flat: np.ndarray, acc: np.ndarray, min_area: float) -> np.ndarray:
+    """Cellules terminales des sous-bassins : exutoires côtiers et confluences de cours d'eau drainant au moins min_area km²."""
+    n = len(ds)
+    idx = np.arange(n)
+    big = (~sea_flat) & (acc >= min_area)
+    has_down = big & (ds != idx) & big[ds]
+    indeg = np.bincount(ds[has_down], minlength=n)
+    return basin_outlets(ds, sea_flat) | (big & (indeg >= 2))
