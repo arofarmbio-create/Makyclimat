@@ -184,3 +184,62 @@ indicators:
     source: "Indice de pauvreté multidimensionnelle via HDX HAPI (niveau région)"
     frequency: Ponctuelle
     status: active
+  - id: rain_trend_pct_decade
+    label: Tendance de la pluie saisonnière 1982-aujourd'hui (points de % de la normale par décennie)
+    unit: "points de % / décennie"
+    format: float
+    style: signed
+    aggregate: popmean
+    sectors: [agriculture, food_security, livestock, wash, drr]
+    sdg: ["13.1", "2.4"]
+    national: [axe1]
+    source: CHIRPS v2.0 (CHC/UCSB), régression linéaire sur la pluie de chaque saison
+    frequency: Annuelle (recalcul après chaque saison)
+    status: active
+  - id: rain_trend_signif_share
+    label: Part de la zone où la tendance est statistiquement significative (p < 0,10)
+    unit: "%"
+    format: pct
+    aggregate: popmean
+    sectors: [agriculture, food_security, drr]
+    sdg: ["13.1"]
+    national: [axe1]
+    source: CHIRPS v2.0, test t sur la pente (à confirmer par un test non paramétrique pour la thèse)
+    frequency: Annuelle
+    status: active
+  - id: enso_el_pct
+    label: Pluie de la saison lors des El Niño passés (% de la normale)
+    unit: "% de la normale"
+    format: pct
+    style: rainpct
+    aggregate: popmean
+    sectors: [agriculture, food_security, livestock, wash, drr, health]
+    sdg: ["13.1", "2.4", "1.5"]
+    national: [axe1, solidarite]
+    source: CHIRPS v2.0 et indice ONI (NOAA CPC), moyenne des saisons classées El Niño
+    frequency: Annuelle
+    status: active
+  - id: enso_la_pct
+    label: Pluie de la saison lors des La Niña passées (% de la normale)
+    unit: "% de la normale"
+    format: pct
+    style: rainpct
+    aggregate: popmean
+    sectors: [agriculture, food_security, livestock, wash, drr, health]
+    sdg: ["13.1", "2.4", "1.5"]
+    national: [axe1, solidarite]
+    source: CHIRPS v2.0 et indice ONI (NOAA CPC), moyenne des saisons classées La Niña
+    frequency: Annuelle
+    status: active
+  - id: enso_corr
+    label: Corrélation entre la pluie de la saison et l'indice ENSO (ONI), de -1 à +1
+    unit: coefficient
+    format: float
+    style: signed
+    aggregate: popmean
+    sectors: [agriculture, food_security, drr]
+    sdg: ["13.1"]
+    national: [axe1]
+    source: CHIRPS v2.0 et ONI (NOAA CPC), corrélation de Pearson
+    frequency: Annuelle
+    status: active

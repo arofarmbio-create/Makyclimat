@@ -54,7 +54,9 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
 (async () => {
   check("chargement initial (KPIs)", await waitFor(() => $("kpis").children.length === 3));
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
-  check("6 indicateurs de base + 3 externes affichables", $("layer").options.length === 9, $("layer").options.length);
+  const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
+  check("6 indicateurs de base + indicateurs externes affichables",
+        $("layer").options.length === 6 + metaJson.external.length, $("layer").options.length + " couches");
   check("régions affichées", currentLayers.length === 4, currentLayers.length + " régions");
   check("couleurs d'alerte attribuées", currentLayers.every((l) => /^#/.test(l._style.fillColor)));
   const kpi0 = $("kpis").textContent;
@@ -62,6 +64,16 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   // sélection puis exploration
   const first = currentLayers[0].feature.properties.c;
   handlers[first]();
+  if (metaJson.has_history) {
+    check("courbe historique ENSO affichée", await waitFor(() => /<svg/.test($("info").innerHTML) && /El Niño/.test($("info").innerHTML)));
+    check("une barre par saison", ($("info").innerHTML.match(/<rect /g) || []).length >= 20);
+  }
+  // toutes les couches colorent la carte sans erreur
+  for (let i = 0; i < $("layer").options.length; i++) {
+    $("layer").value = $("layer").options[i].value; $("layer").dispatchEvent(new w.Event("change"));
+    if (!currentLayers.every((l) => /^#/.test(l._style.fillColor))) { check("couche " + $("layer").value + " colore toutes les zones", false); }
+  }
+  $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
   check("fiche après clic", $("info").textContent.includes(currentLayers[0].feature.properties.n));
   handlers[first]();
   check("exploration vers les districts", await waitFor(() => currentLayers.length === 2 && w.document.querySelectorAll("#crumbs button").length === 2),

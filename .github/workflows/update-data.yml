@@ -48,6 +48,9 @@ jobs:
           HAPI_APP_IDENTIFIER: ${{ secrets.HAPI_APP_IDENTIFIER }}
         run: |
           python scripts/connector_hapi.py --country "$COUNTRY" || echo "HAPI indisponible, indicateurs externes non mis à jour"
+      - name: État actuel d'El Niño / La Niña (indice ONI)
+        run: |
+          python scripts/connector_enso.py || echo "ONI indisponible, état ENSO non mis à jour"
       - name: Calculer les indicateurs
         run: python scripts/compute_metrics.py --country "$COUNTRY"
       - name: Générer le catalogue

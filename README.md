@@ -51,6 +51,12 @@ Tout fichier CSV déposé dans `inputs/indicateurs/` (colonnes `pcode, indicateu
 Déjà branchés : **IPC phase 3 ou plus** (part et nombre de personnes) et **pauvreté multidimensionnelle**, lus automatiquement depuis l'API HDX HAPI de l'OCHA par `scripts/connector_hapi.py`. Là où une analyse IPC existe, sa part de population remplace la part vulnérable par défaut (ordre de priorité : `inputs/vulnerabilite.csv`, puis IPC, puis valeur par défaut).
 Activation : générer gratuitement un « app identifier » dans la documentation interactive de HAPI (https://hapi.humdata.org/docs), puis l'enregistrer dans GitHub : *Settings → Secrets and variables → Actions → New repository secret*, nom `HAPI_APP_IDENTIFIER`. Sans ce secret, l'étape est simplement ignorée. Au premier lancement, vérifier dans le journal le taux de correspondance des codes HAPI avec les limites OCHA.
 
+### Changement climatique et El Niño / La Niña (cœur de la thèse)
+
+Le workflow « 2 - Construire la normale de pluie » télécharge aussi l'indice **ONI** de la NOAA (`scripts/connector_enso.py`) et construit, pour **chaque saison des pluies depuis 1982**, la pluie CHIRPS en % de la normale 1991-2020, classée **El Niño / La Niña / neutre** (`scripts/build_climate_change.py`, module `scripts/enso.py`).
+Par zone, l'outil publie : la tendance de la pluie saisonnière (points de % par décennie) et sa significativité ; la pluie moyenne lors des El Niño et des La Niña passés ; la corrélation pluie/ONI ; et une courbe historique (une barre par saison, colorée par phase ENSO) dans la fiche de chaque région, district, commune ou fokontany (courbe du district). L'état ENSO du moment (ONI le plus récent) s'affiche dans l'en-tête et est rafraîchi à chaque mise à jour.
+À refaire une fois par an après la saison (relancer le workflow 2). **Limites** : 40 à 45 saisons seulement, classement simplifié (moyenne de l'ONI sur la saison, seuils ±0,5), pluie satellitaire, et pas encore de projections climatiques futures (CMIP6), de température ni de prévision saisonnière : prévus ensuite.
+
 ### Population précise (fokontany)
 
 Le workflow « 1 - Construire les limites et la population » remplace, par défaut, la population OCHA COD-PS (référence 2018) par la somme de la grille **WorldPop 100 m** (version R2025A, estimation modélisée) dans chaque fokontany (`scripts/build_population_grid.py`). Si la grille est introuvable, COD-PS est conservée. La source de population est indiquée dans l'outil ; à valider avec l'INSTAT et à comparer au recensement quand il sera disponible.

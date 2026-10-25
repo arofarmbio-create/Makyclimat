@@ -17,12 +17,19 @@
               t: ["#fff5eb", "#fdd0a2", "#fd8d3c", "#d94801", "#7f2704"],
               g: ["#fff5eb", "#fdd0a2", "#fd8d3c", "#d94801", "#7f2704"],
               x: ["#f7f4f9", "#d4b9da", "#c994c7", "#dd3497", "#7a0177"] };
+  var SIGNED_COLORS = ["#b2182b", "#ef8a62", "#f1f1f1", "#67a9cf", "#2166ac"];
+  function styleOfLayer(k) {
+    if (k === "l") return "alert";
+    if (k === "pc") return "pct";
+    var d = layerDef(k);
+    return d && d.ext && d.ext.style === "rainpct" ? "pct" : d && d.ext && d.ext.style === "signed" ? "signed" : "seq";
+  }
   function layerDef(k) { return LAYERS.filter(function (l) { return l.id === k; })[0]; }
   function fmtLayer(k, v) {
     var d = layerDef(k);
     if (v === null || v === undefined) return "n/d";
     if (d && d.ext && d.ext.format === "pct") return MC.fmtPct(v);
-    if (d && d.ext && d.ext.format === "float") return String(Math.round(v * 100) / 100).replace(".", ",");
+    if (d && d.ext && d.ext.format === "float") return (d.ext.style === "signed" && v > 0 ? "+" : "") + String(Math.round(v * 100) / 100).replace(".", ",");
     return MC.fmtInt(v);
   }
   var LAYERS = [
@@ -80,8 +87,14 @@
 
   function computeBreaks() {
     var k = S.layer;
-    if (k === "l" || k === "pc") { S.breaks = []; return; }
+    var st = styleOfLayer(k);
+    if (st === "alert" || st === "pct") { S.breaks = []; return; }
     var vals = S.view.feats.map(function (f) { return val(S.view.metrics[f.properties.c], k); });
+    if (st === "signed") {
+      var ab = vals.filter(function (x) { return x !== null && x !== undefined && isFinite(x); }).map(Math.abs).sort(function (a, b) { return a - b; });
+      S.breaks = ab.length ? [ab[Math.floor(ab.length * 0.4)], ab[Math.min(ab.length - 1, Math.floor(ab.length * 0.8))]] : [0, 0];
+      return;
+    }
     S.breaks = MC.classBreaks(vals, 5);
   }
 
@@ -89,7 +102,12 @@
     var m = S.view.metrics[f.properties.c], k = S.layer, v = val(m, k);
     if (v === null || v === undefined) return "#cccccc";
     if (k === "l") return ALERT_COLORS[v] || "#cccccc";
-    if (k === "pc") { for (var i = 0; i < PCT_BINS.length; i++) if (v < PCT_BINS[i].max) return PCT_BINS[i].color; }
+    var st = styleOfLayer(k);
+    if (st === "pct") { for (var i = 0; i < PCT_BINS.length; i++) if (v < PCT_BINS[i].max) return PCT_BINS[i].color; }
+    if (st === "signed") {
+      var b = S.breaks || [0, 0];
+      return v <= -b[1] ? SIGNED_COLORS[0] : v <= -b[0] ? SIGNED_COLORS[1] : v < b[0] ? SIGNED_COLORS[2] : v < b[1] ? SIGNED_COLORS[3] : SIGNED_COLORS[4];
+    }
     if (v <= 0) return "#f2f2f2";
     var ci = MC.classIndex(v, S.breaks);
     return ci < 1 ? "#cccccc" : (SEQ[k] || SEQ.x)[Math.min(ci - 1, 4)];
@@ -162,7 +180,16 @@
     if (S.simIdx !== null) h += '<div><i style="background:#fff"></i> <em>scénario : pluie × ' + S.meta.rain_factors[S.simIdx].toFixed(2).replace(".", ",") + "</em></div>";
     if (k === "l") {
       [1, 2, 3, 4, 0].forEach(function (l) { h += '<div><i style="background:' + ALERT_COLORS[l] + '"></i>' + esc(levelName(l)) + "</div>"; });
-    } else if (k === "pc") {
+    } else if (styleOfLayer(k) === "signed") {
+      var sb = S.breaks || [0, 0];
+      var dry = layerDef(k).ext.id.indexOf("corr") >= 0 ? "corrélation négative (moins de pluie quand l'ONI monte)" : "baisse";
+      var wet = layerDef(k).ext.id.indexOf("corr") >= 0 ? "corrélation positive" : "hausse";
+      h += '<div><i style="background:' + SIGNED_COLORS[0] + '"></i>' + dry + " forte (au-delà de " + fmtLayer(k, -sb[1]) + ")</div>" +
+        '<div><i style="background:' + SIGNED_COLORS[1] + '"></i>' + dry + " modérée</div>" +
+        '<div><i style="background:' + SIGNED_COLORS[2] + '"></i>proche de zéro (±' + fmtLayer(k, sb[0]).replace("+", "") + ')</div>' +
+        '<div><i style="background:' + SIGNED_COLORS[3] + '"></i>' + wet + " modérée</div>" +
+        '<div><i style="background:' + SIGNED_COLORS[4] + '"></i>' + wet + " forte (au-delà de +" + fmtLayer(k, sb[1]).replace("+", "") + ")</div>";
+    } else if (styleOfLayer(k) === "pct") {
       PCT_BINS.forEach(function (b) { h += '<div><i style="background:' + b.color + '"></i>' + b.label + "</div>"; });
     } else {
       var br = S.breaks, pal = SEQ[k] || SEQ.x;
@@ -220,12 +247,14 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
+    if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
     if (S.view.lvl === 4) h += '<div class="note warn" style="margin-top:6px">Au niveau fokontany, les limites et la population sont des estimations anciennes : à utiliser comme indication à confirmer sur le terrain.</div>';
     if (S.view.lvl < 4) h += '<div style="margin-top:8px"><button class="btn primary" id="drillbtn">Explorer les sous-zones ▸</button></div>';
     box.innerHTML = h;
     var db = $("drillbtn");
     if (db) db.addEventListener("click", function () { drill(f); });
+    if (S.meta.has_history) drawHistory(f);
   }
 
   function renderRank() {
@@ -246,6 +275,46 @@
         S.geo.eachLayer(function (l) { if (l.feature.properties.c === f.properties.c) S.map.fitBounds(l.getBounds(), { padding: [40, 40], maxZoom: 11 }); });
       });
     });
+  }
+
+  /* ---------- Historique climat et ENSO ---------- */
+  var PHASE_COLORS = { E: "#d95f02", L: "#1b6ca8", N: "#9e9e9e", "?": "#cccccc" };
+  var PHASE_NAMES = { E: "El Niño", L: "La Niña", N: "neutre" };
+  function drawHistory(f) {
+    var box = $("histbox");
+    if (!box) return;
+    var pc = S.view.lvl <= 2 ? f.properties.c : S.path[1].pcode;
+    var viaDistrict = S.view.lvl > 2;
+    getJSON("history.json").then(function (H) {
+      var box2 = $("histbox");
+      var ser = H.series[pc];
+      if (!box2 || !ser) return;
+      var n = H.years.length, W = 300, Ht = 120, padL = 26, padB = 16, bw = (W - padL) / n;
+      var mx = Math.max(150, Math.max.apply(null, ser.filter(function (v) { return v !== null; }).concat([100]))), sy = (Ht - padB - 6) / mx;
+      var svg = '<svg viewBox="0 0 ' + W + " " + Ht + '" width="100%" role="img" aria-label="Pluie de chaque saison en pourcentage de la normale, colorée selon la phase ENSO">';
+      svg += '<line x1="' + padL + '" x2="' + W + '" y1="' + (Ht - padB - 100 * sy) + '" y2="' + (Ht - padB - 100 * sy) + '" stroke="#555" stroke-dasharray="3 2"/>';
+      svg += '<text x="1" y="' + (Ht - padB - 100 * sy + 3) + '" font-size="8" fill="#555">100 %</text>';
+      ser.forEach(function (v, i) {
+        if (v === null) return;
+        svg += '<rect x="' + (padL + i * bw + 0.5) + '" y="' + (Ht - padB - v * sy) + '" width="' + Math.max(1, bw - 1) + '" height="' + (v * sy) +
+          '" fill="' + PHASE_COLORS[H.phases[i]] + '"><title>' + H.years[i] + " : " + v + " % de la normale (" + PHASE_NAMES[H.phases[i]] + ", ONI " + String(H.oni[i]).replace(".", ",") + ")</title></rect>";
+      });
+      [0, Math.floor(n / 2), n - 1].forEach(function (i) {
+        svg += '<text x="' + (padL + i * bw) + '" y="' + (Ht - 3) + '" font-size="8" fill="#555">' + H.years[i] + "</text>";
+      });
+      svg += "</svg>";
+      var lg = ["E", "L", "N"].map(function (c) { return '<span><i style="background:' + PHASE_COLORS[c] + '"></i>' + PHASE_NAMES[c] + " (" + H.counts[c] + ")</span>"; }).join(" ");
+      box2.innerHTML = "<b>Pluie de chaque saison depuis " + H.years[0] + (viaDistrict ? " (district " + esc(S.path[1].name) + ")" : "") + "</b>" + svg +
+        '<div class="note hlegend">' + lg + "<br>Chaque barre = une saison des pluies, en % de la normale " + H.baseline[0] + "–" + H.baseline[1] + ", colorée selon la phase ENSO de cette saison.</div>";
+    }).catch(function () { var b = $("histbox"); if (b) b.remove(); });
+  }
+
+  function renderEnso() {
+    var e = S.meta.enso, b = $("enso");
+    if (!e || !b) return;
+    var col = PHASE_COLORS[e.phase] || "#999";
+    b.hidden = false;
+    b.innerHTML = '<i style="background:' + col + '"></i>ENSO : ' + esc(e.phase_label) + " (ONI " + (e.oni > 0 ? "+" : "") + String(e.oni).replace(".", ",") + ", " + esc(e.season) + ")";
   }
 
   /* ---------- Contrôles ---------- */
@@ -413,6 +482,9 @@
       "<h3>2. Population exposée</h3><p>Population des fokontany dont le niveau d'alerte atteint « " + esc(levelName(m.exposure_min_level)) + " » ou plus, puis cumul vers les communes, districts et régions.</p>" +
       "<h3>3. Cibles potentiels</h3><p>Population exposée × part vulnérable. Par défaut, la part vulnérable est de " + Math.round(m.default_vulnerable_share * 100) +
       " % (valeur provisoire, approximation fondée sur la pauvreté nationale). Par ordre de priorité, elle est remplacée (1) par les valeurs du fichier <code>inputs/vulnerabilite.csv</code>, puis (2) par la part de population en IPC phase 3 ou plus (OCHA/HAPI) là où une analyse existe, héritée par les sous-zones.</p>" +
+      (m.has_history ? "<h3>Changement climatique et ENSO</h3><p>Pour chaque saison des pluies depuis 1982, la pluie CHIRPS est comparée à la normale " + m.sources[0].baseline[0] + "–" + m.sources[0].baseline[1] +
+        ". La saison est classée <b>El Niño</b> (indice ONI de la NOAA moyen ≥ +0,5), <b>La Niña</b> (≤ −0,5) ou neutre. Pour chaque zone, l'outil calcule : la <b>tendance</b> de la pluie saisonnière (régression linéaire, points de % de la normale par décennie) et sa significativité ; la <b>pluie moyenne lors des El Niño et des La Niña passés</b> ; la <b>corrélation</b> avec l'ONI. " +
+        "Limites : 40 à 45 saisons seulement (peu de saisons de chaque phase), classement ENSO simplifié, pluie satellitaire (CHIRPS) et non pluviomètres, et aucune projection climatique future à ce stade (modèles CMIP6 prévus). Ces résultats décrivent le passé : ils ne prédisent pas la prochaine saison.</p>" : "") +
       "<h3>4. Simulation « et si ? »</h3><p>La pluie cumulée observée est multipliée par un facteur (de ×" + m.rain_factors[0].toFixed(2).replace(".", ",") + " à ×" +
       m.rain_factors[m.rain_factors.length - 1].toFixed(2).replace(".", ",") + ") puis tous les calculs sont refaits. C'est une analyse de sensibilité : elle ne prédit pas la pluie à venir. La température, l'évaporation et le sol sont prévus aux phases suivantes.</p>" +
       "<h3>5. Limites connues</h3><ul><li>Population et limites des fokontany : estimations anciennes (référence " + esc(m.sources[2].reference_year) + ").</li>" +
@@ -439,6 +511,7 @@
       $("country").textContent = S.meta.country;
       $("through").textContent = "Pluie jusqu'au " + fmtDate(S.meta.data_through);
       document.title = "MakyClimat — " + S.meta.country;
+      renderEnso();
       setupMap(); setupControls();
       var hash = location.hash.replace("#", "").split("/").filter(Boolean).slice(0, 3);
       var p = hash.length ? ensureIndex().then(function () {

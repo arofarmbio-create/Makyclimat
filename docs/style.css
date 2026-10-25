@@ -90,3 +90,7 @@ footer { padding: 10px 16px; font-size: 12px; color: var(--muted); border-top: 1
   #tab-map.active { display: block; height: auto; }
   .mapwrap { height: 420px; }
 }
+
+.badge.enso i, .hlegend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+.hist { margin: 8px 0; }
+.hlegend span { margin-right: 8px; white-space: nowrap; }

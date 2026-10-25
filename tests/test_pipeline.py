@@ -164,7 +164,7 @@ def test_external() -> None:
     meta = load("meta.json")
     ids = {x["id"] for x in meta["external"]}
     check("indicateurs externes déclarés détectés, inconnus ignorés",
-          ids == {"poverty_headcount", "ipc_phase3plus_pct", "ipc_phase3plus_pop"}, str(ids))
+          {"poverty_headcount", "ipc_phase3plus_pct", "ipc_phase3plus_pop"} <= ids and "inconnu_xyz" not in ids, str(ids))
     check("valeur directe région", top["adm1"]["R1"]["x"]["poverty_headcount"] == 70)
     check("date la plus récente retenue (somme R1D2 = 700)", top["adm2"]["R1D2"]["x"]["ipc_phase3plus_pop"] == 700)
     check("agrégation somme vers la région (R1 = 700)", top["adm1"]["R1"]["x"].get("ipc_phase3plus_pop") == 700,

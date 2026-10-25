@@ -1,6 +1,6 @@
 name: 2 - Construire la normale de pluie (une seule fois)
 
-# À lancer manuellement UNE fois. Télécharge environ 360 fichiers CHIRPS (10 à 20 minutes).
+# À lancer manuellement UNE fois (puis à refaire chaque année après la saison). Télécharge environ 650 fichiers CHIRPS.
 # Enchaînement automatique après la construction des limites (premier démarrage).
 on:
   workflow_run:
@@ -29,9 +29,13 @@ jobs:
         run: pip install -r requirements-update.txt
       - name: Calculer la normale mensuelle 1991-2020
         run: python scripts/build_climatology.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Indice ENSO (El Niño / La Niña, NOAA)
+        run: python scripts/connector_enso.py
+      - name: Changement climatique et ENSO (pluie saisonnière depuis 1981, tendances, phases)
+        run: python scripts/build_climate_change.py --country "${{ github.event.inputs.country || 'mdg' }}"
       - name: Enregistrer dans le dépôt
         run: |
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
-          git add data
+          git add data docs/data
           git diff --cached --quiet || (git commit -m "Normale mensuelle de pluie" && git pull --rebase origin main && git push)

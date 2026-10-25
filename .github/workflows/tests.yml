@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - run: pip install numpy pandas pyyaml requests geopandas pyogrio shapely rasterio
+      - run: pip install numpy pandas pyyaml requests geopandas pyogrio shapely rasterio scipy
       - run: npm install --no-save jsdom
       - name: Données simulées et tests de la chaîne de données
         run: |
@@ -24,5 +24,7 @@ jobs:
           python scripts/build_catalogue.py --country demo
           python tests/test_pipeline.py
           python tests/test_connectors.py
+          python tests/test_climate.py
+          python scripts/compute_metrics.py --country demo
       - name: Tests de l'interface
         run: node tests/ui_test.js demo

@@ -20,7 +20,7 @@ import datetime as dt
 import numpy as np
 import pandas as pd
 
-from common import (INPUTS_DIR, country_data_dir, country_docs_dir, grid_dir, load_config, load_grid, load_yaml,
+from common import (DATA_DIR, INPUTS_DIR, country_data_dir, country_docs_dir, grid_dir, load_config, load_grid, load_yaml,
                     read_units, sample_grid, write_json)
 
 
@@ -269,8 +269,14 @@ def main() -> None:
             part[f"adm{int(units.at[i, 'level'])}"][units.at[i, "pcode"]] = pack(i)
         write_json(out / "d" / f"{adm2}.json", part)
 
+    enso_state, enso_p = None, DATA_DIR / "enso" / "oni.csv"
+    if enso_p.exists():
+        import enso as _enso
+        enso_state = _enso.latest(pd.read_csv(enso_p))
+    hist_ok = (country_docs_dir(args.country) / "history.json").exists()
     nat = units[units.level == 1]
     meta = {
+        "enso": enso_state, "has_history": hist_ok,
         "country": cfg["name"], "slug": cfg["slug"], "iso3": cfg["iso3"],
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "data_through": through, "season_start": season_start,
@@ -279,7 +285,7 @@ def main() -> None:
         "default_vulnerable_share": default_share,
         "rain_factors": factors,
         "external": [{"id": i, "label": ext_defs[i]["label"], "unit": ext_defs[i].get("unit", ""),
-                      "format": ext_defs[i].get("format", "float"), "latest": ext_latest.get(i, ""),
+                      "format": ext_defs[i].get("format", "float"), "style": ext_defs[i].get("style", ""), "latest": ext_latest.get(i, ""),
                       "n_units": sum(1 for v in ext_all.values() if i in v)}
                      for i in sorted({k for v in ext_all.values() for k in v})],
         "national": {"pop": int(nat["pop"].sum()), "exposed": int(round(nat["E"].sum())),
