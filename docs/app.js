@@ -1088,8 +1088,9 @@
       if (!ant.length) ah += '<div class="note">Aucune zone de la vue n\'a une alerte de niveau « Alerte » ou plus prévue dans les 7 prochains jours.</div>';
       else ah += "<ul>" + ant.slice(0, 8).map(function (x) {
         var hz = HAZ.filter(function (z, i) { return x.m.ew[i] >= 2; }).map(function (z) { return F.hazard_labels[z].toLowerCase(); });
-        var pop = Math.max.apply(null, (x.m.ewp || [0]).concat([0]));
-        return "<li><b>" + esc(x.n) + "</b> : " + esc(F.level_names[x.ew]) + " (" + esc(hz.join(", ")) + ")" + (pop > 0 ? " · ≈ " + MC.fmtInt(pop) + " pers." : "") + "</li>";
+        var pop = Math.max.apply(null, (x.m.ewp || []).filter(function (v, i) { return x.m.ew[i] >= 2; }).concat([0]));
+        var share = pop > 0 && x.m.p > 0 ? " (" + (100 * pop / x.m.p < 1 ? "moins de 1" : Math.round(100 * pop / x.m.p)) + " % de la population de la zone)" : "";
+        return "<li><b>" + esc(x.n) + "</b> : " + esc(F.level_names[x.ew]) + " (" + esc(hz.join(", ")) + ")" + (pop > 0 ? " · ≈ " + MC.fmtInt(pop) + " pers." + share : "") + "</li>";
       }).join("") + "</ul>";
     }
     $("rant").innerHTML = ah;
