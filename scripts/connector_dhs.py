@@ -76,14 +76,14 @@ def build(data: list[dict], units: pd.DataFrame) -> tuple[pd.DataFrame, list[str
     if df.empty:
         return pd.DataFrame(columns=["pcode", "indicateur", "valeur", "date", "source"]), ["aucune donnée DHS"]
     df = df[(df.CharacteristicCategory == "Region") & (df.Value.notna())]
-    if "IsPreferred" in df.columns:      # certains indicateurs existent pour plusieurs dénominateurs : on garde la série « préférée » de la DHS
-        pref = df[df.IsPreferred == 1]
-        df = pref if len(pref) else df
     rows, unmatched = [], set()
     for ind, cands in SPECS.items():
         got = None
         for c in cands:
             d = df[df.IndicatorId == c]
+            if "IsPreferred" in d.columns and len(d):      # plusieurs dénominateurs possibles : série « préférée » de la DHS (à défaut, toutes)
+                pref = d[d.IsPreferred.fillna(1) == 1]
+                d = pref if len(pref) else d
             if len(d):
                 got = (c, d)
                 break
