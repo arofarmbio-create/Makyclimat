@@ -22,6 +22,8 @@
       return v === undefined ? null : v;
     }
     if (scn && m.sc && m.sc[scn] && key === "g") return Math.max(0, m.sc[scn][3] - (m.b || 0));
+    if (key === "ewm") return m.ew ? Math.max.apply(null, m.ew) : null;
+    if (/^ew[0-4]$/.test(key)) return m.ew ? m.ew[+key.charAt(2)] : null;
     if (key === "pa") return m.pa === undefined || m.pa === null ? null : m.pa * 100;
     if (key === "ex") return m.ex === undefined ? null : m.ex;
     if (key === "w") { var hs = m.sc && (m.sc[scn] || m.sc.hum); return hs ? hs[4] : null; }

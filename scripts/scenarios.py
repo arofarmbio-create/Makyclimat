@@ -31,9 +31,10 @@ def target_season(today: dt.date, s_m: int, e_m: int) -> tuple[int, int]:
     return today.year, today.year
 
 
-def covered_fractions(months: list[tuple[int, int]], season_start: str, through: dt.date | None, start_ym: tuple[int, int]):
-    """Part observée de chaque mois de la saison cible (0 si les données ne couvrent pas cette saison)."""
-    if through is None or season_start != f"{start_ym[0]}-{start_ym[1]:02d}":
+def covered_fractions(months: list[tuple[int, int]], season_start: str, through: dt.date | None, start_ym: tuple[int, int],
+                      ignore_season_check: bool = False):
+    """Part connue (observée ou prévue) de chaque mois de la saison cible (0 si les données ne couvrent pas cette saison)."""
+    if through is None or (not ignore_season_check and season_start != f"{start_ym[0]}-{start_ym[1]:02d}"):
         return [0.0] * len(months)
     out = []
     for y, m in months:
@@ -125,6 +126,18 @@ def rollup_sum(units, leafmask, arr):
     leaf = np.asarray(leafmask)
     for lv, key in ((3, "adm3"), (2, "adm2"), (1, "adm1")):
         s = pd.Series(out[leaf]).groupby(units.loc[leaf, key].values).sum()
+        m = (units.level == lv).values
+        out[m] = units.loc[m, "pcode"].map(s).fillna(0).values
+    return out
+
+
+def rollup_max(units, leafmask, arr):
+    """Valeur maximale parmi les fokontany de chaque commune, district et région."""
+    import pandas as pd
+    out = np.array(arr, dtype=float).copy()
+    leaf = np.asarray(leafmask)
+    for lv, key in ((3, "adm3"), (2, "adm2"), (1, "adm1")):
+        s = pd.Series(out[leaf]).groupby(units.loc[leaf, key].values).max()
         m = (units.level == lv).values
         out[m] = units.loc[m, "pcode"].map(s).fillna(0).values
     return out

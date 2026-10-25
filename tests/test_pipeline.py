@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import chirps  # noqa: E402
 import compute_metrics  # noqa: E402
 import update_rainfall  # noqa: E402
-from common import INPUTS_DIR, country_docs_dir, grid_dir, load_config, load_grid  # noqa: E402
+from common import INPUTS_DIR, country_docs_dir, grid_dir, load_config, load_grid, read_units  # noqa: E402
 
 FAILS = 0
 
@@ -229,6 +229,60 @@ def test_scenarios() -> None:
     run_compute()
 
 
+def test_forecast_alerts() -> None:
+    run_compute()
+    meta, top = load("meta.json"), load("metrics/top.json")
+    fc = meta["forecast"]
+    check("prévision utilisée : dates, horizon et aléas déclarés", fc and fc["horizon_days"] == 7 and fc["today"] == "2026-02-21"
+          and "flood" in fc["hazards"] and fc["flood"]["available"], str(fc and fc["flood"]))
+    casc = meta["scenarios"]["cascade"]
+    check("cascade climat -> prévision : observations jusqu'au 20/02, prévision jusqu'au 08/03",
+          casc["used"] and casc["observed_through"] == "2026-02-20" and casc["known_through"] == "2026-03-08" and casc["days"] == 16, str(casc))
+    # niveaux par fokontany
+    d = {}
+    for f in (country_docs_dir("demo") / "metrics" / "d").glob("*.json"):
+        j = json.load(open(f, encoding="utf-8"))
+        d.update(j["adm4"])
+    units = read_units("demo")
+    leaves = units[units.level == 4]
+    north = [pc for pc, la in zip(leaves.pcode, leaves.lat) if la > -16.5 + 0.13]
+    south = [pc for pc, la in zip(leaves.pcode, leaves.lat) if la < -24.0 - 0.13]
+    west = [pc for pc, lo in zip(leaves.pcode, leaves.lon) if lo < 45.0 - 0.13]
+    H = ["rain", "wind", "heat", "dry", "flood"]
+    check("pluie très forte au nord -> alerte (niveau 2) ou plus", north and all(d[pc]["ew"][0] >= 2 for pc in north), f"{len(north)} fokontany")
+    check("rafales de 95 km/h au nord -> alerte vent", all(d[pc]["ew"][1] == 2 for pc in north))
+    check("39 °C à l'ouest -> alerte chaleur", west and all(d[pc]["ew"][2] == 2 for pc in west))
+    check("plus de 15 jours secs au sud -> alerte période sèche", south and all(d[pc]["ew"][3] >= 2 for pc in south))
+    quiet = [pc for pc in leaves.pcode if pc not in set(north) | set(south) | set(west)]
+    check("zone calme sans alerte pluie/vent/chaleur", all(sum(d[pc]["ew"][:3]) == 0 for pc in quiet[:50]))
+    com = units[units.level == 3].reset_index(drop=True)
+    kids0 = leaves[leaves.adm3 == com.pcode[0]].pcode
+    kids1 = leaves[leaves.adm3 == com.pcode[1]].pcode
+    check("crue : débit prévu 2,5 × la crue de 2 ans -> niveau 2 (alerte) hérité par les fokontany de la commune",
+          all(d[pc]["ew"][4] == 2 for pc in kids0) and d[next(iter(kids0))]["ev"][5] == 2.5)
+    check("crue : 1,2 × la crue de 2 ans -> vigilance", all(d[pc]["ew"][4] == 1 for pc in kids1))
+    r = top["adm1"]
+    check("région : niveau maximal des fokontany et personnes en alerte",
+          all(len(v["ew"]) == 5 and len(v["ewp"]) == 5 for v in r.values()) and max(v["ew"][0] for v in r.values()) >= 2)
+    nd = [len(v["fr"]) for v in r.values()]
+    check("série quotidienne de 10 jours de pluie et de température", all(n == 10 for n in nd))
+    # la prévision change les scénarios (ceinture sèche : zéro pluie pendant 17 jours)
+    sc_with = {k: sum(v["sc"][k][2] for v in r.values()) for k in ("sec", "med", "hum")}
+    p = grid_dir("demo") / "forecast.npz"
+    backup = p.with_suffix(".bak")
+    shutil.move(p, backup)
+    try:
+        run_compute()
+        r0 = load("metrics/top.json")["adm1"]
+        sc_wo = {k: sum(v["sc"][k][2] for v in r0.values()) for k in ("sec", "med", "hum")}
+        check("sans prévision : pas d'alerte précoce ni de cascade", load("meta.json")["forecast"] is None
+              and not load("meta.json")["scenarios"]["cascade"]["used"])
+        check("la prévision (ceinture sèche) augmente les exposés du scénario médian", sc_with["med"] > sc_wo["med"], f"{sc_with['med']} > {sc_wo['med']}")
+    finally:
+        shutil.move(backup, p)
+    run_compute()
+
+
 def test_external() -> None:
     run_compute()
     top = load("metrics/top.json")
@@ -263,5 +317,6 @@ if __name__ == "__main__":
     test_inputs()
     test_external()
     test_scenarios()
+    test_forecast_alerts()
     print("\nTous les tests de données passent." if not FAILS else f"\n{FAILS} ÉCHEC(S)")
     sys.exit(1 if FAILS else 0)

@@ -103,6 +103,38 @@ def main() -> None:
     save_grid(grid_dir("demo") / "monthly_series.npz", arr=mon.astype("float16"), months=np.array([11, 12, 1, 2, 3, 4]),
               years=years, phases=phases, oni=np.where(phases == "E", 1.0, np.where(phases == "L", -1.0, 0.0)).astype("float32"),
               lon0=np.array(x0), lat0=np.array(y1), res=np.array(res))
+    # prévision météo simulée (mailles de 0,25°) et débits de rivière simulés, autour du 21 février 2026
+    import datetime as _dt
+    import update_forecast as _uf
+    from common import country_data_dir as _cdd
+    import pandas as _pd
+    ud = _pd.read_csv(_cdd("demo") / "units.csv", dtype={"pcode": str, "parent": str, "adm1": str, "adm2": str, "adm3": str})
+    flons, flats = _uf.build_points(ud, 0.25)
+    days = [(_dt.date(2026, 2, 11) + _dt.timedelta(days=i)).isoformat() for i in range(26)]   # 10 jours passés + 16 de prévision
+    nP, nT = len(flons), len(days)
+    pr = np.full((nP, nT), 3.0, dtype="float32")
+    tx = np.full((nP, nT), 30.0, dtype="float32")
+    gu = np.full((nP, nT), 40.0, dtype="float32")
+    north = flats > -16.5
+    pr[north, 12] = 130.0          # 23 février : pluie très forte au nord (alerte)
+    gu[north, 12] = 95.0           # rafales de 95 km/h (alerte)
+    west = flons < 45.0
+    tx[west, 11] = 39.0            # chaleur à l'ouest (alerte)
+    south = flats < -24.0
+    pr[south, :] = 0.0             # ceinture sèche au sud : plus de 10 jours sans pluie
+    save_grid(grid_dir("demo") / "forecast.npz", lon=flons, lat=flats, dates=np.array(days), res=np.array(0.25),
+              fetched_at=np.array("2026-02-21T06:00:00+00:00"), today=np.array("2026-02-21"),
+              precipitation_sum=pr, temperature_2m_max=tx, temperature_2m_min=tx - 12, wind_gusts_10m_max=gu,
+              wind_speed_10m_max=gu / 2, et0_fao_evapotranspiration=np.full((nP, nT), 4.0, dtype="float32"))
+    com = ud[ud.level == 3].reset_index(drop=True)
+    th = _pd.DataFrame({"pcode": com.pcode, "lon": com.lon, "lat": com.lat, "n_years": 40, "q_mean": 12.0,
+                        "q2": 10.0, "q5": 20.0, "q10": 30.0, "q20": 40.0})
+    th.to_csv(_cdd("demo") / "flood_thresholds.csv", index=False)
+    q = np.full((len(com), nT), 5.0, dtype="float32")
+    q[0, 13] = 25.0                # la première commune dépasse la crue de 5 ans (alerte)
+    q[1, 13] = 12.0                # la deuxième dépasse la crue de 2 ans (vigilance)
+    save_grid(grid_dir("demo") / "flood_forecast.npz", pcode=com.pcode.to_numpy().astype(str), dates=np.array(days), q=q,
+              fetched_at=np.array("2026-02-21T06:00:00+00:00"))
     print(f"Démo écrite : {len(units)} unités, grille {h}x{w}")
 
 

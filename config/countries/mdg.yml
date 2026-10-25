@@ -57,3 +57,22 @@ default_vulnerable_share: 0.80
 simulation:
   rain_factors: [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00,
                  1.05, 1.10, 1.15, 1.20, 1.25, 1.30, 1.35, 1.40, 1.45, 1.50]
+
+# --- Alerte précoce (prévisions météo, mises à jour automatiques) — SEUILS PROVISOIRES à calibrer avec Météo Madagascar et le BNGRC ---
+timezone: Indian/Antananarivo
+forecast:
+  grid_res: 0.25          # degrés : une prévision par maille de 0,25° (environ 28 km), attribuée aux fokontany voisins
+  forecast_days: 16
+  past_days: 10           # jours récents (analyse du modèle) pour combler le retard des données satellites
+  max_age_days: 3         # au-delà, la prévision est considérée périmée et ignorée
+  horizon_days: 7         # les niveaux d'alerte portent sur les 7 prochains jours
+alerts:
+  rain_day_mm: [50, 100, 200]       # pluie sur une journée : vigilance, alerte, alerte maximale
+  rain_3day_mm: [100, 200, 350]     # pluie cumulée sur 3 jours
+  gust_kmh: [60, 90, 118]           # rafales de vent
+  tmax_c: [35, 38, 41]              # température maximale
+  dry_days: [10, 15, 21]            # jours secs consécutifs (< 1 mm), en saison des pluies seulement
+flood:
+  return_levels: [2, 5, 20]         # débit de rivière dépassant la crue de 2, 5 ou 20 ans
+  min_q2_m3s: 5                     # petits cours d'eau ignorés (débit de crue de 2 ans < 5 m3/s)
+  history_start: 1984

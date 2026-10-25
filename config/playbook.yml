@@ -106,3 +106,21 @@ household:
   normal:
     - "Gardez vos réserves habituelles d'eau et de vivres."
     - "Suivez les informations de la météo et les annonces du fokontany."
+
+# Messages d'alerte précoce pour les ménages (vue « Chez moi »), par aléa. Suivre toujours les consignes officielles.
+household_alert:
+  rain:
+    - "Mettez à l'abri en hauteur vos vivres, semences et papiers."
+    - "Éloignez-vous des rivières et des pentes instables ; ne traversez jamais une eau qui monte."
+  wind:
+    - "Attachez ou rentrez ce qui peut s'envoler et renforcez le toit."
+    - "Pêcheurs : ne prenez pas la mer et mettez les pirogues à l'abri."
+  heat:
+    - "Buvez beaucoup d'eau ; travaillez tôt le matin ou en fin d'après-midi."
+    - "Protégez les enfants, les personnes âgées et les animaux : ombre et eau pour le bétail."
+  dry:
+    - "Gardez l'eau et retardez les semis, ou choisissez des variétés à cycle court."
+    - "Ne brûlez pas la brousse : le risque d'incendie est élevé."
+  flood:
+    - "Une crue de la rivière proche est possible : surveillez le niveau et préparez un lieu sûr en hauteur."
+    - "Écoutez la radio locale et les consignes du fokontany et du BNGRC."

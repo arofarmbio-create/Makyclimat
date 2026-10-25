@@ -1,10 +1,11 @@
 name: Mise à jour des données et publication
 
-# Automatique : les 3, 13 et 23 de chaque mois (après la fin de chaque dékade CHIRPS).
+# Automatique : toutes les 6 heures (prévision météo et débits de rivière) ; les pluies satellites CHIRPS se mettent à jour
+# toutes seules à chaque nouvelle dékade.
 # Manuel : onglet Actions > « Mise à jour des données et publication » > Run workflow.
 on:
   schedule:
-    - cron: "0 5 3,13,23 * *"
+    - cron: "10 0,6,12,18 * * *"
   # Enchaînement automatique après la normale de pluie (premier démarrage)
   workflow_run:
     workflows: ["2 - Construire la normale de pluie (une seule fois)"]
@@ -51,6 +52,12 @@ jobs:
       - name: État actuel d'El Niño / La Niña (indice ONI)
         run: |
           python scripts/connector_enso.py || echo "ONI indisponible, état ENSO non mis à jour"
+      - name: Prévision météo (Open-Meteo) — ignorée en cas d'indisponibilité
+        run: |
+          python scripts/update_forecast.py --country "$COUNTRY" || echo "Prévision indisponible, alertes précoces non mises à jour"
+      - name: Débits de rivière prévus (GloFAS via Open-Meteo) — ignorés en cas d'indisponibilité
+        run: |
+          python scripts/update_floods.py --country "$COUNTRY" || echo "Débits indisponibles, alertes de crue non mises à jour"
       - name: Calculer les indicateurs
         run: python scripts/compute_metrics.py --country "$COUNTRY"
       - name: Générer le catalogue

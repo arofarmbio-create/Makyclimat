@@ -56,7 +56,7 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
   const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
   check("6 indicateurs de base + indicateurs externes affichables",
-        $("layer").options.length === 6 + (metaJson.scenarios ? 3 : 0) + metaJson.external.length, $("layer").options.length + " couches");
+        $("layer").options.length === 6 + (metaJson.scenarios ? 3 : 0) + (metaJson.forecast ? 6 : 0) + metaJson.external.length, $("layer").options.length + " couches");
   check("régions affichées", currentLayers.length === 4, currentLayers.length + " régions");
   check("couleurs d'alerte attribuées", currentLayers.every((l) => /^#/.test(l._style.fillColor)));
   const kpi0 = $("kpis").textContent;
@@ -65,8 +65,16 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   const first = currentLayers[0].feature.properties.c;
   handlers[first]();
   if (metaJson.has_history) {
-    check("courbe historique ENSO affichée", await waitFor(() => /<svg/.test($("info").innerHTML) && /El Niño/.test($("info").innerHTML)));
-    check("une barre par saison", ($("info").innerHTML.match(/<rect /g) || []).length >= 20);
+    check("courbe historique ENSO : une barre par saison", await waitFor(() => /Pluie de chaque saison/.test($("info").innerHTML) && ($("info").innerHTML.match(/<rect /g) || []).length >= 20));
+  }
+  if (metaJson.forecast) {
+    check("badge de prévision", !$("fcbadge").hidden && /Prévision du/.test($("fcbadge").textContent));
+    check("panneau d'alerte précoce : 5 aléas et graphique de 10 jours", $("info").querySelectorAll(".ewrow").length === 5 && /<svg[^>]*Pluie prévue/.test($("info").innerHTML));
+    $("layer").value = "ewm"; $("layer").dispatchEvent(new w.Event("change"));
+    const cols = new Set(currentLayers.map((l) => l._style.fillColor));
+    check("carte des alertes colorée avec la palette des niveaux", [...cols].every((c) => ["#d7ebd2", "#f2d16b", "#e8893a", "#b2262e"].includes(c)), [...cols].join(" "));
+    check("légende des niveaux d'alerte", /Vigilance/.test($("legend").textContent) && /Alerte maximale/.test($("legend").textContent));
+    $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
   }
   if (metaJson.scenarios) {
     check("tableau des scénarios dans la fiche", /Probabilité d'alerte/.test($("info").innerHTML) && $("info").querySelectorAll(".sctable tr").length >= 4);
@@ -79,6 +87,7 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     $("scn").value = ""; $("scn").dispatchEvent(new w.Event("change"));
     // vue simple « Chez moi »
     $("modebtn").click();
+    if (metaJson.forecast) check("vue simple : alerte des 7 prochains jours avec conseils", /Alerte pour les 7 prochains jours/.test($("info").textContent));
     check("vue simple : message clair et conseils", /Risque de saison trop sèche/.test($("info").textContent) && /Ce que vous pouvez faire/.test($("info").textContent));
     $("modebtn").click();
   }

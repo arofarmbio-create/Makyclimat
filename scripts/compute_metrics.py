@@ -15,6 +15,7 @@ Méthode (version 1, à calibrer et valider scientifiquement) :
 from __future__ import annotations
 
 import argparse
+import calendar
 import datetime as dt
 
 import numpy as np
@@ -311,6 +312,69 @@ def main() -> None:
     units["E"], units["T"] = E, T
 
 
+
+    # --- Prévision météo et alertes précoces (cascade : climat -> prévision -> observations) ---
+    import early_warning as EW
+    from openmeteo import cell_key
+    fcst = None
+    fc_path = grid_dir(args.country) / "forecast.npz"
+    LI0 = np.where(leafmask)[0]
+    if fc_path.exists():
+        z = load_grid(fc_path)
+        dts = [str(x) for x in z["dates"]]
+        fetched = dt.datetime.fromisoformat(str(z["fetched_at"]))
+        age = (dt.datetime.now(dt.timezone.utc) - fetched).total_seconds() / 86400 if not args.today else 0
+        if age <= cfg.get("forecast", {}).get("max_age_days", 3) and today.isoformat() in dts:
+            res_f = float(z["res"])
+            kx, ky = cell_key(units.lon.values[LI0], units.lat.values[LI0], res_f)
+            cell_of = {(int(round(a / res_f)), int(round(b / res_f))): i for i, (a, b) in enumerate(zip(z["lon"], z["lat"]))}
+            idxs = np.array([cell_of.get((int(a), int(b)), -1) for a, b in zip(kx, ky)])
+            if (idxs >= 0).all():
+                t0 = dts.index(today.isoformat())
+                fcst = {"dates": dts, "t0": t0, "idx": idxs, "fetched_at": str(z["fetched_at"]),
+                        "precip": z["precipitation_sum"][idxs], "tmax": z["temperature_2m_max"][idxs],
+                        "tmin": z["temperature_2m_min"][idxs], "gust": z["wind_gusts_10m_max"][idxs]}
+            else:
+                print("Prévision ignorée : des fokontany n'ont pas de maille de prévision (relancer update_forecast.py).")
+        else:
+            print("Prévision ignorée : périmée ou ne contient pas la date du jour.")
+    s_m0, e_m0 = cfg["rainfall"]["season_start_month"], cfg["rainfall"]["season_end_month"]
+    in_rain = (today.month >= s_m0 or today.month <= e_m0) if s_m0 > e_m0 else (s_m0 <= today.month <= e_m0)
+    EWL = None   # niveaux d'alerte par fokontany
+    if fcst is not None:
+        horizon = cfg["forecast"].get("horizon_days", 7)
+        fut = slice(fcst["t0"], None)
+        lv, nums = EW.compute(fcst["precip"][:, fut], fcst["tmax"][:, fut], fcst["gust"][:, fut], cfg["alerts"], in_rain, horizon)
+        # crues de rivière (modèle GloFAS) : débit prévu / crue de 2, 5, 20 ans de la commune
+        flood_lv = np.zeros(len(LI0), dtype=int)
+        flood_ratio = np.full(len(LI0), np.nan)
+        flood_q = np.full(len(LI0), np.nan)
+        th_path, ff_path = country_data_dir(args.country) / "flood_thresholds.csv", grid_dir(args.country) / "flood_forecast.npz"
+        flood_info = {"available": False}
+        if th_path.exists() and ff_path.exists():
+            th = pd.read_csv(th_path, dtype={"pcode": str}).set_index("pcode")
+            zf = load_grid(ff_path)
+            fdates = [str(x) for x in zf["dates"]]
+            if today.isoformat() in fdates:
+                f0 = fdates.index(today.isoformat())
+                qmax = {pc: float(np.nanmax(zf["q"][i, f0:f0 + horizon])) if np.isfinite(zf["q"][i, f0:f0 + horizon]).any() else np.nan
+                        for i, pc in enumerate(zf["pcode"].astype(str))}
+                rl = cfg["flood"]["return_levels"]
+                for k, i in enumerate(LI0):
+                    c = units.at[i, "adm3"]
+                    if c in th.index and c in qmax and np.isfinite(qmax[c]):
+                        row = th.loc[c]
+                        q2 = row.get("q2", np.nan)
+                        if np.isfinite(q2) and q2 >= cfg["flood"]["min_q2_m3s"]:
+                            flood_q[k], flood_ratio[k] = qmax[c], qmax[c] / q2
+                            flood_lv[k] = 3 if qmax[c] >= row.get(f"q{rl[2]}", np.inf) else 2 if qmax[c] >= row.get(f"q{rl[1]}", np.inf) \
+                                else 1 if qmax[c] >= q2 else 0
+                flood_info = {"available": True, "fetched_at": str(zf["fetched_at"]), "n_communes": int(len(th)),
+                              "n_valid_thresholds": int(th.q2.notna().sum())}
+        lv["flood"] = flood_lv
+        nums["flood_ratio"], nums["flood_q"] = flood_ratio, flood_q
+        EWL = {"lv": lv, "nums": nums, "horizon": horizon, "flood": flood_info}
+
     # --- Scénarios de fin de saison (ensemble d'analogues, voir scripts/scenarios.py) ---
     import scenarios as SC
     from enso import season_months as _season_months
@@ -325,8 +389,12 @@ def main() -> None:
         s_m, e_m = cfg["rainfall"]["season_start_month"], cfg["rainfall"]["season_end_month"]
         y0s, y1s = SC.target_season(today, s_m, e_m)
         months = _season_months(y1s, s_m, e_m)
-        cov = SC.covered_fractions(months, season_start, dt.date.fromisoformat(through), months[0])
+        through_d = dt.date.fromisoformat(through)
+        cov = SC.covered_fractions(months, season_start, through_d, months[0])
         LI = np.where(leafmask)[0]
+        cov_obs = list(cov)
+        cascade = {"used": False}
+        known_mm = np.zeros(len(LI))
         lon, lat = units.lon.values[LI], units.lat.values[LI]
         g0, g1, gr = float(ms["lon0"]), float(ms["lat0"]), float(ms["res"])
         arr = ms["arr"]
@@ -335,6 +403,23 @@ def main() -> None:
         clim_m = np.stack([sample_grid(cl["clim"][mo - 1], float(cl["lon0"]), float(cl["lat0"]), float(cl["res"]), lon, lat)
                            for _, mo in months])
         act = units.act.values[LI] if any(c > 0 for c in cov) else np.zeros(len(LI))
+        if fcst is not None:
+            # étape 2 de la cascade : jours récents (analyse du modèle) puis prévision remplacent le climat jusqu'à l'horizon
+            s_first = dt.date(months[0][0], months[0][1], 1)
+            s_last = dt.date(months[-1][0], months[-1][1], calendar.monthrange(*months[-1])[1])
+            obs_through = through_d if season_start == f"{months[0][0]}-{months[0][1]:02d}" else None
+            k_start = obs_through + dt.timedelta(days=1) if obs_through else s_first
+            fdates = [dt.date.fromisoformat(x) for x in fcst["dates"]]
+            h_end = min(s_last, fdates[-1])
+            if fdates[0] <= k_start <= h_end:
+                sel = [j for j, d in enumerate(fdates) if k_start <= d <= h_end]
+                known_mm = np.nansum(fcst["precip"][:, sel], axis=1)
+                act = act + known_mm
+                cov = SC.covered_fractions(months, season_start, h_end, months[0], ignore_season_check=True)
+                cascade = {"used": True, "known_through": h_end.isoformat(), "days": len(sel), "fetched_at": fcst["fetched_at"],
+                           "observed_through": through if obs_through else None}
+            else:
+                print("Cascade prévision non appliquée : la prévision ne couvre pas le jour qui suit les dernières observations.")
         pct_y, norm_full = SC.final_pct(act, clim_m, series, cov, min_norm)
         fprobs, fweights = read_forecast(units, LI, anc, pct_y)
         sc_pct, nph = SC.scenario_values(pct_y, ms["phases"], fprobs)
@@ -374,8 +459,38 @@ def main() -> None:
         popU = SC.rollup_sum(units, leafmask, lift(popL))
         with np.errstate(invalid="ignore", divide="ignore"):
             pa_u = np.where(popU > 0, num / popU, np.nan)
-        scn = {"S": SCN, "pa": pa_u, "ex": num, "cov": cov, "season": f"{y0s}-{y1s}", "n": nph,
+        scn = {"S": SCN, "pa": pa_u, "ex": num, "cov": cov, "cov_obs": cov_obs, "cascade": cascade, "season": f"{y0s}-{y1s}", "n": nph,
                "years": [int(ms["years"][0]), int(ms["years"][-1])], "weighted": fweights is not None, "n_years": int(len(ms["years"]))}
+
+
+    # --- Alertes précoces : cumul vers les zones supérieures ---
+    EWU = None
+    if EWL is not None:
+        import scenarios as SC2
+        nU2 = len(units)
+        popL0 = pop[LI0]
+        area2 = units.area_km2.fillna(0).values
+
+        def lift2(v, fill=0.0):
+            a = np.full(nU2, fill, dtype=float)
+            a[LI0] = np.nan_to_num(v, nan=fill)
+            return a
+
+        lv_u = {h: SC2.rollup_max(units, leafmask, lift2(EWL["lv"][h])).astype(int) for h in EW.HAZARDS}
+        ppl_u = {h: SC2.rollup_sum(units, leafmask, lift2(np.where(EWL["lv"][h] >= 2, popL0, 0.0))) for h in EW.HAZARDS}
+        nums_u = {k: SC2.rollup_max(units, leafmask, lift2(v, fill=0.0)) for k, v in EWL["nums"].items()}
+        nd = min(10, fcst["precip"].shape[1] - fcst["t0"])
+        denA = SC2.rollup_sum(units, leafmask, lift2(np.ones(len(LI0))) * area2)
+        daily_p, daily_t = [], []
+        for j in range(nd):
+            for arr_, store in ((fcst["precip"], daily_p), (fcst["tmax"], daily_t)):
+                v = lift2(arr_[:, fcst["t0"] + j])
+                tot = SC2.rollup_sum(units, leafmask, v * area2)
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    u = np.where(denA > 0, tot / denA, np.nan)
+                u[LI0] = arr_[:, fcst["t0"] + j]
+                store.append(u)
+        EWU = {"lv": lv_u, "ppl": ppl_u, "nums": nums_u, "p": np.array(daily_p), "t": np.array(daily_t)}
 
     def pack(i: int) -> dict:
         r = units.iloc[i]
@@ -399,6 +514,16 @@ def main() -> None:
                              int(round(v["e"][i])), int(round(v["t"][i])), int(round(v["w"][i]))] for sid, v in scn["S"].items()}
             d["pa"] = None if not np.isfinite(scn["pa"][i]) else round(float(scn["pa"][i]), 3)
             d["ex"] = int(round(scn["ex"][i]))
+        if EWU is not None:
+            d["ew"] = [int(EWU["lv"][h][i]) for h in EW.HAZARDS]
+            d["ewp"] = [int(round(EWU["ppl"][h][i])) for h in EW.HAZARDS]
+            nm = EWU["nums"]
+            fr = nm["flood_ratio"][i]
+            d["ev"] = [round(float(nm["rain_max"][i]), 1), round(float(nm["rain_3d"][i]), 1), round(float(nm["tmax_max"][i]), 1),
+                       round(float(nm["gust_max"][i]), 1), int(nm["dry_run"][i]),
+                       round(float(fr), 2) if fr > 0 else None, round(float(nm["flood_q"][i]), 1) if nm["flood_q"][i] > 0 else None]
+            d["fr"] = [None if not np.isfinite(x) else int(round(float(x))) for x in EWU["p"][:, i]]
+            d["ft"] = [None if not np.isfinite(x) else int(round(float(x))) for x in EWU["t"][:, i]]
         al = sector_alerts.get(r["pcode"])
         if al:
             d["al"] = al
@@ -427,11 +552,16 @@ def main() -> None:
     meta = {
         "enso": enso_state, "has_history": hist_ok,
         "scenarios": None if scn is None else {
-            "season": scn["season"], "observed_share": round(float(np.mean(scn["cov"])), 2), "years": scn["years"],
-            "n_years": scn["n_years"], "weighted_by_forecast": scn["weighted"], "n_phase": scn["n"], "wet_threshold_pct": wet_thr,
+            "season": scn["season"], "observed_share": round(float(np.mean(scn["cov_obs"])), 2), "years": scn["years"],
+            "cascade": scn["cascade"], "n_years": scn["n_years"], "weighted_by_forecast": scn["weighted"], "n_phase": scn["n"], "wet_threshold_pct": wet_thr,
             "list": [x for x in SCENARIO_LIST if x["id"] in scn["S"]]},
         "playbook": _load_playbook(),
         "sector_alerts": len(sector_alerts),
+        "forecast": None if EWL is None else {
+            "fetched_at": fcst["fetched_at"], "first": fcst["dates"][0], "last": fcst["dates"][-1], "today": today.isoformat(),
+            "horizon_days": EWL["horizon"], "hazards": EW.HAZARDS, "hazard_labels": EW.HAZARD_LABEL, "level_names": EW.LEVEL_NAME,
+            "thresholds": cfg["alerts"], "flood": EWL["flood"], "in_rain_season": bool(in_rain),
+            "n_days_series": int(EWU["p"].shape[0])},
         "sector_names": [{"id": x["id"], "label": x["label"]} for x in load_yaml("sectors.yml")["sectors"]],
         "country": cfg["name"], "slug": cfg["slug"], "iso3": cfg["iso3"],
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),

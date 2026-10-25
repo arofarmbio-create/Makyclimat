@@ -19,6 +19,7 @@
               x: ["#f7f4f9", "#d4b9da", "#c994c7", "#dd3497", "#7a0177"] };
   var SIGNED_COLORS = ["#b2182b", "#ef8a62", "#f1f1f1", "#67a9cf", "#2166ac"];
   function styleOfLayer(k) {
+    if (/^ew/.test(k)) return "ew";
     if (k === "l") return "alert";
     if (k === "pc") return "pct";
     var d = layerDef(k);
@@ -38,7 +39,14 @@
     { id: "g", label: "Écart : cibles moins bénéficiaires déclarés" }, { id: "p", label: "Population" },
     { id: "pa", label: "Probabilité d'alerte sécheresse en fin de saison", fmt: "pct" },
     { id: "ex", label: "Population exposée attendue (moyenne des saisons possibles)" },
-    { id: "w", label: "Population exposée à l'excès de pluie (scénario humide ou choisi)" }];
+    { id: "w", label: "Population exposée à l'excès de pluie (scénario humide ou choisi)" },
+    { id: "ewm", label: "Alerte précoce : niveau maximal (7 prochains jours)", ew: true },
+    { id: "ew0", label: "Alerte précoce : pluies fortes", ew: true }, { id: "ew4", label: "Alerte précoce : crue de rivière", ew: true },
+    { id: "ew1", label: "Alerte précoce : vent fort", ew: true }, { id: "ew2", label: "Alerte précoce : forte chaleur", ew: true },
+    { id: "ew3", label: "Alerte précoce : période sèche prolongée", ew: true }];
+  var EW_COLORS = ["#d7ebd2", "#f2d16b", "#e8893a", "#b2262e"];
+  var EW_ICON = { rain: "🌧", wind: "💨", heat: "🌡", dry: "☀", flood: "🌊" };
+  var HAZ = ["rain", "wind", "heat", "dry", "flood"];
 
   var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null, scn: "", simple: false,
             view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all" };
@@ -92,7 +100,7 @@
   function computeBreaks() {
     var k = S.layer;
     var st = styleOfLayer(k);
-    if (st === "alert" || st === "pct") { S.breaks = []; return; }
+    if (st === "alert" || st === "pct" || st === "ew") { S.breaks = []; return; }
     var vals = S.view.feats.map(function (f) { return val(S.view.metrics[f.properties.c], k); });
     if (st === "signed") {
       var ab = vals.filter(function (x) { return x !== null && x !== undefined && isFinite(x); }).map(Math.abs).sort(function (a, b) { return a - b; });
@@ -106,6 +114,7 @@
     var m = S.view.metrics[f.properties.c], k = S.layer, v = val(m, k);
     if (v === null || v === undefined) return "#cccccc";
     if (k === "l") return ALERT_COLORS[v] || "#cccccc";
+    if (/^ew/.test(k)) return EW_COLORS[v] || "#cccccc";
     var st = styleOfLayer(k);
     if (st === "pct") { for (var i = 0; i < PCT_BINS.length; i++) if (v < PCT_BINS[i].max) return PCT_BINS[i].color; }
     if (st === "signed") {
@@ -145,7 +154,7 @@
 
   function tipText(f) {
     var m = S.view.metrics[f.properties.c], k = S.layer, v = val(m, k);
-    var txt = k === "l" ? levelName(v) : k === "pc" ? MC.fmtPct(v) : fmtLayer(k, v);
+    var txt = k === "l" ? levelName(v) : k === "pc" ? MC.fmtPct(v) : /^ew/.test(k) ? S.meta.forecast.level_names[v] : fmtLayer(k, v);
     return "<b>" + esc(f.properties.n) + "</b><br>" + esc(layerDef(k).label) + " : " + txt;
   }
 
@@ -185,6 +194,9 @@
     else if (S.simIdx !== null) h += '<div><i style="background:#fff"></i> <em>scénario : pluie × ' + S.meta.rain_factors[S.simIdx].toFixed(2).replace(".", ",") + "</em></div>";
     if (k === "l") {
       [1, 2, 3, 4, 0].forEach(function (l) { h += '<div><i style="background:' + ALERT_COLORS[l] + '"></i>' + esc(levelName(l)) + "</div>"; });
+    } else if (styleOfLayer(k) === "ew") {
+      S.meta.forecast.level_names.forEach(function (nm, i) { h += '<div><i style="background:' + EW_COLORS[i] + '"></i>' + esc(nm) + "</div>"; });
+      h += '<div class="note">Prévision météo, 7 prochains jours. Seuils provisoires ; alertes officielles : Météo Madagascar et BNGRC.</div>';
     } else if (styleOfLayer(k) === "signed") {
       var sb = S.breaks || [0, 0];
       var dry = layerDef(k).ext.id.indexOf("corr") >= 0 ? "corrélation négative (moins de pluie quand l'ONI monte)" : "baisse";
@@ -254,7 +266,7 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
-    h += alertsSection(m) + scenarioTable(m);
+    h += forecastSection(m) + alertsSection(m) + scenarioTable(m);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -309,7 +321,8 @@
     var obs = sc.observed_share > 0 ? "Les pluies déjà tombées (" + Math.round(sc.observed_share * 100) + " % de la saison écoulée) sont conservées ; " : "La saison n'a pas encore commencé : ";
     $("scnnote").innerHTML = esc(obs) + "la pluie restante est celle de chacune des " + sc.n_years + " saisons passées (" + sc.years[0] + "–" + sc.years[1] + "). " +
       "Ce n'est pas une prévision météo : ce sont des situations qui se sont déjà produites." +
-      (sc.weighted_by_forecast ? " Les années sont pondérées par la prévision saisonnière fournie." : "");
+      (sc.weighted_by_forecast ? " Les années sont pondérées par la prévision saisonnière fournie." : "") +
+      (sc.cascade && sc.cascade.used ? " La prévision météo est intégrée jusqu'au " + fmtDate(sc.cascade.known_through) + " (elle remplace le climat sur cette période)." : "");
     sel.addEventListener("change", function () {
       S.scn = sel.value;
       if (S.scn) { $("sim").value = S.meta.rain_factors.indexOf(1); S.simIdx = null; $("simlabel").textContent = "observée"; }
@@ -373,7 +386,7 @@
     var pa = m.pa, tier = pa >= 0.5 ? ["élevé", "#b2262e"] : pa >= 0.25 ? ["moyen", "#e8893a"] : ["faible", "#3b8a3e"];
     var tenth = Math.round(pa * 10);
     var wet = m.sc.hum && m.p && m.sc.hum[4] > 0.2 * m.p;
-    var h = "<h3>Chez moi</h3><div class='bigname'>" + name + "</div>" +
+    var h = "<h3>Chez moi</h3><div class='bigname'>" + name + "</div>" + simpleAlerts(m) + "<h3>La saison à venir</h3>" +
       "<div class='risk' style='border-color:" + tier[1] + "'><b style='color:" + tier[1] + "'>Risque de saison trop sèche : " + tier[0] + "</b>" +
       "<div>Saison " + esc(sc.season.replace("-", "–")) + " : sur 10 saisons comparables aux années passées, environ <b>" + tenth + "</b> ont été trop sèches pour cette zone.</div></div>";
     if (sc.observed_share > 0 && m.pc !== undefined) h += "<p>Pluie tombée jusqu'ici : <b>" + Math.round(m.pc) + " %</b> de la normale.</p>";
@@ -388,6 +401,67 @@
       if (wet) h += "<h3>Si les pluies sont très fortes</h3><ul class='advice'>" + pb.household.wet.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
     }
     return h + "<div class='note'>Information indicative, calculée à partir des saisons passées : ce n'est pas une prévision de la météo. Écoutez la météo et les consignes du fokontany, de la commune et du BNGRC.</div>";
+  }
+
+
+  /* ---------- Alerte précoce (prévision) ---------- */
+  function ewMessage(h, m) {
+    var ev = m.ev || [];
+    if (h === "rain") return "pluie jusqu'à " + Math.round(ev[0]) + " mm en un jour (" + Math.round(ev[1]) + " mm sur 3 jours)";
+    if (h === "wind") return "rafales jusqu'à " + Math.round(ev[3]) + " km/h";
+    if (h === "heat") return "jusqu'à " + Math.round(ev[2]) + " °C";
+    if (h === "dry") return ev[4] + " jours secs de suite prévus";
+    if (h === "flood") return ev[5] ? "débit prévu = " + String(ev[5]).replace(".", ",") + " × la crue de 2 ans (" + Math.round(ev[6]) + " m³/s)" : "";
+    return "";
+  }
+
+  function forecastSection(m) {
+    var F = S.meta.forecast;
+    if (!F || !m.ew) return "";
+    var lvlNames = F.level_names, mx = Math.max.apply(null, m.ew);
+    var h = '<div class="ew"><h3>Alerte précoce, 7 prochains jours</h3>';
+    HAZ.forEach(function (hz, i) {
+      var lv = m.ew[i];
+      h += '<div class="row ewrow"><span><i class="ewdot" style="background:' + EW_COLORS[lv] + '"></i>' + EW_ICON[hz] + " <b>" + esc(F.hazard_labels[hz]) + "</b>" +
+        (lv > 0 ? " : " + esc(ewMessage(hz, m)) : "") + "</span><span>" + esc(lvlNames[lv]) +
+        (S.view.lvl < 4 && m.ewp && m.ewp[i] > 0 ? " · " + MC.fmtInt(m.ewp[i]) + " pers." : "") + "</span></div>";
+    });
+    if (!F.in_rain_season) h += '<div class="note">Hors saison des pluies : l\'alerte « période sèche » est désactivée.</div>';
+    if (mx === 0) h += '<div class="note">Aucune alerte prévue pour cette zone dans les 7 prochains jours.</div>';
+    if (m.fr && m.fr.length) {
+      var n = m.fr.length, W = 300, Ht = 96, padL = 4, padB = 14, bw = (W - padL) / n, mxp = Math.max(20, Math.max.apply(null, m.fr.filter(function (v) { return v !== null; }))), sy = (Ht - padB - 12) / mxp;
+      var d0 = new Date(F.today + "T00:00:00");
+      var svg = '<svg viewBox="0 0 ' + W + " " + Ht + '" width="100%" role="img" aria-label="Pluie prévue (barres) et température maximale (points) pour les 10 prochains jours">';
+      m.fr.forEach(function (v, i) {
+        var d = new Date(d0.getTime() + i * 86400000), lab = d.getDate() + "/" + (d.getMonth() + 1);
+        if (v !== null) svg += '<rect x="' + (padL + i * bw + 2) + '" y="' + (Ht - padB - v * sy) + '" width="' + (bw - 4) + '" height="' + Math.max(0.5, v * sy) + '" fill="#3b7dbf"><title>' + lab + " : " + v + " mm</title></rect>" +
+          (v >= 1 ? '<text x="' + (padL + i * bw + bw / 2) + '" y="' + (Ht - padB - v * sy - 2) + '" font-size="8" text-anchor="middle" fill="#245">' + v + "</text>" : "");
+        if (m.ft && m.ft[i] !== null) svg += '<circle cx="' + (padL + i * bw + bw / 2) + '" cy="' + (8 + (Math.max(0, 45 - m.ft[i])) * 0.5) + '" r="2.5" fill="#d95f02"><title>' + lab + " : " + m.ft[i] + " °C max</title></circle>";
+        svg += '<text x="' + (padL + i * bw + bw / 2) + '" y="' + (Ht - 3) + '" font-size="8" text-anchor="middle" fill="#555">' + lab + "</text>";
+      });
+      h += svg + '</svg><div class="note">Barres : pluie (mm/jour). Points orange : température maximale (plus haut = plus chaud).' + (S.view.lvl > 3 ? "" : " Moyenne de la zone.") + "</div>";
+    }
+    h += '<div class="note">Prévision du modèle météo, mise à jour ' + esc(fmtDateTime(F.fetched_at)) + ". Maille d'environ 28 km : à lire comme une indication par zone ; les bulletins officiels de Météo Madagascar et du BNGRC priment.</div></div>";
+    return h;
+  }
+
+  function fmtDateTime(iso) {
+    try { var d = new Date(iso); return d.toLocaleString("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }); } catch (e) { return iso; }
+  }
+
+  function simpleAlerts(m) {
+    var F = S.meta.forecast, pb = S.meta.playbook;
+    if (!F || !m.ew) return "";
+    var h = "<h3>Alerte pour les 7 prochains jours</h3>", any = false;
+    HAZ.forEach(function (hz, i) {
+      if (m.ew[i] > 0) {
+        any = true;
+        h += "<div class='risk' style='border-color:" + EW_COLORS[m.ew[i]] + "'><b>" + EW_ICON[hz] + " " + esc(F.hazard_labels[hz]) + " : " + esc(F.level_names[m.ew[i]]) + "</b><div>" + esc(ewMessage(hz, m)) + "</div>" +
+          (pb && pb.household_alert && pb.household_alert[hz] ? "<ul class='advice'>" + pb.household_alert[hz].map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" : "") + "</div>";
+      }
+    });
+    if (!any) h += "<p>Aucune alerte prévue chez vous dans les 7 prochains jours.</p>";
+    return h + "<div class='note'>Mise à jour : " + esc(fmtDateTime(F.fetched_at)) + ". Écoutez aussi la radio, la Météo et le BNGRC.</div>";
   }
 
   /* ---------- Historique climat et ENSO ---------- */
@@ -422,6 +496,14 @@
     }).catch(function () { var b = $("histbox"); if (b) b.remove(); });
   }
 
+  function renderForecastBadge() {
+    var F = S.meta.forecast, b = $("fcbadge");
+    if (!b) return;
+    if (!F) { b.hidden = true; return; }
+    b.hidden = false;
+    b.textContent = "Prévision du " + fmtDateTime(F.fetched_at);
+  }
+
   function renderEnso() {
     var e = S.meta.enso, b = $("enso");
     if (!e || !b) return;
@@ -436,7 +518,7 @@
     (S.meta.external || []).forEach(function (x) {
       if (!LAYERS.some(function (l) { return l.id === "x:" + x.id; })) LAYERS.push({ id: "x:" + x.id, label: x.label, ext: x });
     });
-    LAYERS = LAYERS.filter(function (l) { return S.meta.scenarios || ["pa", "ex", "w"].indexOf(l.id) < 0; });
+    LAYERS = LAYERS.filter(function (l) { return (S.meta.scenarios || ["pa", "ex", "w"].indexOf(l.id) < 0) && (S.meta.forecast || !l.ew); });
     LAYERS.forEach(function (l) {
       var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o);
     });
@@ -649,7 +731,7 @@
       $("country").textContent = S.meta.country;
       $("through").textContent = "Pluie jusqu'au " + fmtDate(S.meta.data_through);
       document.title = "MakyClimat — " + S.meta.country;
-      renderEnso();
+      renderEnso(); renderForecastBadge();
       setupMap(); setupControls();
       var hash = location.hash.replace("#", "").split("/").filter(Boolean).slice(0, 3);
       var p = hash.length ? ensureIndex().then(function () {

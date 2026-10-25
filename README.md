@@ -120,3 +120,16 @@ docs/          site web publié (carte, simulation, catalogue)
 tests/         tests automatiques
 .github/       mises à jour et publication automatiques
 ```
+
+## Scénarios, prévision et alerte précoce
+
+**Chaîne de précision** : climat (normale CHIRPS 1991–2020, tendance, ENSO) → corrigé par la prévision météo (Open-Meteo, 16 jours, actualisée toutes les 6 h) → corrigé par les observations du jour (CHIRPS). Les jours de pluie connus remplacent l'analogue climatique jusqu'à l'horizon connu.
+
+- **Scénarios de saison** (`scripts/scenarios.py`) : ensemble d'analogues sur ~44 saisons (sec P10, médian, humide P90, El Niño, La Niña, et « prévision saisonnière » si `inputs/prevision_saisonniere.csv` est fourni). Sorties : probabilité d'alerte, population exposée attendue, excès de pluie.
+- **Alerte précoce** (`scripts/early_warning.py`) : pluie (jour / 3 jours), rafales, chaleur, saison sèche prolongée, crue (débit GloFAS vs crues de 2, 5, 20 ans par commune, loi de Gumbel). Niveaux 0–3 (Vigilance, Alerte, Alerte maximale). **Les seuils de `config/countries/*.yml` sont provisoires** : à valider avec Météo Madagascar / BNGRC.
+- **Seuils de crue** : workflow « 3 - Seuils de crue des rivières » (une fois, `update_floods.py --thresholds`).
+- **Plan d'action** par secteur et conseils ménages : `config/playbook.yml` (parts de population par secteur approximatives, à valider avec les clusters).
+- **Alertes sectorielles existantes** : importées depuis `inputs/alertes_secteurs.csv` et affichées sans être remplacées.
+- **Vue simple « Chez moi »** : messages en langage courant pour ménages, paysans, pêcheurs.
+
+Limites : données de pluie, vent et température modélisées/satellitaires, pas des mesures de station ; la fiabilité mesurée (hindcast sur 44 saisons) et le branchement des API BNGRC/Météo sont les prochaines étapes.

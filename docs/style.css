@@ -109,3 +109,6 @@ footer { padding: 10px 16px; font-size: 12px; color: var(--muted); border-top: 1
 .advice { font-size: 16px; line-height: 1.45; margin-left: 18px; padding: 0; }
 .bigprompt { font-size: 17px; }
 body.simple #info { font-size: 16px; }
+
+.ewdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; border: 1px solid #0003; }
+.ew { margin: 8px 0; }

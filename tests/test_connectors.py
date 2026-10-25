@@ -183,6 +183,65 @@ def test_hapi() -> None:
     (common.country_data_dir("demo") / "external" / "hapi.csv").unlink()
 
 
+def test_forecast_and_floods() -> None:
+    import datetime as dt
+
+    import openmeteo as om
+    import update_floods as uf
+    import update_forecast as ufc
+    import common
+
+    units = common.read_units("demo")
+    lons, lats = ufc.build_points(units, 0.25)
+    leaves = units[units.level == 4]
+    ix, iy = om.cell_key(leaves.lon.to_numpy(), leaves.lat.to_numpy(), 0.25)
+    keys = {(int(a), int(b)) for a, b in zip(np.round(lons / 0.25), np.round(lats / 0.25))}
+    check("prévision : chaque fokontany a sa maille de 0,25°", all((int(a), int(b)) in keys for a, b in zip(ix, iy)), f"{len(lons)} mailles")
+
+    calls = []
+    days = [(dt.date(2026, 2, 1) + dt.timedelta(days=i)).isoformat() for i in range(5)]
+
+    def fake(url, params, **kw):
+        calls.append((url, params))
+        n = len(params["latitude"].split(","))
+        if "flood" in url:
+            return [{"latitude": 1.0, "longitude": 2.0, "daily": {"time": days, "river_discharge": [1.0, None, 3.0, 4.0, 5.0]}} for _ in range(n)]
+        d = {"time": days}
+        for v in om.DAILY_VARS:
+            d[v] = [1.0, 2.0, None, 4.0, 5.0]
+        return [{"daily": dict(d)} for _ in range(n)] if n > 1 else {"daily": d}
+
+    om.get_json = fake
+    dates, arr = ufc.fetch(lons[:85], lats[:85], {"forecast_days": 4, "past_days": 1}, "Indian/Antananarivo", batch=40)
+    check("prévision : 85 mailles envoyées par lots de 40 (3 appels)", len(calls) == 3 and arr["precipitation_sum"].shape == (85, 5))
+    check("prévision : valeur manquante -> NaN", np.isnan(arr["precipitation_sum"][0, 2]) and arr["precipitation_sum"][0, 3] == 4.0)
+    check("prévision : variables et fuseau demandés", "wind_gusts_10m_max" in calls[0][1]["daily"] and calls[0][1]["timezone"] == "Indian/Antananarivo")
+    calls.clear()
+    com = units[units.level == 3][["pcode", "lon", "lat"]].reset_index(drop=True)
+    fd, q = uf.forecast(com.iloc[:5], {"forecast_days": 16})
+    check("débits : prévision lue, valeur manquante -> NaN", q.shape == (5, 5) and np.isnan(q[0, 1]) and "flood" in calls[0][0])
+    # lois de Gumbel : on retrouve les débits de crue d'un échantillon connu
+    rng = np.random.default_rng(1)
+    mu, beta = 100.0, 30.0
+    sample = rng.gumbel(mu, beta, 20000)
+    lv = uf.gumbel_levels(sample)
+    true2 = mu - beta * np.log(-np.log(0.5))
+    true20 = mu - beta * np.log(-np.log(1 - 1 / 20))
+    check("Gumbel : crues de 2 et 20 ans retrouvées à 3 %", abs(lv[2] - true2) / true2 < 0.03 and abs(lv[20] - true20) / true20 < 0.03,
+          f"{lv[2]:.1f}/{true2:.1f} {lv[20]:.1f}/{true20:.1f}")
+    check("Gumbel : trop peu d'années -> pas de seuil", np.isnan(uf.gumbel_levels([1, 2, 3])[2]))
+    idx = [f"{y}-{m:02d}-{d:02d}" for y in (2000, 2001) for m in range(1, 13) for d in range(1, 29)]
+    vals = [float(i) for i in range(len(idx))]
+    check("maxima annuels : années incomplètes ignorées", len(uf.annual_maxima(idx[:250], vals[:250])) == 0)
+    om.get_json = lambda url, params, **kw: [{"latitude": 1.0, "longitude": 2.0, "daily": {
+        "time": [f"{y}-{m:02d}-{d:02d}" for y in range(1984, 2000) for m in range(1, 13) for d in range(1, 29)] +
+                [f"{y}-12-{d:02d}" for y in range(1984, 2000) for d in range(29, 32)],
+        "river_discharge": list(np.random.default_rng(3).gumbel(50, 10, 16 * 12 * 28 + 16 * 3))}} for _ in params["latitude"].split(",")]
+    th = uf.thresholds({"flood": {"history_start": 1984}}, com.iloc[:12], batch=10, last_year=1999)
+    check("seuils de crue : une ligne par commune, q2 < q5 < q10 < q20", len(th) == 12 and (th.q2 < th.q5).all() and (th.q5 < th.q10).all() and (th.q10 < th.q20).all(),
+          str(th.iloc[0][["q2", "q5", "q10", "q20", "n_years"]].to_dict()))
+
+
 def test_population_grid() -> None:
     import geopandas as gpd
     import rasterio
@@ -211,6 +270,7 @@ def test_population_grid() -> None:
 
 
 if __name__ == "__main__":
+    test_forecast_and_floods()
     test_hapi()
     test_population_grid()
     test_boundaries_and_population()
