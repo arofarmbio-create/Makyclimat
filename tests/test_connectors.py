@@ -328,8 +328,23 @@ def test_osm_services() -> None:
     check("OSM : la commune reçoit la somme de ses fokontany", out.get(parent, {}).get("osm_ecoles") == 3.0)
 
 
+def test_flood_exposure() -> None:
+    import connector_heigit as CH
+    fl = pd.DataFrame({"ADM2_PCODE": ["MG11117", "MG11119"], "RP10_crops_30cm_croppct": [4.5, 0.0], "RP100_crops_30cm_croppct": [12.0, 1.0],
+                       "RP10_education_30cm_pct": [9, 2], "RP100_education_30cm_pct": [11, 5], "RP100_education_30cm_count": [13, 3],
+                       "RP100_hospitals_30cm_pct": [0, 0], "RP100_primary_healthcare_30cm_pct": [12, 0], "RP100_children_u5_30cm": [34736, 4540]})
+    d = CH.build_flood(fl)
+    g = lambda pc, ind: float(d[(d.pcode == pc) & (d.indicateur == ind)].valeur.iloc[0])
+    check("crues : part des terres cultivées inondées, RP100", g("MG11117", "crue_rp100_cultures_pct") == 12.0)
+    check("crues : écoles touchées (nombre) et enfants de moins de 5 ans", g("MG11117", "crue_rp100_ecoles_nb") == 13 and g("MG11119", "crue_rp100_enfants5") == 4540)
+    check("crues : colonnes absentes ignorées, pourcentages dans [0, 100]", d.valeur.notna().all() and d[d.indicateur.str.endswith("_pct")].valeur.between(0, 100).all())
+    defs = {i["id"]: i for i in __import__("common").load_yaml("indicators.yml")["indicators"]}
+    check("crues : tous les indicateurs produits sont définis", set(d.indicateur) <= set(defs))
+
+
 if __name__ == "__main__":
     test_heigit()
+    test_flood_exposure()
     test_osm_services()
     test_forecast_and_floods()
     test_hapi()

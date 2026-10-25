@@ -439,6 +439,191 @@ indicators:
     source: "HeiGIT GAIA (indice d'accès rural, définition Banque mondiale) via HDX ; surface des routes : Mapillary et Planet ; ne compte pas les pistes en terre"
     frequency: Ponctuelle
     status: active
+  # ---------------- EXPOSITION AUX CRUES (HeiGIT) ----------------
+  - id: crue_rp10_cultures_pct
+    label: "Part des terres cultivées inondées, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (valeur du district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [agriculture, food_security, drr]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp10_ecoles_pct
+    label: "Part des écoles inondées, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (valeur du district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [education, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp10_hopitaux_pct
+    label: "Part des hôpitaux inondés, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (valeur du district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp10_csb_pct
+    label: "Part des centres de santé de base inondés, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (valeur du district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp10_ecoles_nb
+    label: "Écoles inondées, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (nombre, district)"
+    unit: "établissements"
+    format: int
+    aggregate: sum
+    sectors: [education, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp10_hopitaux_nb
+    label: "Hôpitaux inondés, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (nombre, district)"
+    unit: "établissements"
+    format: int
+    aggregate: sum
+    sectors: [health, drr]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp10_csb_nb
+    label: "Centres de santé de base inondés, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (nombre, district)"
+    unit: "établissements"
+    format: int
+    aggregate: sum
+    sectors: [health, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp10_enfants5
+    label: "Enfants de moins de 5 ans en zone inondable, crue décennale (fréquente), hauteur d'eau d'au moins 30 cm (nombre, district)"
+    unit: "enfants"
+    format: int
+    aggregate: sum
+    sectors: [health, nutrition, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp100_cultures_pct
+    label: "Part des terres cultivées inondées, crue centennale (rare), hauteur d'eau d'au moins 30 cm (valeur du district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [agriculture, food_security, drr]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp100_ecoles_pct
+    label: "Part des écoles inondées, crue centennale (rare), hauteur d'eau d'au moins 30 cm (valeur du district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [education, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp100_hopitaux_pct
+    label: "Part des hôpitaux inondés, crue centennale (rare), hauteur d'eau d'au moins 30 cm (valeur du district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp100_csb_pct
+    label: "Part des centres de santé de base inondés, crue centennale (rare), hauteur d'eau d'au moins 30 cm (valeur du district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp100_ecoles_nb
+    label: "Écoles inondées, crue centennale (rare), hauteur d'eau d'au moins 30 cm (nombre, district)"
+    unit: "établissements"
+    format: int
+    aggregate: sum
+    sectors: [education, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp100_hopitaux_nb
+    label: "Hôpitaux inondés, crue centennale (rare), hauteur d'eau d'au moins 30 cm (nombre, district)"
+    unit: "établissements"
+    format: int
+    aggregate: sum
+    sectors: [health, drr]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp100_csb_nb
+    label: "Centres de santé de base inondés, crue centennale (rare), hauteur d'eau d'au moins 30 cm (nombre, district)"
+    unit: "établissements"
+    format: int
+    aggregate: sum
+    sectors: [health, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
+  - id: crue_rp100_enfants5
+    label: "Enfants de moins de 5 ans en zone inondable, crue centennale (rare), hauteur d'eau d'au moins 30 cm (nombre, district)"
+    unit: "enfants"
+    format: int
+    aggregate: sum
+    sectors: [health, nutrition, drr, wash]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
+    frequency: Ponctuelle
+    status: active
   # ---------------- SERVICES CARTOGRAPHIÉS (OpenStreetMap) : comptes minimaux, pas un recensement ----------------
   - id: osm_ecoles
     label: "Écoles cartographiées dans OpenStreetMap (nombre minimal : zéro = rien de cartographié, pas forcément aucune école)"
