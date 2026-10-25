@@ -1,2 +1,80 @@
-== OSM Overpass OK : 5215 éléments en 86 s ; 3944 écoles, 1209 formations sanitaires, dont 320 hôpitaux
-   fokontany : 17465 ; avec école 2152 ; avec formation sanitaire 928 ; total écoles rattachées 3925, formations 1205
+== MDG_ADM2_flood_exposure.csv (120, 69)
+colonnes: ['ADM2_PCODE', 'RP10_crops_30cm_km2', 'RP10_crops_30cm_areapct', 'RP10_crops_30cm_croppct', 'RP10_female_pop_30cm', 'RP10_children_u5_30cm', 'RP10_female_u5_30cm', 'RP10_elderly_30cm', 'RP10_pop_u15_30cm', 'RP10_female_u15_30cm', 'RP10_wra_pop_30cm', 'RP10_dependency_ratio_30cm', 'RP10_education_30cm_pct', 'RP10_education_30cm_count', 'RP10_hospitals_30cm_pct', 'RP10_hospitals_30cm_count', 'RP10_primary_healthcare_30cm_pct', 'RP10_primary_healthcare_30cm_count', 'RP50_crops_30cm_km2', 'RP50_crops_30cm_areapct', 'RP50_crops_30cm_croppct', 'RP50_female_pop_30cm', 'RP50_children_u5_30cm', 'RP50_female_u5_30cm', 'RP50_elderly_30cm', 'RP50_pop_u15_30cm', 'RP50_female_u15_30cm', 'RP50_wra_pop_30cm', 'RP50_dependency_ratio_30cm', 'RP50_education_30cm_pct', 'RP50_education_30cm_count', 'RP50_hospitals_30cm_pct', 'RP50_hospitals_30cm_count', 'RP50_primary_healthcare_30cm_pct', 'RP50_primary_healthcare_30cm_count', 'RP100_crops_30cm_km2', 'RP100_crops_30cm_areapct', 'RP100_crops_30cm_croppct', 'RP100_female_pop_30cm', 'RP100_children_u5_30cm', 'RP100_female_u5_30cm', 'RP100_elderly_30cm', 'RP100_pop_u15_30cm', 'RP100_female_u15_30cm', 'RP100_wra_pop_30cm', 'RP100_dependency_ratio_30cm', 'RP100_education_30cm_pct', 'RP100_education_30cm_count', 'RP100_hospitals_30cm_pct', 'RP100_hospitals_30cm_count', 'RP100_primary_healthcare_30cm_pct', 'RP100_primary_healthcare_30cm_count', 'RP500_crops_30cm_km2', 'RP500_crops_30cm_areapct', 'RP500_crops_30cm_croppct', 'RP500_female_pop_30cm', 'RP500_children_u5_30cm', 'RP500_female_u5_30cm', 'RP500_elderly_30cm', 'RP500_pop_u15_30cm', 'RP500_female_u15_30cm', 'RP500_wra_pop_30cm', 'RP500_dependency_ratio_30cm', 'RP500_education_30cm_pct', 'RP500_education_30cm_count', 'RP500_hospitals_30cm_pct', 'RP500_hospitals_30cm_count', 'RP500_primary_healthcare_30cm_pct', 'RP500_primary_healthcare_30cm_count']
+                                           0        1        2
+ADM2_PCODE                           MG11117  MG11119  MG11122
+RP10_crops_30cm_km2                      0.0      0.0      0.0
+RP10_crops_30cm_areapct                  0.0      0.0      0.0
+RP10_crops_30cm_croppct                  0.0      0.0      0.0
+RP10_female_pop_30cm                  118851    16540    33744
+RP10_children_u5_30cm                  32621     4540     9262
+RP10_female_u5_30cm                    16089     2239     4568
+RP10_elderly_30cm                       8622     1200     2448
+RP10_pop_u15_30cm                      90046    12531    25566
+RP10_female_u15_30cm                   44436     6184    12616
+RP10_wra_pop_30cm                      59775     8319    16971
+RP10_dependency_ratio_30cm             70.57    70.57    70.57
+RP10_education_30cm_pct                    9        2        1
+RP10_education_30cm_count                 11        1        1
+RP10_hospitals_30cm_pct                    0        0        0
+RP10_hospitals_30cm_count                  0        0        0
+RP10_primary_healthcare_30cm_pct          12        0        0
+RP10_primary_healthcare_30cm_count         3        0        0
+RP50_crops_30cm_km2                      0.0      0.0      0.0
+RP50_crops_30cm_areapct                  0.0      0.0      0.0
+RP50_crops_30cm_croppct                  0.0      0.0      0.0
+RP50_female_pop_30cm                  124796    16540    33744
+RP50_children_u5_30cm                  34253     4540     9262
+RP50_female_u5_30cm                    16894     2239     4568
+RP50_elderly_30cm                       9053     1200     2448
+RP50_pop_u15_30cm                      94550    12531    25566
+RP50_female_u15_30cm                   46658     6184    12616
+RP50_wra_pop_30cm                      62765     8319    16971
+RP50_dependency_ratio_30cm             70.57    70.57    70.57
+RP50_education_30cm_pct                   11        2        1
+RP50_education_30cm_count                 13        1        1
+RP50_hospitals_30cm_pct                    0        0        0
+RP50_hospitals_30cm_count                  0        0        0
+RP50_primary_healthcare_30cm_pct          12        0        0
+RP50_primary_healthcare_30cm_count         3        0        0
+RP100_crops_30cm_km2                     0.0      0.0      0.0
+RP100_crops_30cm_areapct                 0.0      0.0      0.0
+RP100_crops_30cm_croppct                 0.0      0.0      0.0
+RP100_female_pop_30cm                 126553    16540    33744
+RP100_children_u5_30cm                 34736     4540     9262
+RP100_female_u5_30cm                   17132     2239     4568
+RP100_elderly_30cm                      9181     1200     2448
+RP100_pop_u15_30cm                     95882    12531    25566
+RP100_female_u15_30cm                  47316     6184    12616
+RP100_wra_pop_30cm                     63649     8319    16971
+RP100_dependency_ratio_30cm            70.57    70.57    70.57
+RP100_education_30cm_pct                  11        5        1
+RP100_education_30cm_count                13        3        1
+RP100_hospitals_30cm_pct                   0        0        0
+RP100_hospitals_30cm_count                 0        0        0
+RP100_primary_healthcare_30cm_pct         12        0        0
+RP100_primary_healthcare_30cm_count        3        0        0
+RP500_crops_30cm_km2                     0.0      0.0      0.0
+RP500_crops_30cm_areapct                 0.0      0.0      0.0
+RP500_crops_30cm_croppct                 0.0      0.0      0.0
+RP500_female_pop_30cm                 143814    16540    33744
+RP500_children_u5_30cm                 39473     4540     9262
+RP500_female_u5_30cm                   19468     2239     4568
+RP500_elderly_30cm                     10433     1200     2448
+RP500_pop_u15_30cm                    108960    12531    25566
+RP500_female_u15_30cm                  53769     6184    12616
+RP500_wra_pop_30cm                     72330     8319    16971
+RP500_dependency_ratio_30cm    
+== IBTrACS SI HTTP 200, 78.0 Mo
+colonnes ((171060, 174)): ['SID', 'SEASON', 'NUMBER', 'BASIN', 'SUBBASIN', 'NAME', 'ISO_TIME', 'NATURE', 'LAT', 'LON', 'WMO_WIND', 'WMO_PRES', 'WMO_AGENCY', 'TRACK_TYPE', 'DIST2LAND', 'LANDFALL', 'IFLAG', 'USA_AGENCY', 'USA_ATCF_ID', 'USA_LAT', 'USA_LON', 'USA_RECORD', 'USA_STATUS', 'USA_WIND', 'USA_PRES', 'USA_SSHS', 'USA_R34_NE', 'USA_R34_SE', 'USA_R34_SW', 'USA_R34_NW', 'USA_R50_NE', 'USA_R50_SE', 'USA_R50_SW', 'USA_R50_NW', 'USA_R64_NE', 'USA_R64_SE', 'USA_R64_SW', 'USA_R64_NW', 'USA_POCI', 'USA_ROCI', 'USA_RMW', 'USA_EYE', 'TOKYO_LAT', 'TOKYO_LON', 'TOKYO_GRADE', 'TOKYO_WIND', 'TOKYO_PRES', 'TOKYO_R50_DIR', 'TOKYO_R50_LONG', 'TOKYO_R50_SHORT', 'TOKYO_R30_DIR', 'TOKYO_R30_LONG', 'TOKYO_R30_SHORT', 'TOKYO_LAND', 'CMA_LAT', 'CMA_LON', 'CMA_CAT', 'CMA_WIND', 'CMA_PRES', 'HKO_LAT']
+saisons 1848–2027 ; tempêtes 2889 ; dernières dates 2026-10-22 00:00:00
+                  SID    NAME             ISO_TIME  LAT   LON USA_WIND WMO_WIND USA_R34_NE REUNION_WIND   TRACK_TYPE
+171057  2026293S05054  AGUEDA  2026-10-21 18:00:00 -6.0  50.8       51                  25               PROVISIONAL
+171058  2026293S05054  AGUEDA  2026-10-21 21:00:00 -6.0  50.9       45                  28               PROVISIONAL
+171059  2026293S05054  AGUEDA  2026-10-22 00:00:00 -5.9  51.1       39                  30               PROVISIONAL
+== seasonal {'monthly': 'precipitation_mean,precipitation_anomaly'} -> HTTP 200 {"latitude":-18.969557,"longitude":47.626457,"generationtime_ms":0.8001327514648438,"utc_offset_seconds":10800,"timezone":"Indian/Antananarivo","timezone_abbreviation":"GMT+3","elevation":1248.0,"monthly_units":{"time":"iso8601","precipitation_mean":"mm","precipitation_anomaly":"mm"},"monthly":{"time":["2026-10-01","2026-11-01","2026-12-01","2027-01-01","2027-02-01","2027-03-01"],"precipitation_mean":[49.50,120.40,199.60,219.30,194.50,130.50],"precipitation_anomaly":[4.60,-10.90,-20.80,-37.30,-24.00,-20.90]}}
+== seasonal {'monthly': 'precipitation_sum'} -> HTTP 400 {"reason":"Invalid value: Cannot initialize ForecastVariableMonthly from invalid String value precipitation_sum","error":true}
+== seasonal {'six_hourly': 'precipitation', 'forecast_days': 3} -> HTTP 200 {"latitude":-18.969557,"longitude":47.626457,"generationtime_ms":0.004410743713378906,"utc_offset_seconds":10800,"timezone":"Indian/Antananarivo","timezone_abbreviation":"GMT+3","elevation":1248.0}
+== seasonal {'daily': 'precipitation_sum', 'forecast_days': 3} -> HTTP 200 {"latitude":-18.969557,"longitude":47.626457,"generationtime_ms":1.0547637939453125,"utc_offset_seconds":10800,"timezone":"Indian/Antananarivo","timezone_abbreviation":"GMT+3","elevation":1248.0,"daily_units":{"time":"iso8601","precipitation_sum":"mm","precipitation_sum_member01":"mm","precipitation_sum_member02":"mm","precipitation_sum_member03":"mm","precipitation_sum_member04":"mm","precipitation_sum_member05":"mm","precipitation_sum_member06":"mm","precipitation_sum_member07":"mm","precipitation_sum_member08":"mm","precipitation_sum_member09":"mm","precipitation_sum_member10":"mm","precipitation_sum_member11":"mm","precipitation_sum_member12":"mm","precipitation_sum_member13":"mm","preci
+== DHS surveys MD: [["MD1992DHS", "1992", "DHS"], ["MD1997DHS", "1997", "DHS"], ["MD2004DHS", "2004", "DHS"], ["MD2008DHS", "2008", "DHS"], ["MD2011MIS", "2011", "MIS"], ["MD2013MIS", "2013", "MIS"], ["MD2016MIS", "2016", "MIS"], ["MD2021DHS", "2021", "DHS"]]
+== DHS indicateurs (3000), sélection 347: [["RH_ANCP_W_DOC", "Antenatal care provider: Doctor"], ["RH_ANCP_W_NRS", "Antenatal care provider: Nurse/midwife"], ["RH_ANCP_W_AUX", "Antenatal care provider: Auxiliary nurse/midwife"], ["RH_ANCP_W_CHW", "Antenatal care provider: Community health worker"], ["RH_ANCP_W_OHW", "Antenatal care provider: Other health worker"], ["RH_ANCP_W_TBA", "Antenatal care provider: Traditional birth attendant"], ["RH_ANCP_W_OTH", "Antenatal care provider: Other"], ["RH_ANCP_W_MIS", "Antenatal care provider: Missing "], ["RH_ANCP_W_NON", "No antenatal care"], ["RH_ANCP_W_TOT", "Antenatal care: Total"], ["RH_ANCP_W_SKP", "Antenatal care from a skilled provider"], ["RH_ANCN_W_NON", "Antenatal visits for pregnancy: None"], ["RH_ANCN_W_N01", "Antenatal visits for pregnancy: 1"], ["RH_ANCN_W_N23", "Antenatal visits for pregnancy: 2-3 visits"], ["RH_ANCN_W_N4P", "Antenatal visits for pregnancy: 4+ visits"], ["RH_ANCN_W_N47", "Antenatal visits for pregnancy: 4-7 visits"], ["RH_ANCN_W_N8P", "Antenatal visits for pregnancy: 8+ visits"], ["RH_ANCN_W_DKM", "Antenatal visits for pregnancy: don't know or missing"], ["RH_ANCT_W_NON", "Timing of first antenatal check: No antenatal care"], ["RH_ANCT_W_TL4", "Timing of first antenatal check: Less than 4 months"], ["RH_ANCT_W_T45", "Timing of first antenatal check: 4-5 months"], ["RH_ANCT_W_T67", "Timing of first antenatal check: 6-7 months"], ["RH_ANCT_W_T8P", "Timing of first antenatal check: 8+ months"], ["RH_ANCT_W_DKM", "Timing of first antenatal check: don't know or missing information on timing"], ["RH_ANCT_W_TOT", "Timing of first antenatal check: Total"], ["RH_ANCC_W_RAS", "Antenatal care content: Received food or cash assistance"], ["RH_ANCC_W_IRN", "Antenatal care content: Received iron tablets or syrup"], ["RH_ANCC_W_PAR", "Antenatal care content: Took intestinal parasite drugs"], ["RH_ANCS_W_SGN", "Antenatal care content (of all): Informed of signs of pregnancy complications"], ["RH_ANCS_W_WGT", "Antenatal care content (of all): Weight measured"], ["RH_ANCS_W_HGT", "Antenatal care content (of all): Height measured"], ["RH_ANCS_W_BLP", "Antenatal care content (of all): Blood pressure measured"], ["RH_ANCS_W_URN", "Antenatal care content (of all): Urine sample taken"], ["RH_ANCS_W_BLS", "Antenatal care content (of all): Blood sample taken"], ["RH_ANCS_W_SGN", "Antenatal care content (of ANC): Informed of signs of pregnancy complications"], ["RH_ANCS_W_HRT", "Antenatal care content (of ANC): Baby's heartbeat listened for"], ["RH_ANCS_W_HRT", "Antenatal care content (of all): Baby's heartbeat listened for"], ["RH_ANCS_W_MDT", "Antenatal care content (of ANC): Counseled about maternal diet"], ["RH_ANCS_W_MDT", "Antenatal care content (of all): Counseled about maternal diet"], ["RH_ANCS_W_CBF", "Antenatal care content (of ANC): Counseled about breastfeeding"], ["RH_ANCS_W_CBF", "Antenatal care content (of all): Counseled about breastfeeding"], ["RH_ANCS_W_VGB", "Antenatal care content (of ANC): Asked about vaginal bleeding"], ["RH_ANCS_W_VGB", "Antenatal care content (of all): Asked about vaginal bleeding"], ["RH_ANCS_W_DUE", "Antenatal care content (of ANC): Discussed the baby's due date"], ["RH_ANCS_W_DUE", "Antenatal care content (of all): Discussed the baby's due date"], ["RH_ANCS_W_BMV", "Antenatal care content (of ANC): Told to pay attention to baby's movements"], ["RH_ANCS_W_BMV", "Antenatal care content (of all): Told to pay attention to baby's movements"], ["RH_ANCS_W_WGT", "Antenatal care content (of ANC): Weight measured"], ["RH_ANCS_W_HGT", "Antenatal care content (of ANC): Height measured"], ["RH_ANCS_W_BLP", "Antenatal care content (of ANC): Blood pressure measured"], ["RH_ANCS_W_URN", "Antenatal care content (of ANC): Urine sample taken"], ["RH_ANCS_W_BLS", "Antenatal care content (of ANC): Blood sample taken"], ["RH_DELA_C_SKP", "Assistance during delivery from a skilled provider"], ["RH_MIMH_M_ANM", "Reported that the child's mother had any antenatal check-ups during the pregnancy with the child"], ["RH_MIMH_M_PDA", "Ever present during any antenatal check-up"], ["CH_VACS_C_BCG", "BCG vaccination received"], ["CH_VACS_C_PT1", "Pentavalent 1 vaccination received"], ["CH_VACS_C_PT2", "Pentavalent 2 vaccination received"], ["CH_VACS_C_PT3", "Pentavalent 3 vaccination received"], ["CH_VACS_C_PT4", "Pentavalent 4 vaccination received"]]
+== DHS data WS_SRCE_P_IMP 100 lignes ; exemple : [{"DataId": 6567862, "Indicator": "Population using an improved water source", "Value": 29, "Precision": 1, "DHS_CountryCode": "MD", "CountryName": "Madagascar", "SurveyYear": 1992, "SurveyId": "MD1992DHS", "IndicatorId": "WS_SRCE_P_IMP", "IndicatorOrder": 250162010, "IndicatorType": "I", "CharacteristicId": 426001, "CharacteristicOrder": 1426010, "CharacteristicCategory": "Region", "CharacteristicLabel": "Antananarivo", "ByVariableId": 0, "ByVariableLabel": "", "IsTotal": 0, "IsPreferred": 1, "SDRID": "WSSRCEPIMP", "RegionId": "MDDHS1992426001", "SurveyYearLabel": "1992", "SurveyType": "DHS", "DenominatorWeighted": 9295, "DenominatorUnweighted": 10049, "CILow": "", "CIHigh": "", "LevelRank": 1}, {"DataId": 4227318, "Indicator": "Population using an improved water source", "Value": 8.8, "Precision": 1, "DHS_CountryCode": "MD", "CountryName": "Madagascar", "SurveyYear": 1992, "SurveyId": 
