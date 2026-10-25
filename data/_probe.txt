@@ -1,281 +1,160 @@
-== HDX « Madagascar displacement tracking matrix » : 287 jeux
-  - mdg-iom-dtm-from-api | Madagascar IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Madagascar IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/f9f16458-78e1-4b70-84e3-3f1f997087c9/resource/bc62114a-68bc-462e-b8aa-b9f9cb0
-  - malawi-affected-persons-locations | Malawi - Displacement Tracking Matrix | maj 2026-01-29 | org ocha-rosea
-      KMZ    05_iom_dtm_malawi_displacement_site_round_iii_report_20150513.rar https://data.humdata.org/dataset/e2eba921-1709-4c9b-9bf4-ddeafba27f32/resource/e08fc5bf-518f-4b4c-8f70-d1b3c16
-  - malawi-affected-persons-locations-0 | Malawi - Displacement Tracking Matrix | maj 2026-01-29 | org ocha-rosea
-      KMZ    04_DTM IDP Site as 06th March 2015.zip https://data.humdata.org/dataset/c1fa0b3d-2926-4949-b1f0-e4edebbdf31a/resource/0c020b75-1186-43b3-8326-3ec2ffa
-  - global-iom-dtm-from-api | Global IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Global IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/32d0365c-d513-4721-8d66-1b19b12c4b08/resource/80911e9b-7527-469a-a545-4074860
-  - yem-iom-dtm-from-api | Yemen IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Yemen IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/1553b405-3eb3-4515-8697-b47cda30483b/resource/a4108594-21e3-4c35-8f55-0374693
-  - peru-dtmr3 | PERU - Displacement Tracking Matrix (Round 3) | maj 2025-05-05 | org international-organization-for-migration
-      XLSX   DTM3 PERU.xlsx https://data.humdata.org/dataset/dad01c41-adde-46ee-998d-a6baf9eeb8d1/resource/538975d3-f7bb-4f0d-9111-58f7e00
-      PDF    DTM3 PERU Survey.pdf https://data.humdata.org/dataset/dad01c41-adde-46ee-998d-a6baf9eeb8d1/resource/059f4769-6b33-4fdd-ae15-8ec0554
-  - ukr-iom-dtm-from-api | Ukraine IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Ukraine IOM DTM data for admin levels 0-1 https://data.humdata.org/dataset/fd8bf6f7-cb5e-4dde-8037-19b5d57ce6ec/resource/820e7059-e484-414b-9ccf-b9ed8b1
-  - lbn-iom-dtm-from-api | Lebanon IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Lebanon IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/e0729389-06d0-48b1-957b-a22168e85ee2/resource/34e7f993-45dd-4152-895e-31a60db
-  - eth-iom-dtm-from-api | Ethiopia IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Ethiopia IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/c5f4bf99-63e3-44e5-8847-296751c667e9/resource/0431906c-0476-491f-9938-e047db8
-  - irq-iom-dtm-from-api | Iraq IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Iraq IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/6f8853ad-b1dc-4e98-a341-a66acc13a9ba/resource/71918243-8052-47bb-8ab1-44f9268
-== HDX « Madagascar IOM DTM » : 330 jeux
-  - madagascar-baseline-assessment-data-iom-dtm | Madagascar Displacement Data - Baseline Assessment [IOM DTM] | maj 2025-04-25 | org international-organization-for-migration
-      XLSX   DTM Madagascar Baseline Assessment Round 5 https://data.humdata.org/dataset/ed13d55a-0b9a-4a9a-b1bb-9bc76475cc59/resource/b1e2a1f7-bd73-42a7-9cde-6227a78
-      XLSX   DTM Madagascar Baseline Assessment Round 4 https://data.humdata.org/dataset/ed13d55a-0b9a-4a9a-b1bb-9bc76475cc59/resource/bd82be15-3eb0-4b4c-8680-5dfbebc
-      XLSX   DTM Madagascar Baseline Assessment Round 2 https://data.humdata.org/dataset/ed13d55a-0b9a-4a9a-b1bb-9bc76475cc59/resource/6e442163-7a20-4d25-a646-fb8cfe0
-      XLSX   DTM Madagascar Baseline Assessment Round 1 https://data.humdata.org/dataset/ed13d55a-0b9a-4a9a-b1bb-9bc76475cc59/resource/ac8ebecc-c6d9-4c7e-985f-c2f742a
-  - mdg-iom-dtm-from-api | Madagascar IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Madagascar IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/f9f16458-78e1-4b70-84e3-3f1f997087c9/resource/bc62114a-68bc-462e-b8aa-b9f9cb0
-  - global-iom-dtm-from-api | Global IOM Displacement Tracking Matrix (DTM) from API | maj 2026-10-19 | org international-organization-for-migration
-      CSV    Global IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/32d0365c-d513-4721-8d66-1b19b12c4b08/resource/80911e9b-7527-469a-a545-4074860
-  - madagascar-displacement-data-baseline-assessment-drought-in-grand-sud-iom-dtm | Madagascar Displacement Data - Baseline Assessment - Drought in Grand Sud [IOM D | maj 2025-05-05 | org international-organization-for-migration
-      XLSX   DTM Madagascar - BA Drought in Gand Sud - Sep 2022 https://data.humdata.org/dataset/a73a71cd-c356-4f21-b6dd-8452bf5245c8/resource/0247ce98-26d6-4d87-96b5-e977138
-  - burundi-baseline-assessment-data-iom-dtm | Burundi Displacement - [IDPs] - Baseline Assessment [IOM DTM] | maj 2026-07-04 | org international-organization-for-migration
-      XLSX   DTM Burundi Baseline Assessment Round 79 https://data.humdata.org/dataset/1eb01fef-133c-4675-b4e9-a76b29511a02/resource/69092cad-65c7-4a3c-967f-73a0d81
-      XLSX   DTM Burundi Baseline Assessment Round 78 https://data.humdata.org/dataset/1eb01fef-133c-4675-b4e9-a76b29511a02/resource/5aab20c1-38ad-40a3-b857-ce57ce9
-      XLSX   DTM Burundi Baseline Assessment Round 77 https://data.humdata.org/dataset/1eb01fef-133c-4675-b4e9-a76b29511a02/resource/7ae6f90b-1413-4147-8fa4-d6718a4
-      XLSX   DTM Burundi Baseline Assessment Round 76 https://data.humdata.org/dataset/1eb01fef-133c-4675-b4e9-a76b29511a02/resource/adb7269d-e074-4262-a271-adf9da8
-      XLSX   DTM Burundi Baseline Assessment Round 75 https://data.humdata.org/dataset/1eb01fef-133c-4675-b4e9-a76b29511a02/resource/e8cc9d22-1627-40d2-937b-7d01c1d
-      XLSX   DTM Burundi Baseline Assessment Round 74 https://data.humdata.org/dataset/1eb01fef-133c-4675-b4e9-a76b29511a02/resource/80f1cedc-13a2-4428-a8e0-72782fa
-  - nigeria-site-assessment-data | Nigeria Displacement - [IDPs]  - Site Assessment [IOM DTM] | maj 2026-08-25 | org international-organization-for-migration
-      XLSX   DTM Nigeria Site Assessment Round 52 https://data.humdata.org/dataset/d07c4df4-ce77-4f80-ae81-eb3db59e102f/resource/7be64610-4845-48ba-94c8-9ca26c6
-      XLSX   DTM Nigeria Site Assessment Round 51 https://data.humdata.org/dataset/d07c4df4-ce77-4f80-ae81-eb3db59e102f/resource/6973475c-c674-4186-9426-b02fc3b
-      XLSX   DTM Nigeria Site Assessment Round 50 https://data.humdata.org/dataset/d07c4df4-ce77-4f80-ae81-eb3db59e102f/resource/314a2dc9-a3bc-49a1-98d8-d971dae
-      XLSX   DTM Nigeria Site Assessment Round 49 https://data.humdata.org/dataset/d07c4df4-ce77-4f80-ae81-eb3db59e102f/resource/dd9da149-8b4e-40cd-afc0-27ab7d5
-      XLSX   DTM Nigeria Site Assessment Round 48 https://data.humdata.org/dataset/d07c4df4-ce77-4f80-ae81-eb3db59e102f/resource/874e9bb1-5185-4153-955c-dcde4e0
-      XLSX   DTM Nigeria Site Assessment Round 47 https://data.humdata.org/dataset/d07c4df4-ce77-4f80-ae81-eb3db59e102f/resource/3b661a22-45aa-4989-a032-ba4f3d7
-  - ukraine-displacement-data-returnees-iom-dtm | Ukraine Displacement Data - Returnees [IOM DTM] | maj 2026-06-22 | org international-organization-for-migration
-      XLSX   Round 23 — DTM Ukraine Returnees Dataset https://data.humdata.org/dataset/839ce6d5-f863-47b6-9c49-da28661e4e44/resource/c16456f4-d3f4-4d7f-a9a9-cba30ed
-      XLSX   Round 22 — DTM Ukraine Returnees Dataset https://data.humdata.org/dataset/839ce6d5-f863-47b6-9c49-da28661e4e44/resource/723dfabd-8256-45dc-b52d-f57cd3d
-      XLSX   Round 21 — DTM Ukraine Returnees Dataset https://data.humdata.org/dataset/839ce6d5-f863-47b6-9c49-da28661e4e44/resource/1ee2050f-db8e-4b27-847a-2a07eed
-      XLSX   Round 20 — DTM Ukraine Returnees Dataset https://data.humdata.org/dataset/839ce6d5-f863-47b6-9c49-da28661e4e44/resource/71c2203b-d238-4039-9bdc-e80ea23
-      XLSX   Round 19 — DTM Ukraine Returnees Dataset https://data.humdata.org/dataset/839ce6d5-f863-47b6-9c49-da28661e4e44/resource/553104a0-310f-40dc-9ece-c8aa09b
-      XLSX   Round 18 — DTM Ukraine Returnees Dataset https://data.humdata.org/dataset/839ce6d5-f863-47b6-9c49-da28661e4e44/resource/a012373e-f3c0-44ab-b97a-2f3bce9
-  - kyrgyzstan-data-baseline-assessment-iom-dtm | Kyrgyzstan - Baseline Assessment [IOM DTM] | maj 2026-02-11 | org international-organization-for-migration
-      XLSX   Kyrgyzstan – Baseline Mobility Assessment - Round 4 https://data.humdata.org/dataset/de82fd8b-4d0a-414e-bbd2-64618ebe0ee0/resource/302c829a-891c-4d1c-a372-cc2ad2e
-      XLSX   Kyrgyzstan – Baseline Mobility Assessment - Round 2 https://data.humdata.org/dataset/de82fd8b-4d0a-414e-bbd2-64618ebe0ee0/resource/0eefb45d-a157-4e06-97ce-1c7a3d8
-  - nigeria-displacements-returnees-iom-dtm | Nigeria Displacement - [Returnees] - [IOM DTM] | maj 2025-05-05 | org international-organization-for-migration
-      XLSX   DTM Nigeria Baseline Assessment Round 43 https://data.humdata.org/dataset/1a37c13c-59cb-42a6-a5e2-4c66f6dae580/resource/e5f334a8-23a6-4e4c-b08b-a48f3ff
-      XLSX   DTM Nigeria Baseline Assessment Round 41 https://data.humdata.org/dataset/1a37c13c-59cb-42a6-a5e2-4c66f6dae580/resource/4cea97e7-d483-4979-a38d-1ecd883
-  - sudan-displacement-data-idps-iom-dtm | Sudan Displacement Data - IDPs [IOM DTM] | maj 2025-07-22 | org international-organization-for-migration
-      XLSX   DTM Sudan IDPs Master List Round 7 https://data.humdata.org/dataset/f09ff170-23a7-41b0-9711-940d2c298131/resource/f297e6de-b77f-42f6-8646-85d51d4
-      XLSX   DTM Sudan IDPs Master List Round 6 https://data.humdata.org/dataset/f09ff170-23a7-41b0-9711-940d2c298131/resource/e06c7e61-dd14-4912-a00f-73d280a
-      XLSX   DTM Sudan IDPs Master List Round 5 https://data.humdata.org/dataset/f09ff170-23a7-41b0-9711-940d2c298131/resource/b27deb4b-99c8-4104-b6e2-9263b9b
-      XLSX   DTM Sudan IDPs Master List Round 4 https://data.humdata.org/dataset/f09ff170-23a7-41b0-9711-940d2c298131/resource/5ccf6d15-6dd8-4801-87d6-300a9d5
-      XLSX   DTM Sudan IDPs Master List Round 3 https://data.humdata.org/dataset/f09ff170-23a7-41b0-9711-940d2c298131/resource/00d0b0f8-96e4-4a12-a6c2-6ae08c2
-      XLSX   DTM Sudan IDPs Master List Round 2 https://data.humdata.org/dataset/f09ff170-23a7-41b0-9711-940d2c298131/resource/34670813-f9ed-40ec-82a4-3bf2b2a
-== HDX « Madagascar population movement » : 729 jeux
-  - movement-distribution | Movement Distribution | maj 2026-10-12 | org meta
-      CSV    Movement Distribution 17-September-2026_01-October-2026 https://data.humdata.org/dataset/32167ba5-ef67-4254-8eaf-04cdb8b90c1d/resource/bc997966-1ae5-4968-b2e7-16935a0
-      CSV    Movement Distribution Maps 01 September 2026_ 16 September 2026 https://data.humdata.org/dataset/32167ba5-ef67-4254-8eaf-04cdb8b90c1d/resource/058dad9e-401c-4df8-b3d6-bae13e8
-      CSV    Meta Movement Distribution Maps_2026-08-18_to_2026-08-31_.csv https://data.humdata.org/dataset/32167ba5-ef67-4254-8eaf-04cdb8b90c1d/resource/adb691f7-56c2-49fc-93b6-0611c01
-      CSV    Meta Movement Distributions Maps_2026-08-01_to_08-16.csv https://data.humdata.org/dataset/32167ba5-ef67-4254-8eaf-04cdb8b90c1d/resource/379e2fb7-c73e-4600-b3b8-814abe9
-      CSV    Movement Distribution 2026-07-17_to_2026-08-01..csv https://data.humdata.org/dataset/32167ba5-ef67-4254-8eaf-04cdb8b90c1d/resource/7321e08f-eac6-46e8-ba43-98b2bcc
-      CSV    Movement Distribution Maps_2026-07-13_to_2026-07-16.csv https://data.humdata.org/dataset/32167ba5-ef67-4254-8eaf-04cdb8b90c1d/resource/4d0fae21-fdec-4922-88ce-771a3df
-  - niger-population-movement | Niger: Population Movement | maj 2026-07-17 | org ocha-niger
-      XLSX   BD_mouvements populations_ope_30062026.xlsx https://data.humdata.org/dataset/501a166f-9f7f-477c-85bc-06019f59ad88/resource/5d90cf55-7fe3-471f-b141-67293cf
-      XLSX   BD_mouvements populations_ope_31072025.xlsx https://data.humdata.org/dataset/501a166f-9f7f-477c-85bc-06019f59ad88/resource/81d88c24-f1b7-498d-987a-315fb07
-      XLSX   BD_mouvements populations_ope_15082024.xlsx https://data.humdata.org/dataset/501a166f-9f7f-477c-85bc-06019f59ad88/resource/de49dfba-7754-4096-befa-425bd7d
-      XLSX   BD_mouvements populations_ope_01072024.xlsx https://data.humdata.org/dataset/501a166f-9f7f-477c-85bc-06019f59ad88/resource/f80478bb-6144-481b-957c-df0efe8
-      XLSX   BD_mouvements populations_ope_03062024.xlsx https://data.humdata.org/dataset/501a166f-9f7f-477c-85bc-06019f59ad88/resource/de7c4d47-f238-471e-8c4f-f6c9938
-      XLSX   BD_mouvements populations_ope_06052024.xlsx https://data.humdata.org/dataset/501a166f-9f7f-477c-85bc-06019f59ad88/resource/228dd96d-a9a1-4577-aef4-89224bb
-  - movement-range-maps | Movement Range Maps | maj 2025-11-19 | org meta
-      TXT    How To Understand This Data.txt https://data.humdata.org/dataset/c3429f0e-651b-4788-bb2f-4adbf222c90e/resource/435ed157-6f7a-4e8f-a63a-2aa177b
-      zip    movement-range-data-2022-05-22.zip https://data.humdata.org/dataset/c3429f0e-651b-4788-bb2f-4adbf222c90e/resource/55a51014-0d27-49ae-bf92-c82a570
-      TXT    movement-range-data-2020-03-01--2020-12-31.zip https://data.humdata.org/dataset/c3429f0e-651b-4788-bb2f-4adbf222c90e/resource/3d77ce5c-ab6d-4864-b8a2-c8bafff
-  - cod-ps-mdg | Madagascar - Subnational Population Statistics | maj 2025-04-08 | org ocha-rosea
-      XLSX   mdg_gazetteer_20181031.xls https://data.humdata.org/dataset/0b6ce366-8651-43aa-8c36-9f3fdc8d6b4f/resource/fe2602f2-3380-43e2-8890-1e28d30
-      XLS    mdg_admpop_2018.xls https://data.humdata.org/dataset/0b6ce366-8651-43aa-8c36-9f3fdc8d6b4f/resource/8e16e769-2b4d-4e4b-a202-e592d7f
-      CSV    mdg_admpop_adm0_2018.csv https://data.humdata.org/dataset/0b6ce366-8651-43aa-8c36-9f3fdc8d6b4f/resource/0b408418-286e-47bc-a037-384e5de
-      CSV    mdg_admpop_adm1_2018.csv https://data.humdata.org/dataset/0b6ce366-8651-43aa-8c36-9f3fdc8d6b4f/resource/36a0fd53-78b9-4b3f-9c2e-f7beb0d
-      CSV    mdg_admpop_adm2_2018.csv https://data.humdata.org/dataset/0b6ce366-8651-43aa-8c36-9f3fdc8d6b4f/resource/5ecd33f3-87f2-4606-9174-92caaab
-      CSV    mdg_admpop_adm3_2018.csv https://data.humdata.org/dataset/0b6ce366-8651-43aa-8c36-9f3fdc8d6b4f/resource/f08856d0-fbaf-4354-8430-db5b0e2
-  - worldpop-population-counts-for-madagascar | Madagascar - Population Counts | maj 2025-08-26 | org worldpop
-      GeoTIFF mdg_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/MDG/mdg_ppp_2020.tif
-      GeoTIFF mdg_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/MDG/mdg_ppp_2019.tif
-      GeoTIFF mdg_ppp_2018.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2018/MDG/mdg_ppp_2018.tif
-      GeoTIFF mdg_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/MDG/mdg_ppp_2017.tif
-      GeoTIFF mdg_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/MDG/mdg_ppp_2016.tif
-      GeoTIFF mdg_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/MDG/mdg_ppp_2020_UNadj.tif
-  - madagascar-settlements | Madagascar - Populated Places | maj 2026-01-29 | org ocha-rosea
-      SHP    mdg_pplp_places_nga_ocha.zip https://data.humdata.org/dataset/57202386-65f8-426f-8f51-be10c9f7c6ae/resource/09cc9db2-2aa7-4301-91b7-ae87f9f
-      TXT    mdg_pplp_places_nga_ocha_metadata.txt https://data.humdata.org/dataset/57202386-65f8-426f-8f51-be10c9f7c6ae/resource/56ac7739-1aa9-4eb0-9edd-29aca92
-      XLSX   mdg_pplp_places_nga_ocha_table.xlsx https://data.humdata.org/dataset/57202386-65f8-426f-8f51-be10c9f7c6ae/resource/ba6cc33a-53c2-4715-9143-2071b12
-  - dtm-south-sudan-flow-monitoring-migration-population-movement-iom | South Sudan Population Movement - [Migrants] - [IOM DTM] | maj 2025-05-05 | org international-organization-for-migration
-      XLSX   DTM South Sudan Flow Monitoring Nov22 to Oct23 https://data.humdata.org/dataset/96a62268-6da6-424b-bb72-721f64c28681/resource/6ca82f30-a4a4-4345-b49e-c470836
-      XLSX   DTM South Sudan Flow Monitoring Oct22 https://data.humdata.org/dataset/96a62268-6da6-424b-bb72-721f64c28681/resource/5020c5dd-f9cc-4418-a6ad-a6bf439
-      XLSX   DTM South Sudan Flow Monitoring Sep22 https://data.humdata.org/dataset/96a62268-6da6-424b-bb72-721f64c28681/resource/7497bca5-d7e9-4d6b-bbf4-7ab0b90
-      XLSX   DTM South Sudan Flow Monitoring Aug22 https://data.humdata.org/dataset/96a62268-6da6-424b-bb72-721f64c28681/resource/c83cb675-b393-4dd3-a6d5-5e40051
-      XLSX   DTM South Sudan Flow Monitoring Jul22 https://data.humdata.org/dataset/96a62268-6da6-424b-bb72-721f64c28681/resource/118fc517-4fe2-49a4-b608-5d5d8ea
-      XLSX   DTM South Sudan Flow Monitoring Jun22 https://data.humdata.org/dataset/96a62268-6da6-424b-bb72-721f64c28681/resource/4d669701-170c-4a33-a944-c071ddd
-  - worldpop-population-density-for-madagascar | Madagascar - Population Density | maj 2025-08-26 | org worldpop
-      GeoTIFF mdg_pd_2020_1km_ASCII_XYZ.zip https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km/2020/MDG/mdg_pd_2020_1km_ASCII_XYZ.zip
-      GeoTIFF mdg_pd_2020_1km.tif https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km/2020/MDG/mdg_pd_2020_1km.tif
-      GeoTIFF mdg_pd_2020_1km_UNadj_ASCII_XYZ.zip https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km_UNadj/2020/MDG/mdg_pd_2020_1km_UNadj_ASC
-      GeoTIFF mdg_pd_2020_1km_UNadj.tif https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km_UNadj/2020/MDG/mdg_pd_2020_1km_UNadj.tif
-      GeoTIFF mdg_pd_2019_1km_ASCII_XYZ.zip https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km/2019/MDG/mdg_pd_2019_1km_ASCII_XYZ.zip
-      GeoTIFF mdg_pd_2019_1km.tif https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km/2019/MDG/mdg_pd_2019_1km.tif
-  - hotosm_mdg_populated_places | Populated Places of Madagascar | maj 2026-10-06 | org hot
-      GeoJSON Populated Places (OSM), GeoJSON https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_geo
-      Geopackage Populated Places (OSM), GeoPackage https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_gpk
-      GeoParquet Populated Places (OSM), GeoParquet https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/_layers/osm/populated_places.parquet
-      KML    Populated Places (OSM), KML https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_kml
-      SHP    Populated Places (OSM), Shapefile https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_shp
-      JSON   Populated Places (OSM), STAC Collection https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_met
-  - sahel-population-movement | Sahel Population Movement Data | maj 2026-04-27 | org ocha-rowca
-      XLSX   Sahel population movement HNRO 2021.xlsx https://data.humdata.org/dataset/370b28e6-5c76-4c69-992e-8d2bb126a598/resource/f53abb96-3814-482b-9eed-9ab5cec
-== HDX « Madagascar internally displaced persons » : 1398 jeux
-  - idmc-idp-data-mdg | Madagascar - Internal Displacements (New Displacements) – IDPs | maj 2026-06-04 | org international-displacement-monitoring-centre-idmc
-      CSV    Internal Displacements (New Displacements) – IDPs https://data.humdata.org/dataset/4cb9d966-c707-424d-aea7-7c29cc0a3c50/resource/f9d88ce3-3d2a-422b-9bc7-a92c4cb
-      CSV    Internal displacements (new displacements) associated with disasters https://data.humdata.org/dataset/4cb9d966-c707-424d-aea7-7c29cc0a3c50/resource/a077992c-3da3-462a-8444-bb724c6
-  - mdg-idmc-idu-events | Madagascar - Internal Displacements Updates (IDU) | maj 2026-10-23 | org international-displacement-monitoring-centre-idmc
-      CSV    mdg_idmc_idu_events.csv https://data.humdata.org/dataset/80a6cfe8-7694-4896-afda-1202542a35d9/resource/05e2e09f-0616-47ff-a77b-9cd32ce
-  - somalia-internally-displaced-persons-idps | Somalia: Internally Displaced Persons (IDPs) | maj 2025-04-28 | org unhcr
-      XLSX   SOM_UNHCR-PRMN-Displacement-Dataset-August-2023 https://data.humdata.org/dataset/475e2e3c-3cec-4961-b73c-d8e68791ce60/resource/981e0a25-8a83-48a2-a46c-0be81a8
-      CSV    SOM_UNHCR-PRMN_Displacement-Dataset.csv https://data.humdata.org/dataset/475e2e3c-3cec-4961-b73c-d8e68791ce60/resource/fca8af92-f589-4604-be97-f55bd57
-  - idmc-idp-data-for-turkiye | Türkiye - Internally displaced persons - IDPs | maj 2023-05-16 | org international-displacement-monitoring-centre-idmc
-      CSV    displacement_data https://data.humdata.org/dataset/c1cf1aa7-4af4-4c16-a96c-4620907a38fe/resource/6b7b5f02-9379-4aae-a0b0-03b969d
-      CSV    disaster_data https://data.humdata.org/dataset/c1cf1aa7-4af4-4c16-a96c-4620907a38fe/resource/7fba81ef-2d10-416b-8d29-ece8110
-  - unicef-mg-idp | Internally displaced persons | maj 2026-04-27 | org unicef-data
-      XLSX   Internally displaced persons (EXCEL) https://sdmx.data.unicef.org/ws/public/sdmxapi/rest/data/UNICEF,MG,1.0/.MG_IDP.?format=excel
-      CSV    Internally displaced persons (CSV) https://sdmx.data.unicef.org/ws/public/sdmxapi/rest/data/UNICEF,MG,1.0/.MG_IDP.?format=csv
-      XML    Internally displaced persons (XML) https://sdmx.data.unicef.org/ws/public/sdmxapi/rest/data/UNICEF,MG,1.0/.MG_IDP.
-  - idmc-idp-data-pcn | Pitcairn - Internally displaced persons - IDPs | maj 2023-09-19 | org international-displacement-monitoring-centre-idmc
-      CSV    displacement_data https://data.humdata.org/dataset/a49b0ee5-f6b1-46f4-ba9f-fd459fc087fd/resource/f24fbc56-f8eb-479c-9606-fbd8ef4
-  - idmc-idp-data-niu | Niue - Internally displaced persons - IDPs | maj 2023-09-19 | org international-displacement-monitoring-centre-idmc
-      CSV    displacement_data https://data.humdata.org/dataset/194e4554-84a2-46c1-a5b8-07683585c456/resource/f1476890-f326-464a-a1c0-93ef8a6
-  - idmc-idp-data-ggy | Guernsey - Internally displaced persons - IDPs | maj 2023-09-19 | org international-displacement-monitoring-centre-idmc
-      CSV    displacement_data https://data.humdata.org/dataset/a01cd32b-060e-4cfd-9c82-a3f2c237081b/resource/53da0779-b201-442d-8c48-9499db6
-  - ukraine-idps | Ukraine: Internally Displaced Persons | maj 2025-02-04 | org ocha-ukraine
-      XLSX   UA-IDPs (2021 HNO).xlsx https://data.humdata.org/dataset/4304319f-db3b-485f-9ec9-c3bf288d95cc/resource/b5bda083-b26c-49a6-9aa4-f476f19
-  - idmc-idp-data-gib | Gibraltar - Internally displaced persons - IDPs | maj 2023-09-19 | org international-displacement-monitoring-centre-idmc
-      CSV    displacement_data https://data.humdata.org/dataset/30540bc2-a628-41ad-be39-4af51db60ba5/resource/d892c4f6-934c-47b7-bfc9-fa7e1d4
-== HDX « Madagascar population density high resolution » : 968 jeux
-  - highresolutionpopulationdensitymaps-mdg | Madagascar: High Resolution Population Density Maps + Demographic Estimates | maj 2025-11-19 | org meta
-      zip    mdg_general_2020_geotiff.zip https://data.humdata.org/dataset/9e7ff424-7b9c-42cc-b869-5756fcad0956/resource/1fafdd04-8e0b-4c2a-b4dc-8f3ff39
-      zip    mdg_general_2020_csv.zip https://data.humdata.org/dataset/9e7ff424-7b9c-42cc-b869-5756fcad0956/resource/5725a196-7ffd-41d4-ae39-d1ff94c
-      zip    mdg_children_under_five_2020_csv.zip https://data.humdata.org/dataset/9e7ff424-7b9c-42cc-b869-5756fcad0956/resource/d73293f2-fdb3-4f35-97a8-9117cf6
-      zip    mdg_children_under_five_2020_geotiff.zip https://data.humdata.org/dataset/9e7ff424-7b9c-42cc-b869-5756fcad0956/resource/a9651094-a1dc-4d59-b3d6-37fbec3
-      zip    mdg_elderly_60_plus_2020_csv.zip https://data.humdata.org/dataset/9e7ff424-7b9c-42cc-b869-5756fcad0956/resource/acc8f75a-ae32-4ef9-9c2b-1260fd1
-      zip    mdg_elderly_60_plus_2020_geotiff.zip https://data.humdata.org/dataset/9e7ff424-7b9c-42cc-b869-5756fcad0956/resource/6136e4a0-d916-4778-ad71-90c5935
-  - india-high-resolution-population-density-maps | India: High Resolution Population Density Maps | maj 2026-09-01 | org meta
-      GeoTIFF ind_general_2025_tif.zip https://data.humdata.org/dataset/cc8e4cb3-7900-438a-a245-ae784da8be6b/resource/1f16907f-4e83-4818-89cd-96290f3
-      GeoTIFF ind_children_under_five_2025_proportion_allocated_20205.zip https://data.humdata.org/dataset/cc8e4cb3-7900-438a-a245-ae784da8be6b/resource/2e46af8f-8969-4039-bce4-2fa5c53
-      GeoTIFF ind_women_of_reproductive_age_15_49_proportion_allocated_2025.zip https://data.humdata.org/dataset/cc8e4cb3-7900-438a-a245-ae784da8be6b/resource/c141a543-9afd-42a6-92a3-4c8d491
-      GeoTIFF ind_youth_15_24_proportion_allocated_2025.zip https://data.humdata.org/dataset/cc8e4cb3-7900-438a-a245-ae784da8be6b/resource/813c3c08-dace-474b-b39e-281aaa4
-      GeoTIFF ind_elderly_60_plus_proportion_allocated_2025.zip https://data.humdata.org/dataset/cc8e4cb3-7900-438a-a245-ae784da8be6b/resource/e0e9ea60-00d4-4032-9080-78c3db0
-      GeoTIFF ind_female_2025_tiff.zip https://data.humdata.org/dataset/cc8e4cb3-7900-438a-a245-ae784da8be6b/resource/cd9b6c23-23f6-4e8b-9b56-85ef9e0
-  - highresolutionpopulationdensitymaps-ken | Kenya: High Resolution Population Density Maps | maj 2025-11-19 | org meta
-      GeoTIFF ken_general_2020_geotiff.zip https://data.humdata.org/dataset/2964b369-c10c-4b55-94a8-495de3fc9858/resource/1271b53b-30be-4c4b-aa27-1bd1045
-      CSV    ken_general_2020_csv.zip https://data.humdata.org/dataset/2964b369-c10c-4b55-94a8-495de3fc9858/resource/728e9fe2-0707-491f-91d8-3dc8379
-      CSV    ken_youth_15_24_2020_csv.zip https://data.humdata.org/dataset/2964b369-c10c-4b55-94a8-495de3fc9858/resource/20769f96-dc26-4342-8900-135e2e1
-      CSV    ken_elderly_60_plus_2020_csv.zip https://data.humdata.org/dataset/2964b369-c10c-4b55-94a8-495de3fc9858/resource/1cdc95e0-3ce4-4515-b08e-e260ee9
-      CSV    ken_women_2020_csv.zip https://data.humdata.org/dataset/2964b369-c10c-4b55-94a8-495de3fc9858/resource/ef425edf-4b59-4487-8a8f-6fa6fe7
-      CSV    ken_men_2020_csv.zip https://data.humdata.org/dataset/2964b369-c10c-4b55-94a8-495de3fc9858/resource/c262d93d-588a-4ef3-8422-bc72cd2
-  - highresolutionpopulationdensitymaps-mwi | Malawi: High Resolution Population Density Maps | maj 2025-11-19 | org meta
-      GeoTIFF mwi_general_2020_geotiff.zip https://data.humdata.org/dataset/8c2c0b1f-66af-4a8e-b30e-59ad2249ee24/resource/d83a3bad-b72a-4e4e-9be9-93b4c65
-      CSV    mwi_general_2020_csv.zip https://data.humdata.org/dataset/8c2c0b1f-66af-4a8e-b30e-59ad2249ee24/resource/18dc65b1-f84f-4248-9068-5057e14
-      CSV    mwi_youth_15_24_2020_csv.zip https://data.humdata.org/dataset/8c2c0b1f-66af-4a8e-b30e-59ad2249ee24/resource/fee5c974-cc51-4e05-89df-c6df10c
-      CSV    mwi_women_of_reproductive_age_15_49_2020_csv.zip https://data.humdata.org/dataset/8c2c0b1f-66af-4a8e-b30e-59ad2249ee24/resource/6bbe77b4-54df-4035-a8a0-7168f78
-      CSV    mwi_men_2020_csv.zip https://data.humdata.org/dataset/8c2c0b1f-66af-4a8e-b30e-59ad2249ee24/resource/4675b46d-c5d5-43a9-9921-05dde64
-      CSV    mwi_women_2020_csv.zip https://data.humdata.org/dataset/8c2c0b1f-66af-4a8e-b30e-59ad2249ee24/resource/809ba14a-8635-4aee-8a77-147f8f1
-  - pakistan-india_all-files-high-resolution-population-density-maps | Pakistan & India: High Resolution Population Density Maps | maj 2025-11-19 | org meta
-      GeoTIFF population_ind_pak_general.zip https://data.humdata.org/dataset/2c8cfe67-448f-4a27-94b3-aaa944598cba/resource/e3dbe673-4117-4243-93a8-3366c6e
-      GeoTIFF population_ind_pak_women.zip https://data.humdata.org/dataset/2c8cfe67-448f-4a27-94b3-aaa944598cba/resource/ae9d489f-0808-4a1f-b3be-4d08ad2
-      GeoTIFF population_ind_pak_children_under_five.zip https://data.humdata.org/dataset/2c8cfe67-448f-4a27-94b3-aaa944598cba/resource/34198f61-8b4e-4622-a4d7-929e88b
-      GeoTIFF population_ind_pak_men.zip https://data.humdata.org/dataset/2c8cfe67-448f-4a27-94b3-aaa944598cba/resource/d61aa052-1fd8-47a1-bc87-a1ca14a
-      GeoTIFF population_ind_pak_women_of_reproductive_age_15_49.zip https://data.humdata.org/dataset/2c8cfe67-448f-4a27-94b3-aaa944598cba/resource/af46c07b-e8a7-4aba-9fd2-72ef189
-      GeoTIFF population_ind_pak_youth_15_24.zip https://data.humdata.org/dataset/2c8cfe67-448f-4a27-94b3-aaa944598cba/resource/925bb929-d535-48f3-a94e-3a9cef0
-  - pomelo-tanzania-high-resolution-population | POMELO - Tanzania High Resolution Population Density | maj 2023-09-11 | org eth-zurich-photogrammetry-and-remote-sensing
-      GeoTIFF tza_pomelo.tiff https://data.humdata.org/dataset/b2146b6f-8267-464f-8bda-efdf2f62f41a/resource/08da2c38-c179-46a8-8ce3-6e7488b
-  - pomelo-rwanda-high-resolution-population | POMELO - Rwanda High Resolution Population Density | maj 2023-09-11 | org eth-zurich-photogrammetry-and-remote-sensing
-      GeoTIFF rwa_pomelo.tiff https://data.humdata.org/dataset/55b4e34a-3016-47d7-9d1e-db9dde7f1f97/resource/eeca5520-a1b3-4a42-b43d-e415bb8
-  - brazil-high-resolution-population-density-maps-demographic-estimates | Brazil: High Resolution Population Density Maps + Demographic Estimates | maj 2025-11-19 | org meta
-      CSV    BRA_children_under_five_2019-06-01_csv.zip https://data.humdata.org/dataset/c17003d1-47f4-4ec5-8229-2f77aeb114be/resource/54964df0-8d6a-4f65-ac10-bcf1149
-      CSV    BRA_elderly_60_plus_2019-06-01_csv.zip https://data.humdata.org/dataset/c17003d1-47f4-4ec5-8229-2f77aeb114be/resource/6d6f1ea3-c8d3-4dc0-b0ea-af9c92b
-      CSV    BRA_men_2019-06-01_csv.zip https://data.humdata.org/dataset/c17003d1-47f4-4ec5-8229-2f77aeb114be/resource/8d00d329-f873-4a20-baf2-01991d6
-      GeoTIFF BRA_northeast_children_under_five_2019-06-01_geotiff.zip https://data.humdata.org/dataset/c17003d1-47f4-4ec5-8229-2f77aeb114be/resource/6ca29762-b872-4bf3-8f1b-1de9af7
-      GeoTIFF BRA_northeast_elderly_60_plus_2019-06-01_geotiff.zip https://data.humdata.org/dataset/c17003d1-47f4-4ec5-8229-2f77aeb114be/resource/9584758c-23d2-47c6-b430-c719e4c
-      GeoTIFF BRA_northeast_men_2019-06-01_geotiff.zip https://data.humdata.org/dataset/c17003d1-47f4-4ec5-8229-2f77aeb114be/resource/562e471e-ae6b-46f2-b2cc-2788621
-  - turkey-high-resolution-population-density-maps-demographic-estimates | Turkey: High Resolution Population Density Maps + Demographic Estimates | maj 2025-11-19 | org meta
-      CSV    population_turkey_2020_csv.zip https://data.humdata.org/dataset/dd6ae158-e35b-45e2-8eb8-dca248b8c3d6/resource/f724b3e0-4788-411c-81a5-2737cca
-      GeoTIFF population_turkey_2020_tif.zip https://data.humdata.org/dataset/dd6ae158-e35b-45e2-8eb8-dca248b8c3d6/resource/9a0963d3-60ad-40e7-83d0-d15d9f4
-      GeoTIFF tur_children_under_five_2020_geotiff.zip https://data.humdata.org/dataset/dd6ae158-e35b-45e2-8eb8-dca248b8c3d6/resource/06cf6311-a894-4e37-8ae2-1ac9c3a
-      GeoTIFF tur_elderly_60_plus_2020_geotiff.zip https://data.humdata.org/dataset/dd6ae158-e35b-45e2-8eb8-dca248b8c3d6/resource/28781a77-958b-4b34-a293-6704c17
-      GeoTIFF tur_men_2020_geotiff.zip https://data.humdata.org/dataset/dd6ae158-e35b-45e2-8eb8-dca248b8c3d6/resource/a0f1793b-440b-41ae-a702-e869de9
-      GeoTIFF tur_women_2020_geotiff.zip https://data.humdata.org/dataset/dd6ae158-e35b-45e2-8eb8-dca248b8c3d6/resource/d3ee498f-dc3c-46e5-a4ad-8168a8d
-  - highresolutionpopulationdensitymaps | Continent of Africa: High Resolution Population Density Maps | maj 2025-11-19 | org meta
-      GeoTIFF All Files - Africa High Resolution Population Density.zip https://data.humdata.org/dataset/dbd7b22d-7426-4eb0-b3c4-faa29a87f44b/resource/7b3ef0ae-a37d-4a42-a2c9-6b111e5
-== HDX « worldpop Madagascar population counts » : 1373 jeux
-  - worldpop-population-counts-for-madagascar | Madagascar - Population Counts | maj 2025-08-26 | org worldpop
-      GeoTIFF mdg_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/MDG/mdg_ppp_2020.tif
-      GeoTIFF mdg_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/MDG/mdg_ppp_2019.tif
-      GeoTIFF mdg_ppp_2018.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2018/MDG/mdg_ppp_2018.tif
-      GeoTIFF mdg_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/MDG/mdg_ppp_2017.tif
-      GeoTIFF mdg_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/MDG/mdg_ppp_2016.tif
-      GeoTIFF mdg_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/MDG/mdg_ppp_2020_UNadj.tif
-  - worldpop-population-density-for-madagascar | Madagascar - Population Density | maj 2025-08-26 | org worldpop
-      GeoTIFF mdg_pd_2020_1km_ASCII_XYZ.zip https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km/2020/MDG/mdg_pd_2020_1km_ASCII_XYZ.zip
-      GeoTIFF mdg_pd_2020_1km.tif https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km/2020/MDG/mdg_pd_2020_1km.tif
-      GeoTIFF mdg_pd_2020_1km_UNadj_ASCII_XYZ.zip https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km_UNadj/2020/MDG/mdg_pd_2020_1km_UNadj_ASC
-      GeoTIFF mdg_pd_2020_1km_UNadj.tif https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km_UNadj/2020/MDG/mdg_pd_2020_1km_UNadj.tif
-      GeoTIFF mdg_pd_2019_1km_ASCII_XYZ.zip https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km/2019/MDG/mdg_pd_2019_1km_ASCII_XYZ.zip
-      GeoTIFF mdg_pd_2019_1km.tif https://data.worldpop.org/GIS/Population_Density/Global_2000_2020_1km/2019/MDG/mdg_pd_2019_1km.tif
-  - worldpop-age-and-gender-structures-for-madagascar | Madagascar - Age and gender structures | maj 2025-08-26 | org worldpop
-      GeoTIFF mdg_m_80_2020.tif https://data.worldpop.org/GIS/AgeSex_structures/Global_2000_2020/2020/MDG/mdg_m_80_2020.tif
-      GeoTIFF mdg_m_75_2020.tif https://data.worldpop.org/GIS/AgeSex_structures/Global_2000_2020/2020/MDG/mdg_m_75_2020.tif
-      GeoTIFF mdg_m_70_2020.tif https://data.worldpop.org/GIS/AgeSex_structures/Global_2000_2020/2020/MDG/mdg_m_70_2020.tif
-      GeoTIFF mdg_m_65_2020.tif https://data.worldpop.org/GIS/AgeSex_structures/Global_2000_2020/2020/MDG/mdg_m_65_2020.tif
-      GeoTIFF mdg_m_60_2020.tif https://data.worldpop.org/GIS/AgeSex_structures/Global_2000_2020/2020/MDG/mdg_m_60_2020.tif
-      GeoTIFF mdg_m_5_2020.tif https://data.worldpop.org/GIS/AgeSex_structures/Global_2000_2020/2020/MDG/mdg_m_5_2020.tif
-  - worldpop-population-counts-2015-2030-mdg | Madagascar - Spatial Distribution of Population (2015-2030) | maj 2026-03-23 | org worldpop
-      GeoTIFF mdg_pop_2015_cn_100m.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2015/MDG/v1/100m/constrained/mdg_pop_2015_CN_
-      GeoTIFF mdg_pop_2015_cn_1km.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2015/MDG/v1/1km_ua/constrained/mdg_pop_2015_C
-      GeoTIFF mdg_pop_2016_cn_100m.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2016/MDG/v1/100m/constrained/mdg_pop_2016_CN_
-      GeoTIFF mdg_pop_2016_cn_1km.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2016/MDG/v1/1km_ua/constrained/mdg_pop_2016_C
-      GeoTIFF mdg_pop_2017_cn_100m.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2017/MDG/v1/100m/constrained/mdg_pop_2017_CN_
-      GeoTIFF mdg_pop_2017_cn_1km.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2017/MDG/v1/1km_ua/constrained/mdg_pop_2017_C
-  - hotosm_mdg_populated_places | Populated Places of Madagascar | maj 2026-10-06 | org hot
-      GeoJSON Populated Places (OSM), GeoJSON https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_geo
-      Geopackage Populated Places (OSM), GeoPackage https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_gpk
-      GeoParquet Populated Places (OSM), GeoParquet https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/_layers/osm/populated_places.parquet
-      KML    Populated Places (OSM), KML https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_kml
-      SHP    Populated Places (OSM), Shapefile https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_shp
-      JSON   Populated Places (OSM), STAC Collection https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_met
-  - worldpop-population-counts-for-switzerland | Switzerland - Population Counts | maj 2026-10-12 | org worldpop
-      GeoTIFF che_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/CHE/che_ppp_2020.tif
-      GeoTIFF che_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/CHE/che_ppp_2019.tif
-      GeoTIFF che_ppp_2018.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2018/CHE/che_ppp_2018.tif
-      GeoTIFF che_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/CHE/che_ppp_2017.tif
-      GeoTIFF che_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/CHE/che_ppp_2016.tif
-      GeoTIFF che_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/CHE/che_ppp_2020_UNadj.tif
-  - worldpop-population-counts-for-nigeria | Nigeria - Population Counts | maj 2025-08-26 | org worldpop
-      GeoTIFF nga_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/NGA/nga_ppp_2020.tif
-      GeoTIFF nga_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/NGA/nga_ppp_2019.tif
-      GeoTIFF nga_ppp_2018.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2018/NGA/nga_ppp_2018.tif
-      GeoTIFF nga_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/NGA/nga_ppp_2017.tif
-      GeoTIFF nga_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/NGA/nga_ppp_2016.tif
-      GeoTIFF nga_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/NGA/nga_ppp_2020_UNadj.tif
-  - madagascar---risk-assessment-indicators | Madagascar - Risk Assessment Indicators | maj 2026-10-16 | org heidelberg-institute-for-geoinformation-technology
-      CSV    MDG_ADM2_cyclone_exposure.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_cyclone_exposure.csv
-      CSV    MDG_ADM2_vulnerability.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_vulnerability.csv
-      CSV    MDG_ADM2_coping.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_coping.csv
-      CSV    MDG_ADM2_access.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_access.csv
-      CSV    MDG_ADM2_demographics.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_demographics.csv
-      CSV    MDG_ADM2_facilities.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_facilities.csv
-  - worldpop-population-counts-for-greece | Greece - Population Counts | maj 2025-08-26 | org worldpop
-      GeoTIFF grc_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/GRC/grc_ppp_2020.tif
-      GeoTIFF grc_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/GRC/grc_ppp_2019.tif
-      GeoTIFF grc_ppp_2018.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2018/GRC/grc_ppp_2018.tif
-      GeoTIFF grc_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/GRC/grc_ppp_2017.tif
-      GeoTIFF grc_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/GRC/grc_ppp_2016.tif
-      GeoTIFF grc_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/GRC/grc_ppp_2020_UNadj.tif
-  - worldpop-population-counts-for-vanuatu | Vanuatu - Population Counts | maj 2025-08-26 | org worldpop
-      GeoTIFF vut_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/VUT/vut_ppp_2020.tif
-      GeoTIFF vut_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/VUT/vut_ppp_2019.tif
-      GeoTIFF vut_ppp_2018.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2018/VUT/vut_ppp_2018.tif
-      GeoTIFF vut_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/VUT/vut_ppp_2017.tif
-      GeoTIFF vut_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/VUT/vut_ppp_2016.tif
-      GeoTIFF vut_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/VUT/vut_ppp_2020_UNadj.tif
+== MDG_ADM2_access.csv HTTP 200 (120, 11)
+   colonnes : ADM2_PCODE, ADM_PCODE, access_pop_education_5km, access_pop_education_10km, access_pop_education_20km, access_pop_hospitals_30min, access_pop_hospitals_1h, access_pop_hospitals_2h, access_pop_primary_healthcare_30min, access_pop_primary_healthcare_1h, access_pop_primary_healthcare_2h
+                                      0        1        2
+ADM2_PCODE                      MG11117  MG11119  MG11122
+ADM_PCODE                       MG11117  MG11119  MG11122
+access_pop_education_5km         946177   211558   453625
+access_pop_education_10km       1065309   211558   453625
+access_pop_education_20km       1108304   211558   453625
+access_pop_hospitals_30min      1091163   211558   453625
+access_pop_hospitals_1h         1111889   211558   453625
+access_pop_hospitals_2h         1111889   211558   453625
+access_pop_primary_healthca...  1102033   211558   453625
+access_pop_primary_healthca...  1111889   211558   453625
+access_pop_primary_healthca...  1111889   211558   453625
+== MDG_ADM2_vulnerability.csv HTTP 200 (120, 21)
+   colonnes : ADM2_PCODE, total_pop, female_pop, children_u5, female_u5, elderly, pop_u15, female_u15, wra_pop, dependency_ratio, total_pop_rural, female_pop_rural, children_u5_rural, female_u5_rural, elderly_rural, pop_u15_rural, female_u15_rural, wra_pop_rural, dependency_ratio_rural, rural_pop_perc, ADM_PCODE
+                              0        1        2
+ADM2_PCODE              MG11117  MG11119  MG11122
+total_pop               1111889   211558   453625
+female_pop               554100   105428   226060
+children_u5              152086    28937    62047
+female_u5                 75010    14272    30602
+elderly                   40197     7648    16400
+pop_u15                  419810    79877   171273
+female_u15               207166    39417    84519
+wra_pop                  278680    53024   113695
+dependency_ratio          70.57    70.57    70.57
+total_pop_rural           70472        0        0
+female_pop_rural          35119        0        0
+children_u5_rural          9639        0        0
+female_u5_rural            4754        0        0
+elderly_rural              2548        0        0
+pop_u15_rural             26608        0        0
+female_u15_rural          13130        0        0
+wra_pop_rural             17663        0        0
+dependency_ratio_rural    70.57      0.0      0.0
+rural_pop_perc             6.34      0.0      0.0
+ADM_PCODE               MG11117  MG11119  MG11122
+== MDG_ADM2_coping.csv HTTP 200 (120, 48)
+   colonnes : ADM2_PCODE, access_pop_education_5km, access_pop_education_10km, access_pop_education_20km, access_pop_hospitals_30min, access_pop_hospitals_1h, access_pop_hospitals_2h, access_pop_primary_healthcare_30min, access_pop_primary_healthcare_1h, access_pop_primary_healthcare_2h, education_count, hospitals_count, primary_healthcare_count, RP10_evac_time_minutes_mean, RP10_evac_time_minutes_max, RP10_evac_time_minutes_median, RP50_evac_time_minutes_mean, RP50_evac_time_minutes_max, RP50_evac_time_minutes_median, RP100_evac_time_minutes_mean, RP100_evac_time_minutes_max, RP100_evac_time_minutes_median, RP500_evac_time_minutes_mean, RP500_evac_time_minutes_max, RP500_evac_time_minutes_median, kt34_evac_time_minutes_mean, kt34_evac_time_minutes_max, kt34_evac_time_minutes_median, rural_access_children_u5, rural_access_dependents, rural_access_working, rural_access_elderly, rural_access_female_pop, rural_access_female_u15, rural_access_female_u5, rural_access_pop_u15, rural_access_total_pop, rural_access_wra_pop, rural_access_dependency_ratio, RAI_total_pop, RAI_female_pop, RAI_children_u5, RAI_female_u5, RAI_elderly, RAI_pop_u15, RAI_female_u15, RAI_wra_pop, ADM_PCODE
+                                      0        1        2
+ADM2_PCODE                      MG11117  MG11119  MG11122
+access_pop_education_5km         946177   211558   453625
+access_pop_education_10km       1065309   211558   453625
+access_pop_education_20km       1108304   211558   453625
+access_pop_hospitals_30min      1091163   211558   453625
+access_pop_hospitals_1h         1111889   211558   453625
+access_pop_hospitals_2h         1111889   211558   453625
+access_pop_primary_healthca...  1102033   211558   453625
+access_pop_primary_healthca...  1111889   211558   453625
+access_pop_primary_healthca...  1111889   211558   453625
+education_count                     121       59       79
+hospitals_count                       8       10       12
+primary_healthcare_count             25       14        9
+RP10_evac_time_minutes_mean        15.4     10.1      3.2
+RP10_evac_time_minutes_max         32.3     13.0      9.7
+RP10_evac_time_minutes_median      15.3     10.0      2.6
+RP50_evac_time_minutes_mean        13.8      3.5      8.4
+RP50_evac_time_minutes_max         31.7      6.9     13.4
+RP50_evac_time_minutes_median      13.3      3.3      8.2
+RP100_evac_time_minutes_mean       16.5      5.1      5.5
+RP100_evac_time_minutes_max        39.4      9.3     10.0
+RP100_evac_time_minutes_median     14.8      4.9      5.0
+RP500_evac_time_minutes_mean       15.7      4.4      8.5
+RP500_evac_time_minutes_max        40.3      8.2     13.6
+RP500_evac_time_minutes_median     15.1      4.4      8.4
+kt34_evac_time_minutes_mean       559.9    533.6    534.3
+kt34_evac_time_minutes_max        608.7    537.3    540.5
+kt34_evac_time_minutes_median     558.4    534.2    534.3
+rural_access_children_u5           2086        0        0
+rural_access_dependents            6310        0        0
+rural_access_working               8942        0        0
+rural_access_elderly                551        0        0
+rural_access_female_pop            7600        0        0
+rural_access_female_u15            2842        0        0
+rural_access_female_u5             1029        0        0
+rural_access_pop_u15               5758        0        0
+rural_access_total_pop            15251        0        0
+rural_access_wra_pop               3823        0        0
+rural_access_dependency_ratio      70.6      NaN      NaN
+RAI_total_pop                      21.6      0.0      0.0
+== MDG_ADM2_cyclone_exposure.csv HTTP 200 (120, 50)
+   colonnes : ADM2_PCODE, ADM_PCODE, kt34_total_pop_cat1, kt34_total_pop_cat2, kt34_total_pop_cat3, kt34_female_pop_cat1, kt34_female_pop_cat2, kt34_female_pop_cat3, kt34_children_u5_cat1, kt34_children_u5_cat2, kt34_children_u5_cat3, kt34_female_u5_cat1, kt34_female_u5_cat2, kt34_female_u5_cat3, kt34_elderly_cat1, kt34_elderly_cat2, kt34_elderly_cat3, kt34_pop_u15_cat1, kt34_pop_u15_cat2, kt34_pop_u15_cat3, kt34_female_u15_cat1, kt34_female_u15_cat2, kt34_female_u15_cat3, kt34_wra_pop_cat1, kt34_wra_pop_cat2, kt34_wra_pop_cat3, kt34_dependency_ratio_cat1, kt34_dependency_ratio_cat2, kt34_dependency_ratio_cat3, kt34_education_count_cat1, kt34_education_perc_cat1, kt34_education_count_cat2, kt34_education_perc_cat2, kt34_education_count_cat3, kt34_education_perc_cat3, kt34_hospitals_count_cat1, kt34_hospitals_perc_cat1, kt34_hospitals_count_cat2, kt34_hospitals_perc_cat2, kt34_hospitals_count_cat3, kt34_hospitals_perc_cat3, kt34_primary_healthcare_count_cat1, kt34_primary_healthcare_perc_cat1, kt34_primary_healthcare_count_cat2, kt34_primary_healthcare_perc_cat2, kt34_primary_healthcare_count_cat3, kt34_primary_healthcare_perc_cat3, kt34_crops_km2_cat1, kt34_crops_km2_cat2, kt34_crops_km2_cat3
+                                  0        1        2
+ADM2_PCODE                  MG11117  MG11119  MG11122
+ADM_PCODE                   MG11117  MG11119  MG11122
+kt34_total_pop_cat1               0        0        0
+kt34_total_pop_cat2               0        0        0
+kt34_total_pop_cat3         1111889   211558   453625
+kt34_female_pop_cat1              0        0        0
+kt34_female_pop_cat2              0        0        0
+kt34_female_pop_cat3         554100   105428   226060
+kt34_children_u5_cat1             0        0        0
+kt34_children_u5_cat2             0        0        0
+kt34_children_u5_cat3        152086    28937    62047
+kt34_female_u5_cat1               0        0        0
+kt34_female_u5_cat2               0        0        0
+kt34_female_u5_cat3           75010    14272    30602
+kt34_elderly_cat1                 0        0        0
+kt34_elderly_cat2                 0        0        0
+kt34_elderly_cat3             40197     7648    16400
+kt34_pop_u15_cat1                 0        0        0
+kt34_pop_u15_cat2                 0        0        0
+kt34_pop_u15_cat3            419810    79877   171273
+kt34_female_u15_cat1              0        0        0
+kt34_female_u15_cat2              0        0        0
+kt34_female_u15_cat3         207166    39417    84519
+kt34_wra_pop_cat1                 0        0        0
+kt34_wra_pop_cat2                 0        0        0
+kt34_wra_pop_cat3            278680    53024   113695
+kt34_dependency_ratio_cat1      0.0      0.0      0.0
+kt34_dependency_ratio_cat2      0.0      0.0      0.0
+kt34_dependency_ratio_cat3    70.57    70.57    70.57
+kt34_education_count_cat1         0        0        0
+kt34_education_perc_cat1          0        0        0
+kt34_education_count_cat2         0        0        0
+kt34_education_perc_cat2          0        0        0
+kt34_education_count_cat3       121       56       79
+kt34_education_perc_cat3        100      100      100
+kt34_hospitals_count_cat1         0        0        0
+kt34_hospitals_perc_cat1          0        0        0
+kt34_hospitals_count_cat2         0        0        0
+kt34_hospitals_perc_cat2          0        0        0
+kt34_hospitals_count_cat3         8       10       12
+== MDG_ADM2_demographics.csv HTTP 200 (120, 11)
+   colonnes : ADM2_PCODE, ADM_PCODE, total_pop, female_pop, children_u5, female_u5, elderly, pop_u15, female_u15, wra_pop, dependency_ratio
+                        0        1        2
+ADM2_PCODE        MG11117  MG11119  MG11122
+ADM_PCODE         MG11117  MG11119  MG11122
+total_pop         1111889   211558   453625
+female_pop         554100   105428   226060
+children_u5        152086    28937    62047
+female_u5           75010    14272    30602
+elderly             40197     7648    16400
+pop_u15            419810    79877   171273
+female_u15         207166    39417    84519
+wra_pop            278680    53024   113695
+dependency_ratio    70.57    70.57    70.57
+== ressources : MDG_ADM2_cyclone_exposure.csv | MDG_ADM2_vulnerability.csv | MDG_ADM2_coping.csv | MDG_ADM2_access.csv | MDG_ADM2_demographics.csv | MDG_ADM2_facilities.csv | MDG_ADM2_flood_exposure.csv | MDG_ADM2_rural_population.csv | MDG_ADM2_evacuability.csv | MDG_ADM2_rai.csv
+   notes : 
+This dataset provides comprehensive **Risk Assessment Indicators** for **Madagascar**, aggregated at **admin level 2** and
+can in particular be used to perform a structured risk assessment for **flood** and **drought** hazards and **cyclone** hazards.
+It includes demographic, environmental, infrastructure, accessibility, and hazard-related data to support disaster risk and resilience analysis.
+
+All layers are derived from [HeiGIT’s GAIA Pipeline](https://giscience.github.io/gis-training-resource-center/en/GIS_AA/en_gaia_indicators_processing.html), integrating open data sources such as [WorldPop](https://www.worldpop.org/), 
+[OpenStreetMap](https://www.openstreetmap.org/), and [Google Earth Engine](https://earthengine.google.com/) based on 
+[HDX COD-AB](https://data.humdata.org/dataset/?q=cod-ab) boundaries.
+
+---
+
+### **Data Overview**
+
+- **Access to Services (`MDG_ADM2_access`)**  
+- **Facilities (`MDG_ADM2_facilities`)**  
+- **Coping Capacity (`MDG_ADM2_coping`)**  
+- **Demographics (`MDG_ADM2_demographics`)**  
+- **Rural Population (`MDG_ADM2_rural_population`)**  
+- **Rural Accessibility Index (RAI) (`MDG_ADM2_rai`)**  
+- **Vulnerability (`MDG_ADM2_vulnerability`)**  
+- **Evac
