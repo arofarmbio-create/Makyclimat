@@ -1,0 +1,37 @@
+name: 8 - Prévision saisonnière (ECMWF SEAS5)
+
+# Récupère la prévision saisonnière de pluie par district (Open-Meteo / ECMWF SEAS5) et calcule les probabilités. Une fois par semaine.
+on:
+  schedule:
+    - cron: "30 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      country:
+        description: "Code du pays"
+        default: "mdg"
+
+permissions:
+  contents: write
+
+jobs:
+  seasonal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+      - name: Prévision saisonnière
+        run: |
+          set -o pipefail
+          python scripts/connector_seasonal.py --country "${{ github.event.inputs.country || 'mdg' }}" 2>&1 | tee data/_seasonal_log.txt
+      - name: Enregistrer dans le dépôt
+        if: always()
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add docs/data data
+          git diff --cached --quiet || (git commit -m "Prévision saisonnière (ECMWF SEAS5) : écarts et probabilités par district" && git pull --rebase origin main && git push)

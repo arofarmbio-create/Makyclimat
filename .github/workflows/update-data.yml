@@ -65,7 +65,9 @@ jobs:
         run: |
           python scripts/update_floods.py --country "$COUNTRY" || echo "Débits indisponibles, alertes de crue non mises à jour"
       - name: Calculer les indicateurs
-        run: python scripts/compute_metrics.py --country "$COUNTRY"
+        run: |
+          set -o pipefail
+          python scripts/compute_metrics.py --country "$COUNTRY" 2>&1 | tee data/_compute_log.txt
       - name: Générer le catalogue
         run: python scripts/build_catalogue.py --country "$COUNTRY"
       - name: Contrôle qualité (arrête tout si anomalie)
@@ -76,6 +78,8 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add archive
+          tail -n 80 data/_compute_log.txt > data/_compute_tail.txt
+          git add -f data/_compute_tail.txt
           git diff --cached --quiet || (git commit -m "Archive des indicateurs (données jusqu'à la dernière dékade)" && git pull --rebase origin main && git push)
       - uses: actions/configure-pages@v5
         with:

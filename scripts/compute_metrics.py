@@ -164,14 +164,14 @@ SCENARIO_LIST = [
     {"id": "hum", "label": "Saison humide (1 saison sur 10 est aussi humide)", "short": "Humide"},
     {"id": "el", "label": "Comme lors des El Niño passés", "short": "Type El Niño"},
     {"id": "la", "label": "Comme lors des La Niña passées", "short": "Type La Niña"},
-    {"id": "prev", "label": "Selon la prévision saisonnière fournie", "short": "Prévision"},
+    {"id": "prev", "label": "Selon la prévision saisonnière (ECMWF SEAS5, ou fichier fourni)", "short": "Prévision"},
 ]
 
 
-def read_forecast(units, LI, anc, pct_y):
+def read_forecast(units, LI, anc, pct_y, path=None):
     """Prévision saisonnière officielle optionnelle (inputs/prevision_saisonniere.csv : pcode, p_sec, p_normal, p_humide,
     source, date ; pcode = zone ou ALL). Retourne (probabilités par fokontany (N,3), poids par saison (Y,N)) ou (None, None)."""
-    path = INPUTS_DIR / "prevision_saisonniere.csv"
+    path = path or INPUTS_DIR / "prevision_saisonniere.csv"
     if not path.exists():
         return None, None
     import scenarios as SC
@@ -437,7 +437,10 @@ def main() -> None:
             else:
                 print("Cascade prévision non appliquée : la prévision ne couvre pas le jour qui suit les dernières observations.")
         pct_y, norm_full = SC.final_pct(act, clim_m, series, cov, min_norm)
-        fprobs, fweights = read_forecast(units, LI, anc, pct_y)
+        seas_path = INPUTS_DIR / "prevision_saisonniere.csv"          # prévision officielle fournie à la main : prioritaire
+        if not seas_path.exists():
+            seas_path = country_data_dir(args.country) / "seasonal_auto.csv"   # sinon prévision ECMWF SEAS5 (connector_seasonal.py)
+        fprobs, fweights = read_forecast(units, LI, anc, pct_y, seas_path)
         sc_pct, nph = SC.scenario_values(pct_y, ms["phases"], fprobs)
         lvl_y = SC.level_array(pct_y, levels)
         ok_y = np.isfinite(pct_y)

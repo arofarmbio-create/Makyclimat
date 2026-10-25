@@ -647,6 +647,43 @@ indicators:
     source: "IBTrACS v04r01 (NOAA/NCEI) ; vent au centre du système, pas à la zone"
     frequency: Hebdomadaire
     status: active
+  # ---------------- PRÉVISION SAISONNIÈRE (ECMWF SEAS5 via Open-Meteo) ----------------
+  - id: seas_anom_pct
+    label: "Prévision saisonnière : écart de la pluie de la saison novembre-avril à la normale du modèle (moyenne d'ensemble, district)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [food_security, agriculture, wash, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1]
+    source: "ECMWF SEAS5/EC46 via Open-Meteo (CC-BY 4.0) ; signal du modèle, compétence modérée à Madagascar"
+    frequency: Mensuelle
+    status: active
+  - id: seas_p_sec_pct
+    label: "Prévision saisonnière : probabilité d'une saison de pluie sèche (tercile inférieur), bornée à 15-50 %"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [food_security, agriculture, wash, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1]
+    source: "ECMWF SEAS5/EC46 via Open-Meteo ; probabilités MakyClimat (correction delta, terciles CHIRPS)"
+    frequency: Mensuelle
+    status: active
+  - id: seas_p_humide_pct
+    label: "Prévision saisonnière : probabilité d'une saison de pluie humide (tercile supérieur), bornée à 15-50 %"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [food_security, agriculture, wash, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1]
+    source: "ECMWF SEAS5/EC46 via Open-Meteo ; probabilités MakyClimat (correction delta, terciles CHIRPS)"
+    frequency: Mensuelle
+    status: active
   # ---------------- SERVICES CARTOGRAPHIÉS (OpenStreetMap) : comptes minimaux, pas un recensement ----------------
   - id: osm_ecoles
     label: "Écoles cartographiées dans OpenStreetMap (nombre minimal : zéro = rien de cartographié, pas forcément aucune école)"

@@ -438,7 +438,7 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
-    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + hydroSection(f) + soilSection(f) + histSection(f);
+    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + seasonSection(f) + hydroSection(f) + soilSection(f) + histSection(f);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -1051,6 +1051,38 @@
   }
 
 
+  /* ---------- Prévision saisonnière (ECMWF SEAS5 via Open-Meteo) ---------- */
+  var MONTHS_FR = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+  function setupSeasonal() {
+    return getJSON("seasonal.json").then(function (D) { S.seas = D; }).catch(function () { S.seas = null; });
+  }
+  function seasonSection(f) {
+    var D = S.seas;
+    if (!D) return "";
+    var c = f.properties.c, chain = (S.anc && S.anc[c]) ? S.anc[c].slice().reverse() : [c, f.properties.p], z = null;
+    for (var i = 0; i < chain.length && !z; i++) z = D.z[chain[i]];
+    if (!z) return "";
+    var own = !!D.z[c], n = D.months.length, W = 300, Ht = 92, base = 46, bw = W / n, sc = 36 / 40;
+    var svg = '<svg viewBox="0 0 ' + W + " " + Ht + '" width="100%" role="img" aria-label="Écart prévu de la pluie mensuelle à la normale du modèle">' +
+      '<line x1="0" x2="' + W + '" y1="' + base + '" y2="' + base + '" stroke="#999" stroke-width="0.8"/>';
+    D.months.forEach(function (m, i) {
+      var v = z.r[i], mo = +m.slice(5, 7), inSeason = D.season_months.indexOf(mo) >= 0;
+      if (v === null || v === undefined) return;
+      var h = Math.max(0.5, Math.min(40, Math.abs(v)) * sc), y = v >= 0 ? base - h : base;
+      svg += '<rect x="' + (i * bw + 4) + '" y="' + y + '" width="' + (bw - 8) + '" height="' + h + '" fill="' + (v >= 0 ? "#3b7dbf" : "#c97b2b") + '" opacity="' + (inSeason ? 1 : 0.35) + '"><title>' +
+        MONTHS_FR[mo - 1] + " " + m.slice(0, 4) + " : " + (v > 0 ? "+" : "") + String(v).replace(".", ",") + " % (" + (z.a[i] > 0 ? "+" : "") + String(z.a[i]).replace(".", ",") + " mm)" + (inSeason ? "" : " ; hors saison de pluie") + "</title></rect>" +
+        '<text x="' + (i * bw + bw / 2) + '" y="' + (Ht - 4) + '" font-size="8" fill="#555" text-anchor="middle">' + MONTHS_FR[mo - 1] + "</text>";
+    });
+    svg += "</svg>";
+    var rs = z.rs, word = rs <= -15 ? "nettement plus sèche que la normale" : rs <= -5 ? "plutôt plus sèche que la normale" : rs < 5 ? "proche de la normale" : rs < 15 ? "plutôt plus humide que la normale" : "nettement plus humide que la normale";
+    var h = "<h4>Prévision saisonnière (modèle ECMWF)</h4>";
+    h += '<div class="row"><span>Pluie de la saison (mois prévus de novembre à avril)</span><span><b>' + (rs > 0 ? "+" : "") + String(rs).replace(".", ",") + " %</b> : " + word + "</span></div>";
+    h += '<div class="row"><span>Probabilités (tiers sec / normal / humide)</span><span><b>' + z.p[0] + " % / " + z.p[1] + " % / " + z.p[2] + " %</b></span></div>" + svg;
+    h += '<div class="note">Prévision émise le ' + esc(D.issued) + ". Barres : écart prévu de chaque mois à la normale du modèle (pâle = hors saison de pluie). " + (own ? "" : "Valeur du district. ") +
+      "Moyenne d'ensemble ECMWF SEAS5 via Open-Meteo ; la compétence est modérée à Madagascar (surtout liée à El Niño dans le Sud) et les probabilités sont volontairement bornées entre 15 et 50 %. Ce n'est pas une prévision de Météo Madagascar.</div>";
+    return h;
+  }
+
   /* ---------- Priorités de réponse (vue d'un gestionnaire d'information) ---------- */
   function respRows() {
     if (!S.view) return [];
@@ -1589,6 +1621,7 @@
       setupHistory();
       setupHydro();
       setupSoil();
+      setupSeasonal();
       setupCyclones();
     }).catch(function (e) { console.error(e); showEmpty("Chargement impossible : " + e.message); });
   }
