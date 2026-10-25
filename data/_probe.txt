@@ -237,6 +237,13 @@
       GeoTIFF mdg_pop_2016_cn_1km.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2016/MDG/v1/1km_ua/constrained/mdg_pop_2016_C
       GeoTIFF mdg_pop_2017_cn_100m.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2017/MDG/v1/100m/constrained/mdg_pop_2017_CN_
       GeoTIFF mdg_pop_2017_cn_1km.tif https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2017/MDG/v1/1km_ua/constrained/mdg_pop_2017_C
+  - hotosm_mdg_populated_places | Populated Places of Madagascar | maj 2026-10-06 | org hot
+      GeoJSON Populated Places (OSM), GeoJSON https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_geo
+      Geopackage Populated Places (OSM), GeoPackage https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_gpk
+      GeoParquet Populated Places (OSM), GeoParquet https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/_layers/osm/populated_places.parquet
+      KML    Populated Places (OSM), KML https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_kml
+      SHP    Populated Places (OSM), Shapefile https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_shp
+      JSON   Populated Places (OSM), STAC Collection https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_met
   - worldpop-population-counts-for-switzerland | Switzerland - Population Counts | maj 2026-10-12 | org worldpop
       GeoTIFF che_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/CHE/che_ppp_2020.tif
       GeoTIFF che_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/CHE/che_ppp_2019.tif
@@ -251,13 +258,13 @@
       GeoTIFF nga_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/NGA/nga_ppp_2017.tif
       GeoTIFF nga_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/NGA/nga_ppp_2016.tif
       GeoTIFF nga_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/NGA/nga_ppp_2020_UNadj.tif
-  - hotosm_mdg_populated_places | Populated Places of Madagascar | maj 2026-10-06 | org hot
-      GeoJSON Populated Places (OSM), GeoJSON https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_geo
-      Geopackage Populated Places (OSM), GeoPackage https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_gpk
-      GeoParquet Populated Places (OSM), GeoParquet https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/_layers/osm/populated_places.parquet
-      KML    Populated Places (OSM), KML https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_kml
-      SHP    Populated Places (OSM), Shapefile https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_shp
-      JSON   Populated Places (OSM), STAC Collection https://production-raw-data-api.s3.amazonaws.com/ISO3/MDG/populated_places/hotosm_mdg_populated_places_osm_met
+  - madagascar---risk-assessment-indicators | Madagascar - Risk Assessment Indicators | maj 2026-10-16 | org heidelberg-institute-for-geoinformation-technology
+      CSV    MDG_ADM2_cyclone_exposure.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_cyclone_exposure.csv
+      CSV    MDG_ADM2_vulnerability.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_vulnerability.csv
+      CSV    MDG_ADM2_coping.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_coping.csv
+      CSV    MDG_ADM2_access.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_access.csv
+      CSV    MDG_ADM2_demographics.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_demographics.csv
+      CSV    MDG_ADM2_facilities.csv https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/MDG_ADM2_facilities.csv
   - worldpop-population-counts-for-greece | Greece - Population Counts | maj 2025-08-26 | org worldpop
       GeoTIFF grc_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/GRC/grc_ppp_2020.tif
       GeoTIFF grc_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/GRC/grc_ppp_2019.tif
@@ -272,10 +279,3 @@
       GeoTIFF vut_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/VUT/vut_ppp_2017.tif
       GeoTIFF vut_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/VUT/vut_ppp_2016.tif
       GeoTIFF vut_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/VUT/vut_ppp_2020_UNadj.tif
-  - worldpop-population-counts-for-grenada | Grenada - Population Counts | maj 2025-08-26 | org worldpop
-      GeoTIFF grd_ppp_2020.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/GRD/grd_ppp_2020.tif
-      GeoTIFF grd_ppp_2019.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2019/GRD/grd_ppp_2019.tif
-      GeoTIFF grd_ppp_2018.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2018/GRD/grd_ppp_2018.tif
-      GeoTIFF grd_ppp_2017.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2017/GRD/grd_ppp_2017.tif
-      GeoTIFF grd_ppp_2016.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2016/GRD/grd_ppp_2016.tif
-      GeoTIFF grd_ppp_2020_UNadj.tif https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/GRD/grd_ppp_2020_UNadj.tif
