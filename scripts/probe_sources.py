@@ -43,13 +43,16 @@ def ibtracs():
 def seasonal():
     base = "https://seasonal-api.open-meteo.com/v1/seasonal"
     for params in [
-        {"monthly": "precipitation_mean,precipitation_anomaly"},
-        {"monthly": "precipitation_sum"},
-        {"six_hourly": "precipitation", "forecast_days": 3},
-        {"daily": "precipitation_sum", "forecast_days": 3},
+        {"monthly": "precipitation_mean,precipitation_anomaly", "forecast_months": 7},
+        {"monthly": "precipitation_mean,precipitation_anomaly", "models": "ecmwf_seas5"},
+        {"monthly": "precipitation_anomaly,precipitation_anomaly_gt0,precipitation_efi"},
+        {"monthly": "precipitation_mean,precipitation_anomaly", "format": "csv"},
     ]:
         r = requests.get(base, params=dict({"latitude": -18.9, "longitude": 47.5, "timezone": "auto"}, **params), headers=UA, timeout=120)
-        note(f"== seasonal {params} -> HTTP {r.status_code} {r.text[:700]}")
+        note(f"== seasonal {params} -> HTTP {r.status_code} {r.text[:900]}")
+    r = requests.get(base, params={"latitude": "-18.9,-15.7", "longitude": "47.5,46.3", "monthly": "precipitation_mean,precipitation_anomaly", "timezone": "auto"}, headers=UA, timeout=120)
+    j = r.json()
+    note(f"== seasonal 2 points : type {type(j).__name__} ; {len(j) if isinstance(j, list) else 'dict'} ; clés {list(j[0].keys()) if isinstance(j, list) else list(j.keys())}")
 
 
 def dhs():
@@ -65,8 +68,6 @@ def dhs():
     note(f"== DHS data WS_SRCE_P_IMP {len(d)} lignes ; exemple : " + json.dumps(d[:3], ensure_ascii=False)[:900])
 
 
-attempt("HeiGIT crues", heigit)
-attempt("IBTrACS", ibtracs)
 attempt("Saisonnier", seasonal)
 attempt("DHS", dhs)
 open("data/_probe.txt", "w", encoding="utf-8").write("\n".join(out))
