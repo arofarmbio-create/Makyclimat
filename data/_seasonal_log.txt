@@ -1,0 +1,1 @@
+Prévision saisonnière : 144 zones, saison sur les mois [11, 12, 1, 2, 3] ; exemple écart saison -11.6 %
