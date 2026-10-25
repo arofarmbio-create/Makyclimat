@@ -41,15 +41,24 @@ def annual_maxima(times, values):
     return g.max()[full].to_numpy()
 
 
-def thresholds(cfg, communes, batch=10, last_year=None):
+def thresholds(cfg, communes, batch=3, last_year=None, existing=None, max_locations=None, save=None):
+    """Seuils par commune. Reprise possible : les communes déjà calculées sont conservées ; arrêt propre si l'API refuse (quota)."""
     start = cfg["flood"].get("history_start", 1984)
     last_year = last_year or dt.date.today().year - 1
-    rows = []
-    for i in range(0, len(communes), batch):
-        sub = communes.iloc[i:i + batch]
+    rows = [] if existing is None or len(existing) == 0 else existing.to_dict("records")
+    done = {r["pcode"] for r in rows}
+    todo = communes[~communes.pcode.isin(done)].reset_index(drop=True)
+    if max_locations:
+        todo = todo.iloc[:max_locations]
+    for i in range(0, len(todo), batch):
+        sub = todo.iloc[i:i + batch]
         params = {"latitude": ",".join(f"{x:.4f}" for x in sub.lat), "longitude": ",".join(f"{x:.4f}" for x in sub.lon),
                   "daily": "river_discharge", "start_date": f"{start}-01-01", "end_date": f"{last_year}-12-31"}
-        payload = om.get_json(om.FLOOD_URL, params)
+        try:
+            payload = om.get_json(om.FLOOD_URL, params, retries=4, pause=5.0)
+        except (RuntimeError, ValueError) as e:
+            print(f"::warning::Seuils de crue interrompus après {len(rows)} communes : {e}")
+            break
         for (pc, lon, lat), item in zip(zip(sub.pcode, sub.lon, sub.lat), om.as_list(payload)):
             d = item["daily"]
             am = annual_maxima(d["time"], [np.nan if v is None else v for v in d["river_discharge"]])
@@ -57,9 +66,11 @@ def thresholds(cfg, communes, batch=10, last_year=None):
             rows.append({"pcode": pc, "lon": lon, "lat": lat, "cell_lat": item.get("latitude"), "cell_lon": item.get("longitude"),
                          "n_years": len(am), "q_mean": float(np.mean(am)) if len(am) else np.nan,
                          **{f"q{T}": v for T, v in lv.items()}})
-        time.sleep(0.5)
+        if save:
+            save(pd.DataFrame(rows))
+        time.sleep(1.0)
         if (i // batch) % 20 == 0:
-            print(f"  seuils : {min(i + batch, len(communes))}/{len(communes)}")
+            print(f"  seuils : {len(rows)}/{len(communes)}")
     return pd.DataFrame(rows)
 
 
@@ -85,15 +96,19 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
     ap.add_argument("--thresholds", action="store_true")
+    ap.add_argument("--max-locations", type=int, default=None, help="plafond de communes par exécution (quota de l'API)")
     args = ap.parse_args()
     cfg = load_config(args.country)
     units = read_units(args.country)
     communes = units[units.level == 3][["pcode", "lon", "lat"]].reset_index(drop=True)
     th_path = country_data_dir(args.country) / "flood_thresholds.csv"
     if args.thresholds:
-        df = thresholds(cfg, communes)
-        df.to_csv(th_path, index=False)
-        print(f"Seuils de crue écrits pour {len(df)} communes ({int(df.q2.notna().sum())} avec ajustement valide).")
+        old = pd.read_csv(th_path, dtype={"pcode": str}) if th_path.exists() else None
+        df = thresholds(cfg, communes, existing=old, max_locations=args.max_locations,
+                        save=lambda d: d.to_csv(th_path, index=False))
+        print(f"Seuils de crue : {len(df)}/{len(communes)} communes ({int(df.q2.notna().sum()) if len(df) else 0} avec ajustement valide).")
+        if len(df) == 0:
+            sys.exit("Aucun seuil calculé (API indisponible ou quota atteint) : relancer plus tard.")
         return
     if not th_path.exists():
         sys.exit("Seuils de crue absents : lancer d'abord --thresholds (workflow « Seuils de crue »).")

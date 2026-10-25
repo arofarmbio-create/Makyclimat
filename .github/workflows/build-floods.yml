@@ -3,6 +3,8 @@ name: 3 - Seuils de crue des rivières (une fois par an)
 # Calcule, pour chaque commune, les débits de crue de 2, 5, 10 et 20 ans à partir de l'historique du modèle GloFAS (1984 à aujourd'hui).
 # Enchaînement automatique après la normale de pluie (premier démarrage) ; à relancer une fois par an.
 on:
+  schedule:
+    - cron: "30 3 * * *"   # reprise quotidienne jusqu'à ce que toutes les communes aient leurs seuils (quota gratuit de l'API)
   workflow_run:
     workflows: ["2 - Construire la normale de pluie (une seule fois)"]
     types: [completed]
@@ -28,7 +30,7 @@ jobs:
       - name: Installer les dépendances
         run: pip install -r requirements-update.txt
       - name: Seuils de crue par commune
-        run: python scripts/update_floods.py --country "${{ github.event.inputs.country || 'mdg' }}" --thresholds
+        run: python scripts/update_floods.py --country "${{ github.event.inputs.country || 'mdg' }}" --thresholds --max-locations 100
       - name: Enregistrer dans le dépôt
         run: |
           git config user.name "makyclimat-bot"

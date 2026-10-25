@@ -238,6 +238,8 @@ def test_forecast_and_floods() -> None:
                 [f"{y}-12-{d:02d}" for y in range(1984, 2000) for d in range(29, 32)],
         "river_discharge": list(np.random.default_rng(3).gumbel(50, 10, 16 * 12 * 28 + 16 * 3))}} for _ in params["latitude"].split(",")]
     th = uf.thresholds({"flood": {"history_start": 1984}}, com.iloc[:12], batch=10, last_year=1999)
+    th2 = uf.thresholds({"flood": {"history_start": 1984}}, com.iloc[:12], batch=10, last_year=1999, existing=th.iloc[:5], max_locations=4)
+    check("seuils : reprise sans refaire les communes déjà calculées", len(th2) == 9 and th2.pcode.is_unique)
     check("seuils de crue : une ligne par commune, q2 < q5 < q10 < q20", len(th) == 12 and (th.q2 < th.q5).all() and (th.q5 < th.q10).all() and (th.q10 < th.q20).all(),
           str(th.iloc[0][["q2", "q5", "q10", "q20", "n_years"]].to_dict()))
 
