@@ -1,11 +1,9 @@
 """Sondage de sources depuis GitHub Actions : le résultat est écrit dans data/_probe.txt (lisible dans le dépôt)."""
-import io
 import sys
+import time
+from pathlib import Path
 
-import pandas as pd
-import requests
-
-UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 out = []
 
 
@@ -15,35 +13,21 @@ def note(msg):
 
 
 try:
-    r = requests.get("https://data.humdata.org/api/3/action/package_show", params={"id": "madagascar---risk-assessment-indicators"}, headers=UA, timeout=60).json()["result"]
-    note("== notes complètes :\n" + (r.get("notes") or "")[:6000])
-    note("   méthodologie : " + (r.get("methodology_other") or "")[:1500] + " | caveats: " + (r.get("caveats") or "")[:1500])
+    import connector_osm_services as CO
+    t = time.time()
+    els = CO.fetch()
+    pts = CO.classify(els)
+    note(f"== OSM Overpass OK : {len(els)} éléments en {time.time() - t:.0f} s ; {(pts.kind == 'edu').sum()} écoles, {(pts.kind == 'sante').sum()} formations sanitaires, dont {int(pts.hopital.sum())} hôpitaux")
+    import json
+    from shapely.geometry import shape
+    from common import country_docs_dir
+    geoms = {}
+    for f in sorted((country_docs_dir("mdg") / "geo" / "adm4").glob("*.geojson")):
+        for ft in json.loads(f.read_text(encoding="utf-8"))["features"]:
+            geoms[ft["properties"]["c"]] = shape(ft["geometry"])
+    c = CO.count_by_unit(pts, geoms)
+    note(f"   fokontany : {len(geoms)} ; avec école {(c.osm_ecoles > 0).sum()} ; avec formation sanitaire {(c.osm_sante > 0).sum()} ; total écoles rattachées {int(c.osm_ecoles.sum())}, formations {int(c.osm_sante.sum())}")
 except Exception as e:
-    note(f"== package ECHEC {e}")
-BASE = "https://hot.storage.heigit.org/heigit-hdx-public/risk_assessment_inputs/mdg/"
-for f in ["MDG_ADM2_flood_exposure.csv", "MDG_ADM2_facilities.csv", "MDG_ADM2_evacuability.csv", "MDG_ADM2_rural_population.csv"]:
-    try:
-        r = requests.get(BASE + f, headers=UA, timeout=120)
-        df = pd.read_csv(io.BytesIO(r.content))
-        note(f"== {f} HTTP {r.status_code} {df.shape}")
-        note("   colonnes : " + ", ".join(df.columns))
-        note(df.head(3).T.head(30).to_string(max_colwidth=30))
-    except Exception as e:
-        note(f"== {f} ECHEC {type(e).__name__}: {str(e)[:200]}")
-# IOM DTM Madagascar (API) : colonnes et valeurs
-try:
-    pk = requests.get("https://data.humdata.org/api/3/action/package_show", params={"id": "mdg-iom-dtm-from-api"}, headers=UA, timeout=60).json()["result"]
-    note("== DTM notes : " + (pk.get("notes") or "")[:1500])
-    for x in pk["resources"]:
-        note(f"   ressource {x['format']} {x['name']} {x['url']}")
-    u = [x["url"] for x in pk["resources"] if x["format"].upper() == "CSV"][0]
-    df = pd.read_csv(io.BytesIO(requests.get(u, headers=UA, timeout=180).content), skiprows=[1], low_memory=False)
-    note(f"== DTM CSV {df.shape} colonnes : {list(df.columns)}")
-    note(df.head(6).T.to_string(max_colwidth=40)[:3000])
-    for c in df.columns:
-        if df[c].nunique() < 15:
-            note(f"   {c}: {df[c].value_counts().head(12).to_dict()}")
-except Exception as e:
-    note(f"== DTM ECHEC {type(e).__name__}: {str(e)[:300]}")
+    note(f"== OSM ECHEC {type(e).__name__}: {str(e)[:400]}")
 open("data/_probe.txt", "w", encoding="utf-8").write("\n".join(out))
 sys.exit(0)
