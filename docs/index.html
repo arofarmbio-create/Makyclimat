@@ -63,6 +63,20 @@
       <label class="check"><input type="checkbox" id="hsubs"> Sous-bassins (jonctions de rivières)</label>
       <div class="note">Calcul MakyClimat sur le modèle de terrain Copernicus (maille ~550 m) : cours d'eau dès 100 km² drainés. Les petits bassins et les ruisseaux ne sont pas résolus. La hauteur au-dessus du drainage (HAND) indique une susceptibilité à l'inondation, pas une carte de crue.</div>
     </div>
+    <div class="card" id="cyccard" hidden>
+      <h3>Cyclones passés</h3>
+      <div class="note" id="cycsrc"></div>
+      <div class="two">
+        <div><label class="field" for="cy0">Saison de</label><select id="cy0"></select></div>
+        <div><label class="field" for="cy1">à</label><select id="cy1"></select></div>
+      </div>
+      <label class="field" for="cymin">Intensité minimale</label>
+      <select id="cymin"></select>
+      <label class="check"><input type="checkbox" id="cynear" checked> Seulement les systèmes passés à moins de 100 km de Madagascar</label>
+      <label class="check"><input type="checkbox" id="cyshow"> Afficher les trajectoires sur la carte</label>
+      <div class="note" id="cycnote"></div>
+      <div class="note">Trajectoires officielles (« best track », une position toutes les 6 h). La trajectoire n'est pas la zone touchée : le vent et la pluie s'étendent sur des dizaines à des centaines de km autour du centre. Voir aussi les indicateurs « Cyclones passés à moins de 100 km » dans la liste des couches.</div>
+    </div>
     <div class="card" id="histcard" hidden>
       <h3>Historique et réponse</h3>
       <div class="note" id="histsrc"></div>

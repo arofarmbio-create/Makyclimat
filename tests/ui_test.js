@@ -22,12 +22,14 @@ let lastBlob = null;
 let mapCount = 0;
 const markerGroups = [];
 const hydroLayers = {};
+let cycGroup = null;
 let layersB = [];
 w.L = {
-  map() { return { id: ++mapCount, setView() { return this; }, fitBounds() {}, removeLayer(l) { if (l && l.kind) delete hydroLayers[l.kind]; }, invalidateSize() {}, on() {}, getCenter() { return [0, 0]; }, getZoom() { return 5; } }; },
+  map() { return { id: ++mapCount, setView() { return this; }, fitBounds() {}, removeLayer(l) { if (l && l.kind) delete hydroLayers[l.kind]; if (l === cycGroup) cycGroup = null; }, invalidateSize() {}, on() {}, getCenter() { return [0, 0]; }, getZoom() { return 5; } }; },
   tileLayer() { return { addTo() {} }; },
+  polyline(ll, o) { return { ll, o, bindTooltip() { return this; } }; },
   circleMarker(ll, o) { return { ll, o, bindTooltip() { return this; } }; },
-  layerGroup(ms) { markerGroups.push(ms); return { ms, addTo() { return this; } }; },
+  layerGroup(ms) { markerGroups.push(ms); const g = { ms, addTo() { if (ms.length && ms.every((m) => m.ll && Array.isArray(m.ll[0]))) cycGroup = g; return this; } }; return g; },
   geoJSON(fc, opts) {
     if (opts.hydro) { const o = { fc, kind: opts.hydro, addTo() { hydroLayers[opts.hydro] = o; return o; } }; return o; }
     const layers = fc.features.map((f) => {
@@ -305,6 +307,20 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     handlers[currentLayers[0].feature.properties.c]();
     check("fiche : eau dans le sol (humidité, indice de nappe, graphique)", await waitFor(() => /Eau dans le sol/.test($("info").innerHTML) && /Indice relatif de nappe/.test($("info").innerHTML) && $("info").querySelectorAll("svg polyline").length >= 1));
     check("éboulement : seuil mondial de pluie et pente affichés", /seuil mondial de déclenchement/.test($("info").innerHTML) || /terrain presque plat/.test($("info").innerHTML) || /Prévision non disponible/.test($("info").innerHTML));
+  }
+  const cycFile = path.join(docs, "data", slug, "cyclones.json");
+  if (fs.existsSync(cycFile)) {
+    const C = JSON.parse(fs.readFileSync(cycFile, "utf8"));
+    check("cyclones : carte de réglage visible", await waitFor(() => !$("cyccard").hidden));
+    const maxS = Math.max(...C.storms.map((s) => s.season));
+    const expect = (a, b, mn, near) => C.storms.filter((s) => s.season >= a && s.season <= b && s.max_kt >= mn && (!near || (s.near_km !== null && s.near_km <= 100))).length;
+    $("cy0").value = String(Math.min(...C.storms.map((s) => s.season))); $("cy1").value = String(maxS); $("cymin").value = "0"; $("cynear").checked = false;
+    $("cyshow").checked = true; $("cyshow").dispatchEvent(new w.Event("change"));
+    check("cyclones : tous les systèmes tracés", cycGroup && cycGroup.ms.length === C.storms.length, cycGroup ? cycGroup.ms.length + "/" + C.storms.length : "aucune couche");
+    $("cymin").value = "64"; $("cymin").dispatchEvent(new w.Event("change"));
+    check("cyclones : filtre d'intensité minimale", (cycGroup ? cycGroup.ms.length : 0) === expect(0, 9999, 64, false), cycGroup ? String(cycGroup.ms.length) : "");
+    $("cyshow").checked = false; $("cyshow").dispatchEvent(new w.Event("change"));
+    check("cyclones : couche retirée à la décoche", cycGroup === null);
   }
   console.log(failures ? `\n${failures} ÉCHEC(S)` : "\nTous les tests de l'interface passent.");
   process.exit(failures ? 1 : 0);

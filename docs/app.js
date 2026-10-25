@@ -1215,6 +1215,41 @@
       " habitants). Un cyclone ou une crue en amont peut toucher les zones en aval ; le nom du bassin est celui de la commune de son embouchure.</p>";
   }
 
+  /* ---------- Cyclones passés (IBTrACS) ---------- */
+  var CYC_MIN = [[0, "Tous les systèmes"], [34, "Tempête tropicale modérée et plus (34 kt)"], [48, "Forte tempête tropicale et plus (48 kt)"], [64, "Cyclone tropical et plus (64 kt)"], [90, "Cyclone intense et plus (90 kt)"]];
+  function cycColor(kt) { return kt < 34 ? "#8b95a1" : kt < 48 ? "#d4ac0d" : kt < 64 ? "#f39c12" : kt < 90 ? "#e67e22" : kt < 116 ? "#c0392b" : "#7b1c12"; }
+  function setupCyclones() {
+    return getJSON("cyclones.json").then(function (C) {
+      var seasons = C.storms.map(function (s) { return s.season; }), y0 = Math.min.apply(null, seasons), y1 = Math.max.apply(null, seasons);
+      S.cyc = { data: C, layer: null };
+      $("cyccard").hidden = false;
+      var opts = "";
+      for (var y = y1; y >= y0; y--) opts += '<option value="' + y + '">' + y + "</option>";
+      $("cy0").innerHTML = opts; $("cy1").innerHTML = opts;
+      $("cy0").value = String(Math.max(y0, y1 - 9)); $("cy1").value = String(y1);
+      $("cymin").innerHTML = CYC_MIN.map(function (m) { return '<option value="' + m[0] + '">' + m[1] + "</option>"; }).join("");
+      $("cymin").value = "34";
+      $("cycsrc").innerHTML = "IBTrACS (NOAA) : <b>" + C.storms.length + "</b> systèmes depuis " + C.since + ", mis à jour le " + esc(C.generated) + ". Les saisons récentes sont provisoires.";
+      ["cyshow", "cy0", "cy1", "cymin", "cynear"].forEach(function (id) { $(id).addEventListener("change", drawCyclones); });
+    }).catch(function () { /* pas de cyclones pour ce pays */ });
+  }
+  function drawCyclones() {
+    var Y = S.cyc;
+    if (!Y) return;
+    if (Y.layer) { S.map.removeLayer(Y.layer); Y.layer = null; }
+    if (!$("cyshow").checked) { $("cycnote").textContent = ""; return; }
+    var a = +$("cy0").value, b = +$("cy1").value, mn = +$("cymin").value, near = $("cynear").checked;
+    if (a > b) { var t = a; a = b; b = t; }
+    var sel = Y.data.storms.filter(function (s) { return s.season >= a && s.season <= b && s.max_kt >= mn && (!near || (s.near_km !== null && s.near_km <= 100)); });
+    var lines = sel.map(function (s) {
+      var ln = L.polyline(s.p.map(function (q) { return [q[1], q[0]]; }), { color: cycColor(s.max_kt), weight: s.max_kt >= 64 ? 2.6 : 1.6, opacity: 0.85 });
+      ln.bindTooltip((s.name || "Sans nom") + " " + s.season + " : " + s.cat + ", vent max " + s.max_kt + " kt (" + s.start + " au " + s.end + ")" + (s.prov ? " ; provisoire" : ""));
+      return ln;
+    });
+    Y.layer = L.layerGroup(lines).addTo(S.map);
+    $("cycnote").innerHTML = "<b>" + sel.length + "</b> systèmes affichés (saisons " + a + " à " + b + "). Couleur = intensité maximale (échelle du RSMC La Réunion) ; trait épais = cyclone tropical (64 kt ou plus).";
+  }
+
   function seasonPhaseOf(date) {
     var sc = S.meta.scenarios;
     if (!sc || !sc.hist_phases) return null;
@@ -1554,6 +1589,7 @@
       setupHistory();
       setupHydro();
       setupSoil();
+      setupCyclones();
     }).catch(function (e) { console.error(e); showEmpty("Chargement impossible : " + e.message); });
   }
   init();

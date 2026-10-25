@@ -624,6 +624,29 @@ indicators:
     source: "HeiGIT (Université de Heidelberg) via HDX, cartes d'aléa de crue modélisées ; exposition estimée, pas une crue observée"
     frequency: Ponctuelle
     status: active
+  # ---------------- CYCLONES PASSÉS (IBTrACS) ----------------
+  - id: cyc_nb_100km
+    label: "Cyclones et tempêtes (vent d'au moins 34 kt) passés à moins de 100 km depuis 1980"
+    unit: "systèmes"
+    format: int
+    aggregate: none
+    sectors: [drr, shelter, wash, health, education, logistics]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: "IBTrACS v04r01 (NOAA/NCEI), trajectoires officielles ; proximité au centre du système, pas un champ de vent ni des dégâts"
+    frequency: Hebdomadaire
+    status: active
+  - id: cyc_vent_max_kt
+    label: "Vent maximal (10 min, en nœuds) d'un cyclone passé à moins de 100 km depuis 1980"
+    unit: "kt"
+    format: int
+    aggregate: none
+    sectors: [drr, shelter, logistics]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: "IBTrACS v04r01 (NOAA/NCEI) ; vent au centre du système, pas à la zone"
+    frequency: Hebdomadaire
+    status: active
   # ---------------- SERVICES CARTOGRAPHIÉS (OpenStreetMap) : comptes minimaux, pas un recensement ----------------
   - id: osm_ecoles
     label: "Écoles cartographiées dans OpenStreetMap (nombre minimal : zéro = rien de cartographié, pas forcément aucune école)"
