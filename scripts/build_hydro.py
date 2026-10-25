@@ -40,7 +40,16 @@ def read_tile_http(lat0: int, lon0: int, res: float, how: str = "average"):
     try:
         with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", CPL_VSIL_CURL_ALLOWED_EXTENSIONS=".tif", GDAL_HTTP_MAX_RETRY="4", GDAL_HTTP_RETRY_DELAY="3"):
             with rasterio.open(tile_url(lat0, lon0)) as src:
-                a = src.read(1, out_shape=(n, n), resampling=(Resampling.min if how == "min" else Resampling.average)).astype("float32")
+                if how == "min":   # le rééchantillonnage « min » n'existe pas à la lecture : on lit pleine résolution et on prend le minimum par bloc
+                    full = src.read(1).astype("float32")
+                    if src.nodata is not None:
+                        full[full == src.nodata] = np.inf
+                    b = max(1, min(full.shape) // n)
+                    full = full[: n * b, : n * b]
+                    a = full.reshape(n, b, n, b).min(axis=(1, 3))
+                    a[~np.isfinite(a)] = 0.0
+                    return a
+                a = src.read(1, out_shape=(n, n), resampling=Resampling.average).astype("float32")
                 if src.nodata is not None:
                     a[a == src.nodata] = 0.0
                 return a
