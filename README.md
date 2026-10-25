@@ -181,3 +181,9 @@ La carte « Qui fait quoi où » croise, pour les zones prioritaires de la vue, 
 ## Accessibilité (HeiGIT via HDX)
 
 `scripts/connector_heigit.py` lit les indicateurs de risque de HeiGIT (Université de Heidelberg, données ouvertes sur HDX, produits à partir de WorldPop et OpenStreetMap) : part de la population à moins d'1 h d'un hôpital ou d'un centre de santé de base, à moins de 5 km d'une école, indice d'accès rural (routes revêtues seulement), et nombre de personnes à plus de 2 h d'un hôpital. La valeur est calculée par district ; les régions sont déduites par moyenne pondérée par la population et les communes et fokontany reprennent la valeur de leur district (indiqué dans les libellés). Limites : temps théoriques, réseau OpenStreetMap incomplet en zone rurale, pas d'état réel des routes en saison des pluies.
+
+## Écoles et formations sanitaires cartographiées (OpenStreetMap)
+
+`scripts/connector_osm_services.py` compte, par fokontany, les écoles (`osm_ecoles`), les formations sanitaires (`osm_sante`) et les hôpitaux (`osm_hopitaux`) cartographiés dans OpenStreetMap (API Overpass, licence ODbL). Les communes, districts et régions en font la somme. Fichier rafraîchi au plus une fois par semaine.
+
+**Limite essentielle** : ce sont des comptes minimaux, pas un recensement. En zone rurale, beaucoup d'écoles et de CSB ne sont pas cartographiés : un zéro signifie « rien de cartographié », pas « aucun service ». Pour une analyse de couverture, déposer la liste officielle (Éducation, Santé) dans `inputs/indicateurs/` au format `pcode, indicateur, valeur, date, source`.

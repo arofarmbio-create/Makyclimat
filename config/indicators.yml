@@ -439,6 +439,40 @@ indicators:
     source: "HeiGIT GAIA (indice d'accès rural, définition Banque mondiale) via HDX ; surface des routes : Mapillary et Planet ; ne compte pas les pistes en terre"
     frequency: Ponctuelle
     status: active
+  # ---------------- SERVICES CARTOGRAPHIÉS (OpenStreetMap) : comptes minimaux, pas un recensement ----------------
+  - id: osm_ecoles
+    label: "Écoles cartographiées dans OpenStreetMap (nombre minimal : zéro = rien de cartographié, pas forcément aucune école)"
+    unit: "écoles"
+    format: int
+    aggregate: sum
+    sectors: [education, wash, drr]
+    sdg: ["4.1"]
+    national: [axe1]
+    source: "© contributeurs OpenStreetMap (ODbL), via Overpass ; à comparer à la liste officielle du Ministère de l'Éducation"
+    frequency: Hebdomadaire
+    status: active
+  - id: osm_sante
+    label: "Formations sanitaires cartographiées dans OpenStreetMap (hôpitaux, cliniques, centres de santé ; nombre minimal)"
+    unit: "formations sanitaires"
+    format: int
+    aggregate: sum
+    sectors: [health, wash, drr]
+    sdg: ["3.8"]
+    national: [axe1]
+    source: "© contributeurs OpenStreetMap (ODbL), via Overpass ; à comparer à la liste officielle du Ministère de la Santé"
+    frequency: Hebdomadaire
+    status: active
+  - id: osm_hopitaux
+    label: "Hôpitaux cartographiés dans OpenStreetMap (nombre minimal)"
+    unit: "hôpitaux"
+    format: int
+    aggregate: sum
+    sectors: [health, drr]
+    sdg: ["3.8"]
+    national: [axe1]
+    source: "© contributeurs OpenStreetMap (ODbL), via Overpass"
+    frequency: Hebdomadaire
+    status: active
   - id: pop_no_hosp_2h
     label: Personnes à plus de 2 h d'un hôpital
     unit: personnes

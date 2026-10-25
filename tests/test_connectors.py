@@ -297,8 +297,40 @@ def test_heigit() -> None:
     check("région : moyenne pondérée par la population des districts", reg in out and "acc_hosp_1h_pct" in out[reg])
 
 
+def test_osm_services() -> None:
+    import connector_osm_services as CO
+    import compute_metrics as CM
+    from shapely.geometry import box
+    from common import read_units
+    els = [
+        {"type": "node", "lon": 1.5, "lat": 1.5, "tags": {"amenity": "school", "name": "EPP A"}},
+        {"type": "way", "center": {"lon": 1.5, "lat": 1.5}, "tags": {"amenity": "school", "name": "EPP A"}},      # doublon (même nom, même endroit)
+        {"type": "node", "lon": 1.6, "lat": 1.6, "tags": {"amenity": "kindergarten"}},
+        {"type": "node", "lon": 1.7, "lat": 1.7, "tags": {"amenity": "hospital", "name": "CHU"}},
+        {"type": "node", "lon": 1.8, "lat": 1.2, "tags": {"healthcare": "centre", "name": "CSB2 B"}},
+        {"type": "node", "lon": 1.9, "lat": 1.9, "tags": {"amenity": "restaurant"}},                            # ignoré
+        {"type": "node", "lon": 9.0, "lat": 9.0, "tags": {"amenity": "school", "name": "hors zone"}},          # hors fokontany
+    ]
+    pts = CO.classify(els)
+    check("OSM : doublon retiré, non-services ignorés", len(pts) == 5 and (pts.kind == "edu").sum() == 3)
+    geoms = {"F1": box(1, 1, 2, 2), "F2": box(5, 5, 6, 6)}
+    c = CO.count_by_unit(pts, geoms)
+    check("OSM : écoles comptées par fokontany", c.loc["F1", "osm_ecoles"] == 2 and c.loc["F2", "osm_ecoles"] == 0)
+    check("OSM : formations sanitaires et hôpitaux", c.loc["F1", "osm_sante"] == 2 and c.loc["F1", "osm_hopitaux"] == 1)
+    rows = CO.to_rows(c)
+    check("OSM : format long (pcode, indicateur, valeur, date, source)", {"pcode", "indicateur", "valeur", "date", "source"} <= set(rows.columns) and len(rows) == 6)
+    units = read_units("demo")
+    defs = {i["id"]: i for i in __import__("common").load_yaml("indicators.yml")["indicators"]}
+    check("OSM : indicateurs définis, somme vers le haut", all(defs[i]["aggregate"] == "sum" for i in ("osm_ecoles", "osm_sante", "osm_hopitaux")))
+    kid = units[units.level == 4].pcode.iloc[0]
+    out = CM.aggregate_external(units, {kid: {"osm_ecoles": 3.0, "osm_sante": 1.0, "osm_hopitaux": 0.0}}, defs)
+    parent = units[units.pcode == kid].parent.iloc[0]
+    check("OSM : la commune reçoit la somme de ses fokontany", out.get(parent, {}).get("osm_ecoles") == 3.0)
+
+
 if __name__ == "__main__":
     test_heigit()
+    test_osm_services()
     test_forecast_and_floods()
     test_hapi()
     test_population_grid()
