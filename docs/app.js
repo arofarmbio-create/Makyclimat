@@ -20,6 +20,7 @@
   var SIGNED_COLORS = ["#b2182b", "#ef8a62", "#f1f1f1", "#67a9cf", "#2166ac"];
   function styleOfLayer(k) {
     if (/^ew/.test(k)) return "ew";
+    if (k === "cx") return "cx";
     if (k === "l") return "alert";
     if (k === "pc") return "pct";
     var d = layerDef(k);
@@ -29,6 +30,7 @@
   function fmtLayer(k, v) {
     var d = layerDef(k);
     if (v === null || v === undefined) return "n/d";
+    if (k === "cx") return Math.round(v) + " / 100";
     if (d && (d.fmt === "pct" || (d.ext && d.ext.format === "pct"))) return MC.fmtPct(v);
     if (d && d.ext && d.ext.format === "float") return (d.ext.style === "signed" && v > 0 ? "+" : "") + String(Math.round(v * 100) / 100).replace(".", ",");
     return MC.fmtInt(v);
@@ -49,7 +51,9 @@
   var HAZ = ["rain", "wind", "heat", "dry", "flood"];
 
   var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null, scn: "", simple: false,
-            view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all", profile: "ong" };
+            view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all", profile: "ong",
+            mode: "single", layerB: "pc", scnB: "", sp: [], br: [], map2: null, geo2: null,
+            cx: { items: [{ k: "pc", w: 1, dir: -1 }, { k: "e", w: 1, dir: 1 }, { k: "", w: 1, dir: 1 }], op: "mean" } };
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -97,38 +101,147 @@
     });
   }
 
-  function computeBreaks() {
-    var k = S.layer;
-    var st = styleOfLayer(k);
-    if (st === "alert" || st === "pct" || st === "ew") { S.breaks = []; return; }
-    var vals = S.view.feats.map(function (f) { return val(S.view.metrics[f.properties.c], k); });
+  /* ---------- Cartes : une, deux côte à côte, ou différence ---------- */
+  var HIGHER_WORSE = ["e", "t", "w", "g", "ex", "pa", "l"];
+  var CX_STEPS = [20, 40, 60, 80];
+
+  function specA() { return { layer: S.layer, scn: S.scn, sim: S.simIdx }; }
+  function specB() { return { layer: S.mode === "split" ? S.layerB : S.layer, scn: S.scnB, sim: null }; }
+  function panes() {
+    if (S.mode === "split") return [{ spec: specA(), tag: "A" }, { spec: specB(), tag: "B" }];
+    if (S.mode === "diff") return [{ spec: { layer: S.layer, diff: [specA(), specB()], scn: S.scn, sim: null }, tag: "Δ" }];
+    return [{ spec: specA(), tag: "A" }];
+  }
+
+  function plainVal(c, layer, scn, sim) { return MC.valueFor(S.view.metrics[c], layer, sim, S.meta, scn); }
+
+  function rankOf(sorted, v) {
+    var lo = 0, hi = sorted.length;
+    while (lo < hi) { var mid = (lo + hi) >> 1; if (sorted[mid] < v) lo = mid + 1; else hi = mid; }
+    var a = lo; hi = sorted.length;
+    while (lo < hi) { var m2 = (lo + hi) >> 1; if (sorted[m2] <= v) lo = m2 + 1; else hi = m2; }
+    return (a + 0.5 * (lo - a)) / sorted.length;
+  }
+
+  // Indice composite : classement relatif (0 à 100) dans la vue de chaque indicateur, puis combinaison.
+  function cxCompute(spec) {
+    var items = S.cx.items.filter(function (it) { return it.k; }), op = S.cx.op;
+    var cs = S.view.feats.map(function (f) { return f.properties.c; });
+    var cols = items.map(function (it) { return cs.map(function (c) { return plainVal(c, it.k, spec.scn, spec.sim); }); });
+    var sorted = cols.map(function (col) { return col.filter(function (v) { return v !== null && v !== undefined && isFinite(v); }).sort(function (a, b) { return a - b; }); });
+    var out = { score: {}, parts: {} };
+    cs.forEach(function (c, i) {
+      var rs = [], ws = [], parts = [], ok = items.length > 0;
+      items.forEach(function (it, j) {
+        var v = cols[j][i];
+        if (v === null || v === undefined || !isFinite(v) || !sorted[j].length) { ok = false; return; }
+        var r = rankOf(sorted[j], v); if (it.dir < 0) r = 1 - r;
+        rs.push(r); ws.push(it.w);
+        parts.push({ k: it.k, v: v, r: Math.round(r * 100) });
+      });
+      if (!ok) { out.score[c] = null; return; }
+      var sc = op === "max" ? Math.max.apply(null, rs) : op === "min" ? Math.min.apply(null, rs) :
+        rs.reduce(function (a, r, j) { return a + r * ws[j]; }, 0) / ws.reduce(function (a, w) { return a + w; }, 0);
+      out.score[c] = Math.round(sc * 1000) / 10;
+      out.parts[c] = parts;
+    });
+    return out;
+  }
+
+  function specValue(c, spec) {
+    if (spec.diff) {
+      var a = specValue(c, spec.diff[0]), b = specValue(c, spec.diff[1]);
+      return a !== null && b !== null && isFinite(a) && isFinite(b) ? b - a : null;
+    }
+    if (spec.layer === "cx") { if (!spec.cx) spec.cx = cxCompute(spec); var v = spec.cx.score[c]; return v === undefined ? null : v; }
+    return plainVal(c, spec.layer, spec.scn, spec.sim);
+  }
+  function specStyle(spec) { return spec.diff ? "signed" : spec.layer === "cx" ? "cx" : styleOfLayer(spec.layer); }
+
+  function breaksFor(spec) {
+    var st = specStyle(spec);
+    if (st === "alert" || st === "pct" || st === "ew" || st === "cx") return [];
+    var vals = S.view.feats.map(function (f) { return specValue(f.properties.c, spec); });
     if (st === "signed") {
       var ab = vals.filter(function (x) { return x !== null && x !== undefined && isFinite(x); }).map(Math.abs).sort(function (a, b) { return a - b; });
-      S.breaks = ab.length ? [ab[Math.floor(ab.length * 0.4)], ab[Math.min(ab.length - 1, Math.floor(ab.length * 0.8))]] : [0, 0];
-      return;
+      return ab.length ? [ab[Math.floor(ab.length * 0.4)], ab[Math.min(ab.length - 1, Math.floor(ab.length * 0.8))]] : [0, 0];
     }
-    S.breaks = MC.classBreaks(vals, 5);
+    return MC.classBreaks(vals, 5);
   }
 
-  function colorOf(f) {
-    var m = S.view.metrics[f.properties.c], k = S.layer, v = val(m, k);
+  function colorFor(f, spec, br) {
+    var k = spec.layer, v = specValue(f.properties.c, spec), st = specStyle(spec);
     if (v === null || v === undefined) return "#cccccc";
-    if (k === "l") return ALERT_COLORS[v] || "#cccccc";
-    if (/^ew/.test(k)) return EW_COLORS[v] || "#cccccc";
-    var st = styleOfLayer(k);
+    if (st === "cx") { var ci = 0; while (ci < CX_STEPS.length && v >= CX_STEPS[ci]) ci++; return SEQ.e[ci]; }
+    if (st === "alert") return ALERT_COLORS[v] || "#cccccc";
+    if (st === "ew") return EW_COLORS[v] || "#cccccc";
     if (st === "pct") { for (var i = 0; i < PCT_BINS.length; i++) if (v < PCT_BINS[i].max) return PCT_BINS[i].color; }
     if (st === "signed") {
-      var b = S.breaks || [0, 0];
-      return v <= -b[1] ? SIGNED_COLORS[0] : v <= -b[0] ? SIGNED_COLORS[1] : v < b[0] ? SIGNED_COLORS[2] : v < b[1] ? SIGNED_COLORS[3] : SIGNED_COLORS[4];
+      var b = br || [0, 0], pal = SIGNED_COLORS;
+      if (spec.diff && (HIGHER_WORSE.indexOf(k) >= 0 || /^ew/.test(k))) pal = SIGNED_COLORS.slice().reverse();
+      return v <= -b[1] ? pal[0] : v <= -b[0] ? pal[1] : v < b[0] ? pal[2] : v < b[1] ? pal[3] : pal[4];
     }
     if (v <= 0) return "#f2f2f2";
-    var ci = MC.classIndex(v, S.breaks);
-    return ci < 1 ? "#cccccc" : (SEQ[k] || SEQ.x)[Math.min(ci - 1, 4)];
+    var cj = MC.classIndex(v, br);
+    return cj < 1 ? "#cccccc" : (SEQ[k] || SEQ.x)[Math.min(cj - 1, 4)];
   }
 
-  function styleOf(f) {
+  function computeBreaks() {
+    S.sp = panes().map(function (p) { p.spec.cx = null; return p.spec; });
+    S.br = S.sp.map(breaksFor);
+    S.breaks = S.br[0];
+  }
+
+  function styleFor(f, i) {
     var sel = S.selected && S.selected.properties.c === f.properties.c;
-    return { fillColor: colorOf(f), fillOpacity: 0.78, color: sel ? "#000" : "#ffffff", weight: sel ? 3 : (S.view.lvl === 4 ? 0.6 : 1.2) };
+    return { fillColor: colorFor(f, S.sp[i], S.br[i]), fillOpacity: 0.78, color: sel ? "#000" : "#ffffff", weight: sel ? 3 : (S.view.lvl === 4 ? 0.6 : 1.2) };
+  }
+  function styleOf(f) { return styleFor(f, 0); }
+  function styleOf2(f) { return styleFor(f, 1); }
+  function restyleGeo() {
+    if (S.geo) S.geo.setStyle(styleOf);
+    if (S.geo2 && S.sp.length > 1) S.geo2.setStyle(styleOf2);
+  }
+
+  function buildGeo(map, i, old) {
+    if (old) map.removeLayer(old);
+    return L.geoJSON({ type: "FeatureCollection", features: S.view.feats }, {
+      style: function (f) { return styleFor(f, i); },
+      onEachFeature: function (f, layer) {
+        layer.on("click", function () { onFeatureClick(f); });
+        layer.bindTooltip(function () { return tipText(f, i); }, { sticky: true });
+      } }).addTo(map);
+  }
+
+  function ensureMap2() {
+    if (S.map2) return;
+    var c = S.meta.map;
+    S.map2 = L.map("map2", { zoomSnap: 0.25 }).setView(c.center, c.zoom);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© contributeurs OpenStreetMap" }).addTo(S.map2);
+    var syncing = false;
+    function link(from, to) {
+      if (!from.on) return;
+      from.on("move", function () {
+        if (syncing || S.mode !== "split") return;
+        syncing = true; to.setView(from.getCenter(), from.getZoom(), { animate: false }); syncing = false;
+      });
+    }
+    link(S.map, S.map2); link(S.map2, S.map);
+  }
+
+  function applyMode() {
+    var split = S.mode === "split";
+    $("mapwrap").classList.toggle("split", split);
+    $("map2").hidden = !split;
+    $("cmpB").hidden = S.mode === "single";
+    $("layerBrow").hidden = !split;
+    $("cmpnote").textContent = S.mode === "split" ? "Les deux cartes se déplacent ensemble. Un clic sur l'une sélectionne la même zone sur l'autre."
+      : S.mode === "diff" ? "Différence B moins A pour l'indicateur choisi ci-dessus (période A = « Scénario ou saison » du haut ; période B = ci-dessous). Rouge : plus de risque en B ; bleu : moins." : "";
+    if (S.mode === "split") ensureMap2();
+    document.querySelectorAll("#modeseg button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.mode === S.mode ? "true" : "false"); });
+    setTimeout(function () { if (S.map.invalidateSize) S.map.invalidateSize(); if (S.map2 && S.map2.invalidateSize) S.map2.invalidateSize(); }, 30);
+    if (S.view) { render(false); }
+    syncURL();
   }
 
   function render(fit) {
@@ -137,32 +250,49 @@
       S.view = v;
       if (S.selected && !v.feats.some(function (f) { return f.properties.c === S.selected.properties.c; })) S.selected = null;
       computeBreaks();
-      if (S.geo) S.map.removeLayer(S.geo);
-      S.geo = L.geoJSON({ type: "FeatureCollection", features: v.feats }, {
-        style: styleOf,
-        onEachFeature: function (f, layer) {
-          layer.on("click", function () { onFeatureClick(f); });
-          layer.bindTooltip(function () { return tipText(f); }, { sticky: true });
-        } }).addTo(S.map);
-      if (fit !== false) S.map.fitBounds(S.geo.getBounds(), { padding: [20, 20] });
+      S.geo = buildGeo(S.map, 0, S.geo);
+      if (S.mode === "split") { ensureMap2(); S.geo2 = buildGeo(S.map2, 1, S.geo2); }
+      else if (S.geo2) { S.map2.removeLayer(S.geo2); S.geo2 = null; }
+      if (fit !== false) { S.map.fitBounds(S.geo.getBounds(), { padding: [20, 20] }); if (S.map2) S.map2.fitBounds(S.geo.getBounds(), { padding: [20, 20] }); }
       refresh();
       location.hash = S.path.map(function (p) { return p.pcode; }).join("/");
     }).catch(function (e) { console.error(e); alert("Erreur de chargement : " + e.message); });
   }
 
-  function restyle() { if (!S.view) return; if (S.geo) { computeBreaks(); S.geo.setStyle(styleOf); } refresh(); }
+  function restyle() { if (!S.view) return; computeBreaks(); restyleGeo(); refresh(); syncURL(); }
 
-  function tipText(f) {
-    var m = S.view.metrics[f.properties.c], k = S.layer, v = val(m, k);
+  function specTitle(spec) {
+    if (spec.diff) return "Différence B − A : " + layerDef(spec.layer).label + " (" + periodName(spec.diff[1].scn) + " moins " + periodName(spec.diff[0].scn) + ")";
+    return layerDef(spec.layer).label + " — " + periodName(spec.scn, spec.sim);
+  }
+  function periodName(scn, sim) {
+    if (scn) return scnShort(scn);
+    if (sim !== null && sim !== undefined) return "pluie × " + S.meta.rain_factors[sim].toFixed(2).replace(".", ",");
+    return S.meta.scenarios && S.meta.scenarios.observed_share > 0 ? "observé à ce jour" : "situation de référence";
+  }
+
+  function tipText(f, i) {
+    i = i || 0;
+    var spec = S.sp[i], c = f.properties.c, v = specValue(c, spec), k = spec.layer;
+    var head = "<b>" + esc(f.properties.n) + "</b><br>";
+    if (spec.diff) {
+      var a = specValue(c, spec.diff[0]), b = specValue(c, spec.diff[1]);
+      return head + esc(layerDef(k).label) + "<br>A : " + fmtLayer(k, a) + " · B : " + fmtLayer(k, b) + "<br><b>B − A : " + (v === null ? "n/d" : (v > 0 ? "+" : "") + fmtLayer(k, v)) + "</b>";
+    }
+    if (k === "cx") {
+      var parts = (spec.cx && spec.cx.parts[c]) || [];
+      return head + "Indice couplé : <b>" + (v === null ? "n/d" : Math.round(v) + " / 100") + "</b>" +
+        parts.map(function (p) { return "<br>" + esc(layerDef(p.k).label) + " : " + fmtLayer(p.k, p.v) + " (rang " + p.r + ")"; }).join("");
+    }
     var txt = k === "l" ? levelName(v) : k === "pc" ? MC.fmtPct(v) : /^ew/.test(k) ? S.meta.forecast.level_names[v] : fmtLayer(k, v);
-    return "<b>" + esc(f.properties.n) + "</b><br>" + esc(layerDef(k).label) + " : " + txt;
+    return head + esc(layerDef(k).label) + (S.mode === "split" ? " (" + (i ? "B" : "A") + ")" : "") + " : " + txt;
   }
 
   function onFeatureClick(f) {
     var same = S.selected && S.selected.properties.c === f.properties.c;
     if (same && S.view.lvl < 4) return drill(f);
     S.selected = f;
-    if (S.geo) S.geo.setStyle(styleOf);
+    restyleGeo();
     renderInfo();
   }
 
@@ -188,37 +318,65 @@
     });
   }
 
-  function renderLegend() {
-    var k = S.layer, h = "<b>" + esc(layerDef(k).label) + "</b>";
-    if (S.scn) h += '<div><i style="background:#fff"></i> <em>scénario : ' + esc(scnLabel(S.scn)) + "</em></div>";
-    else if (S.simIdx !== null) h += '<div><i style="background:#fff"></i> <em>scénario : pluie × ' + S.meta.rain_factors[S.simIdx].toFixed(2).replace(".", ",") + "</em></div>";
-    if (k === "l") {
+  function legendFor(spec, br, tag) {
+    var k = spec.layer, h = "<b>" + (tag ? tag + " · " : "") + esc(spec.diff ? "Différence B − A" : layerDef(k).label) + "</b>";
+    var st = specStyle(spec);
+    if (spec.diff) h += '<div><i style="background:#fff"></i> <em>' + esc(layerDef(k).label) + " : " + esc(periodName(spec.diff[1].scn)) + " moins " + esc(periodName(spec.diff[0].scn)) + "</em></div>";
+    else if (spec.scn) h += '<div><i style="background:#fff"></i> <em>' + (isHist(spec.scn) ? "saison passée : " : "scénario : ") + esc(scnLabel(spec.scn)) + "</em></div>";
+    else if (spec.sim !== null && spec.sim !== undefined) h += '<div><i style="background:#fff"></i> <em>scénario : pluie × ' + S.meta.rain_factors[spec.sim].toFixed(2).replace(".", ",") + "</em></div>";
+    if (st === "cx") {
+      var lab = ["0 à 20 : faible", "20 à 40", "40 à 60", "60 à 80", "80 à 100 : très élevé"];
+      lab.forEach(function (t, i) { h += '<div><i style="background:' + SEQ.e[i] + '"></i>' + t + "</div>"; });
+      var opn = { mean: "moyenne pondérée", max: "au moins un indicateur élevé", min: "tous les indicateurs élevés à la fois" }[S.cx.op];
+      h += '<div class="note">Classement relatif dans cette vue (' + opn + ") de : " + S.cx.items.filter(function (it) { return it.k; }).map(function (it) { return esc(layerDef(it.k).label) + (it.dir < 0 ? " (inversé)" : "") + (S.cx.op === "mean" ? " ×" + it.w : ""); }).join(" ; ") + ".</div>";
+    } else if (st === "alert") {
       [1, 2, 3, 4, 0].forEach(function (l) { h += '<div><i style="background:' + ALERT_COLORS[l] + '"></i>' + esc(levelName(l)) + "</div>"; });
-    } else if (styleOfLayer(k) === "ew") {
+    } else if (st === "ew") {
       S.meta.forecast.level_names.forEach(function (nm, i) { h += '<div><i style="background:' + EW_COLORS[i] + '"></i>' + esc(nm) + "</div>"; });
       h += '<div class="note">Prévision météo, 7 prochains jours. Seuils provisoires ; alertes officielles : Météo Madagascar et BNGRC.</div>';
-    } else if (styleOfLayer(k) === "signed") {
-      var sb = S.breaks || [0, 0];
-      var dry = layerDef(k).ext.id.indexOf("corr") >= 0 ? "corrélation négative (moins de pluie quand l'ONI monte)" : "baisse";
-      var wet = layerDef(k).ext.id.indexOf("corr") >= 0 ? "corrélation positive" : "hausse";
-      h += '<div><i style="background:' + SIGNED_COLORS[0] + '"></i>' + dry + " forte (au-delà de " + fmtLayer(k, -sb[1]) + ")</div>" +
-        '<div><i style="background:' + SIGNED_COLORS[1] + '"></i>' + dry + " modérée</div>" +
-        '<div><i style="background:' + SIGNED_COLORS[2] + '"></i>proche de zéro (±' + fmtLayer(k, sb[0]).replace("+", "") + ')</div>' +
-        '<div><i style="background:' + SIGNED_COLORS[3] + '"></i>' + wet + " modérée</div>" +
-        '<div><i style="background:' + SIGNED_COLORS[4] + '"></i>' + wet + " forte (au-delà de +" + fmtLayer(k, sb[1]).replace("+", "") + ")</div>";
-    } else if (styleOfLayer(k) === "pct") {
+    } else if (st === "signed") {
+      var sb = br || [0, 0], pal = SIGNED_COLORS;
+      var dry, wet;
+      if (spec.diff) {
+        var rev = HIGHER_WORSE.indexOf(k) >= 0;
+        pal = rev ? SIGNED_COLORS.slice().reverse() : SIGNED_COLORS;
+        h += '<div><i style="background:' + pal[0] + '"></i>' + "baisse forte (au-delà de " + fmtLayer(k, -sb[1]) + ")</div>" +
+          '<div><i style="background:' + pal[1] + '"></i>baisse modérée</div>' +
+          '<div><i style="background:' + pal[2] + '"></i>proche de zéro (±' + fmtLayer(k, sb[0]).replace("+", "") + ")</div>" +
+          '<div><i style="background:' + pal[3] + '"></i>hausse modérée</div>' +
+          '<div><i style="background:' + pal[4] + '"></i>hausse forte (au-delà de +' + fmtLayer(k, sb[1]).replace("+", "") + ")</div>" +
+          '<div class="note">' + (rev ? "Rouge = plus de risque ou de personnes en B." : "Rouge = plus sec en B ; bleu = plus humide en B.") + "</div>";
+      } else {
+        dry = layerDef(k).ext.id.indexOf("corr") >= 0 ? "corrélation négative (moins de pluie quand l'ONI monte)" : "baisse";
+        wet = layerDef(k).ext.id.indexOf("corr") >= 0 ? "corrélation positive" : "hausse";
+        h += '<div><i style="background:' + pal[0] + '"></i>' + dry + " forte (au-delà de " + fmtLayer(k, -sb[1]) + ")</div>" +
+          '<div><i style="background:' + pal[1] + '"></i>' + dry + " modérée</div>" +
+          '<div><i style="background:' + pal[2] + '"></i>proche de zéro (±' + fmtLayer(k, sb[0]).replace("+", "") + ')</div>' +
+          '<div><i style="background:' + pal[3] + '"></i>' + wet + " modérée</div>" +
+          '<div><i style="background:' + pal[4] + '"></i>' + wet + " forte (au-delà de +" + fmtLayer(k, sb[1]).replace("+", "") + ")</div>";
+      }
+    } else if (st === "pct") {
       PCT_BINS.forEach(function (b) { h += '<div><i style="background:' + b.color + '"></i>' + b.label + "</div>"; });
     } else {
-      var br = S.breaks, pal = SEQ[k] || SEQ.x;
+      var pal2 = SEQ[k] || SEQ.x;
       h += '<div><i style="background:#f2f2f2"></i>zéro</div>';
       var edges = [0].concat(br);
       edges.forEach(function (e, i) {
         var next = br[i];
         var lab = i === 0 ? "moins de " + fmtLayer(k, br[0] || 0) : fmtLayer(k, e) + (next ? " à " + fmtLayer(k, next) : " et plus");
-        if (br.length) h += '<div><i style="background:' + pal[Math.min(i, 4)] + '"></i>' + lab + "</div>";
+        if (br.length) h += '<div><i style="background:' + pal2[Math.min(i, 4)] + '"></i>' + lab + "</div>";
       });
     }
-    $("legend").innerHTML = h;
+    return h;
+  }
+
+  function renderLegend() {
+    var multi = S.sp.length > 1;
+    $("legend").innerHTML = S.sp.map(function (sp, i) { return legendFor(sp, S.br[i], multi ? (i ? "B" : "A") : ""); }).join('<hr class="lgsep">');
+    var ha = $("hdrA"), hb = $("hdrB");
+    ha.hidden = S.mode === "single"; hb.hidden = S.mode !== "split";
+    if (S.mode !== "single") ha.textContent = (S.mode === "diff" ? "" : "A · ") + specTitle(S.sp[0]);
+    if (S.mode === "split") hb.textContent = "B · " + specTitle(S.sp[1]);
   }
 
   function sumView(key, sim, scn) {
@@ -292,7 +450,7 @@
     $("rank").querySelectorAll("tr.link").forEach(function (tr) {
       tr.addEventListener("click", function () {
         var f = rows[+tr.dataset.i].f;
-        S.selected = f; S.geo.setStyle(styleOf); renderInfo();
+        S.selected = f; restyleGeo(); renderInfo();
         S.geo.eachLayer(function (l) { if (l.feature.properties.c === f.properties.c) S.map.fitBounds(l.getBounds(), { padding: [40, 40], maxZoom: 11 }); });
       });
     });
@@ -300,11 +458,18 @@
 
 
   /* ---------- Scénarios de fin de saison ---------- */
+  function isHist(id) { return typeof id === "string" && id.indexOf("y:") === 0; }
+  function seasonLabel(y) {
+    var sc = S.meta.scenarios, i = sc.hist_years.indexOf(+y), ph = sc.hist_phases ? sc.hist_phases[i] : "";
+    return "Saison " + (y - 1) + "–" + y + (ph && PHASE_NAMES[ph] && ph !== "N" ? " · " + PHASE_NAMES[ph] : "");
+  }
   function scnLabel(id) {
+    if (isHist(id)) return seasonLabel(id.slice(2)) + " (observée)";
     var l = ((S.meta.scenarios || {}).list || []).filter(function (x) { return x.id === id; })[0];
     return l ? l.label : id;
   }
   function scnShort(id) {
+    if (isHist(id)) return seasonLabel(id.slice(2));
     var l = ((S.meta.scenarios || {}).list || []).filter(function (x) { return x.id === id; })[0];
     return l ? l.short : id;
   }
@@ -317,10 +482,17 @@
     sel.innerHTML = "";
     var o0 = document.createElement("option"); o0.value = ""; o0.textContent = sc.observed_share > 0 ? "Observé à ce jour (sans scénario)" : "Aucun (situation de référence)";
     sel.appendChild(o0);
-    sc.list.forEach(function (l) { var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o); });
+    var g1 = document.createElement("optgroup"); g1.label = "Scénarios de la saison à venir";
+    sc.list.forEach(function (l) { var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; g1.appendChild(o); });
+    sel.appendChild(g1);
+    if (sc.hist_years) {
+      var g2 = document.createElement("optgroup"); g2.label = "Saisons passées (pluie réellement observée)";
+      sc.hist_years.slice().reverse().forEach(function (y) { var o = document.createElement("option"); o.value = "y:" + y; o.textContent = seasonLabel(y); g2.appendChild(o); });
+      sel.appendChild(g2);
+    }
     var obs = sc.observed_share > 0 ? "Les pluies déjà tombées (" + Math.round(sc.observed_share * 100) + " % de la saison écoulée) sont conservées ; " : "La saison n'a pas encore commencé : ";
     $("scnnote").innerHTML = esc(obs) + "la pluie restante est celle de chacune des " + sc.n_years + " saisons passées (" + sc.years[0] + "–" + sc.years[1] + "). " +
-      "Ce n'est pas une prévision météo : ce sont des situations qui se sont déjà produites." +
+      "Ce n'est pas une prévision météo : ce sont des situations qui se sont déjà produites. Une « saison passée » montre la pluie réellement tombée cette année-là, avec les seuils d'alerte et la population d'aujourd'hui." +
       (sc.weighted_by_forecast ? " Les années sont pondérées par la prévision saisonnière fournie." : "") +
       (sc.cascade && sc.cascade.used ? " La prévision météo est intégrée jusqu'au " + fmtDate(sc.cascade.known_through) + " (elle remplace le climat sur cette période)." : "");
     sel.addEventListener("change", function () {
@@ -333,8 +505,9 @@
   function planSection(m) {
     var pb = S.meta.playbook, sc = m.sc;
     if (!pb || !sc) return "";
-    var basis = S.scn && sc[S.scn] ? S.scn : "sec";
-    var e = sc[basis][2], w = sc[basis][4], h = '<div class="plan"><h3>Plan d\'action recommandé</h3>' +
+    var hist = isHist(S.scn);
+    var basis = hist ? S.scn : S.scn && sc[S.scn] ? S.scn : "sec";
+    var e = hist ? (val(m, "e") || 0) : sc[basis][2], w = hist ? (val(m, "w") || 0) : sc[basis][4], h = '<div class="plan"><h3>Plan d\'action recommandé</h3>' +
       '<div class="note">Planification sur le scénario : <b>' + esc(scnLabel(basis)) + "</b>. Pistes génériques à valider avec les clusters : elles complètent les outils et alertes de chaque secteur, sans les remplacer.</div>";
     var names = {};
     (S.meta.sector_names || []).forEach(function (x) { names[x.id] = x.label; });
@@ -621,11 +794,12 @@
       if (!LAYERS.some(function (l) { return l.id === "x:" + x.id; })) LAYERS.push({ id: "x:" + x.id, label: x.label, ext: x });
     });
     LAYERS = LAYERS.filter(function (l) { return (S.meta.scenarios || ["pa", "ex", "w"].indexOf(l.id) < 0) && (S.meta.forecast || !l.ew); });
+    LAYERS.push({ id: "cx", label: "Indice couplé (voir « Indicateurs couplés »)" });
     LAYERS.forEach(function (l) {
       var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o);
     });
     sel.addEventListener("change", function () { S.layer = sel.value; restyle(); });
-    setupScenarios(); setupProfiles();
+    setupScenarios(); setupProfiles(); setupCompare(); readURL();
     $("modebtn").addEventListener("click", function () {
       S.simple = !S.simple;
       $("modebtn").setAttribute("aria-pressed", S.simple ? "true" : "false");
@@ -638,6 +812,7 @@
     function apply() {
       var i = +sim.value;
       if (i !== neutral && S.scn) { S.scn = ""; $("scn").value = ""; }
+      if (i !== neutral && S.mode === "diff") S.mode = "single";
       S.simIdx = i === neutral ? null : i;
       $("simlabel").textContent = S.simIdx === null ? "observée" : "× " + S.meta.rain_factors[i].toFixed(2).replace(".", ",") +
         " (" + Math.round(S.meta.rain_factors[i] * 100) + " % de l'observé)";
@@ -686,6 +861,106 @@
     document.body.appendChild(a); a.click(); a.remove();
   }
 
+
+  /* ---------- Comparer, indicateurs couplés, lien partageable ---------- */
+  function fillSelect(sel, withCx, noEw) {
+    sel.innerHTML = "";
+    LAYERS.forEach(function (l) {
+      if (!withCx && l.id === "cx") return;
+      if (noEw && l.ew) return;
+      var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o);
+    });
+  }
+
+  function setupCompare() {
+    fillSelect($("layerB"), true, false);
+    $("layerB").value = S.layerB;
+    $("layerB").addEventListener("change", function () { S.layerB = $("layerB").value; restyle(); });
+    var sB = $("scnB");
+    sB.innerHTML = $("scn").innerHTML;
+    if (S.meta.scenarios) {
+      // par défaut : la saison passée la plus récente pour comparer avec la situation actuelle
+      var yrs = S.meta.scenarios.hist_years || [];
+      if (yrs.length) { S.scnB = "y:" + yrs[yrs.length - 1]; }
+    }
+    sB.value = S.scnB;
+    sB.addEventListener("change", function () { S.scnB = sB.value; restyle(); });
+    document.querySelectorAll("#modeseg button").forEach(function (b) {
+      b.addEventListener("click", function () { S.mode = b.dataset.mode; applyMode(); });
+    });
+    // indicateurs couplés
+    var box = $("cxrows");
+    S.cx.items.forEach(function (it, i) {
+      var row = document.createElement("div"); row.className = "cxrow";
+      row.innerHTML = '<select class="cxk" aria-label="Indicateur ' + (i + 1) + '"></select>' +
+        '<select class="cxw" aria-label="Poids">' + [1, 2, 3, 4, 5].map(function (n) { return "<option value='" + n + "'>poids " + n + "</option>"; }).join("") + "</select>" +
+        '<select class="cxd" aria-label="Sens"><option value="1">plus = plus de risque</option><option value="-1">moins = plus de risque</option></select>';
+      box.appendChild(row);
+      var k = row.querySelector(".cxk");
+      var o0 = document.createElement("option"); o0.value = ""; o0.textContent = i < 2 ? "— choisir —" : "— (facultatif) —"; k.appendChild(o0);
+      LAYERS.forEach(function (l) { if (l.id === "cx") return; var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; k.appendChild(o); });
+      k.value = it.k; row.querySelector(".cxw").value = it.w; row.querySelector(".cxd").value = it.dir;
+    });
+    $("cxgo").addEventListener("click", function () { readCx(); $("layer").value = "cx"; S.layer = "cx"; restyle(); });
+    $("cxop").addEventListener("change", function () { if (S.layer === "cx" || S.layerB === "cx") { readCx(); restyle(); } });
+    box.addEventListener("change", function () { if (S.layer === "cx" || S.layerB === "cx") { readCx(); restyle(); } });
+    $("cxcopy").addEventListener("click", function () {
+      syncURL();
+      var url = location.href, ok = function () { $("cxcopy").textContent = "Lien copié"; setTimeout(function () { $("cxcopy").textContent = "Copier le lien de cette carte"; }, 1800); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok, function () { window.prompt("Copiez ce lien :", url); });
+      else window.prompt("Copiez ce lien :", url);
+    });
+    applyModeUI();
+  }
+
+  function readCx() {
+    var rows = document.querySelectorAll("#cxrows .cxrow");
+    S.cx.items = Array.prototype.map.call(rows, function (r) {
+      return { k: r.querySelector(".cxk").value, w: +r.querySelector(".cxw").value, dir: +r.querySelector(".cxd").value };
+    });
+    S.cx.op = $("cxop").value;
+  }
+
+  function applyModeUI() {
+    document.querySelectorAll("#modeseg button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.mode === S.mode ? "true" : "false"); });
+    $("cmpB").hidden = S.mode === "single";
+    $("layerBrow").hidden = S.mode !== "split";
+  }
+
+  function syncURL() {
+    try {
+      var q = new URLSearchParams();
+      if (SLUG !== "mdg") q.set("pays", SLUG);
+      if (S.layer !== "l") q.set("l", S.layer);
+      if (S.scn) q.set("s", S.scn);
+      if (S.mode !== "single") { q.set("m", S.mode); q.set("sb", S.scnB); if (S.mode === "split") q.set("lb", S.layerB); }
+      if (S.layer === "cx" || S.layerB === "cx") q.set("cx", S.cx.items.filter(function (it) { return it.k; }).map(function (it) { return [it.k, it.w, it.dir].join("|"); }).join("~") + "~op=" + S.cx.op);
+      var qs = q.toString();
+      history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    } catch (e) { /* aperçu sans historique */ }
+  }
+
+  function readURL() {
+    var l = params.get("l"), s = params.get("s"), m = params.get("m"), cx = params.get("cx");
+    if (cx) {
+      var parts = cx.split("~"), items = [];
+      parts.forEach(function (p) {
+        if (p.indexOf("op=") === 0) S.cx.op = p.slice(3);
+        else { var a = p.split("|"); if (a[0]) items.push({ k: a[0], w: +a[1] || 1, dir: +a[2] || 1 }); }
+      });
+      while (items.length < 3) items.push({ k: "", w: 1, dir: 1 });
+      S.cx.items = items.slice(0, 3);
+      var rows = document.querySelectorAll("#cxrows .cxrow");
+      S.cx.items.forEach(function (it, i) { rows[i].querySelector(".cxk").value = it.k; rows[i].querySelector(".cxw").value = it.w; rows[i].querySelector(".cxd").value = it.dir; });
+      $("cxop").value = S.cx.op;
+    }
+    if (l && layerDef(l)) { S.layer = l; $("layer").value = l; }
+    if (s && ($("scn").querySelector('option[value="' + s + '"]'))) { S.scn = s; $("scn").value = s; }
+    if (params.get("sb") !== null && $("scnB").querySelector('option[value="' + params.get("sb") + '"]')) { S.scnB = params.get("sb"); $("scnB").value = S.scnB; }
+    if (params.get("lb") && layerDef(params.get("lb"))) { S.layerB = params.get("lb"); $("layerB").value = S.layerB; }
+    if (m === "split" || m === "diff") { S.mode = m; $("mapwrap").classList.toggle("split", m === "split"); $("map2").hidden = m !== "split"; applyModeUI(); }
+  }
+
   /* ---------- Recherche ---------- */
   function ensureIndex() {
     if (S.index) return Promise.resolve();
@@ -706,7 +981,7 @@
       tries++;
       if (S.view && S.view.lvl === entry.l) {
         var f = S.view.feats.filter(function (x) { return x.properties.c === entry.c; })[0];
-        if (f) { S.selected = f; S.geo.setStyle(styleOf); renderInfo();
+        if (f) { S.selected = f; restyleGeo(); renderInfo();
           S.geo.eachLayer(function (l) { if (l.feature.properties.c === entry.c) S.map.fitBounds(l.getBounds(), { padding: [40, 40], maxZoom: 12 }); }); }
         clearInterval(t);
       }

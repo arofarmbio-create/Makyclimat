@@ -229,6 +229,36 @@ def test_scenarios() -> None:
     run_compute()
 
 
+def test_history_years() -> None:
+    meta, top = load("meta.json"), load("metrics/top.json")
+    yrs = meta["scenarios"]["hist_years"]
+    d = load("metrics/d/R1D1.json")
+    check("pluie par saison passée : une valeur par année pour chaque unité", len(yrs) == 44 and all(len(v["y"]) == 44 for v in list(d["adm4"].values()) + list(d["adm3"].values()) + list(top["adm1"].values())))
+    el = [i for i, y in enumerate(yrs) if y % 4 == 0]
+    la = [i for i, y in enumerate(yrs) if y % 4 == 2]
+    r = top["adm1"]["R1"]["y"]
+    check("saisons El Niño simulées plus sèches que La Niña dans l'historique", np.mean([r[i] for i in el]) < np.mean([r[i] for i in la]) - 20, f"{np.mean([r[i] for i in el]):.0f} vs {np.mean([r[i] for i in la]):.0f}")
+    comm = [v["y"][0] for v in d["adm3"].values() if v["y"][0] is not None]
+    dist = top["adm2"]["R1D1"]["y"][0]
+    check("la valeur d'un district est comprise entre celles de ses communes", min(comm) - 1 <= dist <= max(comm) + 1, f"{min(comm)} {dist} {max(comm)}")
+
+
+def test_history_js_consistency() -> None:
+    """Pour une saison passée, la somme des exposés des fokontany (calcul JS) = exposés du district (calcul Python)."""
+    if not shutil.which("node"):
+        return
+    meta, top = load("meta.json"), load("metrics/top.json")
+    d = load("metrics/d/R1D1.json")
+    code = ("const MC=require('./docs/logic.js');const meta=%s;const top=%s;const d=%s;const out=[];"
+            "meta.scenarios.hist_years.forEach((y,i)=>{const id='y:'+y;"
+            "const dist=top.adm2.R1D1;const lv=Object.values(d.adm4);"
+            "for(const k of ['e','t','w']){const s=lv.reduce((a,m)=>a+MC.valueFor(m,k,null,meta,id),0);"
+            "const t=MC.valueFor(dist,k,null,meta,id);out.push(Math.abs(s-t)<=Math.max(2,0.002*t));}"
+            "out.push(MC.valueFor(dist,'pc',null,meta,id)===dist.y[i]);});console.log(JSON.stringify(out.every(Boolean)))") % (json.dumps(meta), json.dumps(top), json.dumps(d))
+    out = subprocess.run(["node", "-e", code], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    check("saisons passées : exposés, cibles et excès des fokontany (JS) = district (Python), 44 saisons", json.loads(out) is True)
+
+
 def test_forecast_alerts() -> None:
     run_compute()
     meta, top = load("meta.json"), load("metrics/top.json")
@@ -317,6 +347,8 @@ if __name__ == "__main__":
     test_inputs()
     test_external()
     test_scenarios()
+    test_history_years()
+    test_history_js_consistency()
     test_forecast_alerts()
     print("\nTous les tests de données passent." if not FAILS else f"\n{FAILS} ÉCHEC(S)")
     sys.exit(1 if FAILS else 0)

@@ -462,12 +462,31 @@ def main() -> None:
             lv_u = SC.level_array(pct_u, levels)
             SCN[sid] = {"pct": pct_u, "lvl": lv_u, "e": SC.rollup_sum(units, leafmask, lift(e_l)),
                         "t": SC.rollup_sum(units, leafmask, lift(t_l)), "w": SC.rollup_sum(units, leafmask, lift(w_l))}
+        # pluie de chaque saison passée complète (% de la normale) par unité : cartes « une année contre une autre »
+        season_sum = np.nansum(series, axis=1)
+        with np.errstate(invalid="ignore", divide="ignore"):
+            hy_leaf = np.where(norm_full[None, :] > min_norm, season_sum / norm_full[None, :] * 100.0, np.nan)
+        hy_leaf[np.isnan(series).all(axis=1)] = np.nan
+        HY = np.full((nU, hy_leaf.shape[0]), np.nan)
+        HYE, HYT, HYW = (np.zeros((nU, hy_leaf.shape[0])) for _ in range(3))
+        for j in range(hy_leaf.shape[0]):
+            pj = hy_leaf[j]
+            e_j = np.where(SC.level_array(pj, levels) >= min_lvl, popL, 0.0)
+            HYE[:, j] = SC.rollup_sum(units, leafmask, lift(e_j))
+            HYT[:, j] = SC.rollup_sum(units, leafmask, lift(e_j * vsL))
+            HYW[:, j] = SC.rollup_sum(units, leafmask, lift(np.where(np.isfinite(pj) & (pj >= wet_thr), popL, 0.0)))
+            tot_j = SC.rollup_sum(units, leafmask, lift(np.where(np.isfinite(pj), pj / 100 * norm_full, 0.0)) * area)
+            den_j = SC.rollup_sum(units, leafmask, lift(np.where(np.isfinite(pj), norm_full, 0.0)) * area)
+            with np.errstate(invalid="ignore", divide="ignore"):
+                col = np.where(den_j > 0, tot_j / den_j * 100, np.nan)
+            col[LI] = pj
+            HY[:, j] = col
         num = SC.rollup_sum(units, leafmask, lift(popL * np.nan_to_num(p_leaf)))
         popU = SC.rollup_sum(units, leafmask, lift(popL))
         with np.errstate(invalid="ignore", divide="ignore"):
             pa_u = np.where(popU > 0, num / popU, np.nan)
         scn = {"S": SCN, "pa": pa_u, "ex": num, "cov": cov, "cov_obs": cov_obs, "cascade": cascade, "season": f"{y0s}-{y1s}", "n": nph,
-               "years": [int(ms["years"][0]), int(ms["years"][-1])], "weighted": fweights is not None, "n_years": int(len(ms["years"]))}
+               "years": [int(ms["years"][0]), int(ms["years"][-1])], "hist_years": [int(y) for y in ms["years"]], "hist_phases": [str(x) for x in ms["phases"]], "HY": HY, "HYE": HYE, "HYT": HYT, "HYW": HYW, "weighted": fweights is not None, "n_years": int(len(ms["years"]))}
 
 
     # --- Alertes précoces : cumul vers les zones supérieures ---
@@ -520,6 +539,11 @@ def main() -> None:
             d["sc"] = {sid: [None if not np.isfinite(v["pct"][i]) else round(float(v["pct"][i]), 1), int(v["lvl"][i]),
                              int(round(v["e"][i])), int(round(v["t"][i])), int(round(v["w"][i]))] for sid, v in scn["S"].items()}
             d["pa"] = None if not np.isfinite(scn["pa"][i]) else round(float(scn["pa"][i]), 3)
+            d["y"] = [None if not np.isfinite(x) else round(float(x), 1) for x in scn["HY"][i]]
+            if r["level"] < 4:   # pour les fokontany, ces valeurs se déduisent de y, de la population et de la part vulnérable
+                d["ye"] = [int(round(x)) for x in scn["HYE"][i]]
+                d["yt"] = [int(round(x)) for x in scn["HYT"][i]]
+                d["yw"] = [int(round(x)) for x in scn["HYW"][i]]
             d["ex"] = int(round(scn["ex"][i]))
         if EWU is not None:
             d["ew"] = [int(EWU["lv"][h][i]) for h in EW.HAZARDS]
@@ -559,7 +583,7 @@ def main() -> None:
     meta = {
         "enso": enso_state, "has_history": hist_ok,
         "scenarios": None if scn is None else {
-            "season": scn["season"], "observed_share": round(float(np.mean(scn["cov_obs"])), 2), "years": scn["years"],
+            "season": scn["season"], "observed_share": round(float(np.mean(scn["cov_obs"])), 2), "years": scn["years"], "hist_years": scn["hist_years"], "hist_phases": scn["hist_phases"],
             "cascade": scn["cascade"], "n_years": scn["n_years"], "weighted_by_forecast": scn["weighted"], "n_phase": scn["n"], "wet_threshold_pct": wet_thr,
             "list": [x for x in SCENARIO_LIST if x["id"] in scn["S"]]},
         "playbook": _load_playbook(),

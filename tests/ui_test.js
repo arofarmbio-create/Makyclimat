@@ -19,8 +19,10 @@ function check(name, cond, extra) {
 const handlers = {}; // pcode -> click handler
 let currentLayers = [];
 let lastBlob = null;
+let mapCount = 0;
+let layersB = [];
 w.L = {
-  map() { return { setView() { return this; }, fitBounds() {}, removeLayer() {}, invalidateSize() {} }; },
+  map() { return { id: ++mapCount, setView() { return this; }, fitBounds() {}, removeLayer() {}, invalidateSize() {}, on() {}, getCenter() { return [0, 0]; }, getZoom() { return 5; } }; },
   tileLayer() { return { addTo() {} }; },
   geoJSON(fc, opts) {
     const layers = fc.features.map((f) => {
@@ -29,8 +31,7 @@ w.L = {
       opts.onEachFeature(f, layer);
       return layer;
     });
-    currentLayers = layers;
-    return { addTo() { return this; }, getBounds() { return {}; },
+    return { addTo(map) { if (map && map.id === 2) layersB = layers; else currentLayers = layers; return this; }, getBounds() { return {}; },
              setStyle(fn) { layers.forEach((l) => { l._style = fn(l.feature); }); },
              eachLayer(cb) { layers.forEach(cb); } };
   },
@@ -56,7 +57,7 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
   const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
   check("6 indicateurs de base + indicateurs externes affichables",
-        $("layer").options.length === 6 + (metaJson.scenarios ? 3 : 0) + (metaJson.forecast ? 6 : 0) + metaJson.external.length, $("layer").options.length + " couches");
+        $("layer").options.length === 7 + (metaJson.scenarios ? 3 : 0) + (metaJson.forecast ? 6 : 0) + metaJson.external.length, $("layer").options.length + " couches");
   check("régions affichées", currentLayers.length === 4, currentLayers.length + " régions");
   check("couleurs d'alerte attribuées", currentLayers.every((l) => /^#/.test(l._style.fillColor)));
   const kpi0 = $("kpis").textContent;
@@ -78,6 +79,51 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     check("carte des alertes colorée avec la palette des niveaux", [...cols].every((c) => ["#d7ebd2", "#f2d16b", "#e8893a", "#b2262e"].includes(c)), [...cols].join(" "));
     check("légende des niveaux d'alerte", /Vigilance/.test($("legend").textContent) && /Alerte maximale/.test($("legend").textContent));
     $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
+  }
+  if (metaJson.scenarios && metaJson.scenarios.hist_years) {
+    const hy = metaJson.scenarios.hist_years, n = hy.length;
+    check("sélecteur de période : scénarios + saisons passées", $("scn").querySelectorAll("optgroup").length === 2 && $("scn").querySelectorAll('option[value^="y:"]').length === n);
+    const yTest = hy[10], metr = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "metrics", "top.json"), "utf8")).adm1;
+    $("layer").value = "pc"; $("layer").dispatchEvent(new w.Event("change"));
+    $("scn").value = "y:" + yTest; $("scn").dispatchEvent(new w.Event("change"));
+    const l0 = currentLayers[0], c0 = l0.feature.properties.c;
+    check("saison passée : la carte affiche la pluie de cette année-là", /Saison/.test($("legend").textContent) && /Pluie cumulée/.test(l0._tip()) && l0._tip().indexOf(Math.round(metr[c0].y[10]).toString()) >= 0, l0._tip().replace(/<[^>]+>/g, " "));
+    check("saison passée : couleur issue de la pluie de l'année", l0._style.fillColor !== "#cccccc");
+    // deux cartes côte à côte
+    $("modeseg").querySelector('[data-mode="split"]').click();
+    check("deux cartes : carte B visible et construite", await waitFor(() => !$("map2").hidden && layersB.length === 4), layersB.length + " zones");
+    check("deux cartes : en-têtes A et B", /^A · /.test($("hdrA").textContent) && /^B · /.test($("hdrB").textContent), $("hdrA").textContent + " | " + $("hdrB").textContent);
+    check("deux cartes : B = saison choisie, A = autre période", layersB[0]._tip(0).length > 0);
+    $("scn").value = ""; $("scn").dispatchEvent(new w.Event("change"));
+    $("scnB").value = "y:" + hy[0]; $("scnB").dispatchEvent(new w.Event("change"));
+    const a0 = currentLayers[0]._style.fillColor, b0 = layersB[0]._style.fillColor;
+    check("deux cartes : légendes A et B", /A · /.test($("legend").textContent) && /B · /.test($("legend").textContent));
+    // différence
+    $("modeseg").querySelector('[data-mode="diff"]').click();
+    check("différence : carte unique avec légende B − A", await waitFor(() => $("map2").hidden && /Différence B − A/.test($("legend").textContent)), $("legend").textContent.slice(0, 80));
+    check("différence : l'infobulle donne A, B et B − A", /B − A/.test(currentLayers[0]._tip()) && /A : /.test(currentLayers[0]._tip()), currentLayers[0]._tip().replace(/<[^>]+>/g, " "));
+    check("lien partageable : mode et saison dans l'adresse", /m=diff/.test(w.location.search) && /sb=y%3A/.test(w.location.search), w.location.search);
+    $("modeseg").querySelector('[data-mode="single"]').click();
+    await waitFor(() => $("map2").hidden);
+    // indicateurs couplés
+    const rows = $("cxrows").querySelectorAll(".cxrow");
+    rows[0].querySelector(".cxk").value = "pc"; rows[0].querySelector(".cxd").value = "-1";
+    rows[1].querySelector(".cxk").value = "p"; rows[1].querySelector(".cxd").value = "1";
+    $("cxop").value = "min";
+    $("cxgo").click();
+    await sleep(100);
+    const cxv = currentLayers.map((l) => (l._tip().match(/Indice couplé : <b>(\d+)/) || [])[1]).map(Number);
+    check("indice couplé : 4 zones notées de 0 à 100", cxv.length === 4 && cxv.every((v) => v >= 0 && v <= 100), cxv.join(","));
+    // vérification numérique : rang(moyenne des égalités) de (1 - rang pluie) et de la population, minimum des deux
+    const rk = (arr, v) => { const lo = arr.filter((x) => x < v).length, eq = arr.filter((x) => x === v).length; return (lo + 0.5 * eq) / arr.length; };
+    const ids = currentLayers.map((l) => l.feature.properties.c);
+    const pcs = ids.map((c) => metr[c].pc), pps = ids.map((c) => metr[c].p);
+    const exp = ids.map((c, i) => Math.round(100 * Math.min(1 - rk(pcs, pcs[i]), rk(pps, pps[i]))));
+    check("indice couplé : valeurs = minimum des rangs (pluie inversée, population)", exp.every((v, i) => Math.abs(v - cxv[i]) <= 1), exp.join(",") + " vs " + cxv.join(","));
+    check("indice couplé : légende explicative", /Classement relatif/.test($("legend").textContent) && /tous les indicateurs élevés/.test($("legend").textContent));
+    check("indice couplé : lien partageable", /cx=pc/.test(w.location.search), w.location.search);
+    $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
+    $("scn").value = ""; $("scn").dispatchEvent(new w.Event("change"));
   }
   if (metaJson.risks) {
     check("sélecteur de profil visible", !$("profcard").hidden && $("profile").options.length === 5);

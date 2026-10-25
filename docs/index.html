@@ -25,8 +25,11 @@
 </header>
 
 <section id="tab-map" class="tab active">
-  <div class="mapwrap">
+  <div class="mapwrap" id="mapwrap">
     <div id="map"></div>
+    <div id="map2" hidden></div>
+    <div class="maphdr" id="hdrA" hidden></div>
+    <div class="maphdr b" id="hdrB" hidden></div>
     <div class="crumbs" id="crumbs"></div>
     <div class="legend" id="legend"></div>
   </div>
@@ -48,9 +51,36 @@
     </div>
     <div class="card" id="scncard" hidden>
       <h3>Scénarios de la saison <span id="scnseason"></span></h3>
-      <label class="field" for="scn">Que se passe-t-il si la saison est…</label>
+      <label class="field" for="scn">Scénario à venir ou saison passée affichée…</label>
       <select id="scn"></select>
       <div class="note" id="scnnote"></div>
+    </div>
+    <div class="card" id="cmpcard">
+      <h3>Comparer</h3>
+      <div class="seg" id="modeseg" role="group" aria-label="Mode d'affichage">
+        <button class="btn" type="button" data-mode="single" aria-pressed="true">Une carte</button>
+        <button class="btn" type="button" data-mode="split" aria-pressed="false">Deux cartes</button>
+        <button class="btn" type="button" data-mode="diff" aria-pressed="false">Différence</button>
+      </div>
+      <div id="cmpB" hidden>
+        <div id="layerBrow"><label class="field" for="layerB">Carte B : indicateur</label><select id="layerB"></select></div>
+        <label class="field" for="scnB">Carte B : scénario ou saison passée</label>
+        <select id="scnB"></select>
+      </div>
+      <div class="note" id="cmpnote">Comparez une saison à une autre, ou un indicateur à un autre, côte à côte ou en différence.</div>
+    </div>
+    <div class="card" id="cxcard">
+      <h3>Indicateurs couplés</h3>
+      <div class="note">Combinez jusqu'à 3 indicateurs en un seul indice de 0 à 100 (classement relatif dans la vue).</div>
+      <div id="cxrows"></div>
+      <label class="field" for="cxop">Combinaison</label>
+      <select id="cxop">
+        <option value="mean">Moyenne pondérée</option>
+        <option value="max">Au moins un indicateur élevé</option>
+        <option value="min">Tous les indicateurs élevés à la fois</option>
+      </select>
+      <div style="margin-top:6px"><button class="btn primary" id="cxgo" type="button">Afficher l'indice sur la carte</button>
+        <button class="btn" id="cxcopy" type="button">Copier le lien de cette carte</button></div>
     </div>
     <div class="card">
       <h3>Simulation « et si ? »</h3>

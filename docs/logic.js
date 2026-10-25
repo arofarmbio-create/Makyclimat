@@ -15,8 +15,29 @@
 
   // Valeur d'un indicateur pour une unité, sous scénario de pluie (simIdx = index du facteur, null = observé).
   var SC_IDX = { pc: 0, l: 1, e: 2, t: 3, w: 4 };
+  // Saison passée observée : scn = "y:1998". Niveau, exposés, cibles recalculés avec les seuils actuels (« que se passerait-il aujourd'hui avec la pluie de cette saison »).
+  function histValue(m, key, scn, meta) {
+    var i = (meta.scenarios.hist_years || []).indexOf(+scn.slice(2));
+    if (i < 0 || !m.y) return null;
+    var pc = m.y[i];
+    if (key === "pc") return pc === undefined ? null : pc;
+    if (key === "l") return levelFromPct(pc, meta.alert_levels);
+    var leaf = m.ye === undefined;
+    var wet = meta.scenarios.wet_threshold_pct || 130;
+    if (key === "e") return leaf ? (levelFromPct(pc, meta.alert_levels) >= meta.exposure_min_level ? m.p || 0 : 0) : m.ye[i];
+    if (key === "t") {
+      if (!leaf) return m.yt[i];
+      var e = levelFromPct(pc, meta.alert_levels) >= meta.exposure_min_level ? m.p || 0 : 0;
+      return e * (m.vs === undefined ? meta.default_vulnerable_share : m.vs);
+    }
+    if (key === "w") return leaf ? (pc !== null && pc !== undefined && pc >= wet ? m.p || 0 : 0) : m.yw[i];
+    if (key === "g") { var t = histValue(m, "t", scn, meta); return t === null ? null : Math.max(0, t - (m.b || 0)); }
+    return null;
+  }
+
   function valueFor(m, key, simIdx, meta, scn) {
     if (!m) return null;
+    if (scn && scn.indexOf("y:") === 0 && ["pc", "l", "e", "t", "w", "g"].indexOf(key) >= 0) return histValue(m, key, scn, meta);
     if (scn && m.sc && m.sc[scn] && SC_IDX[key] !== undefined) {
       var v = m.sc[scn][SC_IDX[key]];
       return v === undefined ? null : v;
