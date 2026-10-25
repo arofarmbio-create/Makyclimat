@@ -193,6 +193,7 @@ def test_population_grid() -> None:
     res = [{"url": "http://x/mdg_pop_2020_CN_100m.tif"}, {"url": "http://x/mdg_pop_2025_CN_100m_R2025A.tif"},
            {"url": "http://x/mdg_pop_2025_1km.tif"}, {"url": "http://x/readme.pdf"}]
     check("grille : choix du fichier 100 m de l'année", bpg.choose_resource(res, 2025)["url"].endswith("2025_CN_100m_R2025A.tif"))
+    check("grille : à défaut, année la plus proche", bpg.choose_resource([{"url": "m_pop_2015_CN_100m.tif"}, {"url": "m_pop_2010_CN_100m.tif"}], 2025)["url"].startswith("m_pop_2015"))
     check("grille : aucune ressource .tif -> None", bpg.choose_resource([{"url": "a.pdf"}], 2025) is None)
     from shapely.geometry import box
     tmp = Path(tempfile.mkdtemp(prefix="fake_pop_"))

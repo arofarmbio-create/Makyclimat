@@ -29,7 +29,9 @@ def choose_resource(resources: list[dict], year: int) -> dict | None:
         if not url.lower().endswith(".tif"):
             continue
         score = 0
-        score += 10 if re.search(rf"(?<!\d){year}(?!\d)", text) else 0
+        yrs = [int(y) for y in re.findall(r"(?<!\d)(20[0-4]\d)(?!\d)", text)]
+        if yrs:
+            score += 10 - min(9, abs(min(yrs, key=lambda y: abs(y - year)) - year))  # année la plus proche de celle demandée
         score += 5 if "100m" in text or "3arc" in text else 0
         score += 3 if "constrained" in text or "_cn_" in text else 0
         score -= 4 if "1km" in text else 0
@@ -101,6 +103,9 @@ def main() -> None:
             print("Grille introuvable (404) : population COD-PS conservée.")
             return
         label = f"WorldPop {Path(url).name}"
+        yrs = re.findall(r"(?<!\d)(20[0-4]\d)(?!\d)", Path(url).name)
+        if yrs:
+            year = int(yrs[0])
 
     units = read_units(args.country)
     geo = country_docs_dir(args.country) / "geo" / "adm4"
