@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MakyClimat</title>
+<meta name="description" content="Prévision, suivi et anticipation des impacts du climat jusqu'au fokontany : ciblage, réponse et simulation pour les décideurs, bailleurs et ONG.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">MakyClimat<small id="country">Madagascar</small></div>
+  <span class="badge" id="through">Chargement…</span>
+  <span class="badge warn">Pilote de recherche — estimations indicatives</span>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="map" aria-selected="true">Carte</button>
+    <button role="tab" data-tab="catalogue" aria-selected="false">Indicateurs et ODD</button>
+    <button role="tab" data-tab="sources" aria-selected="false">Sources</button>
+    <button role="tab" data-tab="method" aria-selected="false">Méthode</button>
+  </nav>
+</header>
+
+<section id="tab-map" class="tab active">
+  <div class="mapwrap">
+    <div id="map"></div>
+    <div class="crumbs" id="crumbs"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+  <aside id="panel">
+    <div id="results">
+      <label class="field" for="q">Rechercher une région, un district, une commune ou un fokontany</label>
+      <input id="q" type="search" autocomplete="off" placeholder="ex. Ambovombe">
+      <ul id="resultlist" hidden></ul>
+    </div>
+    <div>
+      <label class="field" for="layer">Indicateur affiché</label>
+      <select id="layer"></select>
+    </div>
+    <div class="card">
+      <h3>Simulation « et si ? »</h3>
+      <label class="field" for="sim">Pluie cumulée de la saison : <b id="simlabel">observée</b></label>
+      <input id="sim" type="range" min="0" max="20" step="1" value="10">
+      <div class="note">Multiplie la pluie observée jusqu'à aujourd'hui puis recalcule niveaux d'alerte, population exposée et cibles. Simulation de sensibilité, pas une prévision.</div>
+      <button class="btn" id="simreset" style="margin-top:6px">Revenir à l'observé</button>
+    </div>
+    <div>
+      <h3 id="viewtitle">Vue</h3>
+      <div class="kpis" id="kpis"></div>
+    </div>
+    <div class="card" id="info"><div class="note">Cliquez sur une zone de la carte pour voir ses indicateurs.</div></div>
+    <div>
+      <h3>Zones les plus touchées dans cette vue</h3>
+      <table id="rank"></table>
+      <div style="margin-top:8px"><button class="btn primary" id="export">Exporter la vue (CSV)</button>
+        <button class="btn" id="print">Imprimer / PDF</button></div>
+    </div>
+    <div class="note">Lien partageable : l'adresse de la page garde la zone affichée.</div>
+  </aside>
+</section>
+
+<section id="tab-catalogue" class="tab"><div class="page">
+  <h2>Indicateurs, secteurs et objectifs de politique</h2>
+  <p class="note">Chaque indicateur est rattaché à des secteurs, aux Objectifs de développement durable (ODD, Agenda 2030, qui ont remplacé les OMD) et aux cadres nationaux. Les rattachements sont des propositions de travail à valider.</p>
+  <div class="chips" id="sectorchips"></div>
+  <div style="overflow:auto"><table id="cattable"></table></div>
+</div></section>
+
+<section id="tab-sources" class="tab"><div class="page">
+  <h2>Sources et fraîcheur des données</h2>
+  <div id="sourcelist"></div>
+</div></section>
+
+<section id="tab-method" class="tab"><div class="page" id="methodtext"></div></section>
+
+<footer>MakyClimat — projet de doctorat. Les chiffres sont des estimations indicatives qui ne remplacent pas les analyses officielles (IPC, BNGRC, Météo Madagascar). Fond de carte © contributeurs OpenStreetMap.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

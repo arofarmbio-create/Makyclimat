@@ -1,0 +1,186 @@
+# Registre des indicateurs MakyClimat.
+# status: active (calculé aujourd'hui) | planned (prévu, connecteur à écrire)
+# Chaque indicateur est rattaché à un ou plusieurs secteurs, ODD et cadres nationaux (à valider).
+# Pour ajouter un indicateur : ajouter un bloc ici + écrire (ou réutiliser) un connecteur dans scripts/.
+
+indicators:
+  # ---------------- ACTIFS (phase 1) ----------------
+  - id: rain_pct_normal
+    label: Pluie cumulée de la saison (% de la normale)
+    unit: "%"
+    sectors: [food_security, agriculture, livestock, wash]
+    sdg: ["2.4", "13.1"]
+    national: [axe1, solidarite]
+    source: CHIRPS v2.0 (CHC/UCSB), normale 1991-2020
+    frequency: Tous les 10 jours (dékade)
+    status: active
+  - id: drought_alert_level
+    label: Niveau d'alerte sécheresse (normal, veille, alerte, urgence)
+    unit: niveau
+    sectors: [food_security, agriculture, livestock, wash, drr]
+    sdg: ["1.5", "2.4", "13.1"]
+    national: [axe1, solidarite]
+    source: Dérivé de CHIRPS, seuils provisoires à calibrer
+    frequency: Tous les 10 jours
+    status: active
+  - id: population
+    label: Population (estimation)
+    unit: personnes
+    sectors: [food_security, nutrition, health, wash, education, protection, shelter]
+    sdg: ["1.5", "11.5"]
+    national: [axe1]
+    source: OCHA COD-PS Madagascar (référence 2018, INSTAT/BNGRC)
+    frequency: Ponctuelle (à remplacer par WorldPop/RGPH)
+    status: active
+  - id: population_exposed
+    label: Population exposée à la sécheresse
+    unit: personnes
+    sectors: [food_security, nutrition, health, wash, agriculture, drr]
+    sdg: ["1.5", "11.5", "13.1"]
+    national: [axe1, solidarite]
+    source: Population x niveau d'alerte
+    frequency: Tous les 10 jours
+    status: active
+  - id: potential_targets
+    label: Cibles potentiels (estimation)
+    unit: personnes
+    sectors: [food_security, nutrition, social_protection, early_recovery]
+    sdg: ["1.5", "2.1"]
+    national: [axe1, solidarite]
+    source: Population exposée x part vulnérable (par défaut provisoire ou fournie)
+    frequency: Tous les 10 jours
+    status: active
+  - id: response_coverage
+    label: Bénéficiaires déclarés par les partenaires et écart
+    unit: personnes
+    sectors: [food_security, nutrition, health, wash, education, protection, shelter]
+    sdg: ["17.17"]
+    national: [axe1, solidarite]
+    source: Fichier inputs/interventions.csv (partenaires de mise en œuvre)
+    frequency: À chaque mise à jour du fichier
+    status: active
+
+  # ---------------- PRÉVUS (phases 2 à 4) ----------------
+  - id: flood_exposure
+    label: Exposition aux inondations (prévision de crue et zones inondables)
+    unit: personnes
+    sectors: [drr, shelter, health, wash, food_security]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "Google Flood Hub, Copernicus GloFAS (à vérifier)"
+    frequency: Quotidienne
+    status: planned
+  - id: cyclone_exposure
+    label: Exposition aux cyclones (trajectoire, vent, pluie)
+    unit: personnes
+    sectors: [drr, shelter, education, health, logistics]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: Prévisions ECMWF, Météo Madagascar
+    frequency: Quotidienne en saison cyclonique
+    status: planned
+  - id: et0_water_balance
+    label: Évapotranspiration, humidité du sol et bilan hydrique
+    unit: mm
+    sectors: [agriculture, livestock, wash, food_security]
+    sdg: ["2.4", "6.4"]
+    national: [axe1, eau]
+    source: ERA5-Land / modèle FAO-56 (à construire)
+    frequency: Quotidienne
+    status: planned
+  - id: ndvi_anomaly
+    label: Anomalie de végétation (images satellites)
+    unit: indice
+    sectors: [agriculture, livestock, food_security]
+    sdg: ["2.4", "15.3"]
+    national: [axe1]
+    source: MODIS/VIIRS, Sentinel-2 (à vérifier)
+    frequency: Tous les 10 jours
+    status: planned
+  - id: crop_production_risk
+    label: Risque de baisse de production agricole
+    unit: indice
+    sectors: [agriculture, food_security, nutrition]
+    sdg: ["2.3", "2.4"]
+    national: [axe1, solidarite]
+    source: Modèle de stress hydrique des cultures (à valider scientifiquement)
+    frequency: Tous les 10 jours
+    status: planned
+  - id: air_quality_pm25
+    label: Qualité de l'air (PM2.5, pureté de l'air)
+    unit: µg/m3
+    sectors: [environment, health]
+    sdg: ["3.9", "11.6"]
+    national: [sante]
+    source: Copernicus CAMS (à vérifier)
+    frequency: Quotidienne
+    status: planned
+  - id: wash_access
+    label: Accès à l'eau potable et à l'assainissement
+    unit: "% population"
+    sectors: [wash, health]
+    sdg: ["6.1", "6.2"]
+    national: [axe1, eau]
+    source: "JMP OMS/UNICEF, enquêtes (désagrégation à définir)"
+    frequency: Annuelle
+    status: planned
+  - id: health_access
+    label: Accès aux formations sanitaires et risque épidémique
+    unit: "% population à moins de 5 km"
+    sectors: [health, nutrition]
+    sdg: ["3.8"]
+    national: [axe1, sante]
+    source: "Listes d'établissements, DHIS2 (accès à négocier)"
+    frequency: Mensuelle
+    status: planned
+  - id: school_continuity_risk
+    label: Risque de rupture de scolarité (écoles exposées aux aléas)
+    unit: écoles
+    sectors: [education, drr]
+    sdg: ["4.1", "4.a"]
+    national: [axe1, education]
+    source: "Données EMIS du ministère de l'Éducation (accès à négocier)"
+    frequency: Annuelle
+    status: planned
+  - id: livestock_pasture
+    label: Disponibilité de pâturage et d'eau pour l'élevage
+    unit: indice
+    sectors: [livestock, food_security]
+    sdg: ["2.3"]
+    national: [axe1]
+    source: NDVI + points d'eau (à construire)
+    frequency: Tous les 10 jours
+    status: planned
+  - id: ipc_phase3plus_pct
+    label: Population en insécurité alimentaire aiguë (IPC phase 3 ou plus)
+    unit: "%"
+    format: pct
+    aggregate: popmean
+    sectors: [food_security, nutrition]
+    sdg: ["2.1"]
+    national: [axe1, solidarite]
+    source: "IPC via HDX HAPI (OCHA) — remplace la part vulnérable par défaut là où il existe"
+    frequency: Selon les analyses IPC (2 fois par an)
+    status: active
+  - id: ipc_phase3plus_pop
+    label: Personnes en IPC phase 3 ou plus
+    unit: personnes
+    format: int
+    aggregate: sum
+    sectors: [food_security, nutrition]
+    sdg: ["2.1"]
+    national: [axe1, solidarite]
+    source: IPC via HDX HAPI (OCHA)
+    frequency: Selon les analyses IPC
+    status: active
+  - id: poverty_headcount
+    label: Taux de pauvreté multidimensionnelle (part de la population)
+    unit: "%"
+    format: pct
+    aggregate: none
+    sectors: [social_protection, food_security, health, education, wash]
+    sdg: ["1.2"]
+    national: [axe1, solidarite]
+    source: "Indice de pauvreté multidimensionnelle via HDX HAPI (niveau région)"
+    frequency: Ponctuelle
+    status: active

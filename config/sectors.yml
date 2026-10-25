@@ -1,0 +1,18 @@
+# Secteurs couverts par MakyClimat.
+# kind: humanitarian = clusters humanitaires (IASC) ; development = secteurs de développement
+sectors:
+  - {id: food_security, label: Sécurité alimentaire,       kind: humanitarian}
+  - {id: nutrition,     label: Nutrition,                  kind: humanitarian}
+  - {id: health,        label: Santé,                      kind: humanitarian}
+  - {id: wash,          label: Eau, hygiène et assainissement (WASH), kind: humanitarian}
+  - {id: education,     label: Éducation,                  kind: humanitarian}
+  - {id: protection,    label: Protection,                 kind: humanitarian}
+  - {id: shelter,       label: Abris et biens non alimentaires, kind: humanitarian}
+  - {id: logistics,     label: Logistique et accès,        kind: humanitarian}
+  - {id: early_recovery, label: Relèvement précoce,        kind: humanitarian}
+  - {id: agriculture,   label: Agriculture,                kind: development}
+  - {id: livestock,     label: Élevage,                    kind: development}
+  - {id: environment,   label: Environnement et qualité de l'air, kind: development}
+  - {id: energy,        label: Énergie,                    kind: development}
+  - {id: social_protection, label: Protection sociale et solidarité, kind: development}
+  - {id: drr,           label: Réduction des risques de catastrophes, kind: development}

@@ -1,0 +1,34 @@
+name: 1 - Construire les limites et la population (une seule fois)
+
+# À lancer manuellement UNE fois, puis seulement si les limites administratives changent.
+on:
+  workflow_dispatch:
+    inputs:
+      country:
+        description: "Code du pays"
+        default: "mdg"
+
+permissions:
+  contents: write
+
+jobs:
+  boundaries:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances (cartographie)
+        run: pip install -r requirements.txt
+      - name: Limites administratives (OCHA COD-AB via HDX)
+        run: python scripts/build_boundaries.py --country "${{ github.event.inputs.country }}"
+      - name: Population (OCHA COD-PS via HDX)
+        run: python scripts/build_population.py --country "${{ github.event.inputs.country }}"
+      - name: Enregistrer dans le dépôt
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add docs/data data
+          git diff --cached --quiet || (git commit -m "Limites administratives et population" && git push)

@@ -1,0 +1,14 @@
+# Fichiers recalculés à chaque mise à jour (publiés via GitHub Pages, non versionnés)
+docs/data/*/metrics/
+docs/data/*/meta.json
+docs/data/*/catalogue.json
+data/*/grids/season.npz
+
+# Données de test simulées
+docs/data/demo/
+data/demo/
+config/countries/demo.yml
+
+__pycache__/
+*.pyc
+node_modules/

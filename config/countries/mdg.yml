@@ -1,0 +1,56 @@
+# MakyClimat — configuration pays : Madagascar (pays pilote)
+# Pour ajouter un pays : copier ce fichier (ex. ken.yml), adapter, puis lancer les scripts avec --country ken
+iso3: MDG
+slug: mdg
+name: Madagascar
+language: fr
+
+map:
+  bbox: [43.0, -26.0, 51.0, -11.5]   # lon_min, lat_min, lon_max, lat_max
+  center: [-19.4, 46.7]              # lat, lon
+  zoom: 6
+
+levels:
+  1: {label: Région,    plural: Régions}
+  2: {label: District,  plural: Districts}
+  3: {label: Commune,   plural: Communes}
+  4: {label: Fokontany, plural: Fokontany}
+
+# --- Sources de limites et de population (HDX / OCHA, gratuites) ---
+boundaries:
+  hdx_dataset: cod-ab-mdg
+population:
+  hdx_dataset: cod-ps-mdg
+  reference_year: 2018
+
+# --- Pluie satellitaire CHIRPS (CHC / UCSB, gratuite) ---
+rainfall:
+  monthly_url: "https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_monthly/tifs/chirps-v2.0.{y}.{m:02d}.tif.gz"
+  dekad_url:   "https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_dekad/tifs/chirps-v2.0.{y}.{m:02d}.{d}.tif.gz"
+  baseline_years: [1991, 2020]
+  # Saison des pluies (mois de début et de fin). Madagascar : novembre -> avril
+  season_start_month: 11
+  season_end_month: 4
+  # En dessous de ce cumul normal (mm), le % de la normale n'est pas calculé (début de saison)
+  min_normal_mm: 25
+
+# --- Niveaux d'alerte pluie (PROVISOIRES : à calibrer avec Météo Madagascar, BNGRC, groupe IPC) ---
+# Ratio pluie cumulée / normale (%). Du plus sévère au moins sévère.
+alert_levels:
+  - {level: 4, name: Urgence, below_pct: 50}
+  - {level: 3, name: Alerte,  below_pct: 75}
+  - {level: 2, name: Veille,  below_pct: 90}
+  - {level: 1, name: Normal,  below_pct: 1000000}
+
+# Une unité est dite « exposée » à partir de ce niveau
+exposure_min_level: 3
+
+# Part vulnérable par défaut (PROVISOIRE). Approximation : environ 80 % de la population vit sous
+# le seuil de pauvreté international (PAM, Country Brief Madagascar, mars 2026).
+# À REMPLACER par des données IPC / enquêtes dans inputs/vulnerabilite.csv
+default_vulnerable_share: 0.80
+
+# Simulation de sensibilité : multiplicateurs appliqués à la pluie cumulée
+simulation:
+  rain_factors: [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00,
+                 1.05, 1.10, 1.15, 1.20, 1.25, 1.30, 1.35, 1.40, 1.45, 1.50]

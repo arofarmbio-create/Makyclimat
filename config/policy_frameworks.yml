@@ -1,0 +1,44 @@
+# Cadres de politique auxquels les indicateurs sont rattachés.
+# IMPORTANT : le rattachement indicateur -> cadre est une PROPOSITION de travail à valider avec les
+# sources institutionnelles. Les OMD (2000-2015) ont été remplacés par les ODD (Agenda 2030).
+
+sdg:
+  source: "Nations unies — Agenda 2030 (17 Objectifs de développement durable)"
+  goals:
+    - {id: 1,  label: Pas de pauvreté}
+    - {id: 2,  label: Faim « zéro »}
+    - {id: 3,  label: Bonne santé et bien-être}
+    - {id: 4,  label: Éducation de qualité}
+    - {id: 5,  label: Égalité entre les sexes}
+    - {id: 6,  label: Eau propre et assainissement}
+    - {id: 7,  label: Énergie propre et d'un coût abordable}
+    - {id: 8,  label: Travail décent et croissance économique}
+    - {id: 9,  label: Industrie, innovation et infrastructure}
+    - {id: 10, label: Inégalités réduites}
+    - {id: 11, label: Villes et communautés durables}
+    - {id: 12, label: Consommation et production responsables}
+    - {id: 13, label: Mesures relatives à la lutte contre les changements climatiques}
+    - {id: 14, label: Vie aquatique}
+    - {id: 15, label: Vie terrestre}
+    - {id: 16, label: Paix, justice et institutions efficaces}
+    - {id: 17, label: Partenariats pour la réalisation des objectifs}
+
+madagascar:
+  # Source : analyse du budget national 2026 (UNICEF Madagascar) et loi de finances 2026 (presse)
+  pge_r:
+    label: "PMO/PGE-R — Programme de mise en œuvre de la Politique Générale de l'État pour la Refondation"
+    axes:
+      - {id: axe1, label: "Répondre aux urgences et garantir l'accès aux services sociaux de base dans les zones les plus vulnérables"}
+      - {id: axe2, label: "Engager des réformes structurelles durables"}
+      - {id: axe3, label: "Organiser une concertation nationale et des élections crédibles"}
+  priorites_budgetaires_2026:
+    - {id: energie,    label: Énergie}
+    - {id: eau,        label: Eau potable}
+    - {id: sante,      label: Santé}
+    - {id: education,  label: Éducation}
+    - {id: emploi,     label: Emploi}
+    - {id: solidarite, label: Solidarité nationale}
+  pnde:
+    label: "PNDE — Plan National de Décentralisation Émergente (objectif : 10 % des transferts budgétaires aux entités décentralisées d'ici 2027)"
+  early_warnings_for_all:
+    label: "Alerte précoce pour tous (objectif mondial 2027), adopté par Madagascar avec une alerte basée sur les impacts"

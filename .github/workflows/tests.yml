@@ -1,0 +1,28 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: pip install numpy pandas pyyaml requests geopandas pyogrio shapely rasterio
+      - run: npm install --no-save jsdom
+      - name: Données simulées et tests de la chaîne de données
+        run: |
+          python tests/make_synthetic.py
+          python scripts/build_catalogue.py --country demo
+          python tests/test_pipeline.py
+          python tests/test_connectors.py
+      - name: Tests de l'interface
+        run: node tests/ui_test.js demo
