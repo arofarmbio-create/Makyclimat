@@ -21,13 +21,15 @@ let currentLayers = [];
 let lastBlob = null;
 let mapCount = 0;
 const markerGroups = [];
+const hydroLayers = {};
 let layersB = [];
 w.L = {
-  map() { return { id: ++mapCount, setView() { return this; }, fitBounds() {}, removeLayer() {}, invalidateSize() {}, on() {}, getCenter() { return [0, 0]; }, getZoom() { return 5; } }; },
+  map() { return { id: ++mapCount, setView() { return this; }, fitBounds() {}, removeLayer(l) { if (l && l.kind) delete hydroLayers[l.kind]; }, invalidateSize() {}, on() {}, getCenter() { return [0, 0]; }, getZoom() { return 5; } }; },
   tileLayer() { return { addTo() {} }; },
   circleMarker(ll, o) { return { ll, o, bindTooltip() { return this; } }; },
   layerGroup(ms) { markerGroups.push(ms); return { ms, addTo() { return this; } }; },
   geoJSON(fc, opts) {
+    if (opts.hydro) { const o = { fc, kind: opts.hydro, addTo() { hydroLayers[opts.hydro] = o; return o; } }; return o; }
     const layers = fc.features.map((f) => {
       const layer = { feature: f, on(ev, fn) { if (ev === "click") handlers[f.properties.c] = fn; },
                       bindTooltip(fn) { this._tip = fn; }, getBounds() { return {}; }, _style: opts.style(f) };
@@ -85,6 +87,19 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
   }
   const respPath = path.join(docs, "data", slug, "response.json");
+  const hydroMeta = path.join(docs, "data", slug, "hydro", "meta.json");
+  if (fs.existsSync(hydroMeta)) {
+    const HM = JSON.parse(fs.readFileSync(hydroMeta, "utf8"));
+    check("carte Eau et terrain visible", await waitFor(() => !$("hydcard").hidden));
+    $("hrivers").checked = true; $("hrivers").dispatchEvent(new w.Event("change"));
+    check("cours d'eau ajoutés à la carte", await waitFor(() => hydroLayers.rivers && hydroLayers.rivers.fc.features.length === HM.n_reaches));
+    $("hbasins").checked = true; $("hbasins").dispatchEvent(new w.Event("change"));
+    check("bassins versants ajoutés à la carte", await waitFor(() => hydroLayers.basins && hydroLayers.basins.fc.features.length > 0));
+    $("hrivers").checked = false; $("hrivers").dispatchEvent(new w.Event("change"));
+    check("cours d'eau retirés", !hydroLayers.rivers);
+    $("hbasins").checked = false; $("hbasins").dispatchEvent(new w.Event("change"));
+    check("les couches de zones ne sont pas perturbées", currentLayers.length > 0);
+  }
   if (fs.existsSync(respPath)) {
     const H = JSON.parse(fs.readFileSync(respPath, "utf8"));
     check("carte Historique et réponse visible", await waitFor(() => !$("histcard").hidden));

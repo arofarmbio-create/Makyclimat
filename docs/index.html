@@ -55,6 +55,14 @@
       <select id="scn"></select>
       <div class="note" id="scnnote"></div>
     </div>
+    <div class="card" id="hydcard" hidden>
+      <h3>Eau et terrain</h3>
+      <div class="note" id="hydnote"></div>
+      <label class="check"><input type="checkbox" id="hrivers"> Cours d'eau (épaisseur = ordre de Strahler)</label>
+      <label class="check"><input type="checkbox" id="hbasins"> Grands bassins versants</label>
+      <label class="check"><input type="checkbox" id="hsubs"> Sous-bassins (jonctions de rivières)</label>
+      <div class="note">Calcul MakyClimat sur le modèle de terrain Copernicus (maille ~550 m) : cours d'eau dès 100 km² drainés. Les petits bassins et les ruisseaux ne sont pas résolus. La hauteur au-dessus du drainage (HAND) indique une susceptibilité à l'inondation, pas une carte de crue.</div>
+    </div>
     <div class="card" id="histcard" hidden>
       <h3>Historique et réponse</h3>
       <div class="note" id="histsrc"></div>

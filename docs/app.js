@@ -438,7 +438,7 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
-    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + histSection(f);
+    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + hydroSection(f) + histSection(f);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -997,6 +997,42 @@
     S.evLayer = L.layerGroup(layers).addTo(S.map);
   }
 
+
+  /* ---------- Hydrologie : cours d'eau, bassins versants ---------- */
+  var RIVER_W = [0, 1, 1.4, 2, 2.8, 3.8, 5];
+  function setupHydro() {
+    return getJSON("hydro/meta.json").then(function (M) {
+      S.hydro = { meta: M, layers: {}, units: null };
+      $("hydcard").hidden = false;
+      $("hydnote").innerHTML = "<b>" + M.n_basins + "</b> grands bassins et <b>" + M.n_reaches + "</b> tronçons de cours d'eau calculés le " + esc(M.generated) + ".";
+      var defs = { hrivers: ["rivers", riverStyle], hbasins: ["basins", basinStyle], hsubs: ["subbasins", subStyle] };
+      Object.keys(defs).forEach(function (id) {
+        $(id).addEventListener("change", function () { toggleHydro(defs[id][0], defs[id][1], $(id).checked); });
+      });
+      return getJSON("hydro/units.json").then(function (U) { S.hydro.units = U.u; }).catch(function () {});
+    }).catch(function () { /* pas d'hydrologie calculée pour ce pays */ });
+  }
+  function riverStyle(f) { return { color: "#1f6fb2", weight: RIVER_W[Math.min(6, f.properties.o)] || 1, opacity: 0.85, interactive: false }; }
+  function basinStyle() { return { color: "#6b3fa0", weight: 1.6, fill: false, opacity: 0.9, interactive: false }; }
+  function subStyle() { return { color: "#8a8f98", weight: 0.8, fill: false, opacity: 0.8, dashArray: "3 3", interactive: false }; }
+  function toggleHydro(kind, style, on) {
+    var H = S.hydro;
+    if (H.layers[kind]) { S.map.removeLayer(H.layers[kind]); H.layers[kind] = null; }
+    if (!on) return;
+    getJSON("hydro/" + kind + ".geojson").then(function (fc) {
+      if (!$({ rivers: "hrivers", basins: "hbasins", subbasins: "hsubs" }[kind]).checked || H.layers[kind]) return;
+      H.layers[kind] = L.geoJSON(fc, { style: style, hydro: kind, interactive: false }).addTo(S.map);
+    }).catch(function (e) { console.warn(e); });
+  }
+  function hydroSection(f) {
+    var H = S.hydro;
+    if (!H || !H.units || !H.units[f.properties.c]) return "";
+    var b = H.meta.basins.filter(function (x) { return x.id === H.units[f.properties.c]; })[0];
+    if (!b) return "";
+    return '<h4>Bassin versant</h4><p class="note">Cette zone se draine vers le bassin <b>' + esc(b.name) + "</b> (" + MC.fmtInt(b.area_km2) + " km², " + MC.fmtInt(b.pop) +
+      " habitants). Un cyclone ou une crue en amont peut toucher les zones en aval ; le nom du bassin est celui de la commune de son embouchure.</p>";
+  }
+
   function seasonPhaseOf(date) {
     var sc = S.meta.scenarios;
     if (!sc || !sc.hist_phases) return null;
@@ -1334,6 +1370,7 @@
       renderCatalogue().catch(function (e) { console.warn(e); });
       renderSources(); renderMethod(); renderHindcast();
       setupHistory();
+      setupHydro();
     }).catch(function (e) { console.error(e); showEmpty("Chargement impossible : " + e.message); });
   }
   init();

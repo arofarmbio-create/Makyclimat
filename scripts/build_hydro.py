@@ -284,6 +284,7 @@ def write_all(country, P, main, sub, main_id, sub_id, tot, units, ext, lk, lon0,
     ext_dir.mkdir(parents=True, exist_ok=True)
     ext[["pcode", "indicateur", "valeur", "date", "source"]].to_csv(ext_dir / "hydro.csv", index=False)
     lk.to_csv(country_data_dir(country) / "hydro_units.csv", index=False)
+    write_json(hydro_dir / "units.json", {"u": {pc: int(b) for pc, b in zip(lk.pcode, lk.basin) if b > 0}})
     np.savez_compressed(grid_dir(country) / "hydro.npz", basin=main.astype("int16"), subbasin=sub.astype("int32"), hand=np.nan_to_num(P["hand"], nan=-1).astype("float16"),
                         slope=np.clip(np.nan_to_num(P["slope"], nan=0), 0, 255).astype("uint8"), acc=np.log10(np.maximum(P["acc"], 1)).astype("float16").reshape(h, w),
                         sea=P["sea"], lon0=np.array(lon0), lat0=np.array(lat0), res=np.array(res))

@@ -155,3 +155,8 @@ Limites : données de pluie, vent et température modélisées/satellitaires, pa
 ## Hydrologie de terrain
 
 `scripts/hydro_core.py` calcule, à partir d'un modèle numérique de terrain : écoulement (Priority-Flood), aire drainée, réseau hydrographique et ordre de Strahler, bassins versants, hauteur au-dessus du drainage (HAND) et pente. Les algorithmes sont testés sur des terrains dont la réponse est connue (`tests/test_hydro.py`).
+
+## Eau et terrain (workflow « 5 - Hydrologie »)
+
+`scripts/build_hydro.py` lit le modèle numérique de terrain Copernicus GLO-90 (accès libre), le ré-échantillonne à ~550 m et calcule avec `scripts/hydro_core.py` : remplissage des cuvettes et directions d'écoulement (Priority-Flood, Barnes et al. 2014), accumulation (surface drainée), ordre de Strahler, bassins et sous-bassins, hauteur au-dessus du drainage (HAND, Rennó 2008) et pente. Résultats : cours d'eau, bassins et sous-bassins affichables sur la carte (carte « Eau et terrain »), bassin de chaque fokontany dans sa fiche, et six indicateurs par zone (HAND < 5 m et < 15 m, pente moyenne, part en pente > 30 %, altitude, plus grande surface drainée).
+Limites : maille de ~550 m (les petits bassins et ruisseaux ne sont pas résolus), pas de digues ni de canaux, HAND = susceptibilité à l'inondation et non carte de crue. Contrôle : la Betsiboka ressort à ~48 000 km² (valeur de référence ~49 000 km²).
