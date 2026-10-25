@@ -64,6 +64,9 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   // sélection puis exploration
   const first = currentLayers[0].feature.properties.c;
   handlers[first]();
+  if (fs.existsSync(path.join(docs, "data", slug, "hindcast.json"))) {
+    check("onglet Méthode : fiabilité mesurée (hindcast)", await waitFor(() => /Fiabilité mesurée/.test($("methodtext").innerHTML) && $("methodtext").querySelectorAll("table.hind tbody tr").length === 6));
+  }
   if (metaJson.has_history) {
     check("courbe historique ENSO : une barre par saison", await waitFor(() => /Pluie de chaque saison/.test($("info").innerHTML) && ($("info").innerHTML.match(/<rect /g) || []).length >= 20));
   }
@@ -75,6 +78,16 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     check("carte des alertes colorée avec la palette des niveaux", [...cols].every((c) => ["#d7ebd2", "#f2d16b", "#e8893a", "#b2262e"].includes(c)), [...cols].join(" "));
     check("légende des niveaux d'alerte", /Vigilance/.test($("legend").textContent) && /Alerte maximale/.test($("legend").textContent));
     $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
+  }
+  if (metaJson.risks) {
+    check("sélecteur de profil visible", !$("profcard").hidden && $("profile").options.length === 5);
+    check("tableau des risques (profil ONG) : 9 risques x 3 horizons", $("info").querySelectorAll(".rtab tbody tr").length === 9 && /Risques pour : ONG/.test($("info").innerHTML));
+    check("risque inconnu affiché « données à intégrer » (jamais inventé)", $("info").querySelectorAll(".rtodo").length >= 5);
+    check("alerte précoce reprise dans le tableau (pastilles de niveau)", $("info").querySelectorAll(".rchip").length >= 10);
+    $("profile").value = "pecheur"; $("profile").dispatchEvent(new w.Event("change"));
+    check("profil pêcheur : 4 risques dont mer et pêche", $("info").querySelectorAll(".rtab tbody tr").length === 4 && /Mer et pêche/.test($("info").innerHTML));
+    check("liste des données à intégrer", /Données à intégrer pour compléter/.test($("info").innerHTML));
+    $("profile").value = "ong"; $("profile").dispatchEvent(new w.Event("change"));
   }
   if (metaJson.scenarios) {
     check("tableau des scénarios dans la fiche", /Probabilité d'alerte/.test($("info").innerHTML) && $("info").querySelectorAll(".sctable tr").length >= 4);

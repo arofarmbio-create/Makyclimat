@@ -112,3 +112,17 @@ body.simple #info { font-size: 16px; }
 
 .ewdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; border: 1px solid #0003; }
 .ew { margin: 8px 0; }
+.tablewrap { overflow-x: auto; }
+table.hind th, table.hind td { text-align: right; padding: 3px 6px; border-bottom: 1px solid #e3e3e3; }
+table.hind th:first-child, table.hind td:first-child { text-align: center; }
+.risks table.rtab { font-size: 12px; }
+.risks .rtab th, .risks .rtab td { text-align: left; vertical-align: top; padding: 4px 5px; border-bottom: 1px solid #e3e3e3; }
+.risks .rtab thead th { font-size: 11px; color: #555; }
+.rchip { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; color: #222; }
+.rproxy { font-size: 10px; color: #777; border: 1px solid #bbb; border-radius: 8px; padding: 0 4px; }
+.rtxt { font-size: 11px; color: #555; margin-top: 2px; }
+.rpop { font-size: 11px; font-weight: 600; }
+.rtodo, .rnone { font-size: 11px; color: #888; font-style: italic; }
+.risks details { margin: 6px 0; font-size: 12px; }
+.risks summary { cursor: pointer; font-weight: 600; }
+.dmg { margin: 6px 0; }

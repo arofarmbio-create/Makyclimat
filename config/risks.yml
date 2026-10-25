@@ -1,0 +1,109 @@
+# Risques par profil et par horizon. Textes PROVISOIRES, à valider avec les clusters, le BNGRC, le Ministère de l'agriculture et la Santé.
+# status : live = calculé par l'outil ; proxy = indicateur indirect ; todo = donnée à intégrer (affiché comme tel, jamais inventé)
+# court = prévision météo des 7 prochains jours ; moyen = scénarios de la saison ; long = tendance climatique et ENSO.
+hazards:
+  flood:
+    label: Inondation et crue
+    icon: "🌊"
+    court: {status: live, from: [rain, flood]}
+    moyen: {status: live, scenario: hum}
+    long:  {status: live, kind: wet}
+    needs: "Carte de zones inondables au fokontany (JRC / modèle de terrain) et débits mesurés par bassin versant."
+    damages:
+      court: ["Routes et ponts coupés, déplacements impossibles", "Habitations, latrines et puits inondés", "Cultures de bas-fonds et rizières submergées"]
+      moyen: ["Pertes de récolte (riz, légumes) et de bétail", "Augmentation des maladies hydriques (diarrhée, choléra)", "Écoles et centres de santé fermés ou inaccessibles"]
+      long:  ["Dégradation des infrastructures et des terres agricoles", "Déplacements de population répétés"]
+  drought:
+    label: Sécheresse et déficit de pluie
+    icon: "☀"
+    court: {status: live, from: [dry, heat]}
+    moyen: {status: live, scenario: sec}
+    long:  {status: live, kind: dry}
+    needs: "Humidité du sol et calendrier cultural pour relier le déficit aux stades des cultures."
+    damages:
+      court: ["Stress hydrique des cultures et du bétail", "Baisse de l'eau disponible aux points d'eau"]
+      moyen: ["Perte de récolte et insécurité alimentaire (IPC)", "Malnutrition aiguë des enfants", "Migrations vers les villes ou zones plus humides"]
+      long:  ["Dégradation des moyens d'existence et endettement", "Aridification progressive des zones les plus touchées"]
+  wind:
+    label: Vent fort et cyclone
+    icon: "💨"
+    court: {status: live, from: [wind]}
+    moyen: {status: todo}
+    long:  {status: todo}
+    needs: "Trajectoires cycloniques (bulletins officiels) et climatologie saisonnière des cyclones."
+    damages:
+      court: ["Toitures et habitations endommagées", "Bateaux et matériel de pêche détruits", "Coupures de routes et de courant"]
+      moyen: ["Reconstruction et abris d'urgence"]
+      long:  []
+  heat:
+    label: Chaleur
+    icon: "🌡"
+    court: {status: live, from: [heat]}
+    moyen: {status: todo}
+    long:  {status: todo}
+    needs: "Climatologie de température et anomalies saisonnières."
+    damages:
+      court: ["Stress thermique des personnes, du bétail et des cultures"]
+      moyen: []
+      long:  []
+  landslide:
+    label: Éboulement et route coupée
+    icon: "⛰"
+    court: {status: proxy, from: [rain, flood]}
+    moyen: {status: proxy, scenario: hum}
+    long:  {status: todo}
+    needs: "Pente et relief (modèle numérique de terrain), type de sol, routes OpenStreetMap : sans eux, seul le déclencheur « pluie » est suivi."
+    damages:
+      court: ["Axes routiers coupés, villages isolés", "Habitations sur pentes menacées"]
+      moyen: ["Approvisionnement et accès aux soins perturbés"]
+      long:  []
+  crops:
+    label: Cultures à risque
+    icon: "🌾"
+    court: {status: proxy, from: [rain, dry, heat]}
+    moyen: {status: proxy, scenario: sec, scenario_alt: hum}
+    long:  {status: proxy, kind: both}
+    needs: "Calendrier cultural par région et par culture (à valider avec le Ministère de l'agriculture) pour savoir si la culture est en semis, croissance ou récolte."
+    damages:
+      court: ["Semis ou récolte à décaler selon les pluies annoncées"]
+      moyen: ["Rendement en baisse si déficit ou excès pendant la floraison et le remplissage"]
+      long:  ["Variétés et dates de semis à adapter au climat qui change"]
+  water:
+    label: Niveau de l'eau (puits, nappe)
+    icon: "💧"
+    court: {status: todo}
+    moyen: {status: proxy, scenario: sec}
+    long:  {status: proxy, kind: dry}
+    needs: "Cumul de pluie sur 6 à 12 mois (déficit de recharge) et mesures de niveau des puits/forages."
+    damages:
+      court: []
+      moyen: ["Puits et sources qui baissent ou s'assèchent", "Corvée d'eau plus longue, eau moins sûre"]
+      long:  ["Recharge insuffisante des nappes"]
+  disease:
+    label: Maladies (choléra, paludisme, diarrhées)
+    icon: "🩺"
+    court: {status: proxy, from: [flood, rain]}
+    moyen: {status: proxy, scenario: hum}
+    long:  {status: todo}
+    needs: "Cas notifiés (santé), couverture eau-hygiène-assainissement, population déplacée."
+    damages:
+      court: ["Contamination de l'eau après inondation : risque de choléra et de diarrhées"]
+      moyen: ["Pic de paludisme et de maladies hydriques en saison humide"]
+      long:  []
+  sea:
+    label: Mer et pêche
+    icon: "🎣"
+    court: {status: proxy, from: [wind]}
+    moyen: {status: todo}
+    long:  {status: todo}
+    needs: "Prévision de houle et de vent en mer (modèle marin) ; le vent à terre n'est qu'un indice."
+    damages:
+      court: ["Sorties en mer dangereuses, pirogues et filets perdus"]
+      moyen: []
+      long:  []
+profiles:
+  - {id: menage, label: "Ménage / habitant", hazards: [flood, wind, heat, water, disease, landslide]}
+  - {id: agriculteur, label: "Agriculteur / éleveur", hazards: [crops, drought, flood, water, wind, heat]}
+  - {id: pecheur, label: "Pêcheur", hazards: [sea, wind, flood, disease]}
+  - {id: commune, label: "Commune / autorité locale", hazards: [flood, landslide, drought, wind, disease, water]}
+  - {id: ong, label: "ONG / agence ONU / bailleur", hazards: [flood, drought, wind, landslide, crops, water, disease, heat, sea]}

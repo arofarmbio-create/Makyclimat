@@ -142,6 +142,13 @@ def _load_playbook():
         return None
 
 
+def _load_risks():
+    try:
+        return load_yaml("risks.yml")
+    except FileNotFoundError:
+        return None
+
+
 SCENARIO_LIST = [
     {"id": "sec", "label": "Saison sèche (1 saison sur 10 est aussi sèche)", "short": "Sèche"},
     {"id": "med", "label": "Saison médiane (la plus probable)", "short": "Médiane"},
@@ -556,6 +563,7 @@ def main() -> None:
             "cascade": scn["cascade"], "n_years": scn["n_years"], "weighted_by_forecast": scn["weighted"], "n_phase": scn["n"], "wet_threshold_pct": wet_thr,
             "list": [x for x in SCENARIO_LIST if x["id"] in scn["S"]]},
         "playbook": _load_playbook(),
+        "risks": _load_risks(),
         "sector_alerts": len(sector_alerts),
         "forecast": None if EWL is None else {
             "fetched_at": fcst["fetched_at"], "first": fcst["dates"][0], "last": fcst["dates"][-1], "today": today.isoformat(),

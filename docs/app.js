@@ -49,7 +49,7 @@
   var HAZ = ["rain", "wind", "heat", "dry", "flood"];
 
   var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null, scn: "", simple: false,
-            view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all" };
+            view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all", profile: "ong" };
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -266,7 +266,7 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
-    h += forecastSection(m) + alertsSection(m) + scenarioTable(m);
+    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -377,6 +377,107 @@
     return h + "</div>";
   }
 
+
+  /* ---------- Risques par profil et par horizon ---------- */
+  var SIGNAL = ["Aucun signal", "Signal faible", "Signal net", "Signal fort"];
+  var LONG_TODO = "Données à intégrer";
+
+  function lvlToChip(l) { return l >= 4 ? 3 : l === 3 ? 2 : l === 2 ? 1 : 0; }
+
+  function riskCourt(spec, m) {
+    var F = S.meta.forecast;
+    if (spec.status === "todo") return { todo: true };
+    if (!F || !m.ew) return { none: "Prévision non disponible" };
+    var best = 0, bh = null, pop = 0;
+    spec.from.forEach(function (hz) {
+      var i = HAZ.indexOf(hz);
+      if (i >= 0 && m.ew[i] > best) { best = m.ew[i]; bh = hz; }
+      if (i >= 0 && m.ewp && m.ewp[i] > pop) pop = m.ewp[i];
+    });
+    return { chip: best, label: best ? F.level_names[best] : "Aucun signal", text: bh ? ewMessage(bh, m) : "", pop: S.view.lvl < 4 ? pop : 0, proxy: spec.status === "proxy" };
+  }
+
+  function riskMoyen(spec, m) {
+    var sc = S.meta.scenarios;
+    if (spec.status === "todo") return { todo: true };
+    if (!sc || !m.sc) return { none: "Scénarios non disponibles" };
+    var wetThr = sc.wet_threshold_pct || 130;
+    function one(id) {
+      var v = m.sc[id];
+      if (!v || v[0] === null || v[0] === undefined) return null;
+      if (id === "sec") return { chip: lvlToChip(v[1]), text: "saison sèche : " + Math.round(v[0]) + " % de la normale", pop: v[2] };
+      var c = v[0] >= wetThr + 20 ? 3 : v[0] >= wetThr ? 2 : v[0] >= wetThr - 15 ? 1 : 0;
+      return { chip: c, text: "saison humide : " + Math.round(v[0]) + " % de la normale", pop: v[4] };
+    }
+    var a = one(spec.scenario), b = spec.scenario_alt ? one(spec.scenario_alt) : null;
+    var r = !a ? b : (!b || a.chip >= b.chip ? a : b);
+    if (!r) return { none: "Pas assez de données" };
+    var names = ["Aucun signal", "Vigilance", "Alerte", "Alerte maximale"];
+    return { chip: r.chip, label: names[r.chip], text: r.text, pop: S.view.lvl < 4 ? r.pop : 0, proxy: spec.status === "proxy" };
+  }
+
+  function riskLong(spec, m) {
+    if (spec.status === "todo") return { todo: true };
+    var x = m.x || {};
+    var tr = x.rain_trend_pct_decade, el = x.enso_el_pct, la = x.enso_la_pct;
+    if (tr === undefined && el === undefined && la === undefined) return { none: "Pas assez de données" };
+    var c = 0, parts = [];
+    var dry = (tr !== undefined && tr <= -2 ? 1 : 0) + (tr !== undefined && tr <= -5 ? 1 : 0) + (el !== undefined && el <= 85 ? 1 : 0);
+    var wet = (tr !== undefined && tr >= 2 ? 1 : 0) + (tr !== undefined && tr >= 5 ? 1 : 0) + (la !== undefined && la >= 120 ? 1 : 0);
+    c = spec.kind === "dry" ? dry : spec.kind === "wet" ? wet : Math.max(dry, wet);
+    if (tr !== undefined) parts.push("tendance " + (tr > 0 ? "+" : "") + String(Math.round(tr * 10) / 10).replace(".", ",") + " % de pluie par décennie");
+    if (spec.kind !== "wet" && el !== undefined) parts.push("El Niño passés : " + Math.round(el) + " % de la normale");
+    if (spec.kind !== "dry" && la !== undefined) parts.push("La Niña passées : " + Math.round(la) + " % de la normale");
+    return { chip: Math.min(3, c), label: SIGNAL[Math.min(3, c)], text: parts.join(" ; "), proxy: spec.status === "proxy" };
+  }
+
+  function riskCell(c, longTerm) {
+    if (c.todo) return '<td class="rtodo">' + LONG_TODO + "</td>";
+    if (c.none) return '<td class="rnone">' + esc(c.none) + "</td>";
+    return '<td><span class="rchip" style="background:' + EW_COLORS[c.chip] + (c.chip === 3 ? ";color:#fff" : "") + '">' + esc(c.label) + "</span>" +
+      (c.proxy ? ' <span class="rproxy" title="Indicateur indirect : voir « données à intégrer »">indicatif</span>' : "") +
+      (c.text ? '<div class="rtxt">' + esc(c.text) + "</div>" : "") +
+      (c.pop > 0 ? '<div class="rpop">≈ ' + MC.fmtInt(c.pop) + " pers.</div>" : "") + "</td>";
+  }
+
+  function risksSection(m, forSimple) {
+    var R = S.meta.risks;
+    if (!R) return "";
+    var prof = R.profiles.filter(function (p) { return p.id === S.profile; })[0] || R.profiles[0];
+    var h = '<div class="risks"><h3>Risques pour : ' + esc(prof.label) + "</h3>" +
+      '<div class="tablewrap"><table class="rtab"><thead><tr><th>Risque</th><th>7 jours</th><th>Saison</th><th>Climat (long terme)</th></tr></thead><tbody>';
+    var dmg = "", needs = "";
+    prof.hazards.forEach(function (id) {
+      var hz = R.hazards[id];
+      if (!hz) return;
+      h += "<tr><th scope='row'>" + hz.icon + " " + esc(hz.label) + "</th>" + riskCell(riskCourt(hz.court, m)) + riskCell(riskMoyen(hz.moyen, m)) + riskCell(riskLong(hz.long, m)) + "</tr>";
+      var any = ["court", "moyen", "long"].some(function (k) { return hz.damages[k] && hz.damages[k].length; });
+      if (any && !forSimple) {
+        dmg += "<div class='dmg'><b>" + hz.icon + " " + esc(hz.label) + "</b>";
+        [["court", "Court terme (jours)"], ["moyen", "Moyen terme (saison)"], ["long", "Long terme (années)"]].forEach(function (k) {
+          if (hz.damages[k[0]] && hz.damages[k[0]].length) dmg += "<div><i>" + k[1] + " :</i> " + hz.damages[k[0]].map(esc).join(" ; ") + "</div>";
+        });
+        dmg += "</div>";
+      }
+      if (hz.needs && [hz.court, hz.moyen, hz.long].some(function (s) { return s.status !== "live"; })) needs += "<li><b>" + esc(hz.label) + " :</b> " + esc(hz.needs) + "</li>";
+    });
+    h += "</tbody></table></div>";
+    if (!forSimple && dmg) h += "<details><summary>Dégâts possibles (indicatif)</summary>" + dmg + "<div class='note'>Liste qualitative provisoire, à valider avec les clusters et les services techniques ; elle ne chiffre pas les dommages.</div></details>";
+    if (needs) h += "<details><summary>Données à intégrer pour compléter ce tableau</summary><ul class='advice'>" + needs + "</ul></details>";
+    h += "<div class='note'>« Indicatif » = indicateur indirect (par exemple la pluie comme déclencheur d'éboulement). Les alertes officielles du BNGRC et de Météo Madagascar priment.</div></div>";
+    return h;
+  }
+
+  function setupProfiles() {
+    var R = S.meta.risks;
+    if (!R) return;
+    $("profcard").hidden = false;
+    var sel = $("profile");
+    R.profiles.forEach(function (p) { var o = document.createElement("option"); o.value = p.id; o.textContent = p.label; sel.appendChild(o); });
+    sel.value = S.profile;
+    sel.addEventListener("change", function () { S.profile = sel.value; renderInfo(); });
+  }
+
   function simpleCard(f, m) {
     var sc = S.meta.scenarios, pb = S.meta.playbook;
     var name = esc(f.properties.n);
@@ -400,6 +501,7 @@
       h += "<h3>Ce que vous pouvez faire</h3><ul class='advice'>" + list.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
       if (wet) h += "<h3>Si les pluies sont très fortes</h3><ul class='advice'>" + pb.household.wet.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
     }
+    h += risksSection(m, true);
     return h + "<div class='note'>Information indicative, calculée à partir des saisons passées : ce n'est pas une prévision de la météo. Écoutez la météo et les consignes du fokontany, de la commune et du BNGRC.</div>";
   }
 
@@ -523,7 +625,7 @@
       var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o);
     });
     sel.addEventListener("change", function () { S.layer = sel.value; restyle(); });
-    setupScenarios();
+    setupScenarios(); setupProfiles();
     $("modebtn").addEventListener("click", function () {
       S.simple = !S.simple;
       $("modebtn").setAttribute("aria-pressed", S.simple ? "true" : "false");
@@ -702,6 +804,7 @@
         " saisons passées (" + m.scenarios.years[0] + "–" + m.scenarios.years[1] + "), comparée à la normale complète. Les scénarios sont : saison sèche (le 10<sup>e</sup> centile), médiane, humide (90<sup>e</sup> centile), et la médiane des saisons El Niño et La Niña passées. " +
         "Les niveaux d'alerte, la population exposée et les cibles sont recalculés pour chaque scénario avec les <b>mêmes seuils provisoires</b> ; la probabilité d'alerte est la part des saisons possibles qui atteignent le niveau d'alerte ou pire. Si une prévision saisonnière officielle est fournie (fichier <code>inputs/prevision_saisonniere.csv</code>), les années sont pondérées selon ses probabilités par tercile. " +
         "<b>Ce n'est pas une prévision météo</b> : cela décrit ce que des situations comparables ont produit dans le passé. La couche « excès de pluie » est un indicateur pluviométrique simple, pas une prévision de crue. Les nombres de personnes par secteur appliquent des parts provisoires (voir le plan d'action) à valider avec les clusters.</p>" : "") +
+      '<div id="hindbox"></div>' +
       "<h3>Un outil qui complète les outils existants</h3><p>Chaque secteur et chaque cluster coordonné par l'OCHA dispose déjà de ses propres outils et alertes. MakyClimat ne les remplace pas : il les rassemble sur une même carte jusqu'au fokontany, ajoute le climat, les scénarios et les personnes concernées, et reste utilisable par tous, des ménages aux agences des Nations Unies. " +
       "Les alertes sectorielles peuvent être importées telles quelles (fichier <code>inputs/alertes_secteurs.csv</code>) et sont affichées avec leur source. Pour approfondir : " +
       '<a href="https://fews.net" target="_blank" rel="noopener">FEWS NET</a>, <a href="https://www.ipcinfo.org" target="_blank" rel="noopener">IPC</a>, <a href="https://hungermap.wfp.org" target="_blank" rel="noopener">HungerMap (PAM)</a>, <a href="https://data.humdata.org" target="_blank" rel="noopener">HDX</a> et <a href="https://www.unocha.org/madagascar" target="_blank" rel="noopener">OCHA Madagascar</a>.</p>' +
@@ -711,6 +814,31 @@
       "<li>La pluie satellitaire est moins fiable dans les zones montagneuses et côtières ; à valider avec les stations.</li>" +
       "<li>Aucun chiffre ne remplace l'analyse officielle IPC ; l'outil prépare et met à jour entre deux cycles.</li></ul>" +
       "<p class='note'>Tout est reproductible : le code, les seuils et les fichiers de configuration sont publics dans le dépôt.</p>";
+  }
+
+  function renderHindcast() {
+    getJSON("hindcast.json").then(function (H) {
+      var box = $("hindbox");
+      if (!box) return;
+      var pc = function (x) { return x === null || x === undefined ? "–" : Math.round(x * 100) + " %"; };
+      var f1 = function (x) { return String(x).replace(".", ","); };
+      var rows = H.origins.map(function (o) {
+        return "<tr><td>" + o.months_observed + "</td><td>" + f1(o.mae) + "</td><td>" + f1(o.mae_climatology) + "</td><td>" + pc(o.skill) +
+          "</td><td>" + pc(o.coverage_p10_p90) + "</td><td>" + pc(o.brier_skill) + "</td></tr>";
+      }).join("");
+      var mid = H.origins[Math.min(2, H.origins.length - 1)];
+      var ph = mid.by_phase || {}, phTxt = ["el", "la", "ne"].filter(function (k) { return ph[k]; }).map(function (k) {
+        return { el: "El Niño", la: "La Niña", ne: "neutres" }[k] + " : erreur " + f1(ph[k].mae) + " pts (biais " + (ph[k].bias > 0 ? "+" : "") + f1(ph[k].bias) + ")";
+      }).join(" ; ");
+      box.innerHTML = "<h3>Fiabilité mesurée des scénarios</h3><p>Le moteur de scénarios est testé sur les " + H.n_seasons + " saisons passées (" + H.first_season + "–" + H.last_season +
+        ") : pour chaque saison, on la « cache », on prévoit sa fin à partir des autres saisons et de la pluie déjà tombée, puis on compare à ce qui s'est réellement passé (validation croisée, " + H.n_points + " points de grille). " +
+        "L'erreur est exprimée en points de % de la normale ; la <b>référence</b> est la simple climatologie (ignorer la pluie déjà tombée).</p>" +
+        '<div class="tablewrap"><table class="tbl hind"><thead><tr><th>Mois déjà observés</th><th>Erreur du scénario médian</th><th>Erreur climatologie</th><th>Gain</th><th>Couverture P10–P90 (idéal 80 %)</th><th>Gain du score de Brier (alerte &lt; " + H.alert_below_pct + " %)</th></tr></thead><tbody>' +
+        rows + "</tbody></table></div>" +
+        (phTxt ? "<p>Après " + mid.months_observed + " mois observés, selon la phase ENSO de la saison : " + phTxt + ".</p>" : "") +
+        "<p>Lecture : plus la saison avance, plus le scénario médian est précis ; un gain positif signifie que l'outil fait mieux que la climatologie. Avec 0 mois observé il n'y a aucun gain, c'est normal. " +
+        "Limites : le test porte sur la pluie satellitaire, pas sur les dégâts ; il ne mesure pas la prévision météo à 16 jours (à valider séparément) ; un échantillon de ~" + H.n_seasons + " saisons reste modeste.</p>";
+    }).catch(function () { /* hindcast non encore calculé */ });
   }
 
   /* ---------- Démarrage ---------- */
@@ -739,7 +867,7 @@
       }) : Promise.resolve();
       p.then(function () { render(true); });
       renderCatalogue().catch(function (e) { console.warn(e); });
-      renderSources(); renderMethod();
+      renderSources(); renderMethod(); renderHindcast();
     }).catch(function (e) { console.error(e); showEmpty("Chargement impossible : " + e.message); });
   }
   init();

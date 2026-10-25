@@ -135,6 +135,12 @@ def main() -> None:
     q[1, 13] = 12.0                # la deuxième dépasse la crue de 2 ans (vigilance)
     save_grid(grid_dir("demo") / "flood_forecast.npz", pcode=com.pcode.to_numpy().astype(str), dates=np.array(days), q=q,
               fetched_at=np.array("2026-02-21T06:00:00+00:00"))
+    import build_hindcast as _bh
+    _argv, sys.argv = sys.argv, ["build_hindcast.py", "--country", "demo"]
+    import io, contextlib
+    with contextlib.redirect_stdout(io.StringIO()):
+        _bh.main()
+    sys.argv = _argv
     print(f"Démo écrite : {len(units)} unités, grille {h}x{w}")
 
 

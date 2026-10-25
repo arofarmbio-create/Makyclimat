@@ -133,3 +133,8 @@ tests/         tests automatiques
 - **Vue simple « Chez moi »** : messages en langage courant pour ménages, paysans, pêcheurs.
 
 Limites : données de pluie, vent et température modélisées/satellitaires, pas des mesures de station ; la fiabilité mesurée (hindcast sur 44 saisons) et le branchement des API BNGRC/Météo sont les prochaines étapes.
+
+## Profils, risques par horizon et fiabilité mesurée
+
+- **Mon profil** (ménage, agriculteur/éleveur, pêcheur, commune, ONG/ONU) : la fiche d'une zone affiche un tableau des risques propres au profil, sur trois horizons : 7 jours (alerte précoce), saison (scénarios), climat (tendance et ENSO). Définition dans `config/risks.yml`. Un risque dont la donnée n'est pas encore intégrée (éboulement/pente, niveau des puits, choléra, calendrier cultural, houle) est affiché « Données à intégrer », jamais estimé à l'aveugle ; un risque suivi par un indicateur indirect est marqué « indicatif ». Les listes de dégâts possibles sont qualitatives et provisoires, à valider avec les services techniques et les clusters.
+- **Fiabilité mesurée** (`scripts/build_hindcast.py`, lancé par le workflow 2) : validation croisée « une saison laissée de côté » du moteur de scénarios. Résultats (erreur, gain par rapport à la climatologie, couverture P10–P90, score de Brier, courbe de fiabilité, erreur par phase ENSO) affichés dans l'onglet Méthode et écrits dans `docs/data/<pays>/hindcast.json`.

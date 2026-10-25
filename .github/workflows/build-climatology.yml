@@ -33,6 +33,8 @@ jobs:
         run: python scripts/connector_enso.py
       - name: Changement climatique et ENSO (pluie saisonnière depuis 1981, tendances, phases)
         run: python scripts/build_climate_change.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Fiabilité mesurée des scénarios (validation croisée sur toutes les saisons)
+        run: python scripts/build_hindcast.py --country "${{ github.event.inputs.country || 'mdg' }}"
       - name: Enregistrer dans le dépôt
         run: |
           git config user.name "makyclimat-bot"

@@ -91,7 +91,30 @@ def test_analysis() -> None:
         "rain_trend_pct_decade", "rain_trend_signif_share", "enso_el_pct", "enso_la_pct", "enso_corr"} and ext.pcode.nunique() == (units.level == 4).sum())
 
 
+def test_hindcast() -> None:
+    import build_hindcast as bh
+    rng = np.random.default_rng(5)
+    Y, M, N = 40, 6, 200
+    clim = np.full((M, N), 100.0)
+    arr = clim[None] * (1 + rng.normal(0, 0.5, (Y, M, N)))      # mois indépendants : plus on observe, mieux on sait
+    ph = np.array(["N"] * Y)
+    ph[:6], ph[6:12] = "E", "L"
+    r = bh.run(arr, clim, ph, np.arange(1982, 1982 + Y), 95, 100)
+    o = r["origins"]
+    check("hindcast : 6 points de départ", len(o) == 6 and r["n_seasons"] == Y)
+    check("hindcast : sans pluie observée, aucun gain sur la climatologie", abs(o[0]["mae"] - o[0]["mae_climatology"]) < 1e-9 and abs(o[0]["brier_skill"]) < 1e-9)
+    check("hindcast : l'erreur diminue quand la saison avance", all(o[i]["mae"] > o[i + 1]["mae"] for i in range(5)), str([x["mae"] for x in o]))
+    check("hindcast : gain de Brier fort en fin de saison", o[5]["brier_skill"] > 0.4, str(o[5]["brier_skill"]))
+    check("hindcast : couverture P10-P90 proche de 80 %", all(0.70 <= x["coverage_p10_p90"] <= 0.88 for x in o), str([x["coverage_p10_p90"] for x in o]))
+    rel = o[3]["reliability"]
+    check("hindcast : courbe de fiabilité cohérente (probabilité annoncée ~ fréquence observée)", len(rel) >= 2 and all(abs(b["p"] - b["freq"]) < 0.15 for b in rel), str(rel))
+    same = np.repeat(arr[:1], Y, axis=0)
+    r2 = bh.run(same, clim, ph, np.arange(Y), 75, 100)
+    check("hindcast : saisons identiques -> erreur nulle", all(x["mae"] < 1e-9 for x in r2["origins"]))
+
+
 if __name__ == "__main__":
+    test_hindcast()
     test_parsers()
     test_analysis()
     print("\nTous les tests climat passent." if not FAILS else f"\n{FAILS} ÉCHEC(S)")
