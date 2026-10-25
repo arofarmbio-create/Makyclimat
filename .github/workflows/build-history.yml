@@ -1,0 +1,39 @@
+name: 4 - Historique des événements et de la réponse
+
+# Rassemble les événements (GLIDE, IDMC), les projets des plans de réponse (HRP), les activités géolocalisées (IATI)
+# et l'import 3W/4W (inputs/reponses_humanitaires.csv ou inputs/interventions.csv) dans docs/data/<pays>/response.json.
+on:
+  schedule:
+    - cron: "20 2 * * 1"
+  push:
+    paths:
+      - "inputs/reponses_humanitaires.csv"
+      - "inputs/interventions.csv"
+  workflow_dispatch:
+    inputs:
+      country:
+        description: "Code du pays"
+        default: "mdg"
+
+permissions:
+  contents: write
+
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+      - name: Historique et réponse
+        run: python scripts/build_history.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Enregistrer dans le dépôt
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add docs/data
+          git diff --cached --quiet || (git commit -m "Historique des événements et de la réponse" && git pull --rebase origin main && git push)

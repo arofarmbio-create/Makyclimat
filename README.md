@@ -144,3 +144,14 @@ Limites : données de pluie, vent et température modélisées/satellitaires, pa
 - **Saisons passées** : le sélecteur de période propose, en plus des scénarios, chacune des ~44 saisons observées (avec la phase El Niño / La Niña). Niveaux d'alerte, population exposée et cibles sont recalculés avec les seuils et la population d'aujourd'hui (« que se passerait-il aujourd'hui avec la pluie de cette année-là »).
 - **Deux cartes** côte à côte et synchronisées (indicateur et période propres à chaque carte) ; **Différence** B − A d'un même indicateur entre deux périodes (rouge = plus de risque en B).
 - **Indicateurs couplés** : jusqu'à 3 indicateurs, poids et sens choisis, combinés en un indice 0–100 (classement relatif dans la vue) par moyenne pondérée, « au moins un élevé » (maximum) ou « tous élevés à la fois » (minimum). Le lien de la page garde le mode, les périodes et la recette de l'indice.
+
+## Historique des événements et de la réponse
+
+- **Événements** (GLIDE, IDMC) et **réponse** : projets des plans de réponse (HRP/FTS), activités géolocalisées des partenaires (IATI), et **import 3W/4W** (`inputs/reponses_humanitaires.csv` ou `inputs/interventions.csv`, modèle : `inputs/reponses_humanitaires_modele.csv`). Colonnes obligatoires : `date_debut`, `pcode` (région, district, commune ou fokontany), `cluster`, `organisation`, `beneficiaires`. Les lignes invalides sont ignorées et signalées dans le journal du workflow « 4 - Historique ».
+- Aucune source publique ne donne de bénéficiaires par zone : IATI et HRP indiquent une **présence et un budget**, pas un résultat ; seule la couche 3W contient des bénéficiaires.
+- La carte propose filtres (période, types d'événements, secteur, organisation, sources), couches (événements, personnes affectées, bénéficiaires, écart cibles − bénéficiaires, projets, budget), marqueurs d'événements, et, par zone, une frise annuelle, la répartition par secteur et le nombre d'événements selon la phase ENSO de la saison.
+- Les événements de GLIDE et d'IDMC proches (même type, 10 jours) sont fusionnés pour ne pas être comptés deux fois.
+
+## Hydrologie de terrain
+
+`scripts/hydro_core.py` calcule, à partir d'un modèle numérique de terrain : écoulement (Priority-Flood), aire drainée, réseau hydrographique et ordre de Strahler, bassins versants, hauteur au-dessus du drainage (HAND) et pente. Les algorithmes sont testés sur des terrains dont la réponse est connue (`tests/test_hydro.py`).

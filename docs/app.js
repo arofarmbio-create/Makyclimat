@@ -16,6 +16,8 @@
               e: ["#fff5eb", "#fdd0a2", "#fd8d3c", "#d94801", "#7f2704"],
               t: ["#fff5eb", "#fdd0a2", "#fd8d3c", "#d94801", "#7f2704"],
               g: ["#fff5eb", "#fdd0a2", "#fd8d3c", "#d94801", "#7f2704"],
+              ev_n: ["#f7f4f9", "#d9c6e6", "#b08fd0", "#7e4fb0", "#4a1f80"], ev_p: ["#f7f4f9", "#d9c6e6", "#b08fd0", "#7e4fb0", "#4a1f80"],
+              rb: ["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"], rp: ["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"], rf: ["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"],
               x: ["#f7f4f9", "#d4b9da", "#c994c7", "#dd3497", "#7a0177"] };
   var SIGNED_COLORS = ["#b2182b", "#ef8a62", "#f1f1f1", "#67a9cf", "#2166ac"];
   function styleOfLayer(k) {
@@ -31,6 +33,7 @@
     var d = layerDef(k);
     if (v === null || v === undefined) return "n/d";
     if (k === "cx") return Math.round(v) + " / 100";
+    if (k === "rf") return MC.fmtInt(v) + " €";
     if (d && (d.fmt === "pct" || (d.ext && d.ext.format === "pct"))) return MC.fmtPct(v);
     if (d && d.ext && d.ext.format === "float") return (d.ext.style === "signed" && v > 0 ? "+" : "") + String(Math.round(v * 100) / 100).replace(".", ",");
     return MC.fmtInt(v);
@@ -52,7 +55,7 @@
 
   var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null, scn: "", simple: false,
             view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all", profile: "ong",
-            mode: "single", layerB: "pc", scnB: "", sp: [], br: [], map2: null, geo2: null,
+            mode: "single", layerB: "pc", scnB: "", sp: [], br: [], map2: null, geo2: null, hist: null, anc: null, hf: null, hagg: {}, evLayer: null,
             cx: { items: [{ k: "pc", w: 1, dir: -1 }, { k: "e", w: 1, dir: 1 }, { k: "", w: 1, dir: 1 }], op: "mean" } };
 
   function $(id) { return document.getElementById(id); }
@@ -102,7 +105,8 @@
   }
 
   /* ---------- Cartes : une, deux côte à côte, ou différence ---------- */
-  var HIGHER_WORSE = ["e", "t", "w", "g", "ex", "pa", "l"];
+  var HIGHER_WORSE = ["e", "t", "w", "g", "ex", "pa", "l", "ev_n", "ev_p", "rg"];
+  var HIST_LAYERS = ["ev_n", "ev_p", "rb", "rg", "rp", "rf"];
   var CX_STEPS = [20, 40, 60, 80];
 
   function specA() { return { layer: S.layer, scn: S.scn, sim: S.simIdx }; }
@@ -113,7 +117,16 @@
     return [{ spec: specA(), tag: "A" }];
   }
 
-  function plainVal(c, layer, scn, sim) { return MC.valueFor(S.view.metrics[c], layer, sim, S.meta, scn); }
+  function plainVal(c, layer, scn, sim) {
+    if (HIST_LAYERS.indexOf(layer) >= 0) {
+      if (layer === "rg") {
+        var t = MC.valueFor(S.view.metrics[c], "t", sim, S.meta, scn);
+        return t === null || t === undefined ? null : Math.max(0, t - ((S.hagg.rb || {})[c] || 0));
+      }
+      return (S.hagg[layer] || {})[c] || 0;
+    }
+    return MC.valueFor(S.view.metrics[c], layer, sim, S.meta, scn);
+  }
 
   function rankOf(sorted, v) {
     var lo = 0, hi = sorted.length;
@@ -187,6 +200,7 @@
   }
 
   function computeBreaks() {
+    histAggregate();
     S.sp = panes().map(function (p) { p.spec.cx = null; return p.spec; });
     S.br = S.sp.map(breaksFor);
     S.breaks = S.br[0];
@@ -424,7 +438,7 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
-    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m);
+    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + histSection(f);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -862,6 +876,182 @@
   }
 
 
+
+  /* ---------- Historique des événements et de la réponse ---------- */
+  var EV_COLORS = { cyclone: "#6a3d9a", "inondation": "#1f78b4", "sécheresse": "#e08214", "épidémie": "#33a02c", autre: "#666666" };
+  var KIND_LABELS = { "3w": "Bénéficiaires atteints (import 3W)", hrp: "Projets des plans de réponse (HRP)", iati: "Activités des partenaires (IATI)" };
+
+  function ancestors(pc) { return S.anc && S.anc[pc] ? S.anc[pc] : null; }
+
+  function setupHistory() {
+    return getJSON("response.json").then(function (H) {
+      S.hist = H;
+      return ensureIndex();
+    }).then(function () {
+      S.anc = {};
+      S.index.forEach(function (r) { S.anc[r.c] = [r.a1, r.a2, r.a3].filter(Boolean).slice(0, Math.max(0, r.l - 1)).concat([r.c]); });
+      var H = S.hist, years = {};
+      H.events.forEach(function (e) { years[+e.date.slice(0, 4)] = 1; });
+      H.rec.y.forEach(function (y) { years[y] = 1; });
+      var ys = Object.keys(years).map(Number).sort();
+      if (!ys.length) return;
+      var last = ys[ys.length - 1];
+      S.hf = { y0: Math.max(ys[0], last - 9), y1: last, types: {}, kinds: {}, cl: "", org: "", show: false };
+      H.event_types.forEach(function (t) { S.hf.types[t] = true; });
+      H.kinds.forEach(function (k) { S.hf.kinds[k] = true; });
+      $("histcard").hidden = false;
+      ["hy0", "hy1"].forEach(function (id, j) {
+        var sel = $(id); sel.innerHTML = "";
+        ys.forEach(function (y) { var o = document.createElement("option"); o.value = y; o.textContent = y; sel.appendChild(o); });
+        sel.value = j ? S.hf.y1 : S.hf.y0;
+        sel.addEventListener("change", function () { S.hf.y0 = Math.min(+$("hy0").value, +$("hy1").value); S.hf.y1 = Math.max(+$("hy0").value, +$("hy1").value); histChanged(); });
+      });
+      $("htypes").innerHTML = H.event_types.map(function (t) {
+        return '<label class="check"><input type="checkbox" data-t="' + esc(t) + '" checked><i class="evdot" style="background:' + EV_COLORS[t] + '"></i> ' + esc(t) + "</label>";
+      }).join("");
+      $("htypes").querySelectorAll("input").forEach(function (cb) { cb.addEventListener("change", function () { S.hf.types[cb.dataset.t] = cb.checked; histChanged(); }); });
+      $("hshow").addEventListener("change", function () { S.hf.show = $("hshow").checked; drawEvents(); });
+      var cl = $("hcl"); cl.innerHTML = '<option value="">Tous les secteurs</option>' + H.clusters.map(function (c, i) { return '<option value="' + i + '">' + esc(c) + "</option>"; }).join("");
+      cl.addEventListener("change", function () { S.hf.cl = cl.value; histChanged(); });
+      var og = $("hor"); og.innerHTML = '<option value="">Toutes les organisations</option>' + H.orgs.map(function (o, i) { return '<option value="' + i + '">' + esc(o) + "</option>"; }).join("");
+      og.addEventListener("change", function () { S.hf.org = og.value; histChanged(); });
+      $("hkinds").innerHTML = H.kinds.map(function (k) {
+        var has = H.rec.k.indexOf(H.kinds.indexOf(k)) >= 0;
+        return has ? '<label class="check"><input type="checkbox" data-k="' + k + '" checked> ' + esc(KIND_LABELS[k] || k) + "</label>" : "";
+      }).join("");
+      $("hkinds").querySelectorAll("input").forEach(function (cb) { cb.addEventListener("change", function () { S.hf.kinds[cb.dataset.k] = cb.checked; histChanged(); }); });
+      $("histsrc").innerHTML = "Sources : " + H.sources.map(function (x) { return esc(x.label) + " (" + x.n + ")"; }).join(" ; ") + ". " + H.notes.map(esc).join(" ");
+      // couches
+      var defs = [["ev_n", "Événements : nombre (période choisie)"], ["ev_p", "Événements : personnes affectées ou déplacées"]];
+      if (H.rec.u.length) {
+        if (H.rec.k.indexOf(H.kinds.indexOf("3w")) >= 0) defs.push(["rb", "Réponse : bénéficiaires atteints (3W)"], ["rg", "Réponse : cibles potentiels moins bénéficiaires atteints"]);
+        defs.push(["rp", "Réponse : nombre de projets ou d'activités (HRP, IATI)"], ["rf", "Réponse : budget (€, HRP et IATI)"]);
+      }
+      defs.forEach(function (d) { LAYERS.push({ id: d[0], label: d[1] }); });
+      [$("layer"), $("layerB")].forEach(function (sel) {
+        if (!sel) return;
+        defs.forEach(function (d) { var o = document.createElement("option"); o.value = d[0]; o.textContent = d[1]; sel.appendChild(o); });
+      });
+      readURL();
+      if (S.view) restyle();
+    }).catch(function () { /* pas d'historique disponible */ });
+  }
+
+  function histRecs() {
+    var H = S.hist, f = S.hf, R = H.rec, out = [];
+    for (var i = 0; i < R.u.length; i++) {
+      var kind = H.kinds[R.k[i]];
+      if (R.y[i] < f.y0 || R.y[i] > f.y1 || !f.kinds[kind]) continue;
+      if (f.cl !== "" && R.c[i] !== +f.cl) continue;
+      if (f.org !== "" && R.o[i] !== +f.org) continue;
+      out.push(i);
+    }
+    return out;
+  }
+  function histEvents() {
+    var f = S.hf;
+    return S.hist.events.filter(function (e) { var y = +e.date.slice(0, 4); return y >= f.y0 && y <= f.y1 && f.types[e.type]; });
+  }
+
+  function histAggregate() {
+    S.hagg = {};
+    if (!S.hist || !S.hf || !S.view || !S.anc) return;
+    var L = S.view.lvl, keys = {};
+    S.view.feats.forEach(function (f) { keys[f.properties.c] = 1; });
+    var agg = { ev_n: {}, ev_p: {}, rb: {}, rp: {}, rf: {} };
+    function add(layer, u, v) {
+      var a = ancestors(u);
+      if (!a || a.length < L) return;
+      var key = a[L - 1];
+      if (keys[key]) agg[layer][key] = (agg[layer][key] || 0) + v;
+    }
+    histEvents().forEach(function (e) { add("ev_n", e.u, 1); add("ev_p", e.u, (e.affected || 0) + (e.displaced || 0)); });
+    var R = S.hist.rec;
+    histRecs().forEach(function (i) {
+      if (S.hist.kinds[R.k[i]] === "3w") add("rb", R.u[i], R.b[i]);
+      else { add("rp", R.u[i], R.n[i]); add("rf", R.u[i], R.f[i]); }
+    });
+    S.hagg = agg;
+  }
+
+  function histChanged() {
+    var ev = histEvents(), recs = histRecs(), R = S.hist.rec, ben = 0, funds = 0, aff = 0;
+    ev.forEach(function (e) { aff += (e.affected || 0) + (e.displaced || 0); });
+    recs.forEach(function (i) { if (S.hist.kinds[R.k[i]] === "3w") ben += R.b[i]; else funds += R.f[i]; });
+    $("hsum").innerHTML = "<b>" + ev.length + "</b> événement(s), " + MC.fmtInt(aff) + " personnes affectées ou déplacées" +
+      (ben ? " ; <b>" + MC.fmtInt(ben) + "</b> bénéficiaires atteints (3W)" : "") + (funds ? " ; budget " + MC.fmtInt(funds) + " €" : "") + " sur " + S.hf.y0 + "–" + S.hf.y1 + ".";
+    drawEvents();
+    if (S.view) restyle();
+  }
+
+  function drawEvents() {
+    if (!S.map || !S.hist) return;
+    if (S.evLayer) { S.map.removeLayer(S.evLayer); S.evLayer = null; }
+    if (!S.hf || !S.hf.show || !L.circleMarker) return;
+    var layers = histEvents().map(function (e) {
+      var r = Math.max(5, Math.min(26, Math.sqrt(((e.affected || 0) + (e.displaced || 0)) / 400)));
+      var m = L.circleMarker([e.lat, e.lon], { radius: r, color: "#fff", weight: 1, fillColor: EV_COLORS[e.type] || "#666", fillOpacity: 0.75 });
+      m.bindTooltip("<b>" + esc(e.type) + " · " + esc(e.date) + "</b><br>" + esc(e.name) + "<br>Affectés : " + MC.fmtInt(e.affected) + " · Déplacés : " + MC.fmtInt(e.displaced) + "<br><i>Source : " + esc(e.src) + "</i>");
+      return m;
+    });
+    S.evLayer = L.layerGroup(layers).addTo(S.map);
+  }
+
+  function seasonPhaseOf(date) {
+    var sc = S.meta.scenarios;
+    if (!sc || !sc.hist_phases) return null;
+    var y = +date.slice(0, 4), m = +date.slice(5, 7), end = m >= 11 ? y + 1 : m <= 4 ? y : null;
+    if (end === null) return "hors";
+    var i = sc.hist_years.indexOf(end);
+    return i >= 0 ? sc.hist_phases[i] : null;
+  }
+
+  function histSection(f) {
+    if (!S.hist || !S.hf || !S.anc) return "";
+    var c = f.properties.c, H = S.hist, R = H.rec, hf = S.hf;
+    function inZone(u) { var a = ancestors(u); return a && a.indexOf(c) >= 0; }
+    var ev = histEvents().filter(function (e) { return inZone(e.u); });
+    var recs = histRecs().filter(function (i) { return inZone(R.u[i]); });
+    var h = '<div class="hist2"><h3>Historique et réponse (' + hf.y0 + "–" + hf.y1 + ")</h3>";
+    // frise par année
+    var byY = {};
+    for (var y = hf.y0; y <= hf.y1; y++) byY[y] = { e: 0, p: 0, b: 0, f: 0 };
+    ev.forEach(function (e) { var o = byY[+e.date.slice(0, 4)]; o.e += 1; o.p += (e.affected || 0) + (e.displaced || 0); });
+    recs.forEach(function (i) { var o = byY[R.y[i]]; if (H.kinds[R.k[i]] === "3w") o.b += R.b[i]; else o.f += R.f[i]; });
+    var ys = Object.keys(byY).map(Number), mxe = Math.max(1, Math.max.apply(null, ys.map(function (k) { return byY[k].e; }))),
+        mxb = Math.max(1, Math.max.apply(null, ys.map(function (k) { return byY[k].b + byY[k].f / 100; })));
+    var W = 300, Ht = 90, bw = (W - 8) / ys.length, svg = '<svg viewBox="0 0 ' + W + " " + Ht + '" width="100%" role="img" aria-label="Événements (violet) et réponse (vert) par année">';
+    ys.forEach(function (k, j) {
+      var o = byY[k], x = 4 + j * bw, he = 28 * o.e / mxe, hb = 40 * (o.b + o.f / 100) / mxb;
+      svg += '<rect x="' + (x + 1) + '" y="' + (46 - he) + '" width="' + (bw - 2) + '" height="' + he + '" fill="#7e4fb0"><title>' + k + " : " + o.e + " événement(s), " + MC.fmtInt(o.p) + " personnes</title></rect>" +
+        '<rect x="' + (x + 1) + '" y="48" width="' + (bw - 2) + '" height="' + Math.max(0, hb) + '" fill="#31a354"><title>' + k + " : " + MC.fmtInt(o.b) + " bénéficiaires (3W), " + MC.fmtInt(o.f) + " € (HRP/IATI)</title></rect>" +
+        '<text x="' + (x + bw / 2) + '" y="' + (Ht - 1) + '" font-size="7" text-anchor="middle" fill="#555">' + String(k).slice(2) + "</text>";
+    });
+    h += svg + '</svg><div class="note">Violet (haut) : événements. Vert (bas) : réponse (bénéficiaires 3W, sinon budget).</div>';
+    // lien avec l'ENSO
+    var cnt = { E: 0, L: 0, N: 0, hors: 0 };
+    ev.forEach(function (e) { var p = seasonPhaseOf(e.date); if (p && cnt[p] !== undefined) cnt[p] += 1; });
+    if (ev.length && S.meta.scenarios && S.meta.scenarios.hist_phases)
+      h += row("Événements selon l'ENSO de la saison", "El Niño : " + cnt.E + " · La Niña : " + cnt.L + " · neutre : " + cnt.N + " · hors saison des pluies : " + cnt.hors);
+    // par type
+    var types = {};
+    ev.forEach(function (e) { types[e.type] = (types[e.type] || 0) + 1; });
+    Object.keys(types).forEach(function (t) { h += row('<i class="evdot" style="background:' + EV_COLORS[t] + '"></i> ' + esc(t), types[t]); });
+    // par secteur
+    var cl = {};
+    recs.forEach(function (i) { var k = H.clusters[R.c[i]]; cl[k] = cl[k] || { b: 0, f: 0, n: 0 }; if (H.kinds[R.k[i]] === "3w") cl[k].b += R.b[i]; else cl[k].f += R.f[i]; cl[k].n += R.n[i]; });
+    var ck = Object.keys(cl);
+    if (ck.length) {
+      h += '<table class="hind2"><tr><th>Secteur</th><th>Bénéficiaires (3W)</th><th>Budget (€)</th></tr>' + ck.sort(function (a, b) { return cl[b].b + cl[b].f - cl[a].b - cl[a].f; }).slice(0, 8).map(function (k) {
+        return "<tr><td>" + esc(k) + "</td><td>" + (cl[k].b ? MC.fmtInt(cl[k].b) : "–") + "</td><td>" + (cl[k].f ? MC.fmtInt(cl[k].f) : "–") + "</td></tr>"; }).join("") + "</table>";
+    }
+    if (!ev.length && !recs.length) h += '<div class="note">Aucun événement ni donnée de réponse dans cette zone pour ces filtres' + (S.view.lvl > 1 ? " (certaines données ne sont localisées qu'à un niveau plus large)" : "") + ".</div>";
+    var last = ev.slice(-5).reverse();
+    if (last.length) h += "<details><summary>Derniers événements</summary><ul class='advice'>" + last.map(function (e) {
+      return "<li><b>" + esc(e.date) + "</b> " + esc(e.type) + " : " + esc(e.name) + " (" + MC.fmtInt((e.affected || 0) + (e.displaced || 0)) + " pers., " + esc(e.src) + ")</li>"; }).join("") + "</ul></details>";
+    return h + "</div>";
+  }
+
   /* ---------- Comparer, indicateurs couplés, lien partageable ---------- */
   function fillSelect(sel, withCx, noEw) {
     sel.innerHTML = "";
@@ -1143,6 +1333,7 @@
       p.then(function () { render(true); });
       renderCatalogue().catch(function (e) { console.warn(e); });
       renderSources(); renderMethod(); renderHindcast();
+      setupHistory();
     }).catch(function (e) { console.error(e); showEmpty("Chargement impossible : " + e.message); });
   }
   init();

@@ -20,10 +20,13 @@ const handlers = {}; // pcode -> click handler
 let currentLayers = [];
 let lastBlob = null;
 let mapCount = 0;
+const markerGroups = [];
 let layersB = [];
 w.L = {
   map() { return { id: ++mapCount, setView() { return this; }, fitBounds() {}, removeLayer() {}, invalidateSize() {}, on() {}, getCenter() { return [0, 0]; }, getZoom() { return 5; } }; },
   tileLayer() { return { addTo() {} }; },
+  circleMarker(ll, o) { return { ll, o, bindTooltip() { return this; } }; },
+  layerGroup(ms) { markerGroups.push(ms); return { ms, addTo() { return this; } }; },
   geoJSON(fc, opts) {
     const layers = fc.features.map((f) => {
       const layer = { feature: f, on(ev, fn) { if (ev === "click") handlers[f.properties.c] = fn; },
@@ -56,8 +59,9 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   check("chargement initial (KPIs)", await waitFor(() => $("kpis").children.length === 3));
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
   const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
+  const nHist = fs.existsSync(path.join(docs, "data", slug, "response.json")) ? 6 : 0;
   check("6 indicateurs de base + indicateurs externes affichables",
-        $("layer").options.length === 7 + (metaJson.scenarios ? 3 : 0) + (metaJson.forecast ? 6 : 0) + metaJson.external.length, $("layer").options.length + " couches");
+        await waitFor(() => $("layer").options.length === 7 + (metaJson.scenarios ? 3 : 0) + (metaJson.forecast ? 6 : 0) + metaJson.external.length + nHist), $("layer").options.length + " couches");
   check("régions affichées", currentLayers.length === 4, currentLayers.length + " régions");
   check("couleurs d'alerte attribuées", currentLayers.every((l) => /^#/.test(l._style.fillColor)));
   const kpi0 = $("kpis").textContent;
@@ -78,6 +82,45 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     const cols = new Set(currentLayers.map((l) => l._style.fillColor));
     check("carte des alertes colorée avec la palette des niveaux", [...cols].every((c) => ["#d7ebd2", "#f2d16b", "#e8893a", "#b2262e"].includes(c)), [...cols].join(" "));
     check("légende des niveaux d'alerte", /Vigilance/.test($("legend").textContent) && /Alerte maximale/.test($("legend").textContent));
+    $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
+  }
+  const respPath = path.join(docs, "data", slug, "response.json");
+  if (fs.existsSync(respPath)) {
+    const H = JSON.parse(fs.readFileSync(respPath, "utf8"));
+    check("carte Historique et réponse visible", await waitFor(() => !$("histcard").hidden));
+    check("couches d'historique ajoutées au sélecteur", ["ev_n", "ev_p", "rb", "rg", "rp", "rf"].every((k) => $("layer").querySelector(`option[value="${k}"]`)));
+    const regionOf = (u) => u.split("D")[0];
+    const expect = (fn) => { const o = {}; fn(o); return o; };
+    $("layer").value = "ev_n"; $("layer").dispatchEvent(new w.Event("change"));
+    const evAll = expect((o) => H.events.forEach((e) => { o[regionOf(e.u)] = (o[regionOf(e.u)] || 0) + 1; }));
+    const tipN = (l) => Number(((l._tip().match(/: ([\d\s  ]+)$/) || [])[1] || "0").replace(/\D/g, ""));
+    check("événements : nombre par région = comptage direct du fichier", currentLayers.every((l) => tipN(l) === (evAll[l.feature.properties.c] || 0)), currentLayers.map((l) => tipN(l) + "/" + (evAll[l.feature.properties.c] || 0)).join(" "));
+    $("hy0").value = "2024"; $("hy0").dispatchEvent(new w.Event("change"));
+    const ev24 = expect((o) => H.events.filter((e) => +e.date.slice(0, 4) >= 2024).forEach((e) => { o[regionOf(e.u)] = (o[regionOf(e.u)] || 0) + 1; }));
+    check("filtre de période (2024–2025) appliqué à la carte", currentLayers.every((l) => tipN(l) === (ev24[l.feature.properties.c] || 0)));
+    $("hy0").value = "2016"; $("hy0").dispatchEvent(new w.Event("change"));
+    const t0 = H.event_types[0];
+    $("htypes").querySelector(`input[data-t="${t0}"]`).checked = false; $("htypes").querySelector(`input[data-t="${t0}"]`).dispatchEvent(new w.Event("change"));
+    const evNo = expect((o) => H.events.filter((e) => e.type !== t0).forEach((e) => { o[regionOf(e.u)] = (o[regionOf(e.u)] || 0) + 1; }));
+    check("filtre de type d'événement appliqué", currentLayers.every((l) => tipN(l) === (evNo[l.feature.properties.c] || 0)));
+    $("htypes").querySelector(`input[data-t="${t0}"]`).checked = true; $("htypes").querySelector(`input[data-t="${t0}"]`).dispatchEvent(new w.Event("change"));
+    $("layer").value = "rb"; $("layer").dispatchEvent(new w.Event("change"));
+    const k3 = H.kinds.indexOf("3w");
+    const rbAll = expect((o) => H.rec.u.forEach((u, i) => { if (H.rec.k[i] === k3) o[regionOf(u)] = (o[regionOf(u)] || 0) + H.rec.b[i]; }));
+    check("bénéficiaires 3W par région = somme directe du fichier", currentLayers.every((l) => tipN(l) === (rbAll[l.feature.properties.c] || 0)), currentLayers.map((l) => tipN(l) + "/" + (rbAll[l.feature.properties.c] || 0)).join(" "));
+    $("hcl").value = "0"; $("hcl").dispatchEvent(new w.Event("change"));
+    const rb0 = expect((o) => H.rec.u.forEach((u, i) => { if (H.rec.k[i] === k3 && H.rec.c[i] === 0) o[regionOf(u)] = (o[regionOf(u)] || 0) + H.rec.b[i]; }));
+    check("filtre de secteur appliqué aux bénéficiaires", currentLayers.every((l) => tipN(l) === (rb0[l.feature.properties.c] || 0)));
+    $("hcl").value = ""; $("hcl").dispatchEvent(new w.Event("change"));
+    $("layer").value = "rg"; $("layer").dispatchEvent(new w.Event("change"));
+    check("écart cibles − bénéficiaires : jamais négatif", currentLayers.every((l) => tipN(l) >= 0));
+    $("hshow").checked = true; $("hshow").dispatchEvent(new w.Event("change"));
+    const last = markerGroups[markerGroups.length - 1];
+    check("événements affichés sur la carte : un marqueur par événement filtré", last && last.length === H.events.length, last && last.length + " / " + H.events.length);
+    $("hshow").checked = false; $("hshow").dispatchEvent(new w.Event("change"));
+    handlers[currentLayers[1].feature.properties.c]();
+    check("fiche de zone : frise historique, ENSO et secteurs", await waitFor(() => /Historique et réponse \(/.test($("info").innerHTML) && /Événements selon l'ENSO/.test($("info").innerHTML) && $("info").querySelectorAll("svg rect").length > 20));
+    handlers[first]();
     $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
   }
   if (metaJson.scenarios && metaJson.scenarios.hist_years) {

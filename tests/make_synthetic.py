@@ -135,6 +135,30 @@ def main() -> None:
     q[1, 13] = 12.0                # la deuxième dépasse la crue de 2 ans (vigilance)
     save_grid(grid_dir("demo") / "flood_forecast.npz", pcode=com.pcode.to_numpy().astype(str), dates=np.array(days), q=q,
               fetched_at=np.array("2026-02-21T06:00:00+00:00"))
+    # historique simulé : événements et réponse (3W) sur 2016-2025
+    import build_history as _bhist
+    import json as _json
+    from common import write_json as _wj, country_docs_dir as _cdocs
+    leaves = ud[ud.level == 4].reset_index(drop=True)
+    rr = np.random.default_rng(11)
+    ev = []
+    for y in range(2016, 2026):
+        for k in range(rr.integers(1, 4)):
+            lf = leaves.iloc[int(rr.integers(0, len(leaves)))]
+            tp = ["cyclone", "inondation", "sécheresse", "épidémie"][int(rr.integers(0, 4))]
+            ev.append({"date": f"{y}-{int(rr.integers(1, 5)):02d}-15", "type": tp, "name": f"Événement simulé {y}-{k}", "lat": float(lf.lat), "lon": float(lf.lon),
+                       "affected": int(rr.integers(1000, 90000)), "displaced": int(rr.integers(0, 20000)), "killed": 0, "homeless": 0, "src": "SIMULÉ", "id": f"S{y}{k}", "u": lf.pcode})
+    rows3 = []
+    for y in range(2016, 2026):
+        for _ in range(12):
+            lf = leaves.iloc[int(rr.integers(0, len(leaves)))]
+            rows3.append({"y": y, "pcode": lf.pcode, "org": ["ONG A", "ONG B", "ONG C"][int(rr.integers(0, 3))],
+                          "cluster": _bhist.CLUSTERS[int(rr.integers(0, 4))], "ben": float(rr.integers(100, 3000)), "n": 1})
+    rows_i = [{"y": y, "pcode": leaves.iloc[int(rr.integers(0, len(leaves)))].pcode, "org": "Bailleur X", "cluster": "Éducation", "funds": 50000.0, "n": 1} for y in range(2016, 2026)]
+    pk = _bhist.pack([("3w", pd.DataFrame(rows3)), ("iati", pd.DataFrame(rows_i))])
+    pk.update({"events": ev, "event_types": _bhist.TYPES, "sources": [{"id": "3w", "label": "Import 3W simulé", "n": len(rows3)}, {"id": "iati", "label": "IATI simulé", "n": len(rows_i)}],
+               "warnings": [], "generated_at": "2026-02-21T00:00:00+00:00", "notes": ["Données simulées pour les tests."]})
+    _wj(_cdocs("demo") / "response.json", pk)
     import build_hindcast as _bh
     _argv, sys.argv = sys.argv, ["build_hindcast.py", "--country", "demo"]
     import io, contextlib

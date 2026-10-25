@@ -55,6 +55,24 @@
       <select id="scn"></select>
       <div class="note" id="scnnote"></div>
     </div>
+    <div class="card" id="histcard" hidden>
+      <h3>Historique et réponse</h3>
+      <div class="note" id="histsrc"></div>
+      <div class="two">
+        <div><label class="field" for="hy0">De</label><select id="hy0"></select></div>
+        <div><label class="field" for="hy1">à</label><select id="hy1"></select></div>
+      </div>
+      <label class="field">Types d'événements</label>
+      <div id="htypes" class="checks"></div>
+      <label class="check"><input type="checkbox" id="hshow"> Afficher les événements sur la carte</label>
+      <label class="field" for="hcl">Secteur / cluster (réponse)</label>
+      <select id="hcl"></select>
+      <label class="field" for="hor">Organisation</label>
+      <select id="hor"></select>
+      <label class="field">Données de réponse</label>
+      <div id="hkinds" class="checks"></div>
+      <div class="note" id="hsum"></div>
+    </div>
     <div class="card" id="cmpcard">
       <h3>Comparer</h3>
       <div class="seg" id="modeseg" role="group" aria-label="Mode d'affichage">

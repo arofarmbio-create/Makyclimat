@@ -176,3 +176,26 @@ def sample_grid(arr: np.ndarray, lon0: float, lat0: float, res: float,
                 break
         vals[i] = found
     return vals
+
+
+def locate_points(slug: str, lons, lats):
+    """Pour chaque point (lon, lat), le code du fokontany qui le contient ('' si aucun). Utilise les limites publiées dans docs/data."""
+    import json
+
+    from shapely.geometry import Point, shape
+    from shapely.strtree import STRtree
+
+    geo_dir = country_docs_dir(slug) / "geo" / "adm4"
+    geoms, codes = [], []
+    for f in sorted(geo_dir.glob("*.geojson")):
+        for ft in json.loads(f.read_text(encoding="utf-8"))["features"]:
+            geoms.append(shape(ft["geometry"]))
+            codes.append(ft["properties"]["c"])
+    tree = STRtree(geoms)
+    pts = [Point(x, y) for x, y in zip(lons, lats)]
+    out = [""] * len(pts)
+    hit_p, hit_g = tree.query(pts, predicate="within")
+    for pi, gi in zip(hit_p, hit_g):
+        if not out[pi]:
+            out[pi] = codes[gi]
+    return out
