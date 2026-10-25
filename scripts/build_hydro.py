@@ -32,15 +32,15 @@ def tile_url(lat0: int, lon0: int) -> str:
     return DEM_URL.format(ns="S" if lat0 < 0 else "N", lat=abs(lat0), ew="W" if lon0 < 0 else "E", lon=abs(lon0))
 
 
-def read_tile_http(lat0: int, lon0: int, res: float):
-    """Une tuile de 1° ré-échantillonnée à `res` (moyenne) ; None si la tuile n'existe pas (pleine mer)."""
+def read_tile_http(lat0: int, lon0: int, res: float, how: str = "average"):
+    """Une tuile de 1° ré-échantillonnée à `res` (moyenne, ou minimum pour conserver les vallées) ; None si la tuile n'existe pas (pleine mer)."""
     import rasterio
     from rasterio.enums import Resampling
     n = int(round(1 / res))
     try:
         with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", CPL_VSIL_CURL_ALLOWED_EXTENSIONS=".tif", GDAL_HTTP_MAX_RETRY="4", GDAL_HTTP_RETRY_DELAY="3"):
             with rasterio.open(tile_url(lat0, lon0)) as src:
-                a = src.read(1, out_shape=(n, n), resampling=Resampling.average).astype("float32")
+                a = src.read(1, out_shape=(n, n), resampling=(Resampling.min if how == "min" else Resampling.average)).astype("float32")
                 if src.nodata is not None:
                     a[a == src.nodata] = 0.0
                 return a
@@ -50,7 +50,7 @@ def read_tile_http(lat0: int, lon0: int, res: float):
         raise
 
 
-def read_dem(bbox, res: float = 0.005, reader=read_tile_http, workers: int = 6):
+def read_dem(bbox, res: float = 0.005, reader=read_tile_http, workers: int = 6, how: str = "average"):
     """Mosaïque du MNT sur l'emprise (lon_min, lat_min, lon_max, lat_max). Retourne (dem, lon0, lat0) avec lat0 = bord nord."""
     lon_min, lat_min, lon_max, lat_max = bbox
     lons = list(range(math.floor(lon_min), math.ceil(lon_max)))
@@ -59,7 +59,7 @@ def read_dem(bbox, res: float = 0.005, reader=read_tile_http, workers: int = 6):
     dem = np.zeros((len(lats) * n, len(lons) * n), dtype="float32")
     jobs = [(la, lo) for la in lats for lo in lons]
     with ThreadPoolExecutor(workers) as ex:
-        tiles = list(ex.map(lambda t: reader(t[0], t[1], res), jobs))
+        tiles = list(ex.map(lambda t: reader(t[0], t[1], res) if how == "average" else reader(t[0], t[1], res, how), jobs))
     found = 0
     for (la, lo), t in zip(jobs, tiles):
         if t is None:
@@ -104,14 +104,16 @@ def geom_json(g, nd=4):
     return {"type": m["type"], "coordinates": rnd(m["coordinates"])}
 
 
-def process(dem, lon0, lat0, res, hcfg):
+def process(dem, lon0, lat0, res, hcfg, dem_route=None):
     """Chaîne hydrologique complète sur une grille MNT. Retourne un dict de grilles et de listes."""
     h, w = dem.shape
     sea = sea_mask(dem)
     lats = lat0 - (np.arange(h) + 0.5) * res
     row_area = H.cell_area_km2(lats, res)
     area = np.repeat(row_area, w)
-    z, ds = H.fill_and_route(np.where(sea, -1.0, dem), sea)
+    # acheminement sur le MNT « minimum » si fourni : la moyenne sur ~550 m comble les gorges plus étroites que la maille
+    # et peut faire franchir une ligne de partage à un grand fleuve (ex. Mangoky capté par la Tsiribihina)
+    z, ds = H.fill_and_route(np.where(sea, -1.0, dem if dem_route is None else dem_route), sea)
     sea_flat = sea.ravel()
     acc = H.accumulate(ds, area, sea_flat)
     stream_min = hcfg.get("stream_min_km2", 100)
@@ -299,7 +301,10 @@ def run(country: str, reader=read_tile_http, res: float | None = None, hcfg: dic
     res = res or hcfg.get("res_deg", 0.005)
     bbox = bbox or hcfg.get("bbox") or cfg["map"]["bbox"]
     dem, lon0, lat0 = read_dem(bbox, res, reader)
-    P = process(dem, lon0, lat0, res, hcfg)
+    dem_route = None
+    if hcfg.get("route_resampling", "min") == "min" and reader is read_tile_http:
+        dem_route, _, _ = read_dem(bbox, res, reader, how="min")
+    P = process(dem, lon0, lat0, res, hcfg, dem_route)
     main_lab, sub_lab, main_id, sub_id, tot = rank_basins(P, res)
     units = read_units(country)
     from shapely.geometry import shape
