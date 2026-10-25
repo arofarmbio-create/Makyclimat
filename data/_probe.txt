@@ -1,143 +1,5 @@
-== MDG_ADM2_access.csv HTTP 200 (120, 11)
-   colonnes : ADM2_PCODE, ADM_PCODE, access_pop_education_5km, access_pop_education_10km, access_pop_education_20km, access_pop_hospitals_30min, access_pop_hospitals_1h, access_pop_hospitals_2h, access_pop_primary_healthcare_30min, access_pop_primary_healthcare_1h, access_pop_primary_healthcare_2h
-                                      0        1        2
-ADM2_PCODE                      MG11117  MG11119  MG11122
-ADM_PCODE                       MG11117  MG11119  MG11122
-access_pop_education_5km         946177   211558   453625
-access_pop_education_10km       1065309   211558   453625
-access_pop_education_20km       1108304   211558   453625
-access_pop_hospitals_30min      1091163   211558   453625
-access_pop_hospitals_1h         1111889   211558   453625
-access_pop_hospitals_2h         1111889   211558   453625
-access_pop_primary_healthca...  1102033   211558   453625
-access_pop_primary_healthca...  1111889   211558   453625
-access_pop_primary_healthca...  1111889   211558   453625
-== MDG_ADM2_vulnerability.csv HTTP 200 (120, 21)
-   colonnes : ADM2_PCODE, total_pop, female_pop, children_u5, female_u5, elderly, pop_u15, female_u15, wra_pop, dependency_ratio, total_pop_rural, female_pop_rural, children_u5_rural, female_u5_rural, elderly_rural, pop_u15_rural, female_u15_rural, wra_pop_rural, dependency_ratio_rural, rural_pop_perc, ADM_PCODE
-                              0        1        2
-ADM2_PCODE              MG11117  MG11119  MG11122
-total_pop               1111889   211558   453625
-female_pop               554100   105428   226060
-children_u5              152086    28937    62047
-female_u5                 75010    14272    30602
-elderly                   40197     7648    16400
-pop_u15                  419810    79877   171273
-female_u15               207166    39417    84519
-wra_pop                  278680    53024   113695
-dependency_ratio          70.57    70.57    70.57
-total_pop_rural           70472        0        0
-female_pop_rural          35119        0        0
-children_u5_rural          9639        0        0
-female_u5_rural            4754        0        0
-elderly_rural              2548        0        0
-pop_u15_rural             26608        0        0
-female_u15_rural          13130        0        0
-wra_pop_rural             17663        0        0
-dependency_ratio_rural    70.57      0.0      0.0
-rural_pop_perc             6.34      0.0      0.0
-ADM_PCODE               MG11117  MG11119  MG11122
-== MDG_ADM2_coping.csv HTTP 200 (120, 48)
-   colonnes : ADM2_PCODE, access_pop_education_5km, access_pop_education_10km, access_pop_education_20km, access_pop_hospitals_30min, access_pop_hospitals_1h, access_pop_hospitals_2h, access_pop_primary_healthcare_30min, access_pop_primary_healthcare_1h, access_pop_primary_healthcare_2h, education_count, hospitals_count, primary_healthcare_count, RP10_evac_time_minutes_mean, RP10_evac_time_minutes_max, RP10_evac_time_minutes_median, RP50_evac_time_minutes_mean, RP50_evac_time_minutes_max, RP50_evac_time_minutes_median, RP100_evac_time_minutes_mean, RP100_evac_time_minutes_max, RP100_evac_time_minutes_median, RP500_evac_time_minutes_mean, RP500_evac_time_minutes_max, RP500_evac_time_minutes_median, kt34_evac_time_minutes_mean, kt34_evac_time_minutes_max, kt34_evac_time_minutes_median, rural_access_children_u5, rural_access_dependents, rural_access_working, rural_access_elderly, rural_access_female_pop, rural_access_female_u15, rural_access_female_u5, rural_access_pop_u15, rural_access_total_pop, rural_access_wra_pop, rural_access_dependency_ratio, RAI_total_pop, RAI_female_pop, RAI_children_u5, RAI_female_u5, RAI_elderly, RAI_pop_u15, RAI_female_u15, RAI_wra_pop, ADM_PCODE
-                                      0        1        2
-ADM2_PCODE                      MG11117  MG11119  MG11122
-access_pop_education_5km         946177   211558   453625
-access_pop_education_10km       1065309   211558   453625
-access_pop_education_20km       1108304   211558   453625
-access_pop_hospitals_30min      1091163   211558   453625
-access_pop_hospitals_1h         1111889   211558   453625
-access_pop_hospitals_2h         1111889   211558   453625
-access_pop_primary_healthca...  1102033   211558   453625
-access_pop_primary_healthca...  1111889   211558   453625
-access_pop_primary_healthca...  1111889   211558   453625
-education_count                     121       59       79
-hospitals_count                       8       10       12
-primary_healthcare_count             25       14        9
-RP10_evac_time_minutes_mean        15.4     10.1      3.2
-RP10_evac_time_minutes_max         32.3     13.0      9.7
-RP10_evac_time_minutes_median      15.3     10.0      2.6
-RP50_evac_time_minutes_mean        13.8      3.5      8.4
-RP50_evac_time_minutes_max         31.7      6.9     13.4
-RP50_evac_time_minutes_median      13.3      3.3      8.2
-RP100_evac_time_minutes_mean       16.5      5.1      5.5
-RP100_evac_time_minutes_max        39.4      9.3     10.0
-RP100_evac_time_minutes_median     14.8      4.9      5.0
-RP500_evac_time_minutes_mean       15.7      4.4      8.5
-RP500_evac_time_minutes_max        40.3      8.2     13.6
-RP500_evac_time_minutes_median     15.1      4.4      8.4
-kt34_evac_time_minutes_mean       559.9    533.6    534.3
-kt34_evac_time_minutes_max        608.7    537.3    540.5
-kt34_evac_time_minutes_median     558.4    534.2    534.3
-rural_access_children_u5           2086        0        0
-rural_access_dependents            6310        0        0
-rural_access_working               8942        0        0
-rural_access_elderly                551        0        0
-rural_access_female_pop            7600        0        0
-rural_access_female_u15            2842        0        0
-rural_access_female_u5             1029        0        0
-rural_access_pop_u15               5758        0        0
-rural_access_total_pop            15251        0        0
-rural_access_wra_pop               3823        0        0
-rural_access_dependency_ratio      70.6      NaN      NaN
-RAI_total_pop                      21.6      0.0      0.0
-== MDG_ADM2_cyclone_exposure.csv HTTP 200 (120, 50)
-   colonnes : ADM2_PCODE, ADM_PCODE, kt34_total_pop_cat1, kt34_total_pop_cat2, kt34_total_pop_cat3, kt34_female_pop_cat1, kt34_female_pop_cat2, kt34_female_pop_cat3, kt34_children_u5_cat1, kt34_children_u5_cat2, kt34_children_u5_cat3, kt34_female_u5_cat1, kt34_female_u5_cat2, kt34_female_u5_cat3, kt34_elderly_cat1, kt34_elderly_cat2, kt34_elderly_cat3, kt34_pop_u15_cat1, kt34_pop_u15_cat2, kt34_pop_u15_cat3, kt34_female_u15_cat1, kt34_female_u15_cat2, kt34_female_u15_cat3, kt34_wra_pop_cat1, kt34_wra_pop_cat2, kt34_wra_pop_cat3, kt34_dependency_ratio_cat1, kt34_dependency_ratio_cat2, kt34_dependency_ratio_cat3, kt34_education_count_cat1, kt34_education_perc_cat1, kt34_education_count_cat2, kt34_education_perc_cat2, kt34_education_count_cat3, kt34_education_perc_cat3, kt34_hospitals_count_cat1, kt34_hospitals_perc_cat1, kt34_hospitals_count_cat2, kt34_hospitals_perc_cat2, kt34_hospitals_count_cat3, kt34_hospitals_perc_cat3, kt34_primary_healthcare_count_cat1, kt34_primary_healthcare_perc_cat1, kt34_primary_healthcare_count_cat2, kt34_primary_healthcare_perc_cat2, kt34_primary_healthcare_count_cat3, kt34_primary_healthcare_perc_cat3, kt34_crops_km2_cat1, kt34_crops_km2_cat2, kt34_crops_km2_cat3
-                                  0        1        2
-ADM2_PCODE                  MG11117  MG11119  MG11122
-ADM_PCODE                   MG11117  MG11119  MG11122
-kt34_total_pop_cat1               0        0        0
-kt34_total_pop_cat2               0        0        0
-kt34_total_pop_cat3         1111889   211558   453625
-kt34_female_pop_cat1              0        0        0
-kt34_female_pop_cat2              0        0        0
-kt34_female_pop_cat3         554100   105428   226060
-kt34_children_u5_cat1             0        0        0
-kt34_children_u5_cat2             0        0        0
-kt34_children_u5_cat3        152086    28937    62047
-kt34_female_u5_cat1               0        0        0
-kt34_female_u5_cat2               0        0        0
-kt34_female_u5_cat3           75010    14272    30602
-kt34_elderly_cat1                 0        0        0
-kt34_elderly_cat2                 0        0        0
-kt34_elderly_cat3             40197     7648    16400
-kt34_pop_u15_cat1                 0        0        0
-kt34_pop_u15_cat2                 0        0        0
-kt34_pop_u15_cat3            419810    79877   171273
-kt34_female_u15_cat1              0        0        0
-kt34_female_u15_cat2              0        0        0
-kt34_female_u15_cat3         207166    39417    84519
-kt34_wra_pop_cat1                 0        0        0
-kt34_wra_pop_cat2                 0        0        0
-kt34_wra_pop_cat3            278680    53024   113695
-kt34_dependency_ratio_cat1      0.0      0.0      0.0
-kt34_dependency_ratio_cat2      0.0      0.0      0.0
-kt34_dependency_ratio_cat3    70.57    70.57    70.57
-kt34_education_count_cat1         0        0        0
-kt34_education_perc_cat1          0        0        0
-kt34_education_count_cat2         0        0        0
-kt34_education_perc_cat2          0        0        0
-kt34_education_count_cat3       121       56       79
-kt34_education_perc_cat3        100      100      100
-kt34_hospitals_count_cat1         0        0        0
-kt34_hospitals_perc_cat1          0        0        0
-kt34_hospitals_count_cat2         0        0        0
-kt34_hospitals_perc_cat2          0        0        0
-kt34_hospitals_count_cat3         8       10       12
-== MDG_ADM2_demographics.csv HTTP 200 (120, 11)
-   colonnes : ADM2_PCODE, ADM_PCODE, total_pop, female_pop, children_u5, female_u5, elderly, pop_u15, female_u15, wra_pop, dependency_ratio
-                        0        1        2
-ADM2_PCODE        MG11117  MG11119  MG11122
-ADM_PCODE         MG11117  MG11119  MG11122
-total_pop         1111889   211558   453625
-female_pop         554100   105428   226060
-children_u5        152086    28937    62047
-female_u5           75010    14272    30602
-elderly             40197     7648    16400
-pop_u15            419810    79877   171273
-female_u15         207166    39417    84519
-wra_pop            278680    53024   113695
-dependency_ratio    70.57    70.57    70.57
-== ressources : MDG_ADM2_cyclone_exposure.csv | MDG_ADM2_vulnerability.csv | MDG_ADM2_coping.csv | MDG_ADM2_access.csv | MDG_ADM2_demographics.csv | MDG_ADM2_facilities.csv | MDG_ADM2_flood_exposure.csv | MDG_ADM2_rural_population.csv | MDG_ADM2_evacuability.csv | MDG_ADM2_rai.csv
-   notes : 
+== notes complètes :
+
 This dataset provides comprehensive **Risk Assessment Indicators** for **Madagascar**, aggregated at **admin level 2** and
 can in particular be used to perform a structured risk assessment for **flood** and **drought** hazards and **cyclone** hazards.
 It includes demographic, environmental, infrastructure, accessibility, and hazard-related data to support disaster risk and resilience analysis.
@@ -157,4 +19,220 @@ All layers are derived from [HeiGIT’s GAIA Pipeline](https://giscience.github.
 - **Rural Population (`MDG_ADM2_rural_population`)**  
 - **Rural Accessibility Index (RAI) (`MDG_ADM2_rai`)**  
 - **Vulnerability (`MDG_ADM2_vulnerability`)**  
-- **Evac
+- **Evacuability (`MDG_ADM2_evacuability`)**
+- **Flood Exposure (`MDG_ADM2_flood_exposure`)**  
+- **Cyclone Exposure (`MDG_ADM2_cyclone_exposure`)**
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+---
+
+### **Indicator Descriptions**
+
+#### **Access to Services (`MDG_ADM2_access`)**
+Represents the share of the population with access to key facilities within defined distances or travel times.
+
+- **ADM2_PCODE** – Administrative division code (ADM2)
+- **access_pop_education_5km / 10km / 20km** – Population within 5, 10, and 20 km of educational facilities
+- **access_pop_hospitals_30min / 1h / 2h** – Population within 30 minutes, 1 hour, and 2 hours of a hospital
+- **access_pop_primary_healthcare_30min / 1h / 2h** – Population within 30 minutes, 1 hour, and 2 hours of a primary health care facility
+
+Data Source: [openrouteservice (ORS)](https://openrouteservice.org/)
+
+---
+
+#### **Facilities (`MDG_ADM2_facilities`)**
+Counts of essential service facilities within each district.
+
+- **ADM2_PCODE** – Administrative division code (ADM2)
+- **education_count** – Number of educational facilities
+- **hospitals_count** – Number of hospitals
+- **primary_healthcare_count** – Number of primary health care facilities
+
+Data Source: [OpenStreetMap (OSM)](https://www.openstreetmap.org)
+
+---
+
+#### **Coping Capacity (`MDG_ADM2_coping`)**
+Combines **Access to Services**, **Facilities**, **Evacuability**, and **Rural Accessibility Index (RAI)** data to represent a district’s coping capacity.
+
+---
+
+#### **Demographics (`MDG_ADM2_demographics`)**
+Shows the population composition by age and gender.
+
+- **ADM2_PCODE** – Administrative division code (ADM2)
+- **total_pop** – Total population
+- **female_pop** – Total female population
+- **children_u5** – Population under 5 years old
+- **female_u5** – Female population under 5 years old
+- **elderly** – Population aged 65 and older
+- **pop_u15** – Population under 15 years old
+- **female_u15** – Female population under 15 years old
+
+Data Source: [Worldpop](https://www.worldpop.org/)
+
+---
+
+#### **Rural Population (`MDG_ADM2_rural_population`)**
+Same demographic breakdown as above, but limited to rural populations. Rural areas are those outside urban extents,
+typically characterized by lower population density, agricultural or natural land use, and limited infrastructure compared to urban centers.
+
+- **ADM2_PCODE** – Administrative division code (ADM2)
+- **total_pop_rural**, **female_pop_rural**, **children_u5_rural**, **female_u5_rural**, **elderly_rural**, **pop_u15_rural**, **female_u15_rural** – Rural demographic counts
+- **rural_pop_perc** – Percentage of total population living in rural areas
+
+Data Source: [Global Human Settlement Layer (GHSL)](https://human-settlement.emergency.copernicus.eu/datasets.php)
+
+---
+
+#### **Rural Accessibility Index (RAI) (`MDG_ADM2_rai`)**
+Percentage of rural population living within 2 km of a paved road. Results are provided for multiple demographic groups and as a dependency ratio for the accessible rural population.
+
+- **ADM2_PCODE** – Administrative division code (ADM2)
+- **rural_access_total_pop**, **rural_access_female_pop**, **rural_access_children_u5**, **rural_access_female_u5**, **rural_access_elderly**, **rural_access_pop_u15**, **rural_access_female_u15**, **rural_access_wra_pop**, **rural_access_dependents**, **rural_access_working** – Population in rural areas within 2 km of a paved road
+- **rural_access_dependency_ratio** – Dependency ratio within accessible rural areas
+- **RAI_total_pop**, **RAI_female_pop**, **RAI_children_u5**, **RAI_female_u5**, **RAI_elderly**, **RAI_pop_u15**, **RAI_female_u15**, **RAI_wra_pop** – Rural Accessibility Index (%) per demographic group
+
+Data Source: [Mapillary](https://data.humdata.org/dataset/madagascar-road-surface-data) / [Planet](https://data.humdata.org/dataset/madagascar-planet-road-surface-data) road surface classification
+
+---
+
+#### **Vulnerability (`MDG_ADM2_vulnerability`)**
+Combines **Demographics** and **Rural Population** indicators.
+
+---
+#### **Evacuability (`MDG_ADM2_evacuability`)**
+Travel time (in minutes) from at-risk areas (flooded or cyclone-affected) to the nearest safe zone, computed using least-cost path analysis on a motorized friction surface.
+
+- **ADM2_PCODE** – Administrative division code (ADM2)
+- **RP_evac_time_minutes_mean / max / median** – Mean, max, and median travel time from flooded areas to safe zones (per return period)
+- **kt34_evac_time_minutes_mean / max / median** – Mean, max, and median travel time from cyclone-affected areas to safe zones
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+---
+
+#### **Flood Exposure (`MDG_ADM2_flood_exposure`)**
+Shows population and facility exposure to flooding at 30 cm depth for multiple return periods.
+
+- **ADM2_PCODE** – Administrative division code (ADM2)
+- **total_pop_30cm**, **f
+   méthodologie : This dataset aggregates multiple risk assessment indicators for the country. | caveats: 
+== MDG_ADM2_flood_exposure.csv HTTP 200 (120, 69)
+   colonnes : ADM2_PCODE, RP10_crops_30cm_km2, RP10_crops_30cm_areapct, RP10_crops_30cm_croppct, RP10_female_pop_30cm, RP10_children_u5_30cm, RP10_female_u5_30cm, RP10_elderly_30cm, RP10_pop_u15_30cm, RP10_female_u15_30cm, RP10_wra_pop_30cm, RP10_dependency_ratio_30cm, RP10_education_30cm_pct, RP10_education_30cm_count, RP10_hospitals_30cm_pct, RP10_hospitals_30cm_count, RP10_primary_healthcare_30cm_pct, RP10_primary_healthcare_30cm_count, RP50_crops_30cm_km2, RP50_crops_30cm_areapct, RP50_crops_30cm_croppct, RP50_female_pop_30cm, RP50_children_u5_30cm, RP50_female_u5_30cm, RP50_elderly_30cm, RP50_pop_u15_30cm, RP50_female_u15_30cm, RP50_wra_pop_30cm, RP50_dependency_ratio_30cm, RP50_education_30cm_pct, RP50_education_30cm_count, RP50_hospitals_30cm_pct, RP50_hospitals_30cm_count, RP50_primary_healthcare_30cm_pct, RP50_primary_healthcare_30cm_count, RP100_crops_30cm_km2, RP100_crops_30cm_areapct, RP100_crops_30cm_croppct, RP100_female_pop_30cm, RP100_children_u5_30cm, RP100_female_u5_30cm, RP100_elderly_30cm, RP100_pop_u15_30cm, RP100_female_u15_30cm, RP100_wra_pop_30cm, RP100_dependency_ratio_30cm, RP100_education_30cm_pct, RP100_education_30cm_count, RP100_hospitals_30cm_pct, RP100_hospitals_30cm_count, RP100_primary_healthcare_30cm_pct, RP100_primary_healthcare_30cm_count, RP500_crops_30cm_km2, RP500_crops_30cm_areapct, RP500_crops_30cm_croppct, RP500_female_pop_30cm, RP500_children_u5_30cm, RP500_female_u5_30cm, RP500_elderly_30cm, RP500_pop_u15_30cm, RP500_female_u15_30cm, RP500_wra_pop_30cm, RP500_dependency_ratio_30cm, RP500_education_30cm_pct, RP500_education_30cm_count, RP500_hospitals_30cm_pct, RP500_hospitals_30cm_count, RP500_primary_healthcare_30cm_pct, RP500_primary_healthcare_30cm_count
+                                      0        1        2
+ADM2_PCODE                      MG11117  MG11119  MG11122
+RP10_crops_30cm_km2                 0.0      0.0      0.0
+RP10_crops_30cm_areapct             0.0      0.0      0.0
+RP10_crops_30cm_croppct             0.0      0.0      0.0
+RP10_female_pop_30cm             118851    16540    33744
+RP10_children_u5_30cm             32621     4540     9262
+RP10_female_u5_30cm               16089     2239     4568
+RP10_elderly_30cm                  8622     1200     2448
+RP10_pop_u15_30cm                 90046    12531    25566
+RP10_female_u15_30cm              44436     6184    12616
+RP10_wra_pop_30cm                 59775     8319    16971
+RP10_dependency_ratio_30cm        70.57    70.57    70.57
+RP10_education_30cm_pct               9        2        1
+RP10_education_30cm_count            11        1        1
+RP10_hospitals_30cm_pct               0        0        0
+RP10_hospitals_30cm_count             0        0        0
+RP10_primary_healthcare_30c...       12        0        0
+RP10_primary_healthcare_30c...        3        0        0
+RP50_crops_30cm_km2                 0.0      0.0      0.0
+RP50_crops_30cm_areapct             0.0      0.0      0.0
+RP50_crops_30cm_croppct             0.0      0.0      0.0
+RP50_female_pop_30cm             124796    16540    33744
+RP50_children_u5_30cm             34253     4540     9262
+RP50_female_u5_30cm               16894     2239     4568
+RP50_elderly_30cm                  9053     1200     2448
+RP50_pop_u15_30cm                 94550    12531    25566
+RP50_female_u15_30cm              46658     6184    12616
+RP50_wra_pop_30cm                 62765     8319    16971
+RP50_dependency_ratio_30cm        70.57    70.57    70.57
+RP50_education_30cm_pct              11        2        1
+== MDG_ADM2_facilities.csv HTTP 200 (120, 5)
+   colonnes : ADM2_PCODE, ADM_PCODE, education_count, hospitals_count, primary_healthcare_count
+                                0        1        2
+ADM2_PCODE                MG11117  MG11119  MG11122
+ADM_PCODE                 MG11117  MG11119  MG11122
+education_count               121       59       79
+hospitals_count                 8       10       12
+primary_healthcare_count       25       14        9
+== MDG_ADM2_evacuability.csv HTTP 200 (120, 16)
+   colonnes : ADM2_PCODE, RP10_evac_time_minutes_mean, RP10_evac_time_minutes_max, RP10_evac_time_minutes_median, RP50_evac_time_minutes_mean, RP50_evac_time_minutes_max, RP50_evac_time_minutes_median, RP100_evac_time_minutes_mean, RP100_evac_time_minutes_max, RP100_evac_time_minutes_median, RP500_evac_time_minutes_mean, RP500_evac_time_minutes_max, RP500_evac_time_minutes_median, kt34_evac_time_minutes_mean, kt34_evac_time_minutes_max, kt34_evac_time_minutes_median
+                                      0        1        2
+ADM2_PCODE                      MG11117  MG11119  MG11122
+RP10_evac_time_minutes_mean        15.4     10.1      3.2
+RP10_evac_time_minutes_max         32.3     13.0      9.7
+RP10_evac_time_minutes_median      15.3     10.0      2.6
+RP50_evac_time_minutes_mean        13.8      3.5      8.4
+RP50_evac_time_minutes_max         31.7      6.9     13.4
+RP50_evac_time_minutes_median      13.3      3.3      8.2
+RP100_evac_time_minutes_mean       16.5      5.1      5.5
+RP100_evac_time_minutes_max        39.4      9.3     10.0
+RP100_evac_time_minutes_median     14.8      4.9      5.0
+RP500_evac_time_minutes_mean       15.7      4.4      8.5
+RP500_evac_time_minutes_max        40.3      8.2     13.6
+RP500_evac_time_minutes_median     15.1      4.4      8.4
+kt34_evac_time_minutes_mean       559.9    533.6    534.3
+kt34_evac_time_minutes_max        608.7    537.3    540.5
+kt34_evac_time_minutes_median     558.4    534.2    534.3
+== MDG_ADM2_rural_population.csv HTTP 200 (120, 12)
+   colonnes : ADM2_PCODE, ADM_PCODE, total_pop_rural, female_pop_rural, children_u5_rural, female_u5_rural, elderly_rural, pop_u15_rural, female_u15_rural, wra_pop_rural, dependency_ratio_rural, rural_pop_perc
+                              0        1        2
+ADM2_PCODE              MG11117  MG11119  MG11122
+ADM_PCODE               MG11117  MG11119  MG11122
+total_pop_rural           70472        0        0
+female_pop_rural          35119        0        0
+children_u5_rural          9639        0        0
+female_u5_rural            4754        0        0
+elderly_rural              2548        0        0
+pop_u15_rural             26608        0        0
+female_u15_rural          13130        0        0
+wra_pop_rural             17663        0        0
+dependency_ratio_rural    70.57      0.0      0.0
+rural_pop_perc             6.34      0.0      0.0
+== DTM notes : This dataset comes from the International Organization for Migration (IOM)'s displacement tracking matrix (DTM) [publicly accessible API](https://dtm.iom.int/data-and-analysis/dtm-api). This API allows the humanitarian community, academia, media, government, and non-governmental organizations to utilize the data collected by DTM. The DTM API only provides non-sensitive IDP figures, aggregated at the country, Admin 1 (states, provinces, or equivalent), and Admin 2 (smaller subnational administrative areas) levels. For more detailed information, please see the [country-specific DTM datasets on HDX](https://data.humdata.org/dataset/?dataseries_name=IOM%20-%20DTM%20Baseline%20Assessment&dataseries_name=IOM%20-%20DTM%20Event%20and%20Flow%20Tracking&dataseries_name=IOM%20-%20DTM%20Site%20and%20Location%20Assessment&organization=international-organization-for-migration&q=&sort=last_modified%20desc&ext_page_size=25).
+
+   ressource CSV Madagascar IOM DTM data for admin levels 0-2 https://data.humdata.org/dataset/f9f16458-78e1-4b70-84e3-3f1f997087c9/resource/bc62114a-68bc-462e-b8aa-b9f9cb0021be/download/mdg-iom-dtm-from-api-admin-0-to-2.csv
+== DTM CSV (140, 21) colonnes : ['id', 'operation', 'admin0Name', 'admin0Pcode', 'admin1Name', 'admin1Pcode', 'admin2Name', 'admin2Pcode', 'adminLevel', 'numPresentIdpInd', 'reportingDate', 'yearReportingDate', 'monthReportingDate', 'roundNumber', 'displacementReason', 'numberMales', 'numberFemales', 'idpOriginAdmin1Name', 'idpOriginAdmin1Pcode', 'assessmentType', 'operationStatus']
+                                                            0                      1                                   2                      3                      4                      5
+id                                                        NaN                    NaN                                 NaN                    NaN                    NaN                    NaN
+operation                               Drought in Madagascar  Drought in Madagascar               Drought in Madagascar  Drought in Madagascar  Drought in Madagascar  Drought in Madagascar
+admin0Name                                         Madagascar             Madagascar                          Madagascar             Madagascar             Madagascar             Madagascar
+admin0Pcode                                               MDG                    MDG                                 MDG                    MDG                    MDG                    MDG
+admin1Name                                                NaN                    NaN                                 NaN                    NaN                    NaN                    NaN
+admin1Pcode                                               NaN                    NaN                                 NaN                    NaN                    NaN                    NaN
+admin2Name                                                NaN                    NaN                                 NaN                    NaN                    NaN                    NaN
+admin2Pcode                                               NaN                    NaN                                 NaN                    NaN                    NaN                    NaN
+adminLevel                                                  0                      0                                   0                      0                      0                      0
+numPresentIdpInd                                          324                   2507                                3613                     41                    716                   4395
+reportingDate                             2017-07-01T00:00:00    2017-07-01T00:00:00                 2017-07-01T00:00:00    2017-08-30T00:00:00    2017-08-30T00:00:00    2017-08-30T00:00:00
+yearReportingDate                                        2017                   2017                                2017                   2017                   2017                   2017
+monthReportingDate                                          7                      7                                   7                      8                      8                      8
+roundNumber                                                 1                      1                                   1                      2                      2                      2
+displacementReason    Natural disaster; Economic reasons; ...       Natural disaster  Natural disaster; Economic reasons           Other reason       
+   operation: {'Drought in Madagascar': 100, 'Drought in Grand Sud': 40}
+   admin0Name: {'Madagascar': 140}
+   admin0Pcode: {'MDG': 140}
+   admin1Name: {'Androy': 95, 'Atsimo Andrefana': 8, 'Anosy': 6}
+   admin1Pcode: {'MDG52': 95, 'MDG51': 8, 'MDG53': 6}
+   admin2Name: {'Ambovombe-Androy': 24, 'Tsihombe': 15, 'Beloha': 14, 'Bekily': 14, 'Ampanihy Ouest': 4, 'Amboasary-Atsimo': 3}
+   admin2Pcode: {'MDG52516': 24, 'MDG52514': 15, 'MDG52513': 14, 'MDG52518': 14, 'MDG51507': 4, 'MDG53519': 3}
+   adminLevel: {2: 74, 1: 35, 0: 31}
+   reportingDate: {'2022-09-30T00:00:00': 40, '2017-11-30T00:00:00': 34, '2018-04-30T00:00:00': 19, '2017-08-30T00:00:00': 16, '2018-08-30T00:00:00': 16, '2017-07-01T00:00:00': 15}
+   yearReportingDate: {2017: 65, 2022: 40, 2018: 35}
+   monthReportingDate: {9: 40, 11: 34, 8: 32, 4: 19, 7: 15}
+   roundNumber: {1: 55, 3: 34, 4: 19, 2: 16, 5: 16}
+   displacementReason: {'Natural disaster': 63, 'Economic reasons': 28, 'Other reason': 17, 'Natural disaster; Economic reasons': 14, 'Natural disaster; Economic reasons; Other reason': 8, 'Natural disaster; Insecurity; Other reason': 4, 'Natural disaster; Insecurity; Economic reasons; Other reason': 4, 'Natural disaster; Other reason': 2}
+   numberMales: {361.0: 2, 2640.0: 2, 61.0: 2, 6.0: 2, 49.0: 1, 152.0: 1, 863.0: 1, 31.0: 1, 451.0: 1, 157.0: 1, 733.0: 1, 21.0: 1}
+   numberFemales: {340.0: 2, 2526.0: 2, 52.0: 2, 45.0: 1, 146.0: 1, 860.0: 1, 25.0: 1, 486.0: 1, 5.0: 1, 138.0: 1, 619.0: 1, 2.0: 1}
+   idpOriginAdmin1Name: {'Not available': 100, 'Boeny': 8, 'Atsimo Andrefana': 8, 'Anosy': 6, 'Analamanga': 3, 'Sofia': 3, 'Haute Matsiatra': 3, 'Diana': 3, 'Menabe': 3, 'Androy': 3}
+   idpOriginAdmin1Pcode: {'Not available': 100, 'MDG41': 8, 'MDG51': 8, 'MDG53': 6, 'MDG11': 3, 'MDG42': 3, 'MDG21': 3, 'MDG71': 3, 'MDG54': 3, 'MDG52': 3}
+   assessmentType: {'BA': 123, 'SA': 17}
+   operationStatus: {'Inactive': 100, 'Active': 40}
