@@ -81,6 +81,20 @@
       <div id="hkinds" class="checks"></div>
       <div class="note" id="hsum"></div>
     </div>
+    <div class="card" id="respcard" hidden>
+      <h3>Priorités de réponse</h3>
+      <div class="note">Classe les zones de la vue selon la situation choisie (période ou scénario) et la réponse déjà déclarée (filtres de « Historique et réponse »).</div>
+      <div class="two">
+        <div><label class="field" for="rsort">Classer par</label><select id="rsort">
+          <option value="gap">Écart cibles − bénéficiaires</option><option value="e">Personnes exposées</option><option value="t">Cibles potentielles</option>
+          <option value="l">Niveau d'alerte</option><option value="cov">Couverture la plus faible</option></select></div>
+        <div><label class="field" for="rn">Zones</label><select id="rn"><option>5</option><option selected>10</option><option>20</option></select></div>
+      </div>
+      <div id="rtable"></div>
+      <div id="rant"></div>
+      <div style="margin-top:8px"><button class="btn primary" id="rcopy">Copier la note de situation</button> <button class="btn" id="rcsv">Exporter la liste (CSV)</button></div>
+      <div class="note" id="rnote"></div>
+    </div>
     <div class="card" id="cmpcard">
       <h3>Comparer</h3>
       <div class="seg" id="modeseg" role="group" aria-label="Mode d'affichage">

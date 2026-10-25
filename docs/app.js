@@ -317,7 +317,7 @@
   }
 
   /* ---------- Panneau ---------- */
-  function refresh() { renderCrumbs(); renderLegend(); renderKPIs(); renderInfo(); renderRank(); }
+  function refresh() { renderCrumbs(); renderLegend(); renderKPIs(); renderInfo(); renderRank(); renderResponse(); }
 
   function renderCrumbs() {
     var box = $("crumbs");
@@ -834,7 +834,7 @@
       var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o);
     });
     sel.addEventListener("change", function () { S.layer = sel.value; restyle(); });
-    setupScenarios(); setupProfiles(); setupCompare(); readURL();
+    setupScenarios(); setupProfiles(); setupCompare(); setupResponse(); readURL();
     $("modebtn").addEventListener("click", function () {
       S.simple = !S.simple;
       $("modebtn").setAttribute("aria-pressed", S.simple ? "true" : "false");
@@ -1048,6 +1048,82 @@
     h += svg + '<div class="note">Barres : humidité du sol chaque mois (orange = nettement plus sec que la normale du mois) ; trait : normale du mois. ' +
       (own ? "" : "Valeur de la commune. ") + "Modèle de bilan hydrique mensuel (Thornthwaite-Mather) avec pluie CHIRPS, évapotranspiration ERA5-Land, sols SoilGrids et occupation du sol WorldCover. L'indice de nappe est relatif : ce n'est pas un niveau mesuré.</div>";
     return h;
+  }
+
+
+  /* ---------- Priorités de réponse (vue d'un gestionnaire d'information) ---------- */
+  function respRows() {
+    if (!S.view) return [];
+    var rb = (S.hagg && S.hagg.rb) || {};
+    return S.view.feats.map(function (f) {
+      var c = f.properties.c, m = S.view.metrics[c] || {}, e = val(m, "e") || 0, t = val(m, "t") || 0, got = rb[c] || 0;
+      var ew = m.ew ? Math.max.apply(null, m.ew) : 0;
+      return { c: c, n: f.properties.n, l: val(m, "l") || 0, e: e, t: t, got: got, gap: Math.max(0, t - got), cov: t > 0 ? Math.min(100, 100 * got / t) : null, ew: ew, m: m };
+    });
+  }
+  function respSorted(rows) {
+    var k = $("rsort").value, key = { gap: "gap", e: "e", t: "t", l: "l" }[k];
+    var r = rows.filter(function (x) { return k === "cov" ? x.t > 0 : true; });
+    r.sort(function (a, b) { return k === "cov" ? a.cov - b.cov || b.t - a.t : b[key] - a[key] || b.e - a.e; });
+    return r;
+  }
+  function renderResponse() {
+    var card = $("respcard");
+    if (!card || !S.view) return;
+    card.hidden = false;
+    var rows = respRows(), top = respSorted(rows).slice(0, +$("rn").value), lv = S.meta.levels[S.view.lvl].label.toLowerCase();
+    var tot = rows.reduce(function (a, x) { a.e += x.e; a.t += x.t; a.got += x.got; a.gap += x.gap; return a; }, { e: 0, t: 0, got: 0, gap: 0 });
+    var hasResp = !!S.hist;
+    var h = '<div class="row"><span>Total de la vue</span><span><b>' + MC.fmtInt(tot.e) + "</b> exposés · <b>" + MC.fmtInt(tot.t) + "</b> cibles" + (hasResp ? " · <b>" + MC.fmtInt(tot.got) + "</b> atteints (3W) · écart <b>" + MC.fmtInt(tot.gap) + "</b>" : "") + "</span></div>";
+    h += '<table class="rtab"><tr><th>Zone</th><th>Alerte</th><th>Exposés</th><th>Cibles</th>' + (hasResp ? "<th>Atteints</th><th>Écart</th><th>Couv.</th>" : "") + "</tr>";
+    top.forEach(function (x) {
+      h += "<tr><td>" + esc(x.n) + "</td><td>" + esc(levelName(x.l)) + "</td><td>" + MC.fmtInt(x.e) + "</td><td>" + MC.fmtInt(x.t) + "</td>" +
+        (hasResp ? "<td>" + MC.fmtInt(x.got) + "</td><td>" + MC.fmtInt(x.gap) + "</td><td>" + (x.cov === null ? "n/d" : Math.round(x.cov) + " %") + "</td>" : "") + "</tr>";
+    });
+    $("rtable").innerHTML = h + "</table>";
+    var ant = rows.filter(function (x) { return x.ew >= 2; }).sort(function (a, b) { return b.ew - a.ew || b.e - a.e; });
+    var F = S.meta.forecast, ah = "";
+    if (F && rows.some(function (x) { return x.m.ew; })) {
+      ah = "<h4>Action anticipée : alertes prévues dans les 7 jours</h4>";
+      if (!ant.length) ah += '<div class="note">Aucune zone de la vue n\'a une alerte de niveau « Alerte » ou plus prévue dans les 7 prochains jours.</div>';
+      else ah += "<ul>" + ant.slice(0, 8).map(function (x) {
+        var hz = HAZ.filter(function (z, i) { return x.m.ew[i] >= 2; }).map(function (z) { return F.hazard_labels[z].toLowerCase(); });
+        var pop = Math.max.apply(null, (x.m.ewp || [0]).concat([0]));
+        return "<li><b>" + esc(x.n) + "</b> : " + esc(F.level_names[x.ew]) + " (" + esc(hz.join(", ")) + ")" + (pop > 0 ? " · ≈ " + MC.fmtInt(pop) + " pers." : "") + "</li>";
+      }).join("") + "</ul>";
+    }
+    $("rant").innerHTML = ah;
+    $("rnote").innerHTML = "Écart = cibles potentielles − bénéficiaires déclarés par les partenaires (3W/4W importés, filtres actuels). La réponse non déclarée n'est pas visible : un écart élevé peut aussi venir d'un manque de rapportage. Le 3W importé n'est pas additionnable d'un secteur à l'autre sans filtre de secteur. Les cibles et exposés utilisent des parts provisoires (voir Méthode).";
+  }
+  function respNote() {
+    var rows = respRows(), top = respSorted(rows).slice(0, 5), tot = rows.reduce(function (a, x) { a.e += x.e; a.t += x.t; a.got += x.got; a.gap += x.gap; return a; }, { e: 0, t: 0, got: 0, gap: 0 });
+    var where = S.path.length ? S.path[S.path.length - 1].name : S.meta.country, lv = S.meta.levels[S.view.lvl].plural.toLowerCase();
+    var lines = ["NOTE DE SITUATION — MakyClimat — " + where + " (" + lv + ")", "Situation : " + periodName(S.scn, S.simIdx) + (S.meta.data_through ? " ; pluie jusqu'au " + fmtDate(S.meta.data_through) : ""),
+      "Exposés : " + MC.fmtInt(tot.e) + " ; cibles potentielles : " + MC.fmtInt(tot.t) + (S.hist ? " ; bénéficiaires déclarés (3W) : " + MC.fmtInt(tot.got) + " ; écart : " + MC.fmtInt(tot.gap) : ""), "", "Zones prioritaires (classées par « " + $("rsort").selectedOptions[0].textContent.toLowerCase() + " ») :"];
+    top.forEach(function (x, i) { lines.push((i + 1) + ". " + x.n + " — " + levelName(x.l) + " ; exposés " + MC.fmtInt(x.e) + " ; cibles " + MC.fmtInt(x.t) + (S.hist ? " ; atteints " + MC.fmtInt(x.got) + " ; écart " + MC.fmtInt(x.gap) : "")); });
+    var ant = rows.filter(function (x) { return x.ew >= 2; });
+    if (ant.length) lines.push("", "Alertes prévues sous 7 jours : " + ant.length + " zone(s) (" + ant.slice(0, 5).map(function (x) { return x.n; }).join(", ") + ").");
+    lines.push("", "Sources : CHIRPS, prévision Open-Meteo, population OCHA COD-PS" + (S.hist ? ", réponse déclarée (3W/4W importés, HRP, IATI)" : "") + ". Estimations à valider avec les clusters ; les alertes officielles (BNGRC, Météo Madagascar) priment.");
+    return lines.join("\n");
+  }
+  function setupResponse() {
+    ["rsort", "rn"].forEach(function (id) { $(id).addEventListener("change", renderResponse); });
+    $("rcopy").addEventListener("click", function () {
+      var t = respNote();
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { $("rcopy").textContent = "Note copiée"; setTimeout(function () { $("rcopy").textContent = "Copier la note de situation"; }, 2000); });
+      else { var ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); }
+    });
+    $("rcsv").addEventListener("click", function () {
+      var rows = respSorted(respRows()), cols = [
+        { label: "code", get: function (r) { return r.c; } }, { label: "zone", get: function (r) { return r.n; } }, { label: "niveau_alerte", get: function (r) { return levelName(r.l); } },
+        { label: "exposes", get: function (r) { return r.e; } }, { label: "cibles", get: function (r) { return r.t; } }, { label: "beneficiaires_declares_3w", get: function (r) { return r.got; } },
+        { label: "ecart", get: function (r) { return r.gap; } }, { label: "couverture_pct", get: function (r) { return r.cov === null ? "" : Math.round(r.cov); } },
+        { label: "alerte_prevue_7j", get: function (r) { return S.meta.forecast ? S.meta.forecast.level_names[r.ew] : ""; } }];
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([MC.toCSV(rows, cols)], { type: "text/csv;charset=utf-8" }));
+      a.download = "makyclimat_" + SLUG + "_priorites_" + (S.path.map(function (p) { return p.pcode; }).join("_") || "pays") + ".csv";
+      a.click();
+    });
   }
 
   /* ---------- Hydrologie : cours d'eau, bassins versants ---------- */

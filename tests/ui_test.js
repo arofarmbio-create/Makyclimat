@@ -87,6 +87,23 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
   }
   const respPath = path.join(docs, "data", slug, "response.json");
+  check("carte Priorités de réponse visible", await waitFor(() => !$("respcard").hidden && $("rtable").querySelectorAll("tr").length >= 2));
+  {
+    const rows = [...$("rtable").querySelectorAll("tr")].slice(1).map((tr) => [...tr.children].map((td) => td.textContent));
+    const num = (x) => Number(String(x).replace(/\D/g, ""));
+    const gaps = rows.map((r) => num(r[5]));
+    check("priorités : classées par écart décroissant", rows.length > 0 && gaps.every((g, i) => i === 0 || gaps[i - 1] >= g), gaps.join(" "));
+    $("rsort").value = "e"; $("rsort").dispatchEvent(new w.Event("change"));
+    const ex = [...$("rtable").querySelectorAll("tr")].slice(1).map((tr) => num(tr.children[2].textContent));
+    check("priorités : tri par personnes exposées", ex.every((g, i) => i === 0 || ex[i - 1] >= g), ex.join(" "));
+    let copied = ""; Object.defineProperty(w.navigator, "clipboard", { value: { writeText: (t) => { copied = t; return Promise.resolve(); } }, configurable: true });
+    $("rcopy").click();
+    check("note de situation copiée", /NOTE DE SITUATION/.test(copied) && /Zones prioritaires/.test(copied) && /Sources/.test(copied));
+    $("rcsv").click();
+    const txt = lastBlob ? await lastBlob.text() : "";
+    check("export de la liste priorisée", /ecart/.test(txt) && txt.split("\n").length > 3);
+    $("rsort").value = "gap"; $("rsort").dispatchEvent(new w.Event("change"));
+  }
   const hydroMeta = path.join(docs, "data", slug, "hydro", "meta.json");
   if (fs.existsSync(hydroMeta)) {
     const HM = JSON.parse(fs.readFileSync(hydroMeta, "utf8"));

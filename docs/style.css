@@ -144,3 +144,8 @@ label.check { font-size: 13px; display: inline-flex; align-items: center; gap: 4
 .hist2 .hind2 th, .hist2 .hind2 td { text-align: right; padding: 2px 4px; border-bottom: 1px solid #e3e3e3; }
 .hist2 .hind2 th:first-child, .hist2 .hind2 td:first-child { text-align: left; }
 body.simple #histcard { display: none; }
+
+#respcard .rtab { width: 100%; font-size: 12px; border-collapse: collapse; margin-top: 6px; }
+#respcard .rtab th, #respcard .rtab td { text-align: left; vertical-align: top; padding: 4px 5px; border-bottom: 1px solid #e3e3e3; }
+#respcard h4 { margin: 10px 0 4px; font-size: 14px; }
+#respcard ul { margin: 4px 0 4px 18px; padding: 0; font-size: 13px; }
