@@ -684,6 +684,151 @@ indicators:
     source: "ECMWF SEAS5/EC46 via Open-Meteo ; probabilités MakyClimat (correction delta, terciles CHIRPS)"
     frequency: Mensuelle
     status: active
+  # ---------------- SANTÉ, EAU ET ASSAINISSEMENT (enquête DHS, niveau région) ----------------
+  - id: dhs_eau_amelioree
+    label: "Population utilisant une source d'eau améliorée (valeur de la région, EDS)"
+    unit: "% de la population"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [wash, health, nutrition, drr]
+    sdg: ["6.1"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_toilettes_amel
+    label: "Ménages ou population utilisant des toilettes améliorées (valeur de la région, EDS)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [wash, health, nutrition]
+    sdg: ["6.2"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_sans_toilettes
+    label: "Ménages sans toilettes, défécation à l'air libre (valeur de la région, EDS)"
+    unit: "% des ménages"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [wash, health, nutrition]
+    sdg: ["6.2"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_lavage_mains
+    label: "Ménages avec un dispositif de lavage des mains avec eau et savon (valeur de la région, EDS)"
+    unit: "% des ménages"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [wash, health]
+    sdg: ["6.2"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_retard_croissance
+    label: "Enfants de moins de 5 ans avec retard de croissance (valeur de la région, EDS)"
+    unit: "% des enfants de moins de 5 ans"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [nutrition, health, food_security]
+    sdg: ["2.2"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_emaciation
+    label: "Enfants de moins de 5 ans émaciés (valeur de la région, EDS)"
+    unit: "% des enfants de moins de 5 ans"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [nutrition, health, food_security]
+    sdg: ["2.2"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_insuf_ponderale
+    label: "Enfants de moins de 5 ans en insuffisance pondérale (valeur de la région, EDS)"
+    unit: "% des enfants de moins de 5 ans"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [nutrition, health]
+    sdg: ["2.2"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_diarrhee
+    label: "Enfants de moins de 5 ans ayant eu la diarrhée dans les 2 semaines précédentes (valeur de la région, EDS)"
+    unit: "% des enfants de moins de 5 ans"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health, wash, nutrition]
+    sdg: ["3.2", "6.2"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_vaccination_base
+    label: "Enfants de 12-23 mois avec tous les vaccins de base (valeur de la région, EDS)"
+    unit: "% des enfants de 12-23 mois"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health]
+    sdg: ["3.b"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_accouch_formation
+    label: "Naissances en établissement de santé (valeur de la région, EDS)"
+    unit: "% des naissances"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health]
+    sdg: ["3.1"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_cpn4
+    label: "Femmes avec 4 consultations prénatales ou plus (valeur de la région, EDS)"
+    unit: "% des femmes"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health]
+    sdg: ["3.1"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: dhs_electricite
+    label: "Ménages avec électricité (valeur de la région, EDS)"
+    unit: "% des ménages"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [logistics, health, education]
+    sdg: ["7.1"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
   # ---------------- SERVICES CARTOGRAPHIÉS (OpenStreetMap) : comptes minimaux, pas un recensement ----------------
   - id: osm_ecoles
     label: "Écoles cartographiées dans OpenStreetMap (nombre minimal : zéro = rien de cartographié, pas forcément aucune école)"

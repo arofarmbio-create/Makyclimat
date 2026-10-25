@@ -55,6 +55,9 @@ jobs:
       - name: Écoles et formations sanitaires cartographiées (OpenStreetMap) — ignorées en cas d'indisponibilité
         run: |
           python scripts/connector_osm_services.py --country "$COUNTRY" || echo "OpenStreetMap indisponible, comptes de services non mis à jour"
+      - name: Santé, eau et assainissement par région (enquête DHS) — ignorés en cas d'indisponibilité
+        run: |
+          python scripts/connector_dhs.py --country "$COUNTRY" || echo "DHS indisponible, indicateurs de santé non mis à jour"
       - name: État actuel d'El Niño / La Niña (indice ONI)
         run: |
           python scripts/connector_enso.py || echo "ONI indisponible, état ENSO non mis à jour"

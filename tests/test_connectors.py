@@ -342,8 +342,39 @@ def test_flood_exposure() -> None:
     check("crues : tous les indicateurs produits sont définis", set(d.indicateur) <= set(defs))
 
 
+def test_dhs() -> None:
+    import connector_dhs as CD
+    import compute_metrics as CM
+    from common import read_units
+    units = read_units("demo")
+    regs = units[units.level == 1]
+    n0 = regs.name.iloc[0]
+    data = [
+        {"IndicatorId": "WS_SRCE_P_IMP", "CharacteristicCategory": "Region", "CharacteristicLabel": n0.upper(), "SurveyYear": 2021, "Value": 45.5},
+        {"IndicatorId": "WS_SRCE_P_IMP", "CharacteristicCategory": "Region", "CharacteristicLabel": n0, "SurveyYear": 1992, "Value": 9.0},       # ancienne enquête ignorée
+        {"IndicatorId": "WS_SRCE_P_IMP", "CharacteristicCategory": "Region", "CharacteristicLabel": "Région inconnue", "SurveyYear": 2021, "Value": 80.0},
+        {"IndicatorId": "WS_SRCE_P_IMP", "CharacteristicCategory": "Total", "CharacteristicLabel": "Total", "SurveyYear": 2021, "Value": 55.0},    # ligne nationale ignorée
+        {"IndicatorId": "WS_TLET_H_IMP", "CharacteristicCategory": "Region", "CharacteristicLabel": n0, "SurveyYear": 2021, "Value": 12.0},    # identifiant candidat de repli
+        {"IndicatorId": "CN_NUTS_C_HA2", "CharacteristicCategory": "Region", "CharacteristicLabel": n0, "SurveyYear": 2021, "Value": None},      # valeur absente
+    ]
+    df, log = CD.build(data, units)
+    g = lambda ind: df[(df.pcode == regs.pcode.iloc[0]) & (df.indicateur == ind)]
+    check("DHS : enquête la plus récente, nom de région normalisé", len(g("dhs_eau_amelioree")) == 1 and float(g("dhs_eau_amelioree").valeur.iloc[0]) == 45.5)
+    check("DHS : identifiant de repli utilisé, lignes non régionales et valeurs absentes ignorées", len(g("dhs_toilettes_amel")) == 1 and len(g("dhs_retard_croissance")) == 0)
+    check("DHS : région sans correspondance signalée dans le journal", any("sans correspondance" in x and "inconnue" in x for x in log))
+    defs = {i["id"]: i for i in __import__("common").load_yaml("indicators.yml")["indicators"]}
+    check("DHS : indicateurs définis, repris par les sous-zones", set(CD.SPECS) <= set(defs) and all(defs[i].get("inherit") == "down" for i in CD.SPECS))
+    direct: dict = {}
+    for r in df.itertuples():
+        direct.setdefault(r.pcode, {})[r.indicateur] = r.valeur
+    out = CM.aggregate_external(units, direct, defs)
+    kid = units[units.level == 4].iloc[0]
+    check("DHS : un fokontany reprend la valeur de sa région", out.get(kid.pcode, {}).get("dhs_eau_amelioree") == 45.5 or kid.adm1 != regs.pcode.iloc[0])
+
+
 if __name__ == "__main__":
     test_heigit()
+    test_dhs()
     test_flood_exposure()
     test_osm_services()
     test_forecast_and_floods()
