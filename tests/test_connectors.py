@@ -134,7 +134,84 @@ def test_chirps_reader() -> None:
     shutil.rmtree(tmp, ignore_errors=True)
 
 
+def test_hapi() -> None:
+    import connector_hapi
+    import common
+
+    calls = []
+
+    class R:
+        def __init__(self, data): self._d = data
+        def raise_for_status(self): pass
+        def json(self): return {"data": self._d}
+
+    ipc = [{"admin_level": 2, "admin1_code": "R1", "admin2_code": "R1D1", "population_fraction_in_phase": 0.35,
+            "population_in_phase": 3500, "reference_period_end": "2025-12-31", "resource_hdx_id": "x"},
+           {"admin_level": 2, "admin1_code": "R1", "admin2_code": "R1D1", "population_fraction_in_phase": 0.50,
+            "population_in_phase": 5000, "reference_period_end": "2026-03-31", "resource_hdx_id": "x"},
+           {"admin_level": 1, "admin1_code": "R2", "population_fraction_in_phase": 0.2, "population_in_phase": 900,
+            "reference_period_end": "2026-03-31", "resource_hdx_id": "x"}]
+    pov = [{"admin_level": 1, "admin1_code": "R1", "headcount_ratio": 71.5, "reference_period_end": "2022-12-31",
+            "resource_hdx_id": "y"}]
+
+    def fake_get(url, params=None, timeout=0):
+        calls.append(params)
+        return R(ipc if url.endswith("/food-security") else pov)
+
+    connector_hapi.requests.get = fake_get
+    rows = connector_hapi.fetch_all(connector_hapi.FOOD_SECURITY, {"location_code": "DEM"}, "abc")
+    check("HAPI : identifiant transmis", calls[0]["app_identifier"] == "abc" and len(rows) == 3)
+    best = connector_hapi.latest_per_zone(rows)
+    check("HAPI : analyse la plus récente par zone", best["R1D1"]["population_in_phase"] == 5000 and "R2" in best)
+    # exécution complète
+    import os, sys as _s
+    os.environ["HAPI_APP_IDENTIFIER"] = "abc"
+    _s.argv = ["connector_hapi.py", "--country", "demo"]
+    connector_hapi.main()
+    out = pd.read_csv(common.country_data_dir("demo") / "external" / "hapi.csv")
+    v = out.set_index(["pcode", "indicateur"])["valeur"]
+    check("HAPI : IPC fraction -> pourcentage", abs(v[("R1D1", "ipc_phase3plus_pct")] - 50) < 1e-6)
+    check("HAPI : pauvreté région", abs(v[("R1", "poverty_headcount")] - 71.5) < 1e-6)
+    # sans identifiant : sortie propre
+    os.environ.pop("HAPI_APP_IDENTIFIER")
+    try:
+        connector_hapi.main()
+        ok = False
+    except SystemExit as e:
+        ok = e.code == 0
+    check("HAPI : sans identifiant, ignoré sans erreur", ok)
+    (common.country_data_dir("demo") / "external" / "hapi.csv").unlink()
+
+
+def test_population_grid() -> None:
+    import geopandas as gpd
+    import rasterio
+    from rasterio.transform import from_origin
+
+    import build_population_grid as bpg
+
+    res = [{"url": "http://x/mdg_pop_2020_CN_100m.tif"}, {"url": "http://x/mdg_pop_2025_CN_100m_R2025A.tif"},
+           {"url": "http://x/mdg_pop_2025_1km.tif"}, {"url": "http://x/readme.pdf"}]
+    check("grille : choix du fichier 100 m de l'année", bpg.choose_resource(res, 2025)["url"].endswith("2025_CN_100m_R2025A.tif"))
+    check("grille : aucune ressource .tif -> None", bpg.choose_resource([{"url": "a.pdf"}], 2025) is None)
+    from shapely.geometry import box
+    tmp = Path(tempfile.mkdtemp(prefix="fake_pop_"))
+    tif = tmp / "pop.tif"
+    arr = np.ones((100, 200), dtype="float32")  # 200 x 100 pixels de 0.01°, 1 personne chacun
+    arr[:, :100] = 2.0
+    with rasterio.open(tif, "w", driver="GTiff", height=100, width=200, count=1, dtype="float32", crs="EPSG:4326",
+                       transform=from_origin(45.0, -15.0, 0.01, 0.01), nodata=-99999.0) as dst:
+        dst.write(arr, 1)
+    polys = gpd.GeoDataFrame({"c": ["A", "B"]}, geometry=[box(45.0, -16.0, 46.0, -15.0), box(46.0, -16.0, 47.0, -15.0)], crs=4326)
+    sums, total = bpg.zonal_sum(tif, polys)
+    check("grille : somme par polygone", np.allclose(sums, [20000, 10000]), str(sums))
+    check("grille : total conservé", abs(total - 30000) < 1e-6)
+    shutil.rmtree(tmp, ignore_errors=True)
+
+
 if __name__ == "__main__":
+    test_hapi()
+    test_population_grid()
     test_boundaries_and_population()
     test_chirps_reader()
     print("\nTous les tests de connecteurs passent." if not FAILS else f"\n{FAILS} ÉCHEC(S)")

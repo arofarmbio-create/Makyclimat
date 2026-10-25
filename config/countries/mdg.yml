@@ -22,6 +22,9 @@ boundaries:
 population:
   hdx_dataset: cod-ps-mdg
   reference_year: 2018
+  # Option précision : grille WorldPop 100 m (voir README, workflow « Limites et population »)
+  grid_hdx_dataset: c4591e47-f0fd-4dbd-81a0-6504f97e8f56
+  grid_year: 2025
 
 # --- Pluie satellitaire CHIRPS (CHC / UCSB, gratuite) ---
 rainfall:

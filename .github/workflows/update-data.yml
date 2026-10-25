@@ -38,6 +38,11 @@ jobs:
         run: pip install -r requirements-update.txt
       - name: Mettre à jour la pluie (CHIRPS)
         run: python scripts/update_rainfall.py --country "$COUNTRY"
+      - name: Indicateurs ONU/OCHA via HAPI (IPC, pauvreté) — ignoré si le secret est absent
+        env:
+          HAPI_APP_IDENTIFIER: ${{ secrets.HAPI_APP_IDENTIFIER }}
+        run: |
+          python scripts/connector_hapi.py --country "$COUNTRY" || echo "HAPI indisponible, indicateurs externes non mis à jour"
       - name: Calculer les indicateurs
         run: python scripts/compute_metrics.py --country "$COUNTRY"
       - name: Générer le catalogue

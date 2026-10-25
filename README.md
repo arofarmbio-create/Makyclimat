@@ -44,6 +44,17 @@ Ces points n'ont **pas pu être testés en conditions réelles** (accès réseau
 
 Modifier un fichier directement sur GitHub (icône crayon) : la prochaine mise à jour l'intègre. Les codes `pcode` sont ceux de l'export CSV de l'outil.
 
+### Indicateurs externes (ONU/OCHA et autres) — sans programmer
+
+Tout fichier CSV déposé dans `inputs/indicateurs/` (colonnes `pcode, indicateur, valeur, date, source`) devient une couche de la carte, une ligne de la fiche de zone et une colonne de l'export, **à condition que l'indicateur soit déclaré dans `config/indicators.yml`** (champs `format` : pct, int ou float ; `aggregate` : sum, mean, popmean ou none). La valeur la plus récente est retenue ; les zones supérieures sont agrégées selon la règle `aggregate`.
+
+Déjà branchés : **IPC phase 3 ou plus** (part et nombre de personnes) et **pauvreté multidimensionnelle**, lus automatiquement depuis l'API HDX HAPI de l'OCHA par `scripts/connector_hapi.py`. Là où une analyse IPC existe, sa part de population remplace la part vulnérable par défaut (ordre de priorité : `inputs/vulnerabilite.csv`, puis IPC, puis valeur par défaut).
+Activation : générer gratuitement un « app identifier » dans la documentation interactive de HAPI (https://hapi.humdata.org/docs), puis l'enregistrer dans GitHub : *Settings → Secrets and variables → Actions → New repository secret*, nom `HAPI_APP_IDENTIFIER`. Sans ce secret, l'étape est simplement ignorée. Au premier lancement, vérifier dans le journal le taux de correspondance des codes HAPI avec les limites OCHA.
+
+### Population précise (fokontany)
+
+Le workflow « 1 - Construire les limites et la population » remplace, par défaut, la population OCHA COD-PS (référence 2018) par la somme de la grille **WorldPop 100 m** (version R2025A, estimation modélisée) dans chaque fokontany (`scripts/build_population_grid.py`). Si la grille est introuvable, COD-PS est conservée. La source de population est indiquée dans l'outil ; à valider avec l'INSTAT et à comparer au recensement quand il sera disponible.
+
 ## 3. Ajouter une source de données (connecteur)
 
 1. Déclarer l'indicateur dans `config/indicators.yml` (secteurs, ODD, cadre national, source, fréquence, statut). Le test de cohérence refuse les références inconnues.
@@ -51,7 +62,7 @@ Modifier un fichier directement sur GitHub (icône crayon) : la prochaine mise �
 3. Brancher le calcul dans `scripts/compute_metrics.py`, ajouter l'étape dans `.github/workflows/update-data.yml`, puis une couche dans `docs/app.js` (`LAYERS`).
 4. Ajouter un test dans `tests/test_pipeline.py`.
 
-Sources prévues (à vérifier une à une : disponibilité, licence, fréquence) : prévisions de crue (Flood Hub, GloFAS), cyclones, évapotranspiration et humidité du sol (ERA5-Land), végétation (MODIS/VIIRS, Sentinel-2), qualité de l'air (Copernicus CAMS), accès à l'eau (JMP), établissements de santé et écoles (listes officielles), phases IPC.
+Sources prévues (à vérifier une à une : disponibilité, licence, fréquence) : prévisions de crue (Flood Hub, GloFAS), cyclones, évapotranspiration et humidité du sol (ERA5-Land), végétation (MODIS/VIIRS, Sentinel-2), qualité de l'air (Copernicus CAMS), accès à l'eau (JMP), établissements de santé et écoles (listes officielles), (l'IPC est déjà branché).
 **Vérifier la licence de chaque source avant toute redistribution.**
 
 ## 4. Ajouter un pays

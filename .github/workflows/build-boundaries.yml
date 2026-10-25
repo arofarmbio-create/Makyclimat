@@ -7,6 +7,10 @@ on:
       country:
         description: "Code du pays"
         default: "mdg"
+      precise_population:
+        description: "Remplacer la population COD-PS (2018) par la grille WorldPop 100 m (plus précis, plus long)"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -26,6 +30,10 @@ jobs:
         run: python scripts/build_boundaries.py --country "${{ github.event.inputs.country }}"
       - name: Population (OCHA COD-PS via HDX)
         run: python scripts/build_population.py --country "${{ github.event.inputs.country }}"
+      - name: Population précise par fokontany (grille WorldPop 100 m)
+        if: ${{ github.event.inputs.precise_population == 'true' }}
+        run: |
+          python scripts/build_population_grid.py --country "${{ github.event.inputs.country }}" || echo "Grille indisponible, population COD-PS conservée"
       - name: Enregistrer dans le dépôt
         run: |
           git config user.name "makyclimat-bot"
