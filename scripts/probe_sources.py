@@ -19,11 +19,14 @@ def note(msg):
 def raster(url, label, bbox=(46.5, -20.0, 47.5, -19.0), shape=(40, 40)):
     try:
         import rasterio
+        from rasterio.vrt import WarpedVRT
         from rasterio.windows import from_bounds
         with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", GDAL_HTTP_MAX_RETRY="3", GDAL_HTTP_RETRY_DELAY="2"):
-            with rasterio.open(url) as src:
+            with rasterio.open(url) as src0:
+                src = WarpedVRT(src0, crs="EPSG:4326", resampling=rasterio.enums.Resampling.average) if src0.crs and not src0.crs.is_geographic else src0
                 win = from_bounds(*bbox, transform=src.transform)
                 a = src.read(1, window=win, out_shape=shape, boundless=True).astype("float64")
+                a[a == src.nodata] = np.nan
                 note(f"== {label} OK : crs={src.crs} res={src.res} dtype={src.dtypes[0]} nodata={src.nodata} stats min/mean/max={np.nanmin(a):.1f}/{np.nanmean(a):.1f}/{np.nanmax(a):.1f} valeurs distinctes={len(np.unique(a))}")
     except Exception as e:
         note(f"== {label} ECHEC {type(e).__name__}: {str(e)[:300]}")
@@ -31,7 +34,7 @@ def raster(url, label, bbox=(46.5, -20.0, 47.5, -19.0), shape=(40, 40)):
 
 # Sols (SoilGrids 2.0, ISRIC) : argile, sable, carbone organique, 0-5 cm et 30-60 cm
 for var in ["clay", "sand", "soc"]:
-    for layer in ["0-5cm", "30-60cm"]:
+    for layer in ["0-5cm"]:
         raster(f"/vsicurl/https://files.isric.org/soilgrids/latest/data/{var}/{var}_{layer}_mean.vrt", f"SoilGrids {var} {layer}")
 # Occupation du sol (ESA WorldCover 2021, tuile 3x3 degrés)
 raster("/vsicurl/https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S21E045_Map.tif", "WorldCover S21E045",
@@ -53,6 +56,7 @@ except Exception as e:
 for u in ["https://data.nasa.gov/api/views/dd9e-wu2v/rows.csv?accessType=DOWNLOAD", "https://data.nasa.gov/docs/legacy/Global_Landslide_Catalog_Export.csv"]:
     try:
         r = requests.get(u, headers=UA, timeout=180)
+        note(f"   type={r.headers.get('content-type')} taille={len(r.content)} début={r.content[:200]!r}")
         df = pd.read_csv(io.BytesIO(r.content), low_memory=False)
         cols = [c for c in df.columns if "country" in c.lower()]
         sub = df[df[cols[0]].astype(str).str.contains("Madagascar", case=False)] if cols else df.iloc[:0]
