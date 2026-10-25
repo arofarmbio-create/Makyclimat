@@ -1,14 +1,14 @@
 """Connecteur HeiGIT / HDX : accessibilité aux services (santé, écoles) et aux routes, au niveau district.
 
 Source : « Madagascar - Risk Assessment Indicators » (HeiGIT, Université de Heidelberg ; HDX), produit par le pipeline GAIA à partir de
-WorldPop, OpenStreetMap et Google Earth Engine, sur les limites COD-AB. Données ouvertes. Temps de trajet calculés sur le réseau routier d'OpenStreetMap.
+WorldPop, OpenStreetMap et Google Earth Engine, sur les limites COD-AB. Données ouvertes. Temps de trajet calculés avec openrouteservice sur le réseau OpenStreetMap ; distances aux écoles ; indice d'accès rural d'après la classification de la surface des routes (Mapillary / Planet).
 Indicateurs (district ; les régions sont déduites par moyenne pondérée par la population, les sous-zones héritent de la valeur du district) :
   acc_hosp_1h_pct   part de la population à moins d'1 h d'un hôpital
   acc_phc_1h_pct    part de la population à moins d'1 h d'un centre de santé de base
   acc_edu_5km_pct   part de la population à moins de 5 km d'une école
-  rai_pct           indice d'accès rural (part de la population rurale à moins de 2 km d'une route praticable toute l'année), calcul HeiGIT
+  rai_pct           indice d'accès rural (part de la population rurale à moins de 2 km d'une route revêtue), calcul HeiGIT
   pop_no_hosp_2h    personnes à plus de 2 h d'un hôpital (nombre, non hérité par les sous-zones)
-Limites : un réseau OpenStreetMap incomplet sous-estime l'accès ; temps théoriques (hors saison des pluies, état réel des routes, pannes de bac).
+Limites : un réseau OpenStreetMap incomplet sous-estime l'accès ; temps théoriques (hors saison des pluies, état réel des routes, pannes de bac) ; l'indice d'accès rural ne compte que les routes revêtues, donc il est bas là où les pistes en terre sont les seules routes.
 Sortie : data/<pays>/external/heigit.csv (pcode, indicateur, valeur, date, source). Usage : python scripts/connector_heigit.py --country mdg
 """
 from __future__ import annotations
