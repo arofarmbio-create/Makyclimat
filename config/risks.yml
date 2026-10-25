@@ -1,6 +1,9 @@
 # Risques par profil et par horizon. Textes PROVISOIRES, à valider avec les clusters, le BNGRC, le Ministère de l'agriculture et la Santé.
 # status : live = calculé par l'outil ; proxy = indicateur indirect ; todo = donnée à intégrer (affiché comme tel, jamais inventé)
 # court = prévision météo des 7 prochains jours ; moyen = scénarios de la saison ; long = tendance climatique et ENSO.
+# Seuil mondial de pluie déclenchant des glissements : E = a x D^(1+b) (mm, durée D en heures), Guzzetti et al. (2008) Landslides 5:3-17 (seuil minimal mondial).
+# Niveaux = multiples du seuil (1x vigilance, 2x alerte, 3x alerte maximale) : convention MakyClimat, à calibrer localement.
+landslide_threshold: {a: 2.28, b: -0.20, ref: "Guzzetti et al. (2008)", slope_class: "pente >= 15 % = collines (FAO, 2006)", min_share_pct: 1}
 hazards:
   flood:
     label: Inondation et crue
@@ -49,10 +52,10 @@ hazards:
   landslide:
     label: Éboulement et route coupée
     icon: "⛰"
-    court: {status: proxy, from: [rain, flood]}
-    moyen: {status: proxy, scenario: hum}
+    court: {status: live, rule: landslide}
+    moyen: {status: live, scenario: hum, gate: slope}
     long:  {status: todo}
-    needs: "Pente et relief (modèle numérique de terrain), type de sol, routes OpenStreetMap : sans eux, seul le déclencheur « pluie » est suivi."
+    needs: "Inventaire des éboulements passés (BNGRC, Cluster Logistique) pour calibrer les seuils localement, lithologie, routes OpenStreetMap : sans eux, l'outil utilise le seuil mondial de pluie et la pente."
     damages:
       court: ["Axes routiers coupés, villages isolés", "Habitations sur pentes menacées"]
       moyen: ["Approvisionnement et accès aux soins perturbés"]

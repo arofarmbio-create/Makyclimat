@@ -29,6 +29,8 @@ jobs:
           python tests/test_history.py
           python tests/make_synthetic.py
           python tests/test_hydro_build.py
+          python tests/test_soilwater.py
+          python tests/test_soilwater_build.py
           python scripts/compute_metrics.py --country demo
       - name: Tests de l'interface
         run: node tests/ui_test.js demo

@@ -438,7 +438,7 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
-    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + hydroSection(f) + histSection(f);
+    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + hydroSection(f) + soilSection(f) + histSection(f);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -571,8 +571,23 @@
 
   function lvlToChip(l) { return l >= 4 ? 3 : l === 3 ? 2 : l === 2 ? 1 : 0; }
 
+  function slideThreshold(hours) { var T = S.meta.risks.landslide_threshold; return T.a * Math.pow(hours, 1 + T.b); }
+  function steepShare(m) { var v = m.x ? m.x.slope_ge15_pct : undefined; return v === undefined ? null : v; }
+  function riskSlide(m) {
+    var T = S.meta.risks.landslide_threshold, F = S.meta.forecast, sl = steepShare(m);
+    if (!F || !m.ev) return { none: "Prévision non disponible" };
+    if (sl === null) return { none: "Pente non calculée (lancer le workflow « 5 - Hydrologie »)" };
+    var t24 = slideThreshold(24), t72 = slideThreshold(72), r = Math.max(m.ev[0] / t24, m.ev[1] / t72);
+    var steep = Math.round(sl * 10) / 10, txt = "pluie prévue " + String(m.ev[0]).replace(".", ",") + " mm/jour et " + String(m.ev[1]).replace(".", ",") + " mm/3 jours = " +
+      String(Math.round(r * 10) / 10).replace(".", ",") + " × le seuil mondial de déclenchement (" + Math.round(t24) + " mm/jour, " + Math.round(t72) + " mm/3 jours) ; " + String(steep).replace(".", ",") + " % du territoire en pente ≥ 15 %";
+    if (sl < T.min_share_pct) return { chip: 0, label: "Aucun signal", text: "terrain presque plat (" + String(steep).replace(".", ",") + " % en pente ≥ 15 %)" };
+    var c = r >= 3 ? 3 : r >= 2 ? 2 : r >= 1 ? 1 : 0;
+    return { chip: c, label: ["Aucun signal", "Vigilance", "Alerte", "Alerte maximale"][c], text: txt, pop: S.view.lvl < 4 && m.ewp ? m.ewp[0] : 0, proxy: true };
+  }
+
   function riskCourt(spec, m) {
     var F = S.meta.forecast;
+    if (spec.rule === "landslide") return riskSlide(m);
     if (spec.status === "todo") return { todo: true };
     if (!F || !m.ew) return { none: "Prévision non disponible" };
     var best = 0, bh = null, pop = 0;
@@ -599,6 +614,12 @@
     var a = one(spec.scenario), b = spec.scenario_alt ? one(spec.scenario_alt) : null;
     var r = !a ? b : (!b || a.chip >= b.chip ? a : b);
     if (!r) return { none: "Pas assez de données" };
+    if (spec.gate === "slope") {
+      var sl = steepShare(m), T = S.meta.risks.landslide_threshold;
+      if (sl === null) return { none: "Pente non calculée (lancer le workflow « 5 - Hydrologie »)" };
+      if (sl < T.min_share_pct) return { chip: 0, label: "Aucun signal", text: "terrain presque plat" };
+      r.text += " ; " + String(Math.round(sl * 10) / 10).replace(".", ",") + " % du territoire en pente ≥ 15 %";
+    }
     var names = ["Aucun signal", "Vigilance", "Alerte", "Alerte maximale"];
     return { chip: r.chip, label: names[r.chip], text: r.text, pop: S.view.lvl < 4 ? r.pop : 0, proxy: spec.status === "proxy" };
   }
@@ -998,6 +1019,37 @@
   }
 
 
+
+  /* ---------- Eau dans le sol : humidité, recharge, indice de nappe ---------- */
+  function setupSoil() {
+    return getJSON("soilwater/series.json").then(function (D) { S.soil = D; }).catch(function () { S.soil = null; });
+  }
+  function soilSection(f) {
+    var D = S.soil;
+    if (!D) return "";
+    var c = f.properties.c, own = D.u[c], u = own || D.u[f.properties.p];
+    if (!u) return "";
+    var n = D.months.length, last = n - 1, sm = u.sm[last], rz = u.rz[last];
+    if (sm === null || sm === undefined) return "";
+    var W = 300, Ht = 90, padB = 14, bw = W / n, sy = (Ht - padB - 6) / 100;
+    var svg = '<svg viewBox="0 0 ' + W + " " + Ht + '" width="100%" role="img" aria-label="Humidité du sol des 36 derniers mois (barres) et normale du mois (trait)">';
+    var line = [];
+    D.months.forEach(function (lab, i) {
+      var v = u.sm[i], nm = u.n[D.month_numbers[i] - 1];
+      if (v !== null && v !== undefined) svg += '<rect x="' + (i * bw + 0.5) + '" y="' + (Ht - padB - v * sy) + '" width="' + (bw - 1) + '" height="' + Math.max(0.5, v * sy) + '" fill="' + (nm !== null && v < nm - 10 ? "#c97b2b" : "#3b7dbf") + '"><title>' + lab + " : " + v + " % de la réserve utile (normale " + nm + " %)</title></rect>";
+      if (nm !== null && nm !== undefined) line.push((i * bw + bw / 2) + "," + (Ht - padB - nm * sy));
+      if (i % 6 === 0) svg += '<text x="' + (i * bw) + '" y="' + (Ht - 3) + '" font-size="8" fill="#555">' + lab.slice(2) + "</text>";
+    });
+    svg += '<polyline points="' + line.join(" ") + '" fill="none" stroke="#222" stroke-width="1.2"/></svg>';
+    var desc = function (z) { return z === null || z === undefined ? "" : z <= -1.5 ? "très inférieur à la normale" : z <= -0.5 ? "inférieur à la normale" : z < 0.5 ? "proche de la normale" : z < 1.5 ? "supérieur à la normale" : "très supérieur à la normale"; };
+    var h = "<h4>Eau dans le sol (modèle)</h4>";
+    h += '<div class="row"><span>Humidité du sol, ' + esc(D.months[last]) + '</span><span><b>' + sm + " %</b> de la réserve utile</span></div>";
+    if (rz !== null && rz !== undefined) h += '<div class="row"><span>Indice relatif de nappe (recharge sur 12 mois)</span><span><b>' + (rz > 0 ? "+" : "") + String(rz).replace(".", ",") + "</b> : " + desc(rz) + "</span></div>";
+    h += svg + '<div class="note">Barres : humidité du sol chaque mois (orange = nettement plus sec que la normale du mois) ; trait : normale du mois. ' +
+      (own ? "" : "Valeur de la commune. ") + "Modèle de bilan hydrique mensuel (Thornthwaite-Mather) avec pluie CHIRPS, évapotranspiration ERA5-Land, sols SoilGrids et occupation du sol WorldCover. L'indice de nappe est relatif : ce n'est pas un niveau mesuré.</div>";
+    return h;
+  }
+
   /* ---------- Hydrologie : cours d'eau, bassins versants ---------- */
   var RIVER_W = [0, 1, 1.4, 2, 2.8, 3.8, 5];
   function setupHydro() {
@@ -1371,6 +1423,7 @@
       renderSources(); renderMethod(); renderHindcast();
       setupHistory();
       setupHydro();
+      setupSoil();
     }).catch(function (e) { console.error(e); showEmpty("Chargement impossible : " + e.message); });
   }
   init();

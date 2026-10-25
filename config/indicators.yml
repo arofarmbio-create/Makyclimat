@@ -310,3 +310,83 @@ indicators:
     source: Copernicus GLO-90, accumulation d'écoulement calculée par MakyClimat
     frequency: Ponctuelle
     status: active
+  - id: slope_ge15_pct
+    label: Part du territoire en pente de 15 % ou plus (« collines » selon la classification FAO des pentes)
+    unit: "% de la surface"
+    format: pct
+    aggregate: none
+    sectors: [drr, agriculture, logistics]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: Copernicus GLO-90 ; classe de pente FAO (Guidelines for soil description, 2006) ; maille ~550 m
+    frequency: Ponctuelle
+    status: active
+  # ---------------- EAU DANS LE SOL (workflow « 6 - Eau dans le sol ») ----------------
+  - id: sm_rel_pct
+    label: Humidité du sol (% de la réserve utile) au dernier mois complet
+    unit: "% de la réserve utile"
+    format: pct
+    aggregate: none
+    sectors: [agriculture, food_security, livestock, wash, drr]
+    sdg: ["2.4", "6.4", "13.1"]
+    national: [axe1, eau]
+    source: "Bilan hydrique de Thornthwaite-Mather : CHIRPS, ET0 FAO-56 d'ERA5-Land, sols SoilGrids, occupation du sol WorldCover"
+    frequency: Mensuelle
+    status: active
+  - id: sm_z
+    label: Humidité du sol par rapport à la normale du mois (indice standardisé, 0 = normal, négatif = plus sec)
+    unit: "écart-type"
+    format: float
+    style: signed
+    aggregate: none
+    sectors: [agriculture, food_security, livestock, wash, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1, eau]
+    source: "Scores normaux sur 1981-aujourd'hui (méthode SPI/SGI : McKee 1993, Bloomfield & Marchant 2013)"
+    frequency: Mensuelle
+    status: active
+  - id: recharge12_mm
+    label: Excédent hydrique des 12 derniers mois (ruissellement et recharge des nappes)
+    unit: mm
+    format: int
+    aggregate: none
+    sectors: [wash, agriculture, drr]
+    sdg: ["6.4", "13.1"]
+    national: [eau]
+    source: Bilan de Thornthwaite-Mather (excédent au-delà de la réserve utile du sol)
+    frequency: Mensuelle
+    status: active
+  - id: recharge12_z
+    label: Indice relatif de nappe (recharge sur 12 mois standardisée ; négatif = nappe probablement basse)
+    unit: "écart-type"
+    format: float
+    style: signed
+    aggregate: none
+    sectors: [wash, agriculture, health]
+    sdg: ["6.1", "6.4"]
+    national: [eau]
+    source: "Méthode de Bloomfield & Marchant (2013) appliquée à la recharge calculée ; INDICE relatif, pas un niveau mesuré (calibrage possible avec des mesures de puits)"
+    frequency: Mensuelle
+    status: active
+  - id: whc_mm
+    label: Réserve utile en eau du sol (profondeur racinaire comprise)
+    unit: mm
+    format: int
+    aggregate: none
+    sectors: [agriculture, food_security]
+    sdg: ["2.4"]
+    national: [axe1]
+    source: "Saxton & Rawls (2006) sur SoilGrids ; profondeurs racinaires FAO-56 par occupation du sol (WorldCover)"
+    frequency: Ponctuelle
+    status: active
+  - id: cn2
+    label: Courbe-numéro de ruissellement (CN, condition moyenne ; plus élevé = plus de ruissellement)
+    unit: indice
+    format: int
+    aggregate: none
+    sectors: [drr, agriculture, wash]
+    sdg: ["11.5", "13.1"]
+    national: [eau]
+    source: USDA-NRCS NEH-4 ; groupe hydrologique déduit de la texture SoilGrids ; occupation du sol WorldCover
+    frequency: Ponctuelle
+    status: active

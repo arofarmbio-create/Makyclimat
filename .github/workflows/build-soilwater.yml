@@ -1,0 +1,36 @@
+name: 6 - Eau dans le sol (humidité, recharge, indice de nappe)
+
+# Bilan hydrique mensuel du sol à partir de données réelles : pluie CHIRPS, évapotranspiration ERA5-Land (FAO-56), sols SoilGrids, occupation du sol WorldCover.
+# La récupération de l'évapotranspiration est reprenable : si elle n'est pas terminée, relancer le workflow.
+on:
+  schedule:
+    - cron: "40 3 * * 2"
+  workflow_dispatch:
+    inputs:
+      country:
+        description: "Code du pays"
+        default: "mdg"
+
+permissions:
+  contents: write
+
+jobs:
+  soilwater:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+      - name: Eau dans le sol
+        run: python scripts/build_soilwater.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Enregistrer dans le dépôt (même en cas d'échec partiel, pour garder le cache et l'état)
+        if: always()
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add docs/data data
+          git diff --cached --quiet || (git commit -m "Eau dans le sol : bilan hydrique mensuel" && git pull --rebase origin main && git push)

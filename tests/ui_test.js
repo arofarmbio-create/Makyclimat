@@ -261,6 +261,12 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   check("méthode (seuils provisoires)", $("methodtext").textContent.includes("provisoires"));
   w.document.querySelectorAll(".chip")[3].click();
   check("filtre secteur", w.document.querySelectorAll("#cattable tr").length > 1);
+  const soilSeries = path.join(docs, "data", slug, "soilwater", "series.json");
+  if (fs.existsSync(soilSeries)) {
+    handlers[currentLayers[0].feature.properties.c]();
+    check("fiche : eau dans le sol (humidité, indice de nappe, graphique)", await waitFor(() => /Eau dans le sol/.test($("info").innerHTML) && /Indice relatif de nappe/.test($("info").innerHTML) && $("info").querySelectorAll("svg polyline").length >= 1));
+    check("éboulement : seuil mondial de pluie et pente affichés", /seuil mondial de déclenchement/.test($("info").innerHTML) || /terrain presque plat/.test($("info").innerHTML) || /Prévision non disponible/.test($("info").innerHTML));
+  }
   console.log(failures ? `\n${failures} ÉCHEC(S)` : "\nTous les tests de l'interface passent.");
   process.exit(failures ? 1 : 0);
 })();

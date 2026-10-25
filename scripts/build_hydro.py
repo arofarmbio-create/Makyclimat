@@ -174,12 +174,13 @@ def unit_stats(units, geoms, P, main, sub, lon0, lat0, res):
     cnt = np.bincount(flat[m], minlength=n).astype(float)
     s_sum = np.bincount(flat[m], weights=np.nan_to_num(slope[m]), minlength=n)
     s30 = np.bincount(flat[m], weights=(np.nan_to_num(slope[m]) > 30), minlength=n)
+    s15 = np.bincount(flat[m], weights=(np.nan_to_num(slope[m]) >= 15), minlength=n)
     e_sum = np.bincount(flat[m], weights=dem[m], minlength=n)
     h5 = np.bincount(flat[m], weights=(np.isfinite(hand[m]) & (hand[m] < 5)), minlength=n)
     h15 = np.bincount(flat[m], weights=(np.isfinite(hand[m]) & (hand[m] < 15)), minlength=n)
     amax = np.zeros(n)
     np.maximum.at(amax, flat[m], acc[m])
-    df = pd.DataFrame({"cnt": cnt, "s_sum": s_sum, "s30": s30, "e_sum": e_sum, "h5": h5, "h15": h15, "amax": amax})[1:]
+    df = pd.DataFrame({"cnt": cnt, "s_sum": s_sum, "s30": s30, "s15": s15, "e_sum": e_sum, "h5": h5, "h15": h15, "amax": amax})[1:]
     df.index = leaves.pcode.values[: len(df)] if len(df) == len(leaves) else leaves.pcode.values
     # fokontany plus petits qu'une cellule : on prend la cellule du centroïde
     small = df.cnt == 0
@@ -193,6 +194,7 @@ def unit_stats(units, geoms, P, main, sub, lon0, lat0, res):
         df.loc[idx, "cnt"] = np.where(okl, 1.0, 0.0)
         df.loc[idx, "s_sum"] = np.where(okl, np.nan_to_num(slope[k]), 0.0)
         df.loc[idx, "s30"] = np.where(okl, np.nan_to_num(slope[k]) > 30, 0.0)
+        df.loc[idx, "s15"] = np.where(okl, np.nan_to_num(slope[k]) >= 15, 0.0)
         df.loc[idx, "e_sum"] = np.where(okl, dem[k], 0.0)
         df.loc[idx, "h5"] = np.where(okl, np.isfinite(hand[k]) & (hand[k] < 5), 0.0)
         df.loc[idx, "h15"] = np.where(okl, np.isfinite(hand[k]) & (hand[k] < 15), 0.0)
@@ -209,7 +211,7 @@ def unit_stats(units, geoms, P, main, sub, lon0, lat0, res):
     pairs = units[["pcode", "level", "adm1", "adm2", "adm3"]].set_index("pcode")
     leaf_ix = df.index
     rows = []
-    agg_cols = ["cnt", "s_sum", "s30", "e_sum", "h5", "h15"]
+    agg_cols = ["cnt", "s_sum", "s30", "s15", "e_sum", "h5", "h15"]
     for lv, key in ((4, None), (3, "adm3"), (2, "adm2"), (1, "adm1")):
         if key is None:
             g = df.copy()
@@ -220,7 +222,7 @@ def unit_stats(units, geoms, P, main, sub, lon0, lat0, res):
             if r.cnt <= 0 or not pc:
                 continue
             rows += [(pc, "hand_lt5_pct", 100 * r.h5 / r.cnt), (pc, "hand_lt15_pct", 100 * r.h15 / r.cnt), (pc, "slope_mean_pct", r.s_sum / r.cnt),
-                     (pc, "slope_gt30_pct", 100 * r.s30 / r.cnt), (pc, "elev_mean_m", r.e_sum / r.cnt), (pc, "river_max_km2", r.amax)]
+                     (pc, "slope_gt30_pct", 100 * r.s30 / r.cnt), (pc, "slope_ge15_pct", 100 * r.s15 / r.cnt), (pc, "elev_mean_m", r.e_sum / r.cnt), (pc, "river_max_km2", r.amax)]
     ext = pd.DataFrame(rows, columns=["pcode", "indicateur", "valeur"])
     ext["valeur"] = ext.valeur.round(2)
     ext["date"] = dt.date.today().isoformat()
