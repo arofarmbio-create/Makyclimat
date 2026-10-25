@@ -173,3 +173,7 @@ Limites : bilan mensuel (pas d'intensité journalière), pas de coefficient cult
 ## Priorités de réponse (pour les gestionnaires d'information)
 
 La carte « Priorités de réponse » classe les zones de la vue (région, district, commune ou fokontany) selon le critère choisi : écart entre les cibles et les bénéficiaires déclarés (3W/4W importés, avec les filtres de « Historique et réponse »), personnes exposées, cibles, niveau d'alerte ou couverture la plus faible. Aucun poids composite n'est inventé. Elle liste aussi les zones où une alerte de niveau « Alerte » ou plus est prévue sous 7 jours (déclencheurs d'action anticipée), génère une note de situation à copier et exporte la liste en CSV. Limite : la réponse non déclarée est invisible ; un écart élevé peut venir d'un manque de rapportage.
+
+## Qui fait quoi où
+
+La carte « Qui fait quoi où » croise, pour les zones prioritaires de la vue, les sept secteurs humanitaires principaux et le nombre d'organisations qui déclarent une activité (3W/4W importés, avec les filtres de « Historique et réponse »). Case « vide » : aucune déclaration ; orange : 3 organisations ou plus (seuil de lecture, à vérifier : chevauchement ou complémentarité). Elle liste aussi les principaux partenaires et exporte le détail (zone, secteur, organisation, année, bénéficiaires) en CSV.

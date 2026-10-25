@@ -104,6 +104,28 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     check("export de la liste priorisée", /ecart/.test(txt) && txt.split("\n").length > 3);
     $("rsort").value = "gap"; $("rsort").dispatchEvent(new w.Event("change"));
   }
+  if (fs.existsSync(respPath)) {
+    const HW = JSON.parse(fs.readFileSync(respPath, "utf8"));
+    check("carte Qui fait quoi où visible", await waitFor(() => !$("whocard").hidden && $("whomat").querySelectorAll("tr").length >= 2));
+    const y0 = +$("hy0").value, y1 = +$("hy1").value, trs = [...$("whomat").querySelectorAll("tr")].slice(1);
+    const nameToC = {}; currentLayers.forEach((l) => { nameToC[l.feature.properties.n] = l.feature.properties.c; });
+    const heads = [...$("whomat").querySelectorAll("th")].slice(1).map((t) => t.title);
+    let okAll = true, detail = "";
+    trs.forEach((tr) => {
+      const pc = nameToC[tr.children[0].textContent];
+      heads.forEach((cl, j) => {
+        const ci = HW.clusters.indexOf(cl), set = new Set();
+        HW.rec.u.forEach((u, i) => { if (u.split("D")[0] === pc && HW.rec.c[i] === ci && HW.rec.y[i] >= y0 && HW.rec.y[i] <= y1) set.add(HW.rec.o[i]); });
+        const txt = tr.children[j + 1].textContent, got = txt === "vide" ? 0 : Number(txt);
+        if (got !== set.size) { okAll = false; detail = pc + " " + cl + " " + got + "/" + set.size; }
+      });
+    });
+    check("qui fait quoi où : organisations par zone et secteur = comptage direct du fichier", okAll && trs.length > 0, detail);
+    check("cellules vides signalées", $("whomat").querySelectorAll("td.wvide, td.wok, td.wmany").length === trs.length * heads.length);
+    $("whocsv").click();
+    const t2 = lastBlob ? await lastBlob.text() : "";
+    check("export qui-fait-quoi-où", /organisation/.test(t2) && t2.split("\n").length > 2);
+  }
   const hydroMeta = path.join(docs, "data", slug, "hydro", "meta.json");
   if (fs.existsSync(hydroMeta)) {
     const HM = JSON.parse(fs.readFileSync(hydroMeta, "utf8"));

@@ -317,7 +317,7 @@
   }
 
   /* ---------- Panneau ---------- */
-  function refresh() { renderCrumbs(); renderLegend(); renderKPIs(); renderInfo(); renderRank(); renderResponse(); }
+  function refresh() { renderCrumbs(); renderLegend(); renderKPIs(); renderInfo(); renderRank(); renderResponse(); renderWho(); }
 
   function renderCrumbs() {
     var box = $("crumbs");
@@ -834,7 +834,7 @@
       var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o);
     });
     sel.addEventListener("change", function () { S.layer = sel.value; restyle(); });
-    setupScenarios(); setupProfiles(); setupCompare(); setupResponse(); readURL();
+    setupScenarios(); setupProfiles(); setupCompare(); setupResponse(); setupWho(); readURL();
     $("modebtn").addEventListener("click", function () {
       S.simple = !S.simple;
       $("modebtn").setAttribute("aria-pressed", S.simple ? "true" : "false");
@@ -1122,6 +1122,59 @@
       var a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([MC.toCSV(rows, cols)], { type: "text/csv;charset=utf-8" }));
       a.download = "makyclimat_" + SLUG + "_priorites_" + (S.path.map(function (p) { return p.pcode; }).join("_") || "pays") + ".csv";
+      a.click();
+    });
+  }
+
+
+  /* ---------- Qui fait quoi où (4W) ---------- */
+  var WHO_CLUSTERS = [["food_security", "Sécurité alimentaire"], ["nutrition", "Nutrition"], ["health", "Santé"], ["wash", "Eau, assainissement et hygiène"],
+                      ["education", "Éducation"], ["protection", "Protection"], ["shelter", "Abris et biens non alimentaires"]];
+  var WHO_MANY = 3;
+  function whoData() {
+    // enregistrements filtrés -> par zone de la vue : secteur -> organisations ; organisation -> secteurs, zones, bénéficiaires
+    var H = S.hist, R = H.rec, L = S.view.lvl, keys = {}, zone = {}, orgs = {}, lines = [];
+    S.view.feats.forEach(function (f) { keys[f.properties.c] = f.properties.n; });
+    histRecs().forEach(function (i) {
+      var a = ancestors(R.u[i]);
+      if (!a || a.length < L || !keys[a[L - 1]]) return;
+      var z = a[L - 1], cl = H.clusters[R.c[i]], org = H.orgs[R.o[i]] || "Organisation non précisée";
+      var zz = zone[z] = zone[z] || {};
+      (zz[cl] = zz[cl] || {})[org] = 1;
+      var o = orgs[org] = orgs[org] || { cl: {}, z: {}, b: 0 };
+      o.cl[cl] = 1; o.z[z] = 1; if (H.kinds[R.k[i]] === "3w") o.b += R.b[i];
+      lines.push({ z: z, zn: keys[z], cl: cl, org: org, b: H.kinds[R.k[i]] === "3w" ? R.b[i] : 0, y: R.y[i], kind: H.kinds[R.k[i]] });
+    });
+    return { zone: zone, orgs: orgs, lines: lines, keys: keys };
+  }
+  function renderWho() {
+    var card = $("whocard");
+    if (!card) return;
+    if (!S.hist || !S.view || !S.anc || !S.hf) { card.hidden = true; return; }
+    card.hidden = false;
+    var D = whoData(), rows = respSorted(respRows()).slice(0, +$("rn").value);
+    var h = '<table class="rtab who"><tr><th>Zone</th>' + WHO_CLUSTERS.map(function (c) { return '<th title="' + esc(c[1]) + '">' + esc(c[1].split(",")[0].split(" ")[0]) + "</th>"; }).join("") + "</tr>";
+    rows.forEach(function (x) {
+      h += "<tr><td>" + esc(x.n) + "</td>" + WHO_CLUSTERS.map(function (c) {
+        var n = Object.keys(((D.zone[x.c] || {})[c[1]]) || {}).length, cls = n === 0 ? "wvide" : n >= WHO_MANY ? "wmany" : "wok";
+        return '<td class="' + cls + '">' + (n === 0 ? "vide" : n) + "</td>";
+      }).join("") + "</tr>";
+    });
+    $("whomat").innerHTML = h + "</table>";
+    var ol = Object.keys(D.orgs).map(function (k) { var o = D.orgs[k]; return { n: k, cl: Object.keys(o.cl), z: Object.keys(o.z).length, b: o.b }; }).sort(function (a, b) { return b.z - a.z || b.b - a.b; }).slice(0, 8);
+    $("whoorg").innerHTML = ol.length ? '<h4>Principaux partenaires de la vue</h4><table class="rtab"><tr><th>Organisation</th><th>Secteurs</th><th>Zones</th><th>Bénéf.</th></tr>' +
+      ol.map(function (o) { return "<tr><td>" + esc(o.n) + "</td><td>" + esc(o.cl.slice(0, 3).join(", ")) + (o.cl.length > 3 ? "…" : "") + "</td><td>" + o.z + "</td><td>" + (o.b ? MC.fmtInt(o.b) : "–") + "</td></tr>"; }).join("") + "</table>" : "";
+    $("whonote").innerHTML = "Cellule = nombre d'organisations qui déclarent une activité dans la zone et le secteur. « vide » : aucune déclaration (réponse absente ou non rapportée). Orange : " + WHO_MANY + " organisations ou plus, à vérifier (chevauchement ou complémentarité) : seuil de lecture choisi par MakyClimat, sans valeur normative. Seuls les secteurs humanitaires principaux sont affichés.";
+  }
+  function setupWho() {
+    $("whocsv").addEventListener("click", function () {
+      var D = whoData();
+      var cols = [{ label: "code_zone", get: function (r) { return r.z; } }, { label: "zone", get: function (r) { return r.zn; } }, { label: "secteur", get: function (r) { return r.cl; } },
+                  { label: "organisation", get: function (r) { return r.org; } }, { label: "annee", get: function (r) { return r.y; } }, { label: "beneficiaires", get: function (r) { return r.b; } },
+                  { label: "source", get: function (r) { return r.kind; } }];
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([MC.toCSV(D.lines, cols)], { type: "text/csv;charset=utf-8" }));
+      a.download = "makyclimat_" + SLUG + "_qui_fait_quoi_ou_" + (S.path.map(function (p) { return p.pcode; }).join("_") || "pays") + ".csv";
       a.click();
     });
   }
