@@ -5,6 +5,10 @@ name: Mise à jour des données et publication
 on:
   schedule:
     - cron: "0 5 3,13,23 * *"
+  # Enchaînement automatique après la normale de pluie (premier démarrage)
+  workflow_run:
+    workflows: ["2 - Construire la normale de pluie (une seule fois)"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       country:
@@ -25,6 +29,7 @@ env:
 
 jobs:
   build:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -57,6 +62,8 @@ jobs:
           git add archive
           git diff --cached --quiet || (git commit -m "Archive des indicateurs (données jusqu'à la dernière dékade)" && git push)
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs

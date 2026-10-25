@@ -1,7 +1,11 @@
 name: 1 - Construire les limites et la population (une seule fois)
 
 # À lancer manuellement UNE fois, puis seulement si les limites administratives changent.
+# Se lance aussi automatiquement quand le fichier .github/first-run.txt est modifié (démarrage sans clic).
 on:
+  push:
+    branches: [main]
+    paths: [".github/first-run.txt"]
   workflow_dispatch:
     inputs:
       country:
@@ -27,13 +31,13 @@ jobs:
       - name: Installer les dépendances (cartographie)
         run: pip install -r requirements.txt
       - name: Limites administratives (OCHA COD-AB via HDX)
-        run: python scripts/build_boundaries.py --country "${{ github.event.inputs.country }}"
+        run: python scripts/build_boundaries.py --country "${{ github.event.inputs.country || 'mdg' }}"
       - name: Population (OCHA COD-PS via HDX)
-        run: python scripts/build_population.py --country "${{ github.event.inputs.country }}"
+        run: python scripts/build_population.py --country "${{ github.event.inputs.country || 'mdg' }}"
       - name: Population précise par fokontany (grille WorldPop 100 m)
-        if: ${{ github.event.inputs.precise_population == 'true' }}
+        if: ${{ github.event.inputs.precise_population != 'false' }}
         run: |
-          python scripts/build_population_grid.py --country "${{ github.event.inputs.country }}" || echo "Grille indisponible, population COD-PS conservée"
+          python scripts/build_population_grid.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Grille indisponible, population COD-PS conservée"
       - name: Enregistrer dans le dépôt
         run: |
           git config user.name "makyclimat-bot"
