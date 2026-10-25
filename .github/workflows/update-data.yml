@@ -71,6 +71,8 @@ jobs:
         run: |
           set -o pipefail
           python scripts/compute_metrics.py --country "$COUNTRY" 2>&1 | tee data/_compute_log.txt
+      - name: Calendrier cultural (recommandations officielles et fenêtres saisies)
+        run: python scripts/build_calendar.py --country "$COUNTRY"
       - name: Générer le catalogue
         run: python scripts/build_catalogue.py --country "$COUNTRY"
       - name: Contrôle qualité (arrête tout si anomalie)

@@ -1,0 +1,29 @@
+# Recommandations officielles pour le riz pluvial (saison chaude et humide octobre 2025 - avril 2026).
+# Source : « Calendriers culturaux - Riz, saison 2025-2026 », Ministère de l'Agriculture et de l'Élevage et Ministère des Transports et de la Météorologie
+# (avec DGAE, DVPP, DRAE, FOFIFA, DGM), https://www.meteomadagascar.mg/wp-content/uploads/Calendriers_culturaux-Riz-2025-2026.pdf
+# Ces recommandations dépendent des perspectives climatiques de la saison : elles ne valent que pour elle. Les tableaux par décade et par variété
+# (semis, repiquage, récolte) restent dans le document officiel ; on peut les saisir dans inputs/calendrier_cultural.csv.
+season: "2025-2026 (octobre à avril)"
+source:
+  title: "Calendriers culturaux - Riz, saison 2025-2026 (MinAE, MTM/DGM)"
+  url: "https://www.meteomadagascar.mg/wp-content/uploads/Calendriers_culturaux-Riz-2025-2026.pdf"
+rules:
+  - regions: [Androy, Atsimo Andrefana]
+    text: "Riz pluvial de bas-fond : non possible cette saison (perspectives de pluie)."
+  - regions: [Anosy]
+    text: "Riz pluvial de bas-fond : non possible cette saison dans les districts d'Amboasary Sud et de Betroka."
+  - regions: [Atsimo Andrefana, Androy]
+    text: "Riz pluvial de tanety (plateaux) : non recommandé."
+  - regions: [Anosy]
+    text: "Riz pluvial de tanety : non recommandé à Amboasary et Betroka."
+  - regions: [Menabe]
+    text: "Riz pluvial de tanety : non recommandé à Morondava, Belo sur Tsiribihina et Manja."
+  - regions: [Ihorombe]
+    text: "Seules les variétés à cycle court sont recommandées."
+  - regions: [Analanjirofo, Atsinanana, Sava, Vatovavy, Fitovinany]
+    text: "Double culture possible (cycle court et/ou long)."
+  - regions: [Analamanga, Alaotra Mangoro, Amoron I Mania, Itasy, Vakinankaratra, Diana]
+    text: "Variétés à cycle long adaptées (hautes terres et zones fraîches)."
+general:
+  - "Le semis est l'étape critique : attendre la période recommandée même après les premières pluies, car des périodes sèches suivent souvent (risque d'échec de semis)."
+  - "Cycles : court jusqu'à 110 jours, intermédiaire 120-140 jours, long plus de 140 jours."

@@ -311,6 +311,9 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   if (fs.existsSync(path.join(docs, "data", slug, "seasonal.json"))) {
     check("fiche : prévision saisonnière (écart, probabilités, graphique)", await waitFor(() => /Prévision saisonnière \(modèle ECMWF\)/.test($("info").innerHTML) && /Probabilités \(tiers sec/.test($("info").innerHTML) && $("info").querySelectorAll("svg rect").length >= 2));
   }
+  if (fs.existsSync(path.join(docs, "data", slug, "calendrier.json"))) {
+    check("fiche : cultures et calendrier (recommandations, source citée)", await waitFor(() => /Cultures et calendrier/.test($("info").innerHTML) && /Règle de démonstration|recommand/i.test($("info").innerHTML) && /Source de test|meteomadagascar/.test($("info").innerHTML)));
+  }
   const cycFile = path.join(docs, "data", slug, "cyclones.json");
   if (fs.existsSync(cycFile)) {
     const C = JSON.parse(fs.readFileSync(cycFile, "utf8"));

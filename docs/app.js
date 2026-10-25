@@ -438,7 +438,7 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
-    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + seasonSection(f) + hydroSection(f) + soilSection(f) + histSection(f);
+    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + seasonSection(f) + calendarSection(f) + hydroSection(f) + soilSection(f) + histSection(f);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -1083,6 +1083,32 @@
     return h;
   }
 
+  /* ---------- Calendrier cultural (recommandations officielles par région, fenêtres saisies) ---------- */
+  function setupCalendar() {
+    return getJSON("calendrier.json").then(function (D) { S.cal = D; }).catch(function () { S.cal = null; });
+  }
+  function calendarSection(f) {
+    var D = S.cal;
+    if (!D) return "";
+    var c = f.properties.c, chain = (S.anc && S.anc[c]) ? S.anc[c] : [c], reg = chain[0], recs = D.regions[reg] || [], wins = [];
+    chain.concat(["ALL"]).forEach(function (code) { (D.windows[code] || []).forEach(function (w) { wins.push(w); }); });
+    if (!recs.length && !wins.length) return "";
+    var now = new Date(), cm = now.getMonth() + 1, cd = Math.min(3, Math.ceil(now.getDate() / 10)), DEC = ["1-10", "11-20", "21-fin"];
+    function key(m, d) { return ((m + 1) % 12) * 3 + (d - 1); }      // l'année agricole commence en novembre (mois 11 -> 0)
+    var h = "<h4>Cultures et calendrier</h4>";
+    if (recs.length) h += "<ul>" + recs.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    if (wins.length) {
+      h += "<ul>" + wins.slice(0, 12).map(function (w) {
+        var a = key(w.d0[0], w.d0[1]), b = key(w.d1[0], w.d1[1]), k = key(cm, cd), live = a <= b ? (k >= a && k <= b) : (k >= a || k <= b);
+        return "<li" + (live ? ' style="font-weight:600"' : "") + ">" + esc(w.c) + " : " + esc(w.o) + " du " + DEC[w.d0[1] - 1] + "/" + w.d0[0] + " au " + DEC[w.d1[1] - 1] + "/" + w.d1[0] + (live ? " (en cours)" : "") + (w.src ? ' <span class="note">' + esc(w.src) + "</span>" : "") + "</li>";
+      }).join("") + "</ul>";
+    }
+    h += '<div class="note">Recommandations pour la saison ' + esc(D.season) + " ; elles dépendent des perspectives de pluie de cette saison. Source : " +
+      (D.source && D.source.url ? '<a href="' + esc(D.source.url) + '" target="_blank" rel="noopener">' + esc(D.source.title) + "</a>" : "document officiel") +
+      ". Les tableaux par décade et par variété sont dans le document officiel.</div>";
+    return h;
+  }
+
   /* ---------- Priorités de réponse (vue d'un gestionnaire d'information) ---------- */
   function respRows() {
     if (!S.view) return [];
@@ -1622,6 +1648,7 @@
       setupHydro();
       setupSoil();
       setupSeasonal();
+      setupCalendar();
       setupCyclones();
     }).catch(function (e) { console.error(e); showEmpty("Chargement impossible : " + e.message); });
   }
