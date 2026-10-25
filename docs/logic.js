@@ -14,8 +14,17 @@
   }
 
   // Valeur d'un indicateur pour une unité, sous scénario de pluie (simIdx = index du facteur, null = observé).
-  function valueFor(m, key, simIdx, meta) {
+  var SC_IDX = { pc: 0, l: 1, e: 2, t: 3, w: 4 };
+  function valueFor(m, key, simIdx, meta, scn) {
     if (!m) return null;
+    if (scn && m.sc && m.sc[scn] && SC_IDX[key] !== undefined) {
+      var v = m.sc[scn][SC_IDX[key]];
+      return v === undefined ? null : v;
+    }
+    if (scn && m.sc && m.sc[scn] && key === "g") return Math.max(0, m.sc[scn][3] - (m.b || 0));
+    if (key === "pa") return m.pa === undefined || m.pa === null ? null : m.pa * 100;
+    if (key === "ex") return m.ex === undefined ? null : m.ex;
+    if (key === "w") { var hs = m.sc && (m.sc[scn] || m.sc.hum); return hs ? hs[4] : null; }
     var f = simIdx === null || simIdx === undefined ? 1 : meta.rain_factors[simIdx];
     switch (key) {
       case "l": return simIdx === null || f === 1 ? m.l : levelFromPct(m.pc === undefined ? null : m.pc * f, meta.alert_levels);

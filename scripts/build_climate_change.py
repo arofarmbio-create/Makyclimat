@@ -57,7 +57,7 @@ def load_totals(cfg: dict, y_first: int, y_last: int):
 
     with ThreadPoolExecutor(max_workers=4) as ex:
         got = dict(ex.map(one, jobs))
-    geo, totals = None, {}
+    geo, totals, monthly = None, {}, {}
     for y in range(y_first, y_last + 1):
         months = enso.season_months(y, s_m, e_m)
         if any(got.get(ym) is None for ym in months):
@@ -72,7 +72,8 @@ def load_totals(cfg: dict, y_first: int, y_last: int):
         tot = st.sum(axis=0)
         tot[np.isnan(st).any(axis=0)] = np.nan
         totals[y] = tot.astype("float32")
-    return totals, geo
+        monthly[y] = st.astype("float32")
+    return totals, geo, monthly
 
 
 def analyse(years, totals, oni_by_year, base, min_norm):
@@ -136,7 +137,7 @@ def main() -> None:
 
     y_last = last_complete_season_year(dt.date.today(), e_m)
     y_first = args.start + (1 if s_m > e_m else 0)
-    totals, geo = load_totals(cfg, y_first, y_last)
+    totals, geo, monthly = load_totals(cfg, y_first, y_last)
     oni_by_year = {y: enso.season_oni(oni, y, s_m, e_m) for y in totals}
     years = sorted(y for y in totals if np.isfinite(oni_by_year[y]))
     if len(years) < 25 or geo is None:
@@ -148,6 +149,13 @@ def main() -> None:
     save_grid(grid_dir(args.country) / "climate_change.npz",
               trend=res["trend"], trend_p=res["trend_p"], corr=res["corr"], el=res["el"], la=res["la"], ne=res["ne"],
               years=np.array(years), oni=res["oni"], lon0=np.array(lon0), lat0=np.array(lat0), res=np.array(step))
+
+    # série mensuelle de chaque saison (sert aux scénarios de fin de saison) : float16 pour limiter la taille
+    save_grid(grid_dir(args.country) / "monthly_series.npz",
+              arr=np.stack([monthly[y] for y in years]).astype("float16"),
+              months=np.array([m for _, m in enso.season_months(years[-1], s_m, e_m)]),
+              years=np.array(years), phases=np.array(res["phases"]), oni=res["oni"].astype("float32"),
+              lon0=np.array(lon0), lat0=np.array(lat0), res=np.array(step))
 
     units = read_units(args.country)
     leaves = units[units.level == units.level.max()]

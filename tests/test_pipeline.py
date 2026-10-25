@@ -31,8 +31,8 @@ def check(name: str, cond: bool, extra: str = "") -> None:
         FAILS += 1
 
 
-def run_compute() -> None:
-    sys.argv = ["compute_metrics.py", "--country", "demo"]
+def run_compute(today: str = "2026-02-21") -> None:
+    sys.argv = ["compute_metrics.py", "--country", "demo", "--today", today]
     compute_metrics.main()
 
 
@@ -158,6 +158,77 @@ def test_inputs() -> None:
     run_compute()  # remet les sorties en état par défaut
 
 
+def test_scenarios() -> None:
+    import datetime as dt
+    import numpy as np
+    import scenarios as SC
+    from compute_metrics import level_from_pct
+
+    # fonctions pures
+    months = [(2025, 11), (2025, 12), (2026, 1), (2026, 2), (2026, 3), (2026, 4)]
+    cov = SC.covered_fractions(months, "2025-11", dt.date(2026, 2, 20), (2025, 11))
+    check("fraction observée par mois (nov, déc, jan = 1 ; fév = 20/28 ; mars, avril = 0)",
+          cov[:3] == [1.0, 1.0, 1.0] and abs(cov[3] - 20 / 28) < 1e-9 and cov[4:] == [0.0, 0.0])
+    check("saison non couverte par les données -> rien d'observé",
+          SC.covered_fractions(months, "2024-11", dt.date(2025, 4, 30), (2025, 11)) == [0.0] * 6)
+    check("saison cible hors saison = prochaine saison", SC.target_season(dt.date(2026, 10, 25), 11, 4) == (2026, 2027)
+          and SC.target_season(dt.date(2026, 2, 1), 11, 4) == (2025, 2026))
+    lv = [{"level": 4, "below_pct": 50}, {"level": 3, "below_pct": 75}, {"level": 2, "below_pct": 90}, {"level": 1, "below_pct": 1e6}]
+    xs = np.array([10, 49.9, 50, 74, 80, 95, np.nan, 300])
+    check("niveaux vectorisés identiques à la version de référence", (SC.level_array(xs, lv) == level_from_pct(xs, lv)).all())
+    w = SC.tercile_weights(np.arange(30.0), (0.6, 0.3, 0.1))
+    check("poids de prévision : somme = 1 et plus de poids sur le tercile sec", abs(w.sum() - 1) < 1e-9 and w[:10].sum() > 0.59)
+    check("quantile pondéré", abs(SC.weighted_quantile(np.array([1.0, 2, 3]), np.array([1.0, 1, 1]), 0.5) - 2) < 1e-9)
+
+    # chaîne complète sur la démo (en pleine saison)
+    run_compute()
+    top, meta = load("metrics/top.json"), load("meta.json")
+    sc = meta["scenarios"]
+    check("saison cible en cours et part observée", sc["season"] == "2025-2026" and 0.5 < sc["observed_share"] < 0.7, str(sc["season"]))
+    nat = lambda sid, k: sum(v["sc"][sid][k] for v in top["adm1"].values())
+    check("plus la saison est sèche, plus il y a d'exposés (sèche >= médiane >= humide)",
+          nat("sec", 2) >= nat("med", 2) >= nat("hum", 2), f"{nat('sec', 2)} {nat('med', 2)} {nat('hum', 2)}")
+    check("El Niño simulé plus exposé que La Niña", nat("el", 2) > nat("la", 2))
+    check("excès de pluie : plus de personnes en saison humide", nat("hum", 4) >= nat("sec", 4))
+    check("cibles <= exposés dans chaque scénario", all(v["sc"][s][3] <= v["sc"][s][2] for v in top["adm1"].values() for s in v["sc"]))
+    d = load("metrics/d/R1D1.json")
+    d3 = d["adm3"]
+    check("districts = somme des communes (exposés, scénario sec)",
+          abs(top["adm2"]["R1D1"]["sc"]["sec"][2] - sum(v["sc"]["sec"][2] for v in d3.values())) <= len(d3))
+    check("probabilité d'alerte entre 0 et 1 et exposés attendus", all(0 <= v["pa"] <= 1 and v["ex"] >= 0 for v in top["adm1"].values()))
+
+    # hors saison : on regarde la prochaine saison, rien n'est encore observé
+    run_compute("2026-10-25")
+    sc2 = load("meta.json")["scenarios"]
+    check("hors saison : prochaine saison, aucune pluie observée", sc2["season"] == "2026-2027" and sc2["observed_share"] == 0)
+    run_compute()
+
+    # prévision saisonnière fournie : pondération des années, tout le pays très sec
+    def after_forecast():
+        m2 = load("meta.json")
+        t2 = load("metrics/top.json")
+        n2 = sum(v["sc"]["prev"][2] for v in t2["adm1"].values())
+        check("prévision saisonnière : scénario « prévision » ajouté et pondération signalée",
+              m2["scenarios"]["weighted_by_forecast"] and any(x["id"] == "prev" for x in m2["scenarios"]["list"]))
+        check("prévision très sèche : plus d'exposés que le scénario médian", n2 > nat("med", 2), f"{n2} > {nat('med', 2)}")
+        check("probabilité d'alerte plus forte avec une prévision sèche",
+              sum(v["pa"] for v in t2["adm1"].values()) > sum(v["pa"] for v in top["adm1"].values()))
+    with_inputs({"prevision_saisonniere.csv": "pcode,p_sec,p_normal,p_humide,source,date\nALL,0.8,0.15,0.05,test,2026-10-01\n"},
+                after_forecast)
+
+    # alertes des secteurs : affichées et héritées
+    def after_alerts():
+        t2 = load("metrics/top.json")
+        al = t2["adm2"]["R1D1"].get("al", [])
+        d4 = next(iter(load("metrics/d/R1D1.json")["adm4"].values()))
+        check("alerte sectorielle fournie affichée au niveau du district", al and al[0][0] == "wash" and al[0][1] == 3)
+        check("… héritée par les fokontany du district avec sa source", d4.get("al") and d4["al"][0][3] == "Cluster WASH")
+        check("… pas dans un autre district", "al" not in t2["adm2"]["R2D1"])
+    with_inputs({"alertes_secteurs.csv": "pcode,secteur,niveau,message,source,date\nR1D1,wash,3,Points d'eau en baisse,Cluster WASH,2026-02-10\n"},
+                after_alerts)
+    run_compute()
+
+
 def test_external() -> None:
     run_compute()
     top = load("metrics/top.json")
@@ -191,5 +262,6 @@ if __name__ == "__main__":
     test_invariants()
     test_inputs()
     test_external()
+    test_scenarios()
     print("\nTous les tests de données passent." if not FAILS else f"\n{FAILS} ÉCHEC(S)")
     sys.exit(1 if FAILS else 0)

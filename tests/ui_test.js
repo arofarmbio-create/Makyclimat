@@ -56,7 +56,7 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
   const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
   check("6 indicateurs de base + indicateurs externes affichables",
-        $("layer").options.length === 6 + metaJson.external.length, $("layer").options.length + " couches");
+        $("layer").options.length === 6 + (metaJson.scenarios ? 3 : 0) + metaJson.external.length, $("layer").options.length + " couches");
   check("régions affichées", currentLayers.length === 4, currentLayers.length + " régions");
   check("couleurs d'alerte attribuées", currentLayers.every((l) => /^#/.test(l._style.fillColor)));
   const kpi0 = $("kpis").textContent;
@@ -67,6 +67,20 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   if (metaJson.has_history) {
     check("courbe historique ENSO affichée", await waitFor(() => /<svg/.test($("info").innerHTML) && /El Niño/.test($("info").innerHTML)));
     check("une barre par saison", ($("info").innerHTML.match(/<rect /g) || []).length >= 20);
+  }
+  if (metaJson.scenarios) {
+    check("tableau des scénarios dans la fiche", /Probabilité d'alerte/.test($("info").innerHTML) && $("info").querySelectorAll(".sctable tr").length >= 4);
+    check("plan d'action par secteur", $("info").querySelectorAll(".plan details").length >= 5 && /personnes à cibler/.test($("info").textContent));
+    $("scn").value = "sec"; $("scn").dispatchEvent(new w.Event("change"));
+    check("scénario sec appliqué à la carte (légende)", /scénario/.test($("legend").textContent));
+    const kSec = $("kpis").textContent;
+    $("scn").value = "hum"; $("scn").dispatchEvent(new w.Event("change"));
+    check("les chiffres changent selon le scénario", $("kpis").textContent !== kSec, kSec + " → " + $("kpis").textContent);
+    $("scn").value = ""; $("scn").dispatchEvent(new w.Event("change"));
+    // vue simple « Chez moi »
+    $("modebtn").click();
+    check("vue simple : message clair et conseils", /Risque de saison trop sèche/.test($("info").textContent) && /Ce que vous pouvez faire/.test($("info").textContent));
+    $("modebtn").click();
   }
   // toutes les couches colorent la carte sans erreur
   for (let i = 0; i < $("layer").options.length; i++) {

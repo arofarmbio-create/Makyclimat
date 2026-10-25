@@ -94,3 +94,18 @@ footer { padding: 10px 16px; font-size: 12px; color: var(--muted); border-top: 1
 .badge.enso i, .hlegend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
 .hist { margin: 8px 0; }
 .hlegend span { margin-right: 8px; white-space: nowrap; }
+
+.sctable table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+.sctable th, .sctable td { text-align: right; padding: 2px 4px; border-bottom: 1px solid #e3e3e3; }
+.sctable th:first-child, .sctable td:first-child { text-align: left; }
+.sctable tr.cur td { background: #fff4e0; font-weight: 600; }
+.plan details { border-top: 1px solid #e3e3e3; padding: 4px 0; }
+.plan summary { cursor: pointer; }
+.plan ul { margin: 4px 0 6px 18px; padding: 0; }
+.sectoralerts { background: #eef6ff; border-radius: 6px; padding: 6px 8px; margin: 8px 0; }
+#modebtn { margin-left: 8px; }
+.bigname { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.risk { border-left: 6px solid #999; padding: 8px 10px; background: #fafafa; margin: 8px 0; font-size: 16px; }
+.advice { font-size: 16px; line-height: 1.45; margin-left: 18px; padding: 0; }
+.bigprompt { font-size: 17px; }
+body.simple #info { font-size: 16px; }

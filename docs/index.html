@@ -13,6 +13,7 @@
   <div class="brand">MakyClimat<small id="country">Madagascar</small></div>
   <span class="badge" id="through">Chargement…</span>
   <span class="badge enso" id="enso" hidden></span>
+  <button class="btn" id="modebtn" type="button" aria-pressed="false">Vue simple « Chez moi »</button>
   <span class="badge warn">Pilote de recherche — estimations indicatives</span>
   <nav class="tabs" role="tablist">
     <button role="tab" data-tab="map" aria-selected="true">Carte</button>
@@ -37,6 +38,12 @@
     <div>
       <label class="field" for="layer">Indicateur affiché</label>
       <select id="layer"></select>
+    </div>
+    <div class="card" id="scncard" hidden>
+      <h3>Scénarios de la saison <span id="scnseason"></span></h3>
+      <label class="field" for="scn">Que se passe-t-il si la saison est…</label>
+      <select id="scn"></select>
+      <div class="note" id="scnnote"></div>
     </div>
     <div class="card">
       <h3>Simulation « et si ? »</h3>

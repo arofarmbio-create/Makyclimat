@@ -134,10 +134,85 @@ def aggregate_external(units: pd.DataFrame, direct: dict, defs: dict) -> dict:
     return allv
 
 
+def _load_playbook():
+    try:
+        return load_yaml("playbook.yml")
+    except FileNotFoundError:
+        return None
+
+
+SCENARIO_LIST = [
+    {"id": "sec", "label": "Saison sèche (1 saison sur 10 est aussi sèche)", "short": "Sèche"},
+    {"id": "med", "label": "Saison médiane (la plus probable)", "short": "Médiane"},
+    {"id": "hum", "label": "Saison humide (1 saison sur 10 est aussi humide)", "short": "Humide"},
+    {"id": "el", "label": "Comme lors des El Niño passés", "short": "Type El Niño"},
+    {"id": "la", "label": "Comme lors des La Niña passées", "short": "Type La Niña"},
+    {"id": "prev", "label": "Selon la prévision saisonnière fournie", "short": "Prévision"},
+]
+
+
+def read_forecast(units, LI, anc, pct_y):
+    """Prévision saisonnière officielle optionnelle (inputs/prevision_saisonniere.csv : pcode, p_sec, p_normal, p_humide,
+    source, date ; pcode = zone ou ALL). Retourne (probabilités par fokontany (N,3), poids par saison (Y,N)) ou (None, None)."""
+    path = INPUTS_DIR / "prevision_saisonniere.csv"
+    if not path.exists():
+        return None, None
+    import scenarios as SC
+    df = pd.read_csv(path, dtype={"pcode": str})
+    table = {}
+    for r in df.itertuples():
+        try:
+            p = np.array([float(r.p_sec), float(r.p_normal), float(r.p_humide)])
+        except (TypeError, ValueError):
+            continue
+        if not np.isfinite(p).all() or p.min() < 0 or p.sum() <= 0:
+            print(f"  prévision ignorée (probabilités invalides) : {r.pcode}")
+            continue
+        table[str(r.pcode)] = p / p.sum()
+    if not table:
+        return None, None
+    probs = np.full((len(LI), 3), 1 / 3)
+    for k, i in enumerate(LI):
+        for code in anc[units.at[i, "pcode"]] + ["ALL"]:
+            if code in table:
+                probs[k] = table[code]
+                break
+    W = np.zeros(pct_y.shape)
+    for k in range(len(LI)):
+        W[:, k] = SC.tercile_weights(pct_y[:, k], probs[k])
+    print(f"Prévision saisonnière appliquée ({len(table)} zones fournies).")
+    return probs, W
+
+
+def read_sector_alerts(units, anc):
+    """Alertes déjà produites par les secteurs/clusters (inputs/alertes_secteurs.csv : pcode, secteur, niveau 1-4, message,
+    source, date). Elles sont AFFICHÉES, jamais remplacées : une zone hérite des alertes de ses zones parentes."""
+    path = INPUTS_DIR / "alertes_secteurs.csv"
+    if not path.exists():
+        return {}
+    df = pd.read_csv(path, dtype={"pcode": str}).fillna("")
+    by = {}
+    for r in df.itertuples():
+        try:
+            lvl = int(r.niveau)
+        except (TypeError, ValueError):
+            continue
+        if 1 <= lvl <= 4:
+            by.setdefault(str(r.pcode), []).append([str(r.secteur), lvl, str(r.message), str(r.source), str(r.date), str(r.pcode)])
+    out = {}
+    for pc, chain in anc.items():
+        items = [e for code in chain for e in by.get(code, [])]
+        if items:
+            out[pc] = items
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
+    ap.add_argument("--today", help="date de référence AAAA-MM-JJ (tests) ; par défaut aujourd'hui")
     args = ap.parse_args()
+    today = dt.date.fromisoformat(args.today) if args.today else dt.date.today()
     cfg = load_config(args.country)
     units = read_units(args.country)
     season = load_grid(grid_dir(args.country) / "season.npz")
@@ -184,6 +259,8 @@ def main() -> None:
     anc = {}
     for r in units.itertuples():
         anc[r.pcode] = [r.pcode, r.adm3, r.adm2, r.adm1]
+
+    sector_alerts = read_sector_alerts(units, anc)
 
     def share_for(pcode: str) -> tuple[float, int]:
         """Part vulnérable et sa provenance : 1 = fichier fourni, 2 = IPC phase 3+, 0 = valeur par défaut."""
@@ -233,8 +310,72 @@ def main() -> None:
                 ST[:, j] += sens_t[:, li]
     units["E"], units["T"] = E, T
 
-    through = str(season["data_through"])
+
+    # --- Scénarios de fin de saison (ensemble d'analogues, voir scripts/scenarios.py) ---
+    import scenarios as SC
+    from enso import season_months as _season_months
+    scn = None
+    ms_path, cl_path = grid_dir(args.country) / "monthly_series.npz", grid_dir(args.country) / "clim_monthly.npz"
     season_start = str(season["season_start"])
+    through = str(season["data_through"])
+    sc_cfg = cfg.get("scenarios", {})
+    wet_thr = float(sc_cfg.get("wet_threshold_pct", 130))
+    if ms_path.exists() and cl_path.exists():
+        ms, cl = load_grid(ms_path), load_grid(cl_path)
+        s_m, e_m = cfg["rainfall"]["season_start_month"], cfg["rainfall"]["season_end_month"]
+        y0s, y1s = SC.target_season(today, s_m, e_m)
+        months = _season_months(y1s, s_m, e_m)
+        cov = SC.covered_fractions(months, season_start, dt.date.fromisoformat(through), months[0])
+        LI = np.where(leafmask)[0]
+        lon, lat = units.lon.values[LI], units.lat.values[LI]
+        g0, g1, gr = float(ms["lon0"]), float(ms["lat0"]), float(ms["res"])
+        arr = ms["arr"]
+        series = np.stack([np.stack([sample_grid(arr[yi, mi].astype("float32"), g0, g1, gr, lon, lat)
+                                     for mi in range(arr.shape[1])]) for yi in range(arr.shape[0])])
+        clim_m = np.stack([sample_grid(cl["clim"][mo - 1], float(cl["lon0"]), float(cl["lat0"]), float(cl["res"]), lon, lat)
+                           for _, mo in months])
+        act = units.act.values[LI] if any(c > 0 for c in cov) else np.zeros(len(LI))
+        pct_y, norm_full = SC.final_pct(act, clim_m, series, cov, min_norm)
+        fprobs, fweights = read_forecast(units, LI, anc, pct_y)
+        sc_pct, nph = SC.scenario_values(pct_y, ms["phases"], fprobs)
+        lvl_y = SC.level_array(pct_y, levels)
+        ok_y = np.isfinite(pct_y)
+        W = fweights if fweights is not None else ok_y.astype(float)
+        W = np.where(ok_y, W, 0.0)
+        with np.errstate(invalid="ignore", divide="ignore"):
+            p_leaf = np.where(W.sum(axis=0) > 0, (W * (lvl_y >= min_lvl)).sum(axis=0) / W.sum(axis=0), np.nan)
+        popL = pop[LI]
+        vsL = units.vs.fillna(default_share).values[LI]
+        area = units.area_km2.fillna(0).values
+        nU = len(units)
+
+        def lift(v):
+            a = np.zeros(nU)
+            a[LI] = np.nan_to_num(v)
+            return a
+
+        SCN = {}
+        normU = np.zeros(nU)
+        normU[LI] = np.nan_to_num(norm_full)
+        for sid, pc_leaf in sc_pct.items():
+            lv_leaf = SC.level_array(pc_leaf, levels)
+            e_l = np.where(lv_leaf >= min_lvl, popL, 0.0)
+            t_l = e_l * vsL
+            w_l = np.where(np.isfinite(pc_leaf) & (pc_leaf >= wet_thr), popL, 0.0)
+            tot = SC.rollup_sum(units, leafmask, lift(np.where(np.isfinite(pc_leaf), pc_leaf / 100 * norm_full, 0.0)) * area)
+            den = SC.rollup_sum(units, leafmask, lift(np.where(np.isfinite(pc_leaf), norm_full, 0.0)) * area)
+            with np.errstate(invalid="ignore", divide="ignore"):
+                pct_u = np.where(den > 0, tot / den * 100, np.nan)
+            pct_u[LI] = pc_leaf
+            lv_u = SC.level_array(pct_u, levels)
+            SCN[sid] = {"pct": pct_u, "lvl": lv_u, "e": SC.rollup_sum(units, leafmask, lift(e_l)),
+                        "t": SC.rollup_sum(units, leafmask, lift(t_l)), "w": SC.rollup_sum(units, leafmask, lift(w_l))}
+        num = SC.rollup_sum(units, leafmask, lift(popL * np.nan_to_num(p_leaf)))
+        popU = SC.rollup_sum(units, leafmask, lift(popL))
+        with np.errstate(invalid="ignore", divide="ignore"):
+            pa_u = np.where(popU > 0, num / popU, np.nan)
+        scn = {"S": SCN, "pa": pa_u, "ex": num, "cov": cov, "season": f"{y0s}-{y1s}", "n": nph,
+               "years": [int(ms["years"][0]), int(ms["years"][-1])], "weighted": fweights is not None, "n_years": int(len(ms["years"]))}
 
     def pack(i: int) -> dict:
         r = units.iloc[i]
@@ -253,6 +394,14 @@ def main() -> None:
         b = ben.get(r["pcode"])
         if b:
             d["b"] = int(round(b))
+        if scn is not None:
+            d["sc"] = {sid: [None if not np.isfinite(v["pct"][i]) else round(float(v["pct"][i]), 1), int(v["lvl"][i]),
+                             int(round(v["e"][i])), int(round(v["t"][i])), int(round(v["w"][i]))] for sid, v in scn["S"].items()}
+            d["pa"] = None if not np.isfinite(scn["pa"][i]) else round(float(scn["pa"][i]), 3)
+            d["ex"] = int(round(scn["ex"][i]))
+        al = sector_alerts.get(r["pcode"])
+        if al:
+            d["al"] = al
         xv = ext_all.get(r["pcode"])
         if xv:
             d["x"] = {k: round(v, 3) for k, v in xv.items()}
@@ -277,6 +426,13 @@ def main() -> None:
     nat = units[units.level == 1]
     meta = {
         "enso": enso_state, "has_history": hist_ok,
+        "scenarios": None if scn is None else {
+            "season": scn["season"], "observed_share": round(float(np.mean(scn["cov"])), 2), "years": scn["years"],
+            "n_years": scn["n_years"], "weighted_by_forecast": scn["weighted"], "n_phase": scn["n"], "wet_threshold_pct": wet_thr,
+            "list": [x for x in SCENARIO_LIST if x["id"] in scn["S"]]},
+        "playbook": _load_playbook(),
+        "sector_alerts": len(sector_alerts),
+        "sector_names": [{"id": x["id"], "label": x["label"]} for x in load_yaml("sectors.yml")["sectors"]],
         "country": cfg["name"], "slug": cfg["slug"], "iso3": cfg["iso3"],
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "data_through": through, "season_start": season_start,

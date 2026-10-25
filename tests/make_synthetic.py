@@ -94,6 +94,15 @@ def main() -> None:
               updated=np.array("2026-02-21T00:00:00+00:00"))
     save_grid(grid_dir("demo") / "clim_monthly.npz", clim=clim, lon0=np.array(x0), lat0=np.array(y1),
               res=np.array(res), years=np.array([1991, 2020]), n_files=np.array(360))
+    # série mensuelle de 43 saisons (1982-2025) : El Niño sec, La Niña humide, bruit aléatoire reproductible
+    rng = np.random.default_rng(7)
+    years = np.arange(1982, 2026)
+    phases = np.array(["E" if y % 4 == 0 else "L" if y % 4 == 2 else "N" for y in years])
+    fy = np.where(phases == "E", 0.70, np.where(phases == "L", 1.25, 1.0)) * (1 + rng.normal(0, 0.08, len(years)))
+    mon = (norm / 6.0)[None, None] * fy[:, None, None, None] * (1 + rng.normal(0, 0.1, (len(years), 6, 1, 1)))
+    save_grid(grid_dir("demo") / "monthly_series.npz", arr=mon.astype("float16"), months=np.array([11, 12, 1, 2, 3, 4]),
+              years=years, phases=phases, oni=np.where(phases == "E", 1.0, np.where(phases == "L", -1.0, 0.0)).astype("float32"),
+              lon0=np.array(x0), lat0=np.array(y1), res=np.array(res))
     print(f"Démo écrite : {len(units)} unités, grille {h}x{w}")
 
 

@@ -28,16 +28,19 @@
   function fmtLayer(k, v) {
     var d = layerDef(k);
     if (v === null || v === undefined) return "n/d";
-    if (d && d.ext && d.ext.format === "pct") return MC.fmtPct(v);
+    if (d && (d.fmt === "pct" || (d.ext && d.ext.format === "pct"))) return MC.fmtPct(v);
     if (d && d.ext && d.ext.format === "float") return (d.ext.style === "signed" && v > 0 ? "+" : "") + String(Math.round(v * 100) / 100).replace(".", ",");
     return MC.fmtInt(v);
   }
   var LAYERS = [
     { id: "l", label: "Niveau d'alerte sécheresse" }, { id: "pc", label: "Pluie cumulée (% de la normale)" },
     { id: "e", label: "Population exposée" }, { id: "t", label: "Cibles potentiels (estimation)" },
-    { id: "g", label: "Écart : cibles moins bénéficiaires déclarés" }, { id: "p", label: "Population" }];
+    { id: "g", label: "Écart : cibles moins bénéficiaires déclarés" }, { id: "p", label: "Population" },
+    { id: "pa", label: "Probabilité d'alerte sécheresse en fin de saison", fmt: "pct" },
+    { id: "ex", label: "Population exposée attendue (moyenne des saisons possibles)" },
+    { id: "w", label: "Population exposée à l'excès de pluie (scénario humide ou choisi)" }];
 
-  var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null,
+  var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null, scn: "", simple: false,
             view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all" };
 
   function $(id) { return document.getElementById(id); }
@@ -51,7 +54,8 @@
     var r = S.meta.alert_levels.filter(function (x) { return x.level === l; })[0];
     return r ? r.name : String(l);
   }
-  function val(m, key) { return MC.valueFor(m, key, S.simIdx, S.meta); }
+  function val(m, key) { return MC.valueFor(m, key, S.simIdx, S.meta, S.scn); }
+  function isSim() { return S.simIdx !== null || !!S.scn; }
   function fmtDate(iso) { try { return new Date(iso + (iso.length === 10 ? "T00:00:00" : "")).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }); } catch (e) { return iso; } }
 
   /* ---------- Onglets ---------- */
@@ -177,7 +181,8 @@
 
   function renderLegend() {
     var k = S.layer, h = "<b>" + esc(layerDef(k).label) + "</b>";
-    if (S.simIdx !== null) h += '<div><i style="background:#fff"></i> <em>scénario : pluie × ' + S.meta.rain_factors[S.simIdx].toFixed(2).replace(".", ",") + "</em></div>";
+    if (S.scn) h += '<div><i style="background:#fff"></i> <em>scénario : ' + esc(scnLabel(S.scn)) + "</em></div>";
+    else if (S.simIdx !== null) h += '<div><i style="background:#fff"></i> <em>scénario : pluie × ' + S.meta.rain_factors[S.simIdx].toFixed(2).replace(".", ",") + "</em></div>";
     if (k === "l") {
       [1, 2, 3, 4, 0].forEach(function (l) { h += '<div><i style="background:' + ALERT_COLORS[l] + '"></i>' + esc(levelName(l)) + "</div>"; });
     } else if (styleOfLayer(k) === "signed") {
@@ -204,10 +209,10 @@
     $("legend").innerHTML = h;
   }
 
-  function sumView(key, sim) {
+  function sumView(key, sim, scn) {
     var s = 0, any = false;
     S.view.feats.forEach(function (f) {
-      var v = MC.valueFor(S.view.metrics[f.properties.c], key, sim, S.meta);
+      var v = MC.valueFor(S.view.metrics[f.properties.c], key, sim, S.meta, scn);
       if (v !== null && isFinite(v)) { s += v; any = true; }
     });
     return any ? s : null;
@@ -218,7 +223,7 @@
     $("viewtitle").textContent = "Vue : " + parent + " (" + S.meta.levels[S.view.lvl].plural.toLowerCase() + ")";
     var h = "";
     [["p", "Population"], ["e", "Exposés"], ["t", "Cibles potentiels"]].forEach(function (x) {
-      var obs = sumView(x[0], null), sim = S.simIdx === null ? null : sumView(x[0], S.simIdx);
+      var obs = sumView(x[0], null, ""), sim = !isSim() ? null : sumView(x[0], S.simIdx, S.scn);
       h += '<div class="kpi' + (sim !== null && x[0] !== "p" ? " sim" : "") + '"><b>' + MC.fmtInt(sim !== null && x[0] !== "p" ? sim : obs) +
            "</b><span>" + x[1] + (sim !== null && x[0] !== "p" ? " (scénario)" : "") + "</span></div>";
     });
@@ -229,32 +234,36 @@
 
   function renderInfo() {
     var f = S.selected, box = $("info");
+    if (!f && S.simple) { box.innerHTML = "<h3>Chez moi</h3><p class='bigprompt'>Tapez le nom de votre fokontany, de votre commune ou de votre district dans la recherche, ou touchez votre zone sur la carte.</p>"; return; }
     if (!f) { box.innerHTML = '<div class="note">Cliquez sur une zone de la carte pour voir ses indicateurs. Cliquez une seconde fois pour explorer ses sous-zones.</div>'; return; }
     var m = S.view.metrics[f.properties.c] || {};
+    if (S.simple) { box.innerHTML = simpleCard(f, m); return; }
     var lvlLabel = S.meta.levels[S.view.lvl].label;
     var h = "<h3>" + esc(lvlLabel) + "</h3><div style='font-size:17px;font-weight:700;margin-bottom:6px'>" + esc(f.properties.n) + "</div>";
     h += row("Population (estimation)", MC.fmtInt(m.p));
     if (m.pc !== undefined) {
       h += row("Pluie de la saison", MC.fmtInt(m.a) + " mm sur " + MC.fmtInt(m.n) + " mm normaux");
-      h += row("% de la normale", MC.fmtPct(m.pc) + (S.simIdx !== null ? " → <b>" + MC.fmtPct(val(m, "pc")) + "</b>" : ""));
+      h += row("% de la normale", MC.fmtPct(m.pc) + (isSim() ? " → <b>" + MC.fmtPct(val(m, "pc")) + "</b>" : ""));
     } else h += row("Pluie de la saison", "pas assez de données (début de saison ou hors couverture)");
-    h += row("Niveau d'alerte", esc(levelName(m.l)) + (S.simIdx !== null ? " → <b>" + esc(levelName(val(m, "l"))) + "</b>" : ""));
-    h += row("Population exposée", MC.fmtInt(m.e) + (S.simIdx !== null ? " → <b>" + MC.fmtInt(val(m, "e")) + "</b>" : ""));
-    h += row("Cibles potentiels", MC.fmtInt(m.t) + (S.simIdx !== null ? " → <b>" + MC.fmtInt(val(m, "t")) + "</b>" : ""));
+    h += row("Niveau d'alerte", esc(levelName(m.l)) + (isSim() ? " → <b>" + esc(levelName(val(m, "l"))) + "</b>" : ""));
+    h += row("Population exposée", MC.fmtInt(m.e) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "e")) + "</b>" : ""));
+    h += row("Cibles potentiels", MC.fmtInt(m.t) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "t")) + "</b>" : ""));
     if (m.vs !== undefined) h += row("Part vulnérable retenue", Math.round(m.vs * 100) + " % " +
       (m.vi === 1 ? "(donnée fournie)" : m.vi === 2 ? "(IPC phase 3 ou plus)" : "(valeur par défaut provisoire)"));
     (S.meta.external || []).forEach(function (x) {
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
+    h += alertsSection(m) + scenarioTable(m);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
+    h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
     if (S.view.lvl === 4) h += '<div class="note warn" style="margin-top:6px">Au niveau fokontany, les limites et la population sont des estimations anciennes : à utiliser comme indication à confirmer sur le terrain.</div>';
     if (S.view.lvl < 4) h += '<div style="margin-top:8px"><button class="btn primary" id="drillbtn">Explorer les sous-zones ▸</button></div>';
     box.innerHTML = h;
     var db = $("drillbtn");
     if (db) db.addEventListener("click", function () { drill(f); });
-    if (S.meta.has_history) drawHistory(f);
+    if (S.meta.has_history && !S.simple) drawHistory(f);
   }
 
   function renderRank() {
@@ -262,7 +271,7 @@
       return { f: f, v: val(S.view.metrics[f.properties.c], "t") };
     }).filter(function (r) { return r.v !== null && r.v > 0; })
       .sort(function (a, b) { return b.v - a.v; }).slice(0, 10);
-    var h = "<tr><th>Zone</th><th>Cibles potentiels" + (S.simIdx !== null ? " (scénario)" : "") + "</th></tr>";
+    var h = "<tr><th>Zone</th><th>Cibles potentiels" + (isSim() ? " (scénario)" : "") + "</th></tr>";
     if (!rows.length) h += '<tr><td colspan="2" class="note">Aucune zone exposée dans cette vue.</td></tr>';
     rows.forEach(function (r, i) {
       h += '<tr class="link" data-i="' + i + '"><td>' + esc(r.f.properties.n) + "</td><td>" + MC.fmtInt(r.v) + "</td></tr>";
@@ -275,6 +284,110 @@
         S.geo.eachLayer(function (l) { if (l.feature.properties.c === f.properties.c) S.map.fitBounds(l.getBounds(), { padding: [40, 40], maxZoom: 11 }); });
       });
     });
+  }
+
+
+  /* ---------- Scénarios de fin de saison ---------- */
+  function scnLabel(id) {
+    var l = ((S.meta.scenarios || {}).list || []).filter(function (x) { return x.id === id; })[0];
+    return l ? l.label : id;
+  }
+  function scnShort(id) {
+    var l = ((S.meta.scenarios || {}).list || []).filter(function (x) { return x.id === id; })[0];
+    return l ? l.short : id;
+  }
+  function setupScenarios() {
+    var sc = S.meta.scenarios;
+    if (!sc) return;
+    $("scncard").hidden = false;
+    $("scnseason").textContent = sc.season.replace("-", "–");
+    var sel = $("scn");
+    sel.innerHTML = "";
+    var o0 = document.createElement("option"); o0.value = ""; o0.textContent = sc.observed_share > 0 ? "Observé à ce jour (sans scénario)" : "Aucun (situation de référence)";
+    sel.appendChild(o0);
+    sc.list.forEach(function (l) { var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o); });
+    var obs = sc.observed_share > 0 ? "Les pluies déjà tombées (" + Math.round(sc.observed_share * 100) + " % de la saison écoulée) sont conservées ; " : "La saison n'a pas encore commencé : ";
+    $("scnnote").innerHTML = esc(obs) + "la pluie restante est celle de chacune des " + sc.n_years + " saisons passées (" + sc.years[0] + "–" + sc.years[1] + "). " +
+      "Ce n'est pas une prévision météo : ce sont des situations qui se sont déjà produites." +
+      (sc.weighted_by_forecast ? " Les années sont pondérées par la prévision saisonnière fournie." : "");
+    sel.addEventListener("change", function () {
+      S.scn = sel.value;
+      if (S.scn) { $("sim").value = S.meta.rain_factors.indexOf(1); S.simIdx = null; $("simlabel").textContent = "observée"; }
+      restyle();
+    });
+  }
+
+  function planSection(m) {
+    var pb = S.meta.playbook, sc = m.sc;
+    if (!pb || !sc) return "";
+    var basis = S.scn && sc[S.scn] ? S.scn : "sec";
+    var e = sc[basis][2], w = sc[basis][4], h = '<div class="plan"><h3>Plan d\'action recommandé</h3>' +
+      '<div class="note">Planification sur le scénario : <b>' + esc(scnLabel(basis)) + "</b>. Pistes génériques à valider avec les clusters : elles complètent les outils et alertes de chaque secteur, sans les remplacer.</div>";
+    var names = {};
+    (S.meta.sector_names || []).forEach(function (x) { names[x.id] = x.label; });
+    Object.keys(pb.sectors).forEach(function (id) {
+      var sec = pb.sectors[id], n = Math.round(e * sec.share);
+      var li = function (arr) { return arr.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join(""); };
+      h += "<details><summary><b>" + esc(names[id] || id) + "</b> : " + (n > 0 ? "≈ " + MC.fmtInt(n) + " personnes à cibler" : "pas de population en alerte dans ce scénario") + "</summary>" +
+        '<div class="note">' + esc(sec.share_note) + "</div>" +
+        (n > 0 ? "<b>Anticiper</b><ul>" + li(sec.anticipation) + "</ul><b>Limiter l'impact</b><ul>" + li(sec.mitigation) + "</ul><b>Répondre</b><ul>" + li(sec.response) + "</ul><b>Renforcer la résilience</b><ul>" + li(sec.resilience) + "</ul>" : "<ul>" + li(sec.resilience) + "</ul>") +
+        "</details>";
+    });
+    if (w > 0) h += "<details><summary><b>Excès de pluie</b> : ≈ " + MC.fmtInt(w) + " personnes en zone très pluvieuse</summary><ul>" + pb.wet.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") +
+      '</ul><div class="note">Indicateur pluviométrique simple (pluie finale ≥ ' + S.meta.scenarios.wet_threshold_pct + " % de la normale), pas une prévision de crue.</div></details>";
+    return h + "</div>";
+  }
+
+  function scenarioTable(m) {
+    var sc = m.sc;
+    if (!sc) return "";
+    var ids = S.meta.scenarios.list.map(function (x) { return x.id; }).filter(function (id) { return sc[id]; });
+    var h = '<div class="sctable"><h3>Scénarios de la saison ' + esc(S.meta.scenarios.season.replace("-", "–")) + "</h3>";
+    if (m.pa !== undefined && m.pa !== null) h += row("Probabilité d'alerte ou pire", Math.round(m.pa * 100) + " % des saisons possibles") + row("Exposés attendus (moyenne)", MC.fmtInt(m.ex));
+    h += "<table><tr><th>Scénario</th><th>Pluie</th><th>Niveau</th><th>Exposés</th><th>Cibles</th></tr>";
+    ids.forEach(function (id) {
+      var r = sc[id];
+      h += "<tr" + (S.scn === id ? ' class="cur"' : "") + "><td>" + esc(scnShort(id)) + "</td><td>" + (r[0] === null ? "n/d" : Math.round(r[0]) + " %") + "</td><td>" + esc(levelName(r[1])) +
+        "</td><td>" + MC.fmtInt(r[2]) + "</td><td>" + MC.fmtInt(r[3]) + "</td></tr>";
+    });
+    return h + "</table></div>";
+  }
+
+  function alertsSection(m) {
+    if (!m.al) return "";
+    var h = '<div class="sectoralerts"><h3>Alertes déjà émises par les secteurs</h3><div class="note">Affichées telles que fournies : MakyClimat ne les remplace pas.</div>';
+    var names = {};
+    (S.meta.sector_names || []).forEach(function (x) { names[x.id] = x.label; });
+    m.al.forEach(function (a) {
+      h += '<div class="row"><span><b>' + esc(names[a[0]] || a[0]) + "</b> : " + esc(a[2]) + " <em>(" + esc(a[3]) + (a[4] ? ", " + esc(a[4]) : "") + ")</em></span><span>niveau " + a[1] + "</span></div>";
+    });
+    return h + "</div>";
+  }
+
+  function simpleCard(f, m) {
+    var sc = S.meta.scenarios, pb = S.meta.playbook;
+    var name = esc(f.properties.n);
+    if (!sc || !m.sc || m.pa === undefined || m.pa === null) {
+      return "<h3>Chez moi</h3><div class='bigname'>" + name + "</div><p>Pas assez de données pour cette zone.</p>";
+    }
+    var pa = m.pa, tier = pa >= 0.5 ? ["élevé", "#b2262e"] : pa >= 0.25 ? ["moyen", "#e8893a"] : ["faible", "#3b8a3e"];
+    var tenth = Math.round(pa * 10);
+    var wet = m.sc.hum && m.p && m.sc.hum[4] > 0.2 * m.p;
+    var h = "<h3>Chez moi</h3><div class='bigname'>" + name + "</div>" +
+      "<div class='risk' style='border-color:" + tier[1] + "'><b style='color:" + tier[1] + "'>Risque de saison trop sèche : " + tier[0] + "</b>" +
+      "<div>Saison " + esc(sc.season.replace("-", "–")) + " : sur 10 saisons comparables aux années passées, environ <b>" + tenth + "</b> ont été trop sèches pour cette zone.</div></div>";
+    if (sc.observed_share > 0 && m.pc !== undefined) h += "<p>Pluie tombée jusqu'ici : <b>" + Math.round(m.pc) + " %</b> de la normale.</p>";
+    else h += "<p>La saison des pluies n'a pas encore commencé.</p>";
+    var e = S.meta.enso;
+    if (e) h += "<p>Le Pacifique est actuellement en phase <b>" + esc(e.phase_label) + "</b>." +
+      (m.x && m.x.enso_el_pct !== undefined && e.phase === "E" ? " Lors des El Niño passés, cette zone a reçu en moyenne <b>" + Math.round(m.x.enso_el_pct) + " %</b> de la pluie normale." : "") +
+      (m.x && m.x.enso_la_pct !== undefined && e.phase === "L" ? " Lors des La Niña passées, cette zone a reçu en moyenne <b>" + Math.round(m.x.enso_la_pct) + " %</b> de la pluie normale." : "") + "</p>";
+    if (pb && pb.household) {
+      var list = pa >= 0.25 ? pb.household.dry : pb.household.normal;
+      h += "<h3>Ce que vous pouvez faire</h3><ul class='advice'>" + list.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+      if (wet) h += "<h3>Si les pluies sont très fortes</h3><ul class='advice'>" + pb.household.wet.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    }
+    return h + "<div class='note'>Information indicative, calculée à partir des saisons passées : ce n'est pas une prévision de la météo. Écoutez la météo et les consignes du fokontany, de la commune et du BNGRC.</div>";
   }
 
   /* ---------- Historique climat et ENSO ---------- */
@@ -323,14 +436,24 @@
     (S.meta.external || []).forEach(function (x) {
       if (!LAYERS.some(function (l) { return l.id === "x:" + x.id; })) LAYERS.push({ id: "x:" + x.id, label: x.label, ext: x });
     });
+    LAYERS = LAYERS.filter(function (l) { return S.meta.scenarios || ["pa", "ex", "w"].indexOf(l.id) < 0; });
     LAYERS.forEach(function (l) {
       var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o);
     });
     sel.addEventListener("change", function () { S.layer = sel.value; restyle(); });
+    setupScenarios();
+    $("modebtn").addEventListener("click", function () {
+      S.simple = !S.simple;
+      $("modebtn").setAttribute("aria-pressed", S.simple ? "true" : "false");
+      $("modebtn").textContent = S.simple ? "Vue experte" : "Vue simple « Chez moi »";
+      document.body.classList.toggle("simple", S.simple);
+      renderInfo();
+    });
     var sim = $("sim"), nf = S.meta.rain_factors.length, neutral = S.meta.rain_factors.indexOf(1);
     sim.max = nf - 1; sim.value = neutral;
     function apply() {
       var i = +sim.value;
+      if (i !== neutral && S.scn) { S.scn = ""; $("scn").value = ""; }
       S.simIdx = i === neutral ? null : i;
       $("simlabel").textContent = S.simIdx === null ? "observée" : "× " + S.meta.rain_factors[i].toFixed(2).replace(".", ",") +
         " (" + Math.round(S.meta.rain_factors[i] * 100) + " % de l'observé)";
@@ -357,9 +480,17 @@
       { label: "cibles_potentiels", get: function (r) { return r.m.t; } },
       { label: "beneficiaires_declares", get: function (r) { return r.m.b || 0; } },
       { label: "part_vulnerable", get: function (r) { return r.m.vs === undefined ? "" : r.m.vs; } },
+      { label: "scenario_choisi", get: function () { return S.scn || ""; } },
+      { label: "proba_alerte_fin_saison", get: function (r) { return r.m.pa === undefined || r.m.pa === null ? "" : r.m.pa; } },
+      { label: "exposes_attendus", get: function (r) { return r.m.ex === undefined ? "" : r.m.ex; } },
       { label: "scenario_facteur_pluie", get: function () { return S.simIdx === null ? 1 : S.meta.rain_factors[S.simIdx]; } },
       { label: "exposes_scenario", get: function (r) { return val(r.m, "e"); } },
       { label: "cibles_scenario", get: function (r) { return val(r.m, "t"); } }];
+    ((S.meta.scenarios || {}).list || []).forEach(function (l) {
+      ["pct_fin_saison", "niveau", "exposes", "cibles", "exposes_exces_pluie"].forEach(function (nm, k) {
+        cols.push({ label: "sc_" + l.id + "_" + nm, get: function (r) { var v = r.m.sc && r.m.sc[l.id]; return v ? (k === 1 ? levelName(v[1]) : (v[k === 0 ? 0 : k] === null ? "" : v[k])) : ""; } });
+      });
+    });
     (S.meta.external || []).forEach(function (x) {
       cols.push({ label: x.id, get: function (r) { var v = r.m.x ? r.m.x[x.id] : undefined; return v === undefined ? "" : v; } });
     });
@@ -485,6 +616,13 @@
       (m.has_history ? "<h3>Changement climatique et ENSO</h3><p>Pour chaque saison des pluies depuis 1982, la pluie CHIRPS est comparée à la normale " + m.sources[0].baseline[0] + "–" + m.sources[0].baseline[1] +
         ". La saison est classée <b>El Niño</b> (indice ONI de la NOAA moyen ≥ +0,5), <b>La Niña</b> (≤ −0,5) ou neutre. Pour chaque zone, l'outil calcule : la <b>tendance</b> de la pluie saisonnière (régression linéaire, points de % de la normale par décennie) et sa significativité ; la <b>pluie moyenne lors des El Niño et des La Niña passés</b> ; la <b>corrélation</b> avec l'ONI. " +
         "Limites : 40 à 45 saisons seulement (peu de saisons de chaque phase), classement ENSO simplifié, pluie satellitaire (CHIRPS) et non pluviomètres, et aucune projection climatique future à ce stade (modèles CMIP6 prévus). Ces résultats décrivent le passé : ils ne prédisent pas la prochaine saison.</p>" : "") +
+      (m.scenarios ? "<h3>Scénarios de fin de saison</h3><p>La pluie finale de la saison " + esc(m.scenarios.season.replace("-", "–")) + " est la pluie déjà observée plus la pluie restante prise dans chacune des " + m.scenarios.n_years +
+        " saisons passées (" + m.scenarios.years[0] + "–" + m.scenarios.years[1] + "), comparée à la normale complète. Les scénarios sont : saison sèche (le 10<sup>e</sup> centile), médiane, humide (90<sup>e</sup> centile), et la médiane des saisons El Niño et La Niña passées. " +
+        "Les niveaux d'alerte, la population exposée et les cibles sont recalculés pour chaque scénario avec les <b>mêmes seuils provisoires</b> ; la probabilité d'alerte est la part des saisons possibles qui atteignent le niveau d'alerte ou pire. Si une prévision saisonnière officielle est fournie (fichier <code>inputs/prevision_saisonniere.csv</code>), les années sont pondérées selon ses probabilités par tercile. " +
+        "<b>Ce n'est pas une prévision météo</b> : cela décrit ce que des situations comparables ont produit dans le passé. La couche « excès de pluie » est un indicateur pluviométrique simple, pas une prévision de crue. Les nombres de personnes par secteur appliquent des parts provisoires (voir le plan d'action) à valider avec les clusters.</p>" : "") +
+      "<h3>Un outil qui complète les outils existants</h3><p>Chaque secteur et chaque cluster coordonné par l'OCHA dispose déjà de ses propres outils et alertes. MakyClimat ne les remplace pas : il les rassemble sur une même carte jusqu'au fokontany, ajoute le climat, les scénarios et les personnes concernées, et reste utilisable par tous, des ménages aux agences des Nations Unies. " +
+      "Les alertes sectorielles peuvent être importées telles quelles (fichier <code>inputs/alertes_secteurs.csv</code>) et sont affichées avec leur source. Pour approfondir : " +
+      '<a href="https://fews.net" target="_blank" rel="noopener">FEWS NET</a>, <a href="https://www.ipcinfo.org" target="_blank" rel="noopener">IPC</a>, <a href="https://hungermap.wfp.org" target="_blank" rel="noopener">HungerMap (PAM)</a>, <a href="https://data.humdata.org" target="_blank" rel="noopener">HDX</a> et <a href="https://www.unocha.org/madagascar" target="_blank" rel="noopener">OCHA Madagascar</a>.</p>' +
       "<h3>4. Simulation « et si ? »</h3><p>La pluie cumulée observée est multipliée par un facteur (de ×" + m.rain_factors[0].toFixed(2).replace(".", ",") + " à ×" +
       m.rain_factors[m.rain_factors.length - 1].toFixed(2).replace(".", ",") + ") puis tous les calculs sont refaits. C'est une analyse de sensibilité : elle ne prédit pas la pluie à venir. La température, l'évaporation et le sol sont prévus aux phases suivantes.</p>" +
       "<h3>5. Limites connues</h3><ul><li>Population et limites des fokontany : estimations anciennes (référence " + esc(m.sources[2].reference_year) + ").</li>" +

@@ -1,0 +1,108 @@
+# Plan d'action par secteur — PROPOSITION de départ, à valider et corriger avec les clusters et le BNGRC.
+# MakyClimat COMPLÈTE les outils et alertes propres à chaque secteur (clusters coordonnés par l'OCHA, systèmes d'alerte
+# existants) : il ne les remplace pas. Les actions ci-dessous sont des pistes génériques ; les protocoles officiels de chaque
+# cluster priment toujours.
+#
+# share : part de la population exposée que l'on retient comme « personnes à cibler » pour ce secteur.
+#   1.0 = toute la population exposée (aucun ratio fiable sans données sectorielles) ; sinon ratio démographique APPROXIMATIF.
+sectors:
+  food_security:
+    share: 1.0
+    share_note: "Toute la population exposée (ciblage fin à faire avec l'IPC et les enquêtes de ménages)."
+    anticipation: ["Prépositionner des vivres et des fonds dans les districts à forte probabilité d'alerte", "Activer le suivi des prix des marchés et des stocks des ménages"]
+    mitigation: ["Distribuer des semences adaptées aux cycles courts et résistantes à la sécheresse", "Appuyer la vente anticipée du bétail affaibli et le stockage communautaire"]
+    response: ["Transferts monétaires ou en nature aux ménages cibles, selon le fonctionnement des marchés", "Alimentation scolaire et distributions ciblées dans les zones en urgence"]
+    resilience: ["Petite irrigation, gestion de l'eau, diversification des cultures", "Banques de céréales et assurance indicielle"]
+  nutrition:
+    share: 0.22
+    share_note: "Enfants de moins de 5 ans (environ 16 %) et femmes enceintes ou allaitantes (environ 6 %) : ratio approximatif."
+    anticipation: ["Prépositionner aliments thérapeutiques et matériel de dépistage", "Renforcer le dépistage de la malnutrition dans les zones à risque"]
+    mitigation: ["Compléments pour enfants et femmes à risque", "Éducation nutritionnelle, allaitement, hygiène"]
+    response: ["Prise en charge de la malnutrition aiguë (centres et approche communautaire)", "Soutien aux centres de santé débordés"]
+    resilience: ["Jardins potagers, aliments locaux nutritifs", "Intégration de la nutrition dans la protection sociale"]
+  wash:
+    share: 1.0
+    share_note: "Toute la population exposée (aucune donnée d'accès à l'eau intégrée pour l'instant)."
+    anticipation: ["Recenser les points d'eau fragiles et les réparer avant la saison sèche", "Prépositionner pièces de rechange, désinfectant et citernes"]
+    mitigation: ["Protéger et approfondir les sources, gérer l'eau de façon partagée", "Messages d'hygiène en période de pénurie"]
+    response: ["Distribution d'eau par camion ou par bidons, traitement de l'eau à domicile", "Kits d'hygiène, prévention du choléra et des maladies diarrhéiques"]
+    resilience: ["Forages et systèmes d'eau à énergie solaire", "Récupération de l'eau de pluie, comités de gestion de l'eau"]
+  health:
+    share: 1.0
+    share_note: "Toute la population exposée (aucune donnée d'accès aux soins intégrée pour l'instant)."
+    anticipation: ["Surveillance renforcée des maladies sensibles au climat (diarrhées, paludisme, malnutrition)", "Stocks de médicaments dans les districts à risque"]
+    mitigation: ["Campagnes de prévention et de sensibilisation communautaire", "Équipes mobiles vers les zones isolées"]
+    response: ["Renfort des formations sanitaires et des équipes d'intervention rapide", "Prise en charge des maladies liées au manque d'eau ou aux inondations"]
+    resilience: ["Systèmes de santé adaptés au climat", "Alerte précoce sanitaire connectée aux prévisions"]
+  agriculture:
+    share: 1.0
+    share_note: "Toute la population exposée (la part d'agriculteurs n'est pas intégrée)."
+    anticipation: ["Informer les producteurs du scénario attendu avant les semis", "Choisir variétés et dates de semis selon le scénario"]
+    mitigation: ["Variétés à cycle court, paillage, conservation de l'eau et du sol", "Jardins irrigués en contre-saison"]
+    response: ["Distribution de semences et d'intrants de relance après le choc", "Travail contre rémunération sur des ouvrages de conservation de l'eau"]
+    resilience: ["Agroécologie, reboisement, petite irrigation", "Services d'informations agrométéorologiques"]
+  livestock:
+    share: 1.0
+    share_note: "Toute la population exposée (la part d'éleveurs n'est pas intégrée)."
+    anticipation: ["Repérer pâturages et points d'eau pour le bétail", "Vaccination préventive avant le stress hydrique"]
+    mitigation: ["Constitution de réserves de fourrage, déstockage organisé", "Points d'eau pastoraux"]
+    response: ["Distribution d'aliments pour le bétail dans les zones en urgence", "Soutien vétérinaire d'urgence"]
+    resilience: ["Cultures fourragères, gestion des parcours", "Reconstitution du cheptel après la crise"]
+  education:
+    share: 0.30
+    share_note: "Enfants d'âge scolaire (environ 30 % de la population) : ratio approximatif."
+    anticipation: ["Prévoir cantines, points d'eau et plans de continuité dans les écoles des zones à risque", "Adapter le calendrier scolaire si nécessaire"]
+    mitigation: ["Réduire les abandons liés à la faim et à la recherche d'eau", "Sensibilisation climat à l'école"]
+    response: ["Cantines scolaires d'urgence, maintien des cours, éducation en situation d'urgence", "Réhabilitation rapide des écoles endommagées"]
+    resilience: ["Écoles résistantes aux aléas, eau et assainissement scolaires", "Éducation au changement climatique"]
+  protection:
+    share: 1.0
+    share_note: "Toute la population exposée."
+    anticipation: ["Cartographier les ménages vulnérables (femmes seules, enfants, personnes âgées, handicap)", "Préparer les mécanismes de plainte et de signalement"]
+    mitigation: ["Prévenir les départs forcés, le travail des enfants et les mariages précoces liés aux chocs", "Appui psychosocial communautaire"]
+    response: ["Suivi des déplacements, protection de l'enfance, prévention des violences basées sur le genre", "Orientation vers les services"]
+    resilience: ["Renforcer les comités communautaires de protection", "Inclusion dans les plans locaux"]
+  shelter:
+    share: 1.0
+    share_note: "Toute la population exposée."
+    anticipation: ["Prépositionner bâches, kits d'abris et biens non alimentaires", "Identifier les sites d'accueil en cas d'inondation ou de déplacement"]
+    mitigation: ["Renforcer les abris et préparer les évacuations", "Plans communautaires de préparation"]
+    response: ["Distribution de kits d'abris et de biens essentiels", "Gestion des sites de déplacement"]
+    resilience: ["Habitat résilient aux aléas", "Aménagement du territoire sensible aux risques"]
+  social_protection:
+    share: 1.0
+    share_note: "Toute la population exposée (ciblage à affiner avec les registres sociaux)."
+    anticipation: ["Préparer l'extension des filets sociaux et des transferts monétaires aux zones à risque", "Mettre à jour les listes de bénéficiaires"]
+    mitigation: ["Transferts anticipés avant le choc dès le franchissement d'un seuil convenu", "Mécanismes de financement basés sur les prévisions"]
+    response: ["Extension rapide des programmes existants (verticale et horizontale)", "Coordination avec les partenaires humanitaires pour éviter les doublons"]
+    resilience: ["Registre social dynamique, assurance sociale", "Protection sociale adaptative"]
+  drr:
+    share: 1.0
+    share_note: "Toute la population exposée."
+    anticipation: ["Activer les plans de contingence et les comités locaux de gestion des risques", "Diffuser l'alerte à tous, jusqu'au fokontany (radio, SMS, relais communautaires)"]
+    mitigation: ["Ouvrages de protection, entretien des drains et des digues", "Exercices de simulation avec les communautés"]
+    response: ["Coordination de la réponse avec le BNGRC et les clusters", "Évaluations rapides conjointes"]
+    resilience: ["Intégration des scénarios climatiques dans les plans communaux", "Financement des risques (fonds d'urgence, assurance)"]
+# Si la saison est plus humide que la normale (excès de pluie : risque de crues et de maladies)
+wet:
+  - "Vérifier digues, drains et chemins d'évacuation avant les fortes pluies"
+  - "Prépositionner abris, kits d'hygiène et médicaments contre les maladies liées à l'eau"
+  - "Protéger les stocks de semences et de récoltes, prévoir des routes alternatives"
+
+# Messages simples pour les ménages et les agriculteurs (vue « Chez moi »). Suivre toujours les consignes des autorités locales.
+household:
+  dry:
+    - "Faites des réserves d'eau potable et gardez-la propre et couverte."
+    - "Choisissez des semences à cycle court et semez après les premières vraies pluies."
+    - "Protégez le sol avec de la paille ou des feuilles pour garder l'humidité."
+    - "Vendez plus tôt les animaux faibles plutôt que de les perdre ; gardez de la nourriture pour les autres."
+    - "Réservez des vivres et ne vendez pas tous vos stocks."
+    - "Signalez les difficultés au chef fokontany et au comité local de gestion des risques."
+  wet:
+    - "Gardez vos papiers, vos semences et vos vivres à l'abri de l'eau, en hauteur."
+    - "Repérez avec la famille le chemin et le lieu sûr en cas de crue."
+    - "Ne buvez que de l'eau traitée ou bouillie ; lavez-vous les mains."
+    - "Dégagez les canaux et les fossés autour des champs et de la maison."
+  normal:
+    - "Gardez vos réserves habituelles d'eau et de vivres."
+    - "Suivez les informations de la météo et les annonces du fokontany."
