@@ -1,1 +1,2 @@
-== OSM ECHEC ModuleNotFoundError: No module named 'yaml'
+== OSM Overpass OK : 5215 éléments en 86 s ; 3944 écoles, 1209 formations sanitaires, dont 320 hôpitaux
+   fokontany : 17465 ; avec école 2152 ; avec formation sanitaire 928 ; total écoles rattachées 3925, formations 1205
