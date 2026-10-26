@@ -146,6 +146,7 @@
     "#cxcopy": "Copie un lien qui rouvre exactement cette carte.",
     "#sim": "Multiplie la pluie observée pour tester une saison plus sèche ou plus humide. Pas une prévision.",
     "#simreset": "Revient aux données réellement observées.",
+    "#exportshocks": "Fiche des chocs au format JIAF (OCHA) : cyclone, crue, sécheresse, routes, avec le niveau de preuve de chaque colonne.",
     "#export": "Télécharge les zones de cette vue au format CSV (Excel).",
     "#print": "Imprime la vue ou l'enregistre en PDF.",
     "#viewtitle": "Chiffres clés de la zone actuellement affichée.",
@@ -963,6 +964,7 @@
     $("simreset").addEventListener("click", function () { sim.value = neutral; apply(); });
     $("print").addEventListener("click", function () { window.print(); });
     $("export").addEventListener("click", exportCSV);
+    $("exportshocks").addEventListener("click", exportShocks);
     setupSearch();
   }
 
@@ -1003,6 +1005,54 @@
   }
 
 
+
+  /* Fiche « chocs » au format JIAF 2 : intensité, proximité, tendance, avec le niveau de preuve de chaque colonne */
+  var SHOCK_COLS = [
+    ["choc_cyc_vent_kt", "Aléa naturel - cyclone : intensité, classe de vent atteinte (kt)", "approximation"],
+    ["choc_cyc_dist_km", "Aléa naturel - cyclone : proximité, distance à la trajectoire (km)", "approximation"],
+    ["choc_cyc_dernier_jours", "Aléa naturel - cyclone : jours depuis le dernier passage", "approximation"],
+    ["choc_cyc_retour_ans", "Aléa naturel - cyclone : période de retour de la pluie (ans, plafond 15)", "approximation"],
+    ["choc_cyc_nb", "Aléa naturel - cyclone : nombre de systèmes en 12 mois", "approximation"],
+    ["choc_crue_retour_ans", "Aléa naturel - crue : période de retour du débit récent (ans)", "approximation"],
+    ["choc_crue_ratio_q2", "Aléa naturel - crue : débit en multiple de la crue de 2 ans", "approximation"],
+    ["spi3", "Choc agroécologique - SPI 3 mois (OMM)", "standard"],
+    ["spi6", "Choc agroécologique - SPI 6 mois (OMM)", "standard"],
+    ["spi12", "Choc agroécologique - SPI 12 mois (OMM)", "standard"],
+    ["sm_z", "Choc agroécologique - humidité du sol vs normale du mois (écart-type)", "approximation"],
+    ["susc_inond_pct", "Exposition - susceptibilité aux inondations (% , conditionnelle à une zone touchée)", "validé"],
+    ["cult_basse5_pct", "Exposition - part des cultures à moins de 5 m d'un cours d'eau (%)", "approximation"],
+    ["route_basse5_pct", "Exposition - part des routes principales à moins de 5 m d'un cours d'eau (%)", "approximation"],
+    ["route_dist_km", "Enclavement - distance à la route principale la plus proche (km)", "approximation"]];
+
+  function exportShocks() {
+    var has = {};
+    S.view.feats.forEach(function (f) { var x = (S.view.metrics[f.properties.c] || {}).x || {}; Object.keys(x).forEach(function (k) { has[k] = true; }); });
+    var cols = [
+      { label: "code", get: function (r) { return r.f.properties.c; } },
+      { label: "nom", get: function (r) { return r.f.properties.n; } },
+      { label: "niveau", get: function () { return S.meta.levels[S.view.lvl].label; } },
+      { label: "population", get: function (r) { return r.m.p; } }];
+    var used = [];
+    SHOCK_COLS.forEach(function (c) {
+      if (!has[c[0]]) return;
+      used.push(c);
+      cols.push({ label: c[1] + " [preuve : " + c[2] + "]", get: function (r) { var v = r.m.x ? r.m.x[c[0]] : undefined; return v === undefined ? "" : v; } });
+    });
+    var rows = S.view.feats.map(function (f) { return { f: f, m: S.view.metrics[f.properties.c] || {} }; });
+    var notes = ["", "Notes",
+      "Chocs au format JIAF 2 (IASC/OCHA, Tableau de référence 1) : intensité et proximité des dangers naturels et des chocs agroécologiques.",
+      "Exposition au danger : ce n'est ni un dégât constaté ni un besoin humanitaire (ceux-ci relèvent des évaluations de terrain et du JIAF).",
+      "Niveaux de preuve : validé = testé sur événements réels ; standard = méthode internationale sur données réelles ; approximation = proxy raisonné.",
+      "Une cellule vide = pas de donnée (rien n'est inventé). Cyclones et crues : 12 derniers mois ; SPI : dernier mois complet.",
+      "Source : MakyClimat, " + new Date().toISOString().slice(0, 10) + ", " + location.href.split("#")[0].split("?")[0]];
+    var csv = MC.toCSV(rows, cols) + notes.map(function (l) { return "\r\n" + '"' + l.replace(/"/g, '""') + '"'; }).join("");
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "makyclimat_chocs_JIAF_" + SLUG + "_" + (S.path.map(function (p) { return p.pcode; }).join("_") || "pays") + ".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    return used.length;
+  }
 
   /* ---------- Historique des événements et de la réponse ---------- */
   var EV_COLORS = { cyclone: "#6a3d9a", "inondation": "#1f78b4", "sécheresse": "#e08214", "épidémie": "#33a02c", autre: "#666666" };

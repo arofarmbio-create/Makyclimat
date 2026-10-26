@@ -83,6 +83,7 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   $("helpbtn").click(); w.document.querySelector('nav.tabs [data-tab=map]').click();
   w.document.querySelector('nav.tabs [data-tab=trust]').click();
   check("page Fiabilité", $("tab-trust").classList.contains("active") && /Validé/.test($("tab-trust").textContent) && /Non validé/.test($("tab-trust").textContent));
+  check("fiche chocs JIAF : bouton présent et export sans erreur", !!$("exportshocks") && (function () { try { $("exportshocks").click(); return true; } catch (e) { return false; } })());
   w.document.querySelector('nav.tabs [data-tab=map]').click();
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
   const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
