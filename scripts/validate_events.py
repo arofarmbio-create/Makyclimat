@@ -173,7 +173,10 @@ def footprint(g: pd.DataFrame, lons, lats, substeps=6):
             x0, y0 = xc[i] * (1 - f) + xc[j] * f, yc[i] * (1 - f) + yc[j] * f
             dx, dy = X - x0, Y - y0
             d = np.hypot(dx, dy)
-            q = ((np.degrees(np.arctan2(dx, dy)) % 360) // 90).astype(int)
+            # % 4 (pas seulement cast en int) : évite un IndexError si l'arrondi flottant
+            # fait tomber l'angle exactement sur 360° (// 90 vaut alors 4, pas 0-3) -
+            # cas réel rencontré avec les trajectoires historiques courtes (ex. Gafilo 2004).
+            q = ((np.degrees(np.arctan2(dx, dy)) % 360) // 90).astype(int) % 4
             for k in (34, 50, 64):
                 r = rad[k][i] * (1 - f) + rad[k][j] * f
                 cov[k] |= d <= r[q]
