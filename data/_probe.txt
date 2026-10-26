@@ -1,42 +1,8 @@
-https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/a7b17eff544a4ce5ae045c32dbb99f7b/data -> 200 86857 car.
-urls de services : []
-ids : ["316937f6b8934de7ba69b45c4688598c"]
-https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/316937f6b8934de7ba69b45c4688598c -> 200 17190 car.
-   316937f6b8934de7ba69b45c4688598c: Web Map | Landslide Viewer (web map) | 
-https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/316937f6b8934de7ba69b45c4688598c/data -> 200 65389 car.
-         Infrastructure | None | None | GroupLayer
-            Transportation v1 - Railroads | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/9 | None | ArcGISFeatureLayer
-            Transportation v1 - Local Roads | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/8 | None | ArcGISFeatureLayer
-            Transportation v1 - Local Roads 72k scale | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/7 | None | ArcGISFeatureLayer
-            Transportation v1 - Secondary Roads 72 1k scale | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/6 | None | ArcGISFeatureLayer
-            Transportation v1 - Secondary Roads 289 144k scale | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/5 | None | ArcGISFeatureLayer
-            Transportation v1 - Secondary Roads 578k scale | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/4 | None | ArcGISFeatureLayer
-            Transportation v1 - Secondary Roads Interstates and US Highways | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/3 | None | ArcGISFeatureLayer
-            Transportation v1 - Primary Roads | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/2 | None | ArcGISFeatureLayer
-            Transportation v1 - Primary Roads 2 1M scale | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/1 | None | ArcGISFeatureLayer
-            Transportation v1 - Primary Roads Interstates 5M scale | https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Transportation_v1/FeatureServer/0 | None | ArcGISFeatureLayer
-         Landslide Hazard Model (LHASA) Input and Output Datasets | None | None | GroupLayer
-            Global Landslide Susceptibility | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/Global_Landslide_Susceptibility/ImageServer | None | ArcGISImageServiceLayer
-            Global landslide nowcast (tomorrow) | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/LHASA_Hazard_Tomorrow/ImageServer | None | ArcGISImageServiceLayer
-            Global landslide nowcast (today) | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/LHASA_Hazard_Today/ImageServer | None | ArcGISImageServiceLayer
-            Global landslide nowcast (yesterday) | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/LHASA_Hazard_Yesterday/ImageServer | None | ArcGISImageServiceLayer
-            Daily Global Landslide Exposure Map | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/LHASA_Exposure/FeatureServer/0 | 8c70efc9175e41699bdb320abf5ec544 | ArcGISFeatureLayer
-         External Landslide Catalogs (Referenced) | None | None | GroupLayer
-            Map of slope-failure locations in Puerto Rico after Hurricane Maria | https://services5.arcgis.com/TQ9qkk0dURXSP7LQ/arcgis/rest/services/DERRUMBES_HURACAN_MARIA/FeatureServer/0 | None | ArcGISFeatureLayer
-            Oregon DOGAMI Historic Landslides | https://gis.dogami.oregon.gov/arcgis/rest/services/Public/HistoricLandslidePoints_3_4/MapServer/0 | None | ArcGISFeatureLayer
-            Kentucky GS Landslide Inventory | https://kgs.uky.edu/arcgis/rest/services/Hazards/LandslideInformationMap/MapServer | None | ArcGISMapServiceLayer
-            Vermont Geological Survey- Preliminary Landslide Inventory | https://anrmaps.vermont.gov/arcgis/rest/services/Open_Data/OPENDATA_ANR_GEOLOGIC_SP_NOCACHE_v2/MapServer/186 | None | ArcGISFeatureLayer
-            North Carolina Post Helene Landslide Inventory | None | None | GroupLayer
-               Landslides | https://services2.arcgis.com/kCu40SDxsCGcuUWO/arcgis/rest/services/North_Carolina_Post_Helene_Landslide_Inventory/FeatureServer/2 | None | ArcGISFeatureLayer
-               Ground Ruptures | https://services2.arcgis.com/kCu40SDxsCGcuUWO/arcgis/rest/services/North_Carolina_Post_Helene_Landslide_Inventory/FeatureServer/1 | None | ArcGISFeatureLayer
-               Observations | https://services2.arcgis.com/kCu40SDxsCGcuUWO/arcgis/rest/services/North_Carolina_Post_Helene_Landslide_Inventory/FeatureServer/0 | None | ArcGISFeatureLayer
-         NASA Cooperative Open Online Landslide Repository (COOLR) Polygons | None | None | GroupLayer
-            Landslide Events | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/COOLR_Events_Polygons/FeatureServer/0 | None | ArcGISFeatureLayer
-            Landslide Reports | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/COOLR_Reports_Polygons/FeatureServer/0 | None | ArcGISFeatureLayer
-         NASA Cooperative Open Online Landslide Repository (COOLR) Points | None | None | GroupLayer
-            Landslide Reports - Catalog | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/COOLR_Reports_Points/FeatureServer/0 | None | ArcGISFeatureLayer
-            Landslide Reports - Trigger | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/COOLR_Reports_Points/FeatureServer/0 | None | ArcGISFeatureLayer
-            Landslide Reports - Fatalities | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/COOLR_Reports_Points/FeatureServer/0 | None | ArcGISFeatureLayer
-            Landslide Events | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/COOLR_Events_Points/FeatureServer/0 | None | ArcGISFeatureLayer
-            Landslide Reports | https://gis.earthdata.nasa.gov/portal/rest/services/Landslides/COOLR_Reports_Points/FeatureServer/0 | None | ArcGISFeatureLayer
-candidats : []
+COOLR_Events_Points -> 200
+champs : objectid, source_name, source_link, event_id, event_date, event_time, event_title, event_description, location_description, landslide_category, landslide_trigger, storm_name, comments, method, image_type, sat_date_before, sat_date_after, country_name, country_code, citation, latitude, longitude
+evenements : 0 dans l'emprise de Madagascar
+COOLR_Reports_Points -> 200
+champs : objectid, source_name, source_link, event_id, event_date, event_time, event_title, event_description, location_description, location_accuracy, landslide_category, landslide_trigger, landslide_size, landslide_setting, fatality_count, injury_count, storm_name, photo_link, comments, event_import_source, event_import_id, latitude, longitude, country_name, country_code, admin_division_name, gazetteer_closest_point, gazetteer_distance, submitted_date, last_edited_date
+rapports : 8 dans l'emprise de Madagascar
+   objectid                 source_name                                                                                                                             source_link  event_id     event_date event_time                                     event_title                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         event_description                        location_description location_accuracy landslide_category landslide_trigger landslide_size landslide_setting  fatality_count  injury_count            storm_name                                                                               photo_link comments event_import_source event_import_id   latitude  longitude country_name country_code admin_division_name gazetteer_closest_point  gazetteer_distance  submitted_date last_edited_date        lon        lat
+0       885                   reliefweb                                                                   http://www.reliefweb.int/rw/rwb.nsf/db900SID/MYAI-7QX4S6?OpenDocument       998
