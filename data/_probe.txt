@@ -1,72 +1,40 @@
-recherche 'Madagascar cyclone' erreur Expecting value: line 1 column 1 (char 0)
-recherche 'Madagascar cyclone' erreur Expecting value: line 1 column 1 (char 0)
-recherche 'Madagascar flood' erreur Expecting value: line 1 column 1 (char 0)
-recherche 'Madagascar flood' erreur Expecting value: line 1 column 1 (char 0)
-recherche 'Madagascar storm' erreur Expecting value: line 1 column 1 (char 0)
-recherche 'Madagascar storm' erreur Expecting value: line 1 column 1 (char 0)
-recherche 'Madagascar tropical' erreur Expecting value: line 1 column 1 (char 0)
-recherche 'Madagascar tropical' erreur Expecting value: line 1 column 1 (char 0)
-0 jeux de données Madagascar
--- EMSR564_AOI05_GRA_PRODUCT_r1_RTP01_v2: 1261 ko ; fichiers : EMSR564_AOI05_GRA_PRODUCT_areaOfInterestA_r1_v2.shp, EMSR564_AOI05_GRA_PRODUCT_builtUpP_r1_v2.shp, EMSR564_AOI05_GRA_PRODUCT_hydrographyA_r1_v2.shp, EMSR564_AOI05_GRA_PRODUCT_hydrographyL_r1_v2.shp, EMSR564_AOI05_GRA_PRODUCT_imageFootprintA_r1_v2.shp, EMSR564_AOI05_GRA_PRODUCT_naturalLandUseA_r1_v2.shp, EMSR564_AOI05_GRA_PRODUCT_observedEventA_r1_v2.shp, EMSR564_AOI05_GRA_PRODUCT_transportationL_r1_v2.shp
-   EMSR564_AOI05_GRA_PRODUCT_areaOfInterestA_r1_v2.shp: 1 objets, colonnes ['emsr_id', 'glide_no', 'area_id', 'locality', 'map_type', 'geometry']
-   EMSR564_AOI05_GRA_PRODUCT_builtUpP_r1_v2.shp: 3072 objets, colonnes ['obj_type', 'name', 'info', 'damage_gra', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
-      obj_type: {'11-Residential Buildings': 3068, '12-Non-residential Buildings': 4}
-      damage_gra: {'Possibly damaged': 1684, 'No visible damage': 1178, 'Damaged': 128, 'Destroyed': 82}
-      notation: {'Building point': 3072}
-      dmg_src_id: {2: 3072}
-   EMSR564_AOI05_GRA_PRODUCT_hydrographyA_r1_v2.shp: 115 objets, colonnes ['obj_type', 'name', 'notation', 'or_src_id', 'cd_value', 'geometry']
-      obj_type: {'BH090-Land Subject to Inundation': 95, 'BH080-Lake': 18, 'BH140-River': 2}
-      notation: {'Not Applicable': 115}
-   EMSR564_AOI05_GRA_PRODUCT_hydrographyL_r1_v2.shp: 9 objets, colonnes ['obj_type', 'name', 'notation', 'or_src_id', 'cd_value', 'geometry']
-      obj_type: {'BH141-Stream': 8, 'BH140-River': 1}
-      notation: {'Not Applicable': 9}
-   EMSR564_AOI05_GRA_PRODUCT_imageFootprintA_r1_v2.shp: 2 objets, colonnes ['obj_type', 'or_src_id', 'geometry']
-      obj_type: {'Image Footprint': 2}
-   EMSR564_AOI05_GRA_PRODUCT_naturalLandUseA_r1_v2.shp: 529 objets, colonnes ['obj_type', 'name', 'info', 'damage_gra', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
-      obj_type: {'3-Forests and Semi-natural Areas': 500, '2-Agricultural Areas': 15, '998-Other': 13, '4-Wetlands': 1}
-      damage_gra: {'Not Analysed': 529}
-      notation: {'Not Applicable': 529}
-      dmg_src_id: {997: 529}
-   EMSR564_AOI05_GRA_PRODUCT_observedEventA_r1_v2.shp: 21 objets, colonnes ['event_type', 'obj_desc', 'det_method', 'notation', 'dmg_src_id', 'area', 'geometry']
-      event_type: {'5-Flood': 21}
-      notation: {'Flooded area': 21}
-      dmg_src_id: {2: 21}
-   EMSR564_AOI05_GRA_PRODUCT_transportationL_r1_v2.shp: 77 objets, colonnes ['obj_type', 'name', 'info', 'damage_gra', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
-      obj_type: {'211-Highways, Streets and Roads': 76, '214-Bridges, Elevated Highways, Tunnels and Subways': 1}
-      damage_gra: {'No visible damage': 60, 'Possibly damaged': 16, 'Damaged': 1}
-      notation: {'Not Applicable': 77}
-      dmg_src_id: {2: 77}
--- EMSR564_AOI01_DEL_PRODUCT_r1_RTP01_v1: 14304 ko ; fichiers : EMSR564_AOI01_DEL_PRODUCT_areaOfInterestA_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_builtUpA_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_facilitiesA_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_facilitiesL_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_hydrographyA_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_hydrographyL_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_imageFootprintA_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_naturalLandUseA_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_observedEventA_r1_v1.shp, EMSR564_AOI01_DEL_PRODUCT_transportationL_r1_v1.shp
-   EMSR564_AOI01_DEL_PRODUCT_areaOfInterestA_r1_v1.shp: 1 objets, colonnes ['emsr_id', 'glide_no', 'area_id', 'locality', 'map_type', 'geometry']
-   EMSR564_AOI01_DEL_PRODUCT_builtUpA_r1_v1.shp: 322 objets, colonnes ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
-      obj_type: {'11-Residential Buildings': 320, '12-Non-residential Buildings': 2}
-      notation: {'Built up area': 322}
-      dmg_src_id: {997: 322}
-   EMSR564_AOI01_DEL_PRODUCT_facilitiesA_r1_v1.shp: 1 objets, colonnes ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
-      obj_type: {'24-Other Civil Engineering Works': 1}
-      notation: {'Not Applicable': 1}
-      dmg_src_id: {997: 1}
-   EMSR564_AOI01_DEL_PRODUCT_facilitiesL_r1_v1.shp: 2 objets, colonnes ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
-      obj_type: {'215-Harbours, waterways, dams and other waterworks': 2}
-      notation: {'Not Applicable': 2}
-      dmg_src_id: {997: 2}
-   EMSR564_AOI01_DEL_PRODUCT_hydrographyA_r1_v1.shp: 121 objets, colonnes ['obj_type', 'name', 'notation', 'or_src_id', 'cd_value', 'geometry']
-      obj_type: {'BH080-Lake': 77, 'BH140-River': 26, 'BH130-Reservoir': 11, 'BH090-Land Subject to Inundation': 4, 'BA040-Open Water': 3}
-      notation: {'Not Applicable': 121}
-   EMSR564_AOI01_DEL_PRODUCT_hydrographyL_r1_v1.shp: 193 objets, colonnes ['obj_type', 'name', 'notation', 'or_src_id', 'cd_value', 'geometry']
-      obj_type: {'BH141-Stream': 108, 'BH140-River': 77, 'BA010-Coastline': 8}
-      notation: {'Not Applicable': 193}
-   EMSR564_AOI01_DEL_PRODUCT_imageFootprintA_r1_v1.shp: 3 objets, colonnes ['obj_type', 'or_src_id', 'geometry']
-      obj_type: {'Image Footprint': 2, 'Not Analysed - No data': 1}
-   EMSR564_AOI01_DEL_PRODUCT_naturalLandUseA_r1_v1.shp: 24818 objets, colonnes ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
-      obj_type: {'3-Forests and Semi-natural Areas': 23729, '998-Other': 640, '4-Wetlands': 226, '2-Agricultural Areas': 223}
-      notation: {'Not Applicable': 24818}
-      dmg_src_id: {997: 24818}
-   EMSR564_AOI01_DEL_PRODUCT_observedEventA_r1_v1.shp: 1020 objets, colonnes ['event_type', 'obj_desc', 'det_method', 'notation', 'dmg_src_id', 'area', 'geometry']
-      event_type: {'5-Flood': 1020}
-      notation: {'Flooded area': 1020}
-      dmg_src_id: {2: 1020}
-   EMSR564_AOI01_DEL_PRODUCT_transportationL_r1_v1.shp: 610 objets, colonnes ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
-      obj_type: {'211-Highways, Streets and Roads': 609, '213-Airfield': 1}
-      notation: {'Not Applicable': 610}
-      dmg_src_id: {997: 610}
+EMSR197 | EMSR197
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone ENAWO-17 in Madagascar', 'Storm'] | zips {'?': 14}
+EMSR264 | EMSR264
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Tropical cyclone AVA- Madagascar', 'Storm'] | zips {'?': 37}
+EMSR274 | EMSR274
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Tropical cyclone Eliakim in Madagascar', 'Storm'] | zips {'?': 21}
+EMSR415 | EMSR415
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone Belna in Mayotte- France', 'Storm'] | zips {}
+EMSR424 | EMSR424
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Flood and Landslide in Madagascar', 'Flood'] | zips {'DEL': 8, '?': 2}
+EMSR559 | EMSR559
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Flood in Madagascar', 'Flood'] | zips {'DEL': 4, 'GRA': 4}
+EMSR564 | EMSR564
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone Batsirai in Madagascar', 'Storm'] | zips {'DEL': 3, 'GRA': 5}
+EMSR565 | EMSR565
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone Emnati in Madagascar', 'Storm'] | zips {'DEL': 8, 'GRA': 2}
+EMSR645 | EMSR645
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Tropical Storm Cheneso in Madagascar', 'Storm'] | zips {'DEL': 10, 'GRA': 9, '?': 4}
+EMSR652 | EMSR652
+            
+            
+            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone Freddy in Madagascar', 'Storm'] | zips {'REF': 2, 'DEL': 1, 'GRA': 4}
