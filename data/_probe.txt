@@ -1,2 +1,12 @@
-meta.json -> 200 31388 car.; cult_ : 5; susc_inond_pct : 1; susc_inond_pct : 1
-   début : {"enso":{"oni":2.16,"season":"JAS 2026","phase":"E","phase_label":"El Niño"},"has_history":true,"scenarios":{"season":"2026-2027","observed_share":0.0,"years":[1982,2026],"hist_years":[1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,
+meta.json 32989 car.
+spi3: 1
+spi6: 1
+spi12: 1
+choc_cyc_vent_kt: 1
+choc_cyc_dist_km: 1
+choc_cyc_retour_ans: 1
+choc_cyc_nb: 1
+choc_cyc_dernier_jours: 1
+susc_inond_pct: 1
+cult_basse5_pct: 1
+page : rubrique JIAF dans app.js : True
