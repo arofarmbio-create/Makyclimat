@@ -208,3 +208,36 @@ def monthly_standardized(series, month0, axis=0):
         if len(idx) >= 10:
             out[idx] = normal_scores(series[idx], axis=0)
     return out
+
+
+def spi(P, n, month0):
+    """Indice de précipitation standardisé SPI-n (McKee et al. 1993 ; Guide de l'utilisateur du SPI, OMM-N° 1090, 2012).
+    P (T, N) : pluie mensuelle (mm), le pas 0 étant le mois `month0` (1-12). Le cumul glissant sur n mois est ajusté, séparément pour chaque
+    mois du calendrier, par une loi gamma (ajustement de Thom 1958) avec probabilité de zéro q ; SPI = Phi^-1(q + (1-q) G(x)), borné à +-3,09.
+    Retourne (T, N) avec NaN pour les n-1 premiers pas et si moins de 20 cumuls valides."""
+    from scipy import special, stats
+    T = P.shape[0]
+    S = rolling_sum(np.asarray(P, float), n)
+    out = np.full(S.shape, np.nan)
+    cal = np.array([(month0 - 1 + t) % 12 for t in range(T)])
+    for m in range(12):
+        idx = np.where((cal == m) & np.isfinite(S[:, 0] if S.ndim > 1 else S))[0]
+        if len(idx) < 20:
+            continue
+        x = S[idx]
+        ok = np.isfinite(x)
+        pos = ok & (x > 0)
+        npos, nok = pos.sum(axis=0), ok.sum(axis=0)
+        q = 1.0 - npos / np.maximum(nok, 1)
+        xm = np.where(pos, x, 0).sum(axis=0) / np.maximum(npos, 1)
+        lm = np.where(pos, np.log(np.where(pos, x, 1.0)), 0).sum(axis=0) / np.maximum(npos, 1)
+        A = np.log(np.maximum(xm, 1e-9)) - lm
+        A = np.maximum(A, 1e-6)
+        alpha = (1 + np.sqrt(1 + 4 * A / 3)) / (4 * A)
+        beta = xm / alpha
+        G = special.gammainc(alpha[None, :], np.maximum(x, 0) / np.maximum(beta[None, :], 1e-9))
+        H = q[None, :] + (1 - q[None, :]) * G
+        z = np.clip(stats.norm.ppf(np.clip(H, 1e-6, 1 - 1e-6)), -3.09, 3.09)
+        z = np.where(ok & (npos >= 15)[None, :], z, np.nan)
+        out[idx] = z
+    return out

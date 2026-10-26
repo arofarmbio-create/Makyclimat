@@ -32,5 +32,14 @@ def test_fill_radii():
     assert np.isfinite(g2.loc[0, "USA_R50_NE"]) and np.isfinite(g2.loc[0, "USA_R64_NE"]) and g2.loc[0, "USA_R64_NE"] <= g2.loc[0, "USA_R50_NE"] + 1e-9
     assert np.isnan(g2.loc[1, "USA_R50_NE"])
 
+def test_rollup():
+    from build_shocks import rollup
+    leaves = pd.DataFrame({"pcode": ["F1", "F2", "F3"], "adm1": ["R1"] * 3, "adm2": ["D1", "D1", "D2"], "adm3": ["C1", "C1", "C2"]})
+    df = pd.DataFrame({"evenement": ["a", "a", "b"], "pcode": ["F1", "F2", "F1"], "vent_classe_kt": [34, 64, 50], "dist_min_km": [100, 20, 80],
+                       "date_passage": ["2026-02-10"] * 3, "rx3_mm": [1, 2, 3], "periode_retour_ans": [2, 8, 16]})
+    r = rollup(leaves, df, "2026-02-20", "s").pivot(index="pcode", columns="indicateur", values="valeur")
+    assert r.loc["C1", "choc_cyc_vent_kt"] == 64 and r.loc["R1", "choc_cyc_dist_km"] == 20 and r.loc["F1", "choc_cyc_nb"] == 2
+    assert r.loc["D1", "choc_cyc_retour_ans"] == 16 and r.loc["F2", "choc_cyc_dernier_jours"] == 10 and "C2" not in r.index
+
 if __name__ == "__main__":
-    test_wind_class(); test_track_distance(); test_fill_radii(); print("ok")
+    test_wind_class(); test_track_distance(); test_fill_radii(); test_rollup(); print("ok")

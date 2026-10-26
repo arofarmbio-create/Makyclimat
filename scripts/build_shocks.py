@@ -106,72 +106,117 @@ def track_distance(xc, yc, tt, X, Y, substeps=6):
     return best, when
 
 
+def analyse(g, leaves, LX, LY, tree, ratios, bbox, annual, sampler, label, max_km=300.0):
+    """Une trajectoire (positions IBTrACS) -> tableau par fokontany ; (None, sampler) si le système n'approche pas le territoire."""
+    from chirps_daily import days_between, leaf_series, roll3_max
+    from validate_events import footprint, project
+    x, y = project(g.LON.values, g.LAT.values)
+    dist, _ = tree.query(np.c_[x, y])
+    near = g[dist <= 400]
+    if near.empty:
+        return None, sampler, {}
+    gg = g[(g.time >= near.time.min() - pd.Timedelta(hours=12)) & (g.time <= near.time.max() + pd.Timedelta(hours=12))].reset_index(drop=True)
+    gg, filled = fill_radii(gg, ratios)
+    cov, miss, n34 = footprint(gg, leaves.lon.values, leaves.lat.values)
+    cls = wind_class(cov)
+    xc, yc = project(gg.LON.values, gg.LAT.values)
+    dmin, when = track_distance(xc, yc, gg.time.values, LX, LY)
+    rx3 = rp = np.full(len(leaves), np.nan)
+    try:
+        days = days_between(near.time.min().date() - dt.timedelta(days=1), near.time.max().date() + dt.timedelta(days=1))
+        v, sampler = leaf_series(days, bbox, leaves.lon.values, leaves.lat.values, sampler)
+        if np.isnan(v).all(axis=1).any():
+            raise RuntimeError("jour de pluie absent")
+        rx3 = roll3_max(v)
+        if annual is not None:
+            N = annual.shape[0]
+            rp = (N + 1) / (1 + (annual >= rx3[None, :]).sum(axis=0))
+    except Exception as ex:  # noqa: BLE001
+        print("pluie indisponible", label, ex)
+    keep = (dmin <= max_km) | (cls > 0)
+    df = pd.DataFrame({"evenement": label, "pcode": leaves.pcode.values, "vent_classe_kt": cls, "dist_min_km": np.round(dmin, 1),
+                       "date_passage": pd.to_datetime(when).strftime("%Y-%m-%d"), "rx3_mm": np.round(rx3, 0), "periode_retour_ans": np.round(rp, 1)})[keep]
+    info = {"miss": miss, "n34": n34, "filled": filled, "n_keep": int(keep.sum()), "cls": cls, "rx3_ok": bool(np.isfinite(rx3).any())}
+    return df, sampler, info
+
+
+def rollup(leaves: pd.DataFrame, df: pd.DataFrame, today: str, source: str) -> pd.DataFrame:
+    """Valeurs au fokontany, puis cumul vers commune, district et région : vent max, distance min, période de retour max, nombre de systèmes."""
+    a = df.groupby("pcode").agg(choc_cyc_vent_kt=("vent_classe_kt", "max"), choc_cyc_dist_km=("dist_min_km", "min"),
+                                choc_cyc_retour_ans=("periode_retour_ans", "max"), choc_cyc_nb=("evenement", "nunique"))
+    a["choc_cyc_dernier_jours"] = (pd.Timestamp(today) - pd.to_datetime(df.groupby("pcode")["date_passage"].max())).dt.days
+    t = leaves[["pcode", "adm1", "adm2", "adm3"]].merge(a, left_on="pcode", right_index=True, how="inner")
+    ops = {"choc_cyc_vent_kt": "max", "choc_cyc_dist_km": "min", "choc_cyc_retour_ans": "max", "choc_cyc_nb": "max", "choc_cyc_dernier_jours": "min"}
+    parts = [a.reset_index()]
+    for col in ("adm3", "adm2", "adm1"):
+        parts.append(t.groupby(col).agg(ops).reset_index().rename(columns={col: "pcode"}))
+    allv = pd.concat(parts).drop_duplicates("pcode")
+    m = allv.melt(id_vars="pcode", var_name="indicateur", value_name="valeur").dropna()
+    m["date"], m["source"] = today, source
+    return m[["pcode", "indicateur", "valeur", "date", "source"]]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
     ap.add_argument("--max-km", type=float, default=300.0)
+    ap.add_argument("--recent", action="store_true", help="systèmes des 12 derniers mois -> data/<pays>/external/chocs.csv (pour le site)")
     args = ap.parse_args()
-    from chirps_daily import days_between, leaf_series
-    from validate_events import fetch_ibtracs, footprint, project, rain_features
+    from common import country_data_dir
+    from scipy.spatial import cKDTree
+    from validate_events import fetch_ibtracs, project
     full = load_config(args.country)
     bbox = full["map"]["bbox"]
     units = read_units(args.country)
     leaves = units[units.level == 4].reset_index(drop=True)
-    ev = pd.read_csv(VAL_DIR / "evenements.csv")
     annual = None
     p = grid_dir(args.country) / "rx3_annual.npz"
     if p.exists():
         z = np.load(p, allow_pickle=True)
         if (z["codes"].astype(str) == leaves.pcode.values).all():
             annual = z["rx3"]
-    from scipy.spatial import cKDTree
-    d_all = fetch_ibtracs()
+    d_all = fetch_ibtracs(since=2000)
     ratios = fit_ratios(d_all)
     for k, (a, b, sd, n) in ratios.items():
         print(f"rapport R{k}/R34 = exp({a:.3f} + {b:.4f} x vent), écart-type résiduel {sd:.2f} (log), n = {n}")
     LX, LY = project(leaves.lon.values, leaves.lat.values)
     tree = cKDTree(np.c_[LX, LY])
     sampler, out, summ = None, [], []
-    from chirps_daily import roll3_max
-    for _, e in ev[ev.type == "cyclone"].iterrows():
-        yr = int(str(e.date_debut)[:4])
-        g = d_all[(d_all.nom == e.nom) & (d_all.time.dt.year.isin([yr, yr + 1]))]
-        if g.empty:
-            print("trajectoire introuvable", e.id)
+    pop = leaves["pop"].fillna(0).values
+    if args.recent:
+        since = pd.Timestamp.today() - pd.Timedelta(days=365)
+        recent = d_all[d_all.time >= since]
+        systems = [(f"{r.nom}-{r.time.year}", d_all[d_all.SID == sid].reset_index(drop=True)) for sid, r in recent.groupby("SID").first().iterrows()]
+    else:
+        ev = pd.read_csv(VAL_DIR / "evenements.csv")
+        systems = []
+        for _, e in ev[ev.type == "cyclone"].iterrows():
+            yr = int(str(e.date_debut)[:4])
+            g = d_all[(d_all.nom == e.nom) & (d_all.time.dt.year.isin([yr, yr + 1]))]
+            if g.empty:
+                print("trajectoire introuvable", e.id)
+                continue
+            systems.append((e.id, g[g.SID == g.SID.iloc[0]].reset_index(drop=True)))
+    for label, g in systems:
+        df, sampler, info = analyse(g, leaves, LX, LY, tree, ratios, bbox, annual, sampler, label, args.max_km)
+        if df is None:
             continue
-        g = g[g.SID == g.SID.iloc[0]].reset_index(drop=True)
-        x, y = project(g.LON.values, g.LAT.values)
-        dist, _ = tree.query(np.c_[x, y])
-        near = g[dist <= 400]
-        if near.empty:
-            continue
-        gg = g[(g.time >= near.time.min() - pd.Timedelta(hours=12)) & (g.time <= near.time.max() + pd.Timedelta(hours=12))].reset_index(drop=True)
-        gg, filled = fill_radii(gg, ratios)
-        cov, miss, n34 = footprint(gg, leaves.lon.values, leaves.lat.values)
-        cls = wind_class(cov)
-        xc, yc = project(gg.LON.values, gg.LAT.values)
-        dmin, when = track_distance(xc, yc, gg.time.values, LX, LY)
-        rx3 = rp = np.full(len(leaves), np.nan)
-        try:
-            days = days_between(near.time.min().date() - dt.timedelta(days=1), near.time.max().date() + dt.timedelta(days=1))
-            v, sampler = leaf_series(days, bbox, leaves.lon.values, leaves.lat.values, sampler)
-            if np.isnan(v).all(axis=1).any():
-                raise RuntimeError("jour de pluie absent")
-            rx3 = roll3_max(v)
-            if annual is not None:
-                N = annual.shape[0]
-                rp = (N + 1) / (1 + (annual >= rx3[None, :]).sum(axis=0))
-        except Exception as ex:  # noqa: BLE001
-            print("pluie indisponible", e.id, ex)
-        keep = (dmin <= args.max_km) | (cls > 0)
-        df = pd.DataFrame({"evenement": e.id, "pcode": leaves.pcode.values, "vent_classe_kt": cls, "dist_min_km": np.round(dmin, 1),
-                           "date_passage": pd.to_datetime(when).strftime("%Y-%m-%d"), "rx3_mm": np.round(rx3, 0), "periode_retour_ans": np.round(rp, 1)})[keep]
         out.append(df)
-        pop = leaves["pop"].fillna(0).values
-        summ.append({"evenement": e.id, "nom": e.nom, "fokontany_concernes": int(keep.sum()),
-                     **{f"pop_vent_{k}kt": int(pop[cls >= k].sum()) for k in (34, 50, 64)},
-                     "fokontany_vent_64kt": int((cls >= 64).sum()), "rayons_manquants": f"{miss}/{n34}", "positions_R50_R64_estimees": filled})
-        print(f"{e.id}: {keep.sum()} fokontany, vent>=34: {(cls >= 34).sum()}, >=64: {(cls >= 64).sum()}, pluie={'oui' if np.isfinite(rx3).any() else 'non'}")
+        cls = info["cls"]
+        summ.append({"evenement": label, "fokontany_concernes": info["n_keep"], **{f"pop_vent_{k}kt": int(pop[cls >= k].sum()) for k in (34, 50, 64)},
+                     "fokontany_vent_64kt": int((cls >= 64).sum()), "rayons_manquants": f"{info['miss']}/{info['n34']}", "positions_R50_R64_estimees": info["filled"]})
+        print(f"{label}: {info['n_keep']} fokontany, vent>=34: {(cls >= 34).sum()}, >=64: {(cls >= 64).sum()}, pluie={'oui' if info['rx3_ok'] else 'non'}")
+    if args.recent:
+        ed = country_data_dir(args.country) / "external"
+        ed.mkdir(parents=True, exist_ok=True)
+        today = dt.date.today().isoformat()
+        src = "IBTrACS (rayons de vent JTWC, R50/R64 manquants estimés), CHIRPS journalier : indicateurs de choc au format JIAF, 12 derniers mois"
+        if out:
+            rollup(leaves, pd.concat(out), today, src).to_csv(ed / "chocs.csv", index=False)
+        else:
+            (ed / "chocs.csv").write_text("pcode,indicateur,valeur,date,source\n")
+        print(f"{len(out)} système(s) des 12 derniers mois")
+        return
     VAL_DIR.mkdir(exist_ok=True)
     pd.concat(out).to_csv(VAL_DIR / "chocs_cyclones_fokontany.csv", index=False)
     pd.DataFrame(summ).to_csv(VAL_DIR / "chocs_cyclones_resume.csv", index=False)

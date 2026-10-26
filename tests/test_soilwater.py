@@ -79,6 +79,21 @@ def test_standardize():
     assert np.isnan(r[:2]).all() and (r[2:] == 3).all()
 
 
+def test_spi():
+    rng = np.random.default_rng(1)
+    T = 12 * 40
+    P = rng.gamma(2.0, 40.0, size=(T, 3))
+    P[::7, 2] = 0.0                                    # mois secs avec zéro pluie (probabilité de zéro)
+    z3 = C.spi(P, 3, 1)
+    assert np.isnan(z3[:2]).all(), "n-1 premiers pas vides"
+    ok = z3[2:]
+    assert abs(np.nanmean(ok[:, :2])) < 0.08 and abs(np.nanstd(ok[:, :2]) - 1) < 0.1, (np.nanmean(ok), np.nanstd(ok))
+    assert np.nanmax(np.abs(z3)) <= 3.09 + 1e-9
+    # plus de pluie -> SPI plus élevé (monotonie), à mois du calendrier égal
+    idx = np.arange(5, T, 12)
+    assert (np.argsort(z3[idx, 0]) == np.argsort(C.rolling_sum(P, 3)[idx, 0])).all()
+
+
 if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):

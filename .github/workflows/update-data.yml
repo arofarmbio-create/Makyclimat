@@ -69,6 +69,8 @@ jobs:
           python scripts/update_floods.py --country "$COUNTRY" || echo "Débits indisponibles, alertes de crue non mises à jour"
       - name: Susceptibilité aux inondations (modèle validé, sans réseau)
         run: python scripts/build_susceptibility.py --country "$COUNTRY" || echo "Susceptibilité indisponible"
+      - name: Chocs cyclone des 12 derniers mois (format JIAF) — ignorés en cas d'indisponibilité
+        run: python scripts/build_shocks.py --country "$COUNTRY" --recent || echo "Chocs indisponibles"
       - name: Calculer les indicateurs
         run: |
           set -o pipefail

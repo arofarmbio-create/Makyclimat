@@ -343,6 +343,7 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     sm_z = C.monthly_standardized(rel, month0)
     rech12 = C.rolling_sum(X, 12)
     rz = C.monthly_standardized(rech12, month0)
+    spis = {f"spi{n}": C.spi(Pc, n, month0)[T - 1] for n in (3, 6, 12)}       # SPI de l'OMM sur le dernier mois complet
     last = T - 1
     cal = np.array([(month0 - 1 + t) % 12 for t in range(T)])
     smn = np.stack([np.nanmean(rel[cal == m], axis=0) for m in range(12)])       # normale mensuelle du stock relatif
@@ -360,6 +361,8 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     lv = {"whc_mm": sample_grid(np.where(valid, props["whc"], np.nan), grid["lon0"], grid["lat0"], grid["res"], leaves.lon.to_numpy(), leaves.lat.to_numpy()),
           "cn2": sample_grid(np.where(valid, props["cn2"], np.nan), grid["lon0"], grid["lat0"], grid["res"], leaves.lon.to_numpy(), leaves.lat.to_numpy()),
           "sm_rel_pct": leaf_series(100 * rel[last]), "sm_z": leaf_series(sm_z[last]), "recharge12_mm": leaf_series(rech12[last]), "recharge12_z": leaf_series(rz[last])}
+    for k, v in spis.items():
+        lv[k] = leaf_series(v)
     zm = zone_means(units, lv)
     rows = []
     date = dt.date.today().isoformat()

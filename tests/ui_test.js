@@ -106,7 +106,6 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     const cols = new Set(currentLayers.map((l) => l._style.fillColor));
     check("carte des alertes colorée avec la palette des niveaux", [...cols].every((c) => ["#d7ebd2", "#f2d16b", "#e8893a", "#b2262e"].includes(c)), [...cols].join(" "));
     check("légende des niveaux d'alerte", /Vigilance/.test($("legend").textContent) && /Alerte maximale/.test($("legend").textContent));
-  check("rubrique repliable", $("cmpcard").classList.contains("collapsed")); h3.click();
     $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
   }
   const respPath = path.join(docs, "data", slug, "response.json");

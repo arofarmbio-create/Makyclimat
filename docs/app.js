@@ -544,7 +544,7 @@
       var xv = m.x ? m.x[x.id] : undefined;
       if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
     });
-    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + scenarioTable(m) + seasonSection(f) + calendarSection(f) + hydroSection(f) + soilSection(f) + histSection(f);
+    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + shockSection(m) + scenarioTable(m) + seasonSection(f) + calendarSection(f) + hydroSection(f) + soilSection(f) + histSection(f);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -1162,6 +1162,29 @@
   function setupSeasonal() {
     return getJSON("seasonal.json").then(function (D) { S.seas = D; }).catch(function () { S.seas = null; });
   }
+  /* Chocs au format JIAF 2 : intensité et proximité des dangers naturels et des chocs agroécologiques */
+  function shockSection(m) {
+    var x = m.x || {}, rows = "";
+    function g(k) { return x[k]; }
+    function spiWord(v) { return v <= -2 ? "extrêmement sec" : v <= -1.5 ? "sévèrement sec" : v <= -1 ? "modérément sec" : v < 1 ? "proche de la normale" : v < 1.5 ? "modérément humide" : v < 2 ? "très humide" : "extrêmement humide"; }
+    var wind = g("choc_cyc_vent_kt");
+    if (wind !== undefined && g("choc_cyc_nb") > 0) {
+      var wl = wind >= 64 ? "force cyclone (≥ 64 kt)" : wind >= 50 ? "vent fort (≥ 50 kt)" : wind >= 34 ? "tempête tropicale (≥ 34 kt)" : "pas de vent de tempête";
+      rows += row("Aléa naturel · intensité (cyclone)", "<b>" + esc(wl) + "</b>");
+      if (g("choc_cyc_dist_km") !== undefined) rows += row("Aléa naturel · proximité", Math.round(g("choc_cyc_dist_km")) + " km de la trajectoire" + (g("choc_cyc_dernier_jours") !== undefined ? ", passage il y a " + Math.round(g("choc_cyc_dernier_jours")) + " jours" : ""));
+      if (g("choc_cyc_retour_ans") !== undefined) rows += row("Pluie du passage (3 jours)", g("choc_cyc_retour_ans") >= 15 ? "au moins aussi forte que toutes les saisons de référence" : "retour d'environ " + String(Math.round(g("choc_cyc_retour_ans") * 10) / 10).replace(".", ",") + " ans");
+    }
+    [["spi3", "SPI-3"], ["spi6", "SPI-6"], ["spi12", "SPI-12"]].forEach(function (k) {
+      var v = g(k[0]);
+      if (v !== undefined && v !== null) rows += row("Choc agroécologique · " + k[1], "<b>" + (v > 0 ? "+" : "") + String(Math.round(v * 100) / 100).replace(".", ",") + "</b> : " + spiWord(v));
+    });
+    var sm = g("sm_z");
+    if (sm !== undefined && sm !== null) rows += row("Humidité du sol vs normale du mois", (sm > 0 ? "+" : "") + String(Math.round(sm * 100) / 100).replace(".", ",") + " écart-type");
+    if (!rows) return "";
+    return "<h4>Chocs (format JIAF)</h4>" + rows +
+      '<div class="note" data-tip="Le JIAF est le cadre d\'analyse des besoins humanitaires de l\'ONU (OCHA/IASC). Il demande l\'intensité et la proximité de chaque choc.">Intensité et proximité des chocs, selon le cadre JIAF 2 (OCHA/IASC). SPI : indice standardisé de précipitation de l\'OMM (1981 à aujourd\'hui). Exposition au danger, pas dégât ni besoin humanitaire.</div>';
+  }
+
   function seasonSection(f) {
     var D = S.seas;
     if (!D) return "";
