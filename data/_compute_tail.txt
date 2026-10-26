@@ -1,2 +1,3 @@
+  fichier ignoré (colonnes pcode, indicateur, valeur requises) : vuln_cumul.csv
 Prévision saisonnière appliquée (144 zones fournies).
 Indicateurs écrits : données de pluie jusqu'au 2026-04-30 ; exposés au niveau national : 3,325,839 ; cibles : 2,660,671
