@@ -1064,3 +1064,47 @@ indicators:
     source: "Intensité du danger naturel (JIAF 2). GloFAS (Copernicus/ECMWF) via Open-Meteo, maxima annuels 1984-aujourd'hui ajustés par une loi de Gumbel ; débit modélisé (maille ~5 km), résolution commune ; au-delà de 20 ans la valeur est extrapolée et plafonnée à 100 ans ; pas une hauteur d'eau ni un dégât"
     frequency: Quotidienne
     status: active
+  - id: route_km
+    label: "Routes principales (trunk à tertiary, OpenStreetMap)"
+    unit: "km"
+    format: float
+    aggregate: none
+    sectors: [logistics, drr]
+    sdg: ["9.1", "11.5"]
+    national: [axe1]
+    source: "OpenStreetMap (© contributeurs, ODbL) via Overpass, routes trunk/primary/secondary/tertiary, croisées avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique, pas une coupure constatée ; OSM n'est pas un recensement"
+    frequency: Ponctuelle
+    status: active
+  - id: route_basse5_km
+    label: "Routes principales à moins de 5 m au-dessus d'un cours d'eau (tronçons susceptibles d'être coupés par une crue)"
+    unit: "km"
+    format: float
+    aggregate: none
+    sectors: [logistics, drr]
+    sdg: ["9.1", "11.5"]
+    national: [axe1]
+    source: "OpenStreetMap (© contributeurs, ODbL) via Overpass, routes trunk/primary/secondary/tertiary, croisées avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique, pas une coupure constatée ; OSM n'est pas un recensement"
+    frequency: Ponctuelle
+    status: active
+  - id: route_basse5_pct
+    label: "Part des routes principales à moins de 5 m au-dessus d'un cours d'eau (exposition aux coupures par crue)"
+    unit: "%"
+    format: pct
+    aggregate: none
+    sectors: [logistics, drr]
+    sdg: ["9.1", "11.5"]
+    national: [axe1]
+    source: "OpenStreetMap (© contributeurs, ODbL) via Overpass, routes trunk/primary/secondary/tertiary, croisées avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique, pas une coupure constatée ; OSM n'est pas un recensement"
+    frequency: Ponctuelle
+    status: active
+  - id: route_dist_km
+    label: "Distance à vol d'oiseau à la route principale la plus proche (proxy d'enclavement ; moyenne pondérée par la population pour les zones larges)"
+    unit: "km"
+    format: float
+    aggregate: none
+    sectors: [logistics, health, education]
+    sdg: ["9.1", "11.5"]
+    national: [axe1]
+    source: "OpenStreetMap (© contributeurs, ODbL) via Overpass, routes trunk/primary/secondary/tertiary, croisées avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique, pas une coupure constatée ; OSM n'est pas un recensement"
+    frequency: Ponctuelle
+    status: active
