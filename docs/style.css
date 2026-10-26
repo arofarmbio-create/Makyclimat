@@ -202,3 +202,12 @@ body.mapfull .crumbs { right: 250px; }
 .helptoc a { color: var(--brand); }
 .help details { border-top: 1px solid var(--line); padding: 6px 0; }
 .help summary { cursor: pointer; font-weight: 600; }
+
+.lvl { display: inline-block; border-radius: 6px; padding: 1px 8px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.lvl.l1 { background: #d8f0e3; color: #0b5a3c; }
+.lvl.l2 { background: #dbe9f8; color: #1d4d85; }
+.lvl.l3 { background: #fdf0d2; color: #7a5600; }
+.lvl.l4 { background: #fde7e9; color: #a02028; }
+.legendline { margin: 10px 0 14px; font-size: 14px; line-height: 2; }
+.trust td:first-child { font-weight: 600; min-width: 150px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lvl.l1 { background: #1c4a38; color: #bfeed6; } :root:not([data-theme="light"]) .lvl.l2 { background: #1d3a5c; color: #cfe3fa; } :root:not([data-theme="light"]) .lvl.l3 { background: #4d3d12; color: #f6dfa4; } :root:not([data-theme="light"]) .lvl.l4 { background: #55232a; color: #f8c9ce; } }

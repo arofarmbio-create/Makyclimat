@@ -1174,6 +1174,8 @@
       if (g("choc_cyc_dist_km") !== undefined) rows += row("Aléa naturel · proximité", Math.round(g("choc_cyc_dist_km")) + " km de la trajectoire" + (g("choc_cyc_dernier_jours") !== undefined ? ", passage il y a " + Math.round(g("choc_cyc_dernier_jours")) + " jours" : ""));
       if (g("choc_cyc_retour_ans") !== undefined) rows += row("Pluie du passage (3 jours)", g("choc_cyc_retour_ans") >= 15 ? "au moins aussi forte que toutes les saisons de référence" : "retour d'environ " + String(Math.round(g("choc_cyc_retour_ans") * 10) / 10).replace(".", ",") + " ans");
     }
+    var fr = g("choc_crue_retour_ans");
+    if (fr !== undefined && fr !== null) rows += row("Aléa naturel · crue de rivière (débit récent)", fr >= 20 ? "<b>plus de 20 ans</b> de période de retour" : fr >= 2 ? "<b>environ " + Math.round(fr) + " ans</b> de période de retour" : "débit courant (moins d'une crue de 2 ans)");
     [["spi3", "SPI-3"], ["spi6", "SPI-6"], ["spi12", "SPI-12"]].forEach(function (k) {
       var v = g(k[0]);
       if (v !== undefined && v !== null) rows += row("Choc agroécologique · " + k[1], "<b>" + (v > 0 ? "+" : "") + String(Math.round(v * 100) / 100).replace(".", ",") + "</b> : " + spiWord(v));

@@ -41,5 +41,11 @@ def test_rollup():
     assert r.loc["C1", "choc_cyc_vent_kt"] == 64 and r.loc["R1", "choc_cyc_dist_km"] == 20 and r.loc["F1", "choc_cyc_nb"] == 2
     assert r.loc["D1", "choc_cyc_retour_ans"] == 16 and r.loc["F2", "choc_cyc_dernier_jours"] == 10 and "C2" not in r.index
 
+def test_return_period():
+    from build_flood_shock import return_period
+    r = return_period([100, 300, 10000, 10], 100, 300)
+    assert abs(r[0] - 2) < 1e-6 and abs(r[1] - 20) < 1e-6 and r[2] == 100 and 1 <= r[3] < 2
+    assert np.isnan(return_period([5], np.nan, 300)[0]) and np.isnan(return_period([5], 100, 50)[0])
+
 if __name__ == "__main__":
-    test_wind_class(); test_track_distance(); test_fill_radii(); test_rollup(); print("ok")
+    test_wind_class(); test_track_distance(); test_fill_radii(); test_rollup(); test_return_period(); print("ok")

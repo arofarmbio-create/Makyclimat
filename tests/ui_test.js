@@ -81,6 +81,9 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   $("helpbtn").click();
   check("aide : onglet ouvert", $("tab-help").classList.contains("active") && /Démarrer en 30 secondes/.test($("tab-help").textContent));
   $("helpbtn").click(); w.document.querySelector('nav.tabs [data-tab=map]').click();
+  w.document.querySelector('nav.tabs [data-tab=trust]').click();
+  check("page Fiabilité", $("tab-trust").classList.contains("active") && /Validé/.test($("tab-trust").textContent) && /Non validé/.test($("tab-trust").textContent));
+  w.document.querySelector('nav.tabs [data-tab=map]').click();
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
   const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
   const nHist = fs.existsSync(path.join(docs, "data", slug, "response.json")) ? 6 : 0;

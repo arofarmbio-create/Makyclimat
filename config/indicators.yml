@@ -1042,3 +1042,25 @@ indicators:
     source: "Proximité dans le temps (JIAF 2, Tableau de référence 1). IBTrACS (NOAA ; rayons de vent JTWC, rayons 50/64 kt manquants estimés par rapport empirique à R34) et CHIRPS ; format des indicateurs de choc du JIAF 2 (intensité, proximité). Exposition au vent publié, pas dégât."
     frequency: À chaque passage
     status: active
+  - id: choc_crue_retour_ans
+    label: "Crue de rivière : période de retour du débit des derniers jours (valeur de la commune, du district ou de la région)"
+    unit: "ans"
+    format: float
+    aggregate: none
+    sectors: [drr, shelter, early_recovery]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: "Intensité du danger naturel (JIAF 2, Tableau de référence 1). GloFAS (Copernicus/ECMWF) via Open-Meteo, maxima annuels 1984-aujourd'hui ajustés par une loi de Gumbel ; débit modélisé (maille ~5 km), résolution commune ; au-delà de 20 ans la valeur est extrapolée et plafonnée à 100 ans ; pas une hauteur d'eau ni un dégât"
+    frequency: Quotidienne
+    status: active
+  - id: choc_crue_ratio_q2
+    label: "Crue de rivière : débit des derniers jours en multiple de la crue de 2 ans"
+    unit: "× crue de 2 ans"
+    format: float
+    aggregate: none
+    sectors: [drr, shelter, early_recovery]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: "Intensité du danger naturel (JIAF 2). GloFAS (Copernicus/ECMWF) via Open-Meteo, maxima annuels 1984-aujourd'hui ajustés par une loi de Gumbel ; débit modélisé (maille ~5 km), résolution commune ; au-delà de 20 ans la valeur est extrapolée et plafonnée à 100 ans ; pas une hauteur d'eau ni un dégât"
+    frequency: Quotidienne
+    status: active

@@ -21,6 +21,7 @@
     <button role="tab" data-tab="catalogue" aria-selected="false">Indicateurs et ODD</button>
     <button role="tab" data-tab="sources" aria-selected="false">Sources</button>
     <button role="tab" data-tab="method" aria-selected="false">Méthode</button>
+    <button role="tab" data-tab="trust" aria-selected="false">Fiabilité</button>
     <button role="tab" data-tab="help" aria-selected="false" id="helptab">? Aide</button>
   </nav>
 </header>
@@ -189,6 +190,32 @@
 
 <section id="tab-method" class="tab"><div class="page" id="methodtext"></div></section>
 
+<section id="tab-trust" class="tab"><div class="page trust">
+  <h2>Fiabilité : ce qui est vérifié, ce qui ne l'est pas</h2>
+  <p>Chaque indicateur porte un niveau de preuve. Aucune donnée simulée n'est présentée comme réelle. Les validations comparent nos résultats à des événements passés documentés (rapports OCHA, IFRC, Copernicus EMS, presse).</p>
+  <div class="legendline"><span class="lvl l1">Validé</span> testé sur des événements réels · <span class="lvl l2">Standard</span> méthode internationale appliquée à des données réelles · <span class="lvl l3">Approximation</span> proxy raisonné · <span class="lvl l4">Non validé</span> à utiliser avec prudence</div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Module</th><th>Niveau</th><th>Ce qui a été mesuré</th><th>Limites</th></tr></thead>
+    <tbody>
+      <tr><td>Cyclones : régions touchées (vent + pluie)</td><td><span class="lvl l1">Validé</span></td><td>10 cyclones 2017-2026, évaluation en laissant chaque événement de côté : bon classement des régions (AUC 0,81 ; 92 % des régions touchées dans les 8 premières sur 24).</td><td>Listes de régions touchées partielles dans les rapports. Les probabilités et seuils d'alerte ne sont pas fiables : à lire comme un classement.</td></tr>
+      <tr><td>Susceptibilité aux inondations au fokontany</td><td><span class="lvl l1">Validé</span></td><td>Cartes de dégâts Copernicus EMS : parmi les fokontany d'une zone touchée, le terrain (hauteur au-dessus des rivières, altitude, pente) distingue ceux qui ont été inondés (AUC 0,80, probabilités calibrées).</td><td>Conditionnelle à une zone déjà touchée ; couverture EMS biaisée vers les villes ; ne prédit pas les dégâts aux bâtiments.</td></tr>
+      <tr><td>Sécheresse : SPI 3, 6 et 12 mois</td><td><span class="lvl l2">Standard</span></td><td>Méthode de l'OMM sur 40 ans de pluie satellite. Pic 2020-21 du Grand Sud retrouvé : Androy -2,38 et Anosy -2,11 (extrême), 1re et 3e régions sur 24.</td><td>Mesure le déficit de pluie, pas l'insécurité alimentaire. Validation descriptive sur trois régions.</td></tr>
+      <tr><td>Chocs au format JIAF (vent, distance, pluie)</td><td><span class="lvl l3">Approximation</span></td><td>Rayons de vent publiés (JTWC) ; ceux de 50 et 64 nœuds manquants sont estimés par un rapport appris sur les rayons publiés (écart ≈ ±30 %).</td><td>Exposition au vent, pas dégât. Distance mesurée au centroïde du fokontany. Pluie plafonnée à 15 saisons de référence.</td></tr>
+      <tr><td>Crue de rivière (période de retour du débit)</td><td><span class="lvl l3">Approximation</span></td><td>Débit modélisé GloFAS, loi de Gumbel sur 1984-aujourd'hui.</td><td>Maille d'environ 5 km, incertain sur les petits bassins ; résolution commune ; pas de hauteur d'eau.</td></tr>
+      <tr><td>Cultures et bâti en zone basse</td><td><span class="lvl l3">Approximation</span></td><td>Occupation du sol ESA WorldCover (10 m) croisée avec la hauteur au-dessus des cours d'eau.</td><td>Exposition topographique, pas une perte constatée. Certaines zones sèches peuvent être classées en cultures.</td></tr>
+      <tr><td>Humidité du sol et indice de nappe</td><td><span class="lvl l3">Approximation</span></td><td>Bilan hydrique mensuel (Thornthwaite-Mather) sur pluie satellite, sols mondiaux et évapotranspiration.</td><td>Indice relatif seulement : sans mesures de puits, pas de niveau d'eau en mètres.</td></tr>
+      <tr><td>Prévision saisonnière</td><td><span class="lvl l2">Standard</span></td><td>Prévisions ECMWF présentées en trois tiers (sec, normal, humide).</td><td>Probabilités modestes (15 à 50 %) : indication de tendance, pas une promesse.</td></tr>
+      <tr><td>Éboulements</td><td><span class="lvl l4">Non validé</span></td><td>Seuil mondial de pluie et pente (littérature).</td><td>Pas encore comparé à des événements malgaches.</td></tr>
+      <tr><td>Santé liée au climat (choléra, paludisme, peste)</td><td><span class="lvl l4">Non validé</span></td><td>Liens climatiques de la littérature.</td><td>Aucune série de cas locale utilisée pour l'instant.</td></tr>
+    </tbody></table></div>
+  <h3>Ce que ces niveaux ne disent pas</h3>
+  <ul>
+    <li>L'<b>exposition</b> (qui et quoi est dans la zone d'un danger) n'est pas un <b>dégât</b>, ni un <b>besoin humanitaire</b> : ceux-ci relèvent des évaluations de terrain et du cadre JIAF d'OCHA.</li>
+    <li>Un niveau « validé » vaut pour les événements testés ; chaque nouvelle catastrophe enrichit la validation.</li>
+    <li>Un retour de terrain (zone touchée non signalée, fausse alerte) est précieux : il sert à corriger les modèles.</li>
+  </ul>
+</div></section>
+
 <section id="tab-help" class="tab"><div class="page help">
   <h2>Aide : comprendre MakyClimat</h2>
   <p>MakyClimat suit la pluie, la température et l'humidité du sol à Madagascar, prévoit les risques (sécheresse, inondation, cyclone, éboulement, chaleur) et montre où agir en priorité, de la région jusqu'au fokontany. Les chiffres sont des estimations indicatives et ne remplacent pas les analyses officielles (IPC, BNGRC, Météo Madagascar).</p>
@@ -231,7 +258,7 @@
   <h3 id="h-trust">Fiabilité et limites</h3>
   <ul>
     <li>Les données viennent de sources réelles (satellites de pluie, réanalyses météo, cartes d'occupation du sol, relief, base mondiale des cyclones). Aucune donnée simulée n'est affichée comme réelle.</li>
-    <li>Les modèles sont testés sur des événements passés (cyclones, inondations) ; les résultats chiffrés sont dans l'onglet <b>Méthode</b>.</li>
+    <li>Les modèles sont testés sur des événements passés (cyclones, inondations) ; le niveau de preuve de chaque module est dans l'onglet <b>Fiabilité</b> et les détails dans <b>Méthode</b>.</li>
     <li><b>Exposition n'est pas dégât :</b> « cultures en zone basse » signifie des cultures situées là où l'eau peut monter, pas des pertes constatées.</li>
     <li>Les prévisions saisonnières donnent des probabilités modestes ; la prévision à 7 jours est plus fiable que la saisonnière.</li>
   </ul>
