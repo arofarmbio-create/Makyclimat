@@ -1,34 +1,126 @@
-  couches non reconnues, exemples : ['EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_area_of_interest.shp', 'EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_crisis_information_poly.shp', 'EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_general_information_poly.shp', 'EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_hydrography_line.shp', 'EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_hydrography_poly.shp', 'EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_populated_places_point.shp', 'EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_settlements_poly.shp', 'EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_transportation_line.shp', 'EMSR197_01MAROANTSETRA_01DELINEATION_v1_60000_transportation_point.shp', 'EMSR197_02VANGAINDRANONORTH_01DELINEATION_v1_10000_area_of_interest.shp', 'EMSR197_02VANGAINDRANONORTH_01DELINEATION_v1_10000_crisis_information_poly.shp', 'EMSR197_02VANGAINDRANONORTH_01DELINEATION_v1_10000_general_information_poly.shp'] ; archives : ['EMSR197_01MAROANTSETRA_DELINEATION_OVERVIEW_v1_vector.zip', 'EMSR197_02VANGAINDRANONORTH_DELINEATION_OVERVIEW_v1_vector.zip', 'EMSR197_03VANGAINDRANO_GRADING_OVERVIEW_v1_vector.zip', 'EMSR197_04SAMBAVA_GRADING_OVERVIEW_v1_vector.zip']
-EMSR197 Enawo: zones cartographiées 0, polygones inondés 0, bâtiments gradés 0, fokontany évalués 0, touchés 0
-  couches non reconnues, exemples : ['area_of_interest_a.shp', 'built_up_a.shp', 'hydrography_a.shp', 'hydrography_l.shp', 'natural_land_use_a.shp', 'observed_event_a.shp', 'sensor_metadata_a.shp', 'transportation_l.shp', 'transportation_p.shp', 'v2_area_of_interest_a.shp', 'v2_built_up_a.shp', 'v2_hydrography_a.shp'] ; archives : ['EMSR264_01AMBILOPE_00REFERENCE_MAP_v2_vector.zip', 'EMSR264_01AMBILOPE_01DELINEATION_MAP_v2_vector.zip', 'EMSR264_02AMBANJA_00REFERENCE_MAP_v2_vector.zip', 'EMSR264_02AMBANJA_01DELINEATION_MAP_v2_vector.zip']
-EMSR264 Ava: zones cartographiées 0, polygones inondés 0, bâtiments gradés 0, fokontany évalués 0, touchés 0
-  couches non reconnues, exemples : ['area_of_interest_a.shp', 'built_up_a.shp', 'built_up_p.shp', 'facilities_a.shp', 'hydrography_a.shp', 'hydrography_l.shp', 'observed_event_a.shp', 'physiography_l.shp', 'sensor_metadata_a.shp', 'transportation_a.shp', 'transportation_l.shp', 'transportation_p.shp'] ; archives : ['EMSR274_01AMBILOBE_01DELINEATION_MAP_v2_vector.zip', 'EMSR274_02AMBANJA_01DELINEATION_MAP_v1_vector.zip', 'EMSR274_03BEFOTAKA_01DELINEATION_MAP_v1_vector.zip', 'EMSR274_04ANTSOHIHY_01DELINEATION_MAP_v1_vector.zip']
-EMSR274 Eliakim: zones cartographiées 0, polygones inondés 0, bâtiments gradés 0, fokontany évalués 0, touchés 0
+  crisis_information : ION_v1_60000_crisis_information_poly.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+  crisis_information : ION_v1_10000_crisis_information_poly.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+  crisis_information : 0500_crisis_information_poly_grading.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+  crisis_information : 1000_crisis_information_poly_grading.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+  crisis_information : 0000_crisis_information_poly_grading.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+  crisis_information : 0000_crisis_information_poly_grading.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+  crisis_information : 0000_crisis_information_poly_grading.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+  crisis_information : 0000_crisis_information_poly_grading.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+  crisis_information : 6000_crisis_information_poly_grading.shp ['src_date', 'ext_scale', 'nam', 'ext_date', 'txt', 'src_info', 'act_id', 'source_nam', 'grading', 'interpret'] {}
+EMSR197 Enawo: zones cartographiées 14, polygones inondés 0, bâtiments gradés 0, fokontany évalués 331, touchés 0
+  built_up sans classe de dégât : AMBILOPE_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : AMBILOPE_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : 2AMBANJA_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : 2AMBANJA_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : NTSOHIHY_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : NTSOHIHY_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : BORIZINY_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : BORIZINY_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : _DEL_MONIT01_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : MAROVOAY_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : MAROVOAY_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : 6MAHAMBO_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : 6MAHAMBO_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : AMBATOBE_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : AMBATOBE_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : TOMANDRY_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : TOMANDRY_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : MAHANORO_REF_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : MAHANORO_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : SOMELOKA_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : SOMELOKA_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : SYVARIKA_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : SYVARIKA_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : AFANGANA_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : AFANGANA_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : IHOROMBE_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : IHOROMBE_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : AINDRANO_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : AINDRANO_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : NANARIVO_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : NANARIVO_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : NDRIVAZO_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : NDRIVAZO_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : RIBIHINA_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : RIBIHINA_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : ZODETAIL_REF_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : ZODETAIL_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+EMSR264 Ava: zones cartographiées 38, polygones inondés 121598, bâtiments gradés 0, fokontany évalués 2754, touchés 873
+  built_up sans classe de dégât : AMBILOBE_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : 2AMBANJA_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : BEFOTAKA_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : NTSOHIHY_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : OAMASINA_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : CKAVILLE_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : TOMANDRY_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : MAHANORO_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : SYVARIKA_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : ANANJARY_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : HIMASINA_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : ANTALAHA_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : ANTSETRA_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : AHAJANGA_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : FENERIVE_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : MANANARA_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : NAIVONGO_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : LOKINTSY_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : IFOTOTRA_DEL_v1_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : 21NOSYBE_DEL_v2_built_up_a.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : VATENINA_DEL_v1_built_up_p.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
+EMSR274 Eliakim: zones cartographiées 21, polygones inondés 6834, bâtiments gradés 0, fokontany évalués 622, touchés 154
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
 EMSR564 Batsirai: zones cartographiées 8, polygones inondés 2330, bâtiments gradés 37141, fokontany évalués 245, touchés 100
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_MONIT01_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_MONIT01_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
 EMSR565 Emnati: zones cartographiées 10, polygones inondés 8412, bâtiments gradés 38432, fokontany évalués 291, touchés 168
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_MONIT01_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r2_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpA_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'real', 'geometry']
 EMSR645 Cheneso: zones cartographiées 23, polygones inondés 11671, bâtiments gradés 66413, fokontany évalués 1038, touchés 406
+  built_up sans classe de dégât : REF_PRODUCT_builtUpP_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'geometry']
+  built_up sans classe de dégât : DEL_PRODUCT_builtUpP_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'dmg_src_id', 'cd_value', 'geometry']
+  built_up sans classe de dégât : REF_PRODUCT_builtUpP_r1_v1.shp ['obj_type', 'name', 'info', 'det_method', 'notation', 'or_src_id', 'geometry']
 EMSR652 Freddy: zones cartographiées 7, polygones inondés 10, bâtiments gradés 32714, fokontany évalués 48, touchés 28
                                    cible                variante    auc  brier  brier_climato    pod    far
-0  touche (bâtiment endommagé ou inondé)           vent et pluie  0.517  0.322          0.245  0.390  0.391
-1  touche (bâtiment endommagé ou inondé)            terrain seul  0.807  0.179          0.245  0.903  0.398
-2  touche (bâtiment endommagé ou inondé)  vent, pluie et terrain  0.829  0.167          0.245  0.775  0.314
-3                                 inondé           vent et pluie  0.531  0.311          0.241  0.234  0.471
-4                                 inondé            terrain seul  0.798  0.179          0.241  0.797  0.378
-5                                 inondé  vent, pluie et terrain  0.797  0.182          0.241  0.786  0.403
-6       bâtiments détruits ou endommagés           vent et pluie  0.447  0.097          0.088  0.138  0.938
-7       bâtiments détruits ou endommagés            terrain seul  0.733  0.093          0.088  0.333  0.813
-8       bâtiments détruits ou endommagés  vent, pluie et terrain  0.717  0.128          0.088  0.245  0.873
+0  touche (bâtiment endommagé ou inondé)           vent et pluie  0.495  0.241          0.226  0.674  0.652
+1  touche (bâtiment endommagé ou inondé)            terrain seul  0.796  0.171          0.226  0.690  0.456
+2  touche (bâtiment endommagé ou inondé)  vent, pluie et terrain  0.786  0.176          0.226  0.756  0.481
+3                                 inondé           vent et pluie  0.482  0.238          0.223  0.573  0.689
+4                                 inondé            terrain seul  0.807  0.165          0.223  0.743  0.400
+5                                 inondé  vent, pluie et terrain  0.794  0.172          0.223  0.730  0.415
+6       bâtiments détruits ou endommagés           vent et pluie  0.166  0.037          0.031  0.119  0.983
+7       bâtiments détruits ou endommagés            terrain seul  0.588  0.035          0.031  0.308  0.922
+8       bâtiments détruits ou endommagés  vent, pluie et terrain  0.421  0.047          0.031  0.063  0.972
                   variante evenement   auc   pod   far
-0            vent et pluie   EMSR564  0.61  0.78  0.52
-1            vent et pluie   EMSR565  0.83  0.97  0.21
-2            vent et pluie   EMSR645  0.36  0.03  0.76
-3            vent et pluie   EMSR652  0.80  0.71  0.26
-4             terrain seul   EMSR564  0.66  0.63  0.49
-5             terrain seul   EMSR565  0.90  0.98  0.22
-6             terrain seul   EMSR645  0.83  0.94  0.43
-7             terrain seul   EMSR652  0.37  0.86  0.44
-8   vent, pluie et terrain   EMSR564  0.70  0.63  0.39
-9   vent, pluie et terrain   EMSR565  0.91  0.96  0.20
-10  vent, pluie et terrain   EMSR645  0.83  0.74  0.34
-11  vent, pluie et terrain   EMSR652  0.49  0.64  0.40
-0.8625082182774491 [{'evenement': 'EMSR564', 'communes_evaluees': 43, 'communes_touchees': 32, 'auc': 0.8465909090909091}, {'evenement': 'EMSR565', 'communes_evaluees': 49, 'communes_touchees': 36, 'auc': 0.9615384615384616}, {'evenement': 'EMSR645', 'communes_evaluees': 133, 'communes_touchees': 80, 'auc': 0.8511792452830189}, {'evenement': 'EMSR652', 'communes_evaluees': 9, 'communes_touchees': 8, 'auc': 0.5}]
+0            vent et pluie   EMSR264  0.45  0.45  0.71
+1            vent et pluie   EMSR274  0.55  0.81  0.76
+2            vent et pluie   EMSR564  0.56  0.60  0.53
+3            vent et pluie   EMSR565  0.71  0.98  0.43
+4            vent et pluie   EMSR645  0.66  1.00  0.61
+5            vent et pluie   EMSR652  0.84  0.61  0.06
+6             terrain seul   EMSR264  0.80  0.64  0.45
+7             terrain seul   EMSR274  0.75  0.86  0.70
+8             terrain seul   EMSR564  0.65  0.45  0.50
+9             terrain seul   EMSR565  0.93  0.91  0.10
+10            terrain seul   EMSR645  0.81  0.72  0.35
+11            terrain seul   EMSR652  0.43  0.39  0.50
+12  vent, pluie et terrain   EMSR264  0.78  0.76  0.50
+13  vent, pluie et terrain   EMSR274  0.76  0.79  0.71
+14  vent, pluie et terrain   EMSR564  0.69  0.51  0.40
+15  vent, pluie et terrain   EMSR565  0.93  0.94  0.16
+16  vent, pluie et terrain   EMSR645  0.81  0.73  0.37
+17  vent, pluie et terrain   EMSR652  0.56  0.50  0.44
+0.8143805816349897 [{'evenement': 'EMSR264', 'communes_evaluees': 300, 'communes_touchees': 191, 'auc': 0.7846198184350833}, {'evenement': 'EMSR274', 'communes_evaluees': 83, 'communes_touchees': 50, 'auc': 0.8436363636363636}, {'evenement': 'EMSR564', 'communes_evaluees': 43, 'communes_touchees': 32, 'auc': 0.8693181818181818}, {'evenement': 'EMSR565', 'communes_evaluees': 49, 'communes_touchees': 36, 'auc': 0.9572649572649573}, {'evenement': 'EMSR645', 'communes_evaluees': 133, 'communes_touchees': 80, 'auc': 0.839622641509434}, {'evenement': 'EMSR652', 'communes_evaluees': 9, 'communes_touchees': 8, 'auc': 0.5}]
