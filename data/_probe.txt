@@ -1,26 +1,8 @@
-couche -> 404
-champs illisibles Expecting value: line 1 column 1 (char 0)
-Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/models.py", line 1116, in json
-    return complexjson.loads(self.text, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/json/__init__.py", line 346, in loads
-    return _default_decoder.decode(s)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/json/decoder.py", line 337, in decode
-    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/json/decoder.py", line 355, in raw_decode
-    raise JSONDecodeError("Expecting value", s, err.value) from None
-json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/probe_sources.py", line 19, in <module>
-    j = q.json()
-        ^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/models.py", line 1120, in json
-    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
-requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-
+https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/MapServer/0 -> 404 '<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n'
+https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/FeatureServer/0 -> 404 '<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n'
+https://maps.nccs.nasa.gov/mapping/rest/services/COOLR/COOLR_Events_Point/MapServer/0 -> erreur HTTPSConnectionPool(host='maps.nccs.nasa.gov', port=443): Max retries exceeded with url: /mapping/rest/services/COOLR/COOLR_Events_Point/MapServer/0?f=json (Caused by NewConnectionError("HTTPSConnection(host='maps.nccs.nasa.gov', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable"))
+https://maps.nccs.nasa.gov/mapping/rest/services/COOLR/COOLR_Events/MapServer/0 -> erreur HTTPSConnectionPool(host='maps.nccs.nasa.gov', port=443): Max retries exceeded with url: /mapping/rest/services/COOLR/COOLR_Events/MapServer/0?f=json (Caused by NewConnectionError("HTTPSConnection(host='maps.nccs.nasa.gov', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable"))
+https://maps.nccs.nasa.gov/mapping/rest/services/COOLR/COOLR_Events_Polygon/MapServer/0 -> erreur HTTPSConnectionPool(host='maps.nccs.nasa.gov', port=443): Max retries exceeded with url: /mapping/rest/services/COOLR/COOLR_Events_Polygon/MapServer/0?f=json (Caused by NewConnectionError("HTTPSConnection(host='maps.nccs.nasa.gov', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable"))
+https://maps.nccs.nasa.gov/mapping/rest/services/COOLR/COOLR_Events_Polygon/FeatureServer/0 -> erreur HTTPSConnectionPool(host='maps.nccs.nasa.gov', port=443): Max retries exceeded with url: /mapping/rest/services/COOLR/COOLR_Events_Polygon/FeatureServer/0?f=json (Caused by NewConnectionError("HTTPSConnection(host='maps.nccs.nasa.gov', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable"))
+https://maps.nccs.nasa.gov/mapping/rest/services/COOLR -> erreur HTTPSConnectionPool(host='maps.nccs.nasa.gov', port=443): Max retries exceeded with url: /mapping/rest/services/COOLR?f=json (Caused by NewConnectionError("HTTPSConnection(host='maps.nccs.nasa.gov', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable"))
+https://gpm.nasa.gov/landslides/data.html -> 404 '<!DOCTYPE html>\n<html  lang="en" dir="ltr">\n  <head>\n    <meta charset="utf-8" />\n<noscript><style>form.antibot * :not(.antibot-message) { display: none !important; }</style>\n</noscript><meta name="de'
