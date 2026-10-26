@@ -1,17 +1,12 @@
-enawo-2017: fenêtre 2017-03-05..2017-03-11, pluie=oui
-batsirai-2022: fenêtre 2022-02-03..2022-02-09, pluie=oui
-belna-2019: fenêtre 2019-12-05..2019-12-12, pluie=oui
-gamane-2024: fenêtre 2024-03-23..2024-04-02, pluie=oui
-jude-2025: fenêtre 2025-03-06..2025-03-16, pluie=oui
-       evenement  n_regions  n_documentees  auc_wind100  auc_wind200  auc_rx3  auc_frac3  auc_combine
-0  batsirai-2022         24              5         0.84         0.87     0.85       0.72         0.85
-1     belna-2019         24              2         1.00         0.95     0.30       0.36         0.80
-2     enawo-2017         24              4         0.68         0.76     0.95       0.75         0.82
-3    gamane-2024         24              3         0.82         0.93     0.95       0.94         0.97
-4      jude-2025         24              4         0.86         0.82     0.61       0.96         0.81
-       evenement                               regle_choisie  tp  fp  fn   pod   far    f1
-0  batsirai-2022                         pluie 3 j >= 200 mm   1   0   4  0.20  0.00  0.33
-1     belna-2019                         pluie 3 j >= 150 mm   0   3   2  0.00  1.00  0.00
-2     enawo-2017                         vent>=34kt à 100 km   3  17   1  0.75  0.85  0.25
-3    gamane-2024  vent>=34kt à 100 km OU pluie 3 j >= 200 mm   3   3   0  1.00  0.50  0.67
-4      jude-2025                         pluie 3 j >= 200 mm   1   3   3  0.25  0.75  0.25
+Traceback (most recent call last):
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_events.py", line 302, in <module>
+    main()
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_events.py", line 234, in main
+    if (z["codes"] == leaves.pcode.values).all():
+        ~^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy/lib/_npyio_impl.py", line 257, in __getitem__
+    return format.read_array(
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/numpy/lib/_format_impl.py", line 833, in read_array
+    raise ValueError("Object arrays cannot be loaded when "
+ValueError: Object arrays cannot be loaded when allow_pickle=False
