@@ -4,20 +4,20 @@ import requests
 import pandas as pd
 
 out = []
-cands = ["https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/MapServer/0",
-         "https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/FeatureServer/0",
-         "https://maps.nccs.nasa.gov/mapping/rest/services/COOLR/COOLR_Events_Point/MapServer/0",
-         "https://maps.nccs.nasa.gov/mapping/rest/services/COOLR/COOLR_Events/MapServer/0",
-         "https://maps.nccs.nasa.gov/mapping/rest/services/COOLR/COOLR_Events_Polygon/MapServer/0",
-         "https://maps.nccs.nasa.gov/mapping/rest/services/COOLR/COOLR_Events_Polygon/FeatureServer/0",
-         "https://maps.nccs.nasa.gov/mapping/rest/services/COOLR",
-         "https://gpm.nasa.gov/landslides/data.html"]
+cands = ["https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides?f=json",
+         "https://gis.earthdata.nasa.gov/gis05/rest/services?f=json",
+         "https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/FeatureServer?f=json",
+         "https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/MapServer?f=json",
+         "https://maps.nccs.nasa.gov/arcgis/rest/services?f=json",
+         "https://maps.nccs.nasa.gov/mapping/rest/services/COOLR?f=json",
+         "https://data.humdata.org/api/3/action/package_search?q=landslide%20madagascar&rows=10",
+         "https://data.humdata.org/api/3/action/package_search?q=desinventar%20madagascar&rows=10"]
 try:
     base = None
     for c in cands:
         try:
-            rr = requests.get(c, params={"f": "json"}, timeout=40)
-            out.append(f"{c} -> {rr.status_code} {rr.text[:200]!r}")
+            rr = requests.get(c, timeout=40)
+            out.append(f"{c} -> {rr.status_code} {rr.text[:700]!r}")
             if rr.ok and '"fields"' in rr.text and base is None:
                 base = c
         except Exception as e:
