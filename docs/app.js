@@ -84,6 +84,43 @@
     });
   }
 
+  /* ---------- Ergonomie : plein écran, panneau, légende, cartes repliables ---------- */
+  function resizeMaps() {
+    setTimeout(function () { if (S.map && S.map.invalidateSize) S.map.invalidateSize(); if (S.map2 && S.map2.invalidateSize) S.map2.invalidateSize(); }, 60);
+  }
+  function setupErgonomics() {
+    var body = document.body, fs = $("fsbtn"), pb = $("panelbtn"), lg = $("lgtoggle"), box = $("legendbox");
+    var small = false;
+    try { small = window.matchMedia && window.matchMedia("(max-width: 860px)").matches; } catch (e) {}
+    function sync() {
+      fs.setAttribute("aria-pressed", body.classList.contains("mapfull") ? "true" : "false");
+      fs.textContent = body.classList.contains("mapfull") ? "✕ Quitter le plein écran" : "⛶ Plein écran";
+      pb.setAttribute("aria-pressed", body.classList.contains("nopanel") ? "false" : "true");
+      lg.setAttribute("aria-expanded", box.classList.contains("closed") ? "false" : "true");
+      lg.textContent = box.classList.contains("closed") ? "Légende ▸" : "Légende ▾";
+      resizeMaps();
+    }
+    fs.addEventListener("click", function () {
+      var on = !body.classList.contains("mapfull");
+      body.classList.toggle("mapfull", on);
+      if (on && small) body.classList.add("nopanel");   // sur téléphone : carte seule d'abord
+      if (!on) body.classList.remove("nopanel");
+      sync();
+    });
+    pb.addEventListener("click", function () { body.classList.toggle("nopanel"); sync(); });
+    lg.addEventListener("click", function () { box.classList.toggle("closed"); sync(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && body.classList.contains("mapfull")) { body.classList.remove("mapfull", "nopanel"); sync(); } });
+    // rubriques du panneau repliables (clic sur le titre)
+    document.querySelectorAll("#panel .card > h3, #panel > div > h3").forEach(function (h) {
+      h.setAttribute("role", "button"); h.tabIndex = 0;
+      function tog() { h.parentNode.classList.toggle("collapsed"); }
+      h.addEventListener("click", tog);
+      h.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tog(); } });
+    });
+    if (small) box.classList.add("closed");            // téléphone : légende repliée au départ
+    sync();
+  }
+
   /* ---------- Carte ---------- */
   function setupMap() {
     var c = S.meta.map;
@@ -1636,7 +1673,7 @@
       $("through").textContent = "Pluie jusqu'au " + fmtDate(S.meta.data_through);
       document.title = "MakyClimat — " + S.meta.country;
       renderEnso(); renderForecastBadge();
-      setupMap(); setupControls();
+      setupMap(); setupControls(); setupErgonomics();
       var hash = location.hash.replace("#", "").split("/").filter(Boolean).slice(0, 3);
       var p = hash.length ? ensureIndex().then(function () {
         S.path = hash.map(function (c) { return { pcode: c, name: S.nameOf[c] || c }; });

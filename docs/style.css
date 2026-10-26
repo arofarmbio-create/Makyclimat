@@ -32,8 +32,10 @@ nav.tabs button[aria-selected="true"] { background: var(--brand); color: var(--b
 .crumbs button { pointer-events: auto; background: var(--panel); border: 1px solid var(--line); color: var(--ink);
   border-radius: 999px; padding: 4px 10px; cursor: pointer; font: inherit; font-size: 13px; }
 .crumbs button.cur { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
-.legend { position: absolute; z-index: 500; bottom: 16px; left: 10px; background: var(--panel); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 8px 10px; font-size: 12px; max-width: 260px; }
+.legendbox { position: absolute; z-index: 500; bottom: 16px; left: 10px; max-width: 260px; max-height: 60%; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.legendbox.closed .legend { display: none; }
+.legend { overflow: auto; background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 8px 10px; font-size: 12px; }
 .legend div { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
 .legend i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,.15); }
 aside#panel { overflow: auto; padding: var(--gap); background: var(--panel); border-left: 1px solid var(--line);
@@ -156,3 +158,35 @@ body.simple #histcard { display: none; }
 #whocard .who td.wok { background: #e6f4ea; text-align: center; }
 #whocard .who td.wmany { background: #ffe9c7; text-align: center; font-weight: 600; }
 #whocard h4 { margin: 10px 0 4px; font-size: 14px; }
+
+/* Ergonomie : plein écran, panneau et légende repliables */
+.mapctl { position: absolute; z-index: 700; top: 10px; right: 10px; display: flex; gap: 6px; }
+.mcbtn { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px;
+  font: inherit; font-size: 13px; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+.mcbtn:hover { background: var(--chip); }
+.crumbs { right: 250px; }
+#panel .card > h3, #panel > div > h3 { cursor: pointer; user-select: none; }
+#panel .card > h3::after, #panel > div > h3::after { content: " ▾"; font-size: 11px; opacity: .6; }
+#panel .collapsed > h3::after { content: " ▸"; }
+#panel .collapsed > :not(h3) { display: none !important; }
+/* panneau masqué (bureau) */
+body.nopanel #tab-map.active { grid-template-columns: 1fr; }
+body.nopanel aside#panel { display: none; }
+/* plein écran : carte seule, panneau flottant par-dessus */
+body.mapfull header.top, body.mapfull footer { display: none; }
+body.mapfull #tab-map.active { position: fixed; inset: 0; z-index: 900; height: 100vh; display: block; background: var(--bg); }
+body.mapfull .mapwrap { position: absolute; inset: 0; height: auto; }
+body.mapfull aside#panel { position: absolute; z-index: 800; top: 54px; right: 10px; bottom: 10px; width: min(390px, calc(100vw - 20px));
+  height: auto; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 4px 18px rgba(0,0,0,.28); opacity: .97; }
+body.mapfull.nopanel aside#panel { display: none; }
+body.mapfull .crumbs { right: 250px; }
+@media (max-width: 860px) {
+  .mapwrap { height: 70vh; }
+  .crumbs { right: 10px; top: 46px; }
+  .maphdr { top: 84px; }
+  .mcbtn { padding: 6px 10px; }
+  body.nopanel aside#panel { display: none; }
+  body.mapfull aside#panel { top: auto; left: 10px; right: 10px; bottom: 10px; width: auto; max-height: 55vh; }
+  body.mapfull .legendbox { bottom: 10px; }
+  body.mapfull:not(.nopanel) .legendbox { bottom: calc(55vh + 20px); }
+}

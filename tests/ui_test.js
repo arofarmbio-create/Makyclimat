@@ -61,6 +61,18 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
 
 (async () => {
   check("chargement initial (KPIs)", await waitFor(() => $("kpis").children.length === 3));
+  $("fsbtn").click();
+  check("plein écran activé", w.document.body.classList.contains("mapfull"));
+  $("panelbtn").click();
+  check("panneau masquable", w.document.body.classList.contains("nopanel"));
+  $("fsbtn").click();
+  check("sortie du plein écran", !w.document.body.classList.contains("mapfull") && !w.document.body.classList.contains("nopanel"));
+  $("lgtoggle").click();
+  check("légende repliable", $("legendbox").classList.contains("closed"));
+  $("lgtoggle").click();
+  check("légende réaffichée", !$("legendbox").classList.contains("closed"));
+  var h3 = w.document.querySelector("#cmpcard > h3"); h3.click();
+  check("rubrique repliable", $("cmpcard").classList.contains("collapsed")); h3.click();
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
   const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
   const nHist = fs.existsSync(path.join(docs, "data", slug, "response.json")) ? 6 : 0;
@@ -86,6 +98,7 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     const cols = new Set(currentLayers.map((l) => l._style.fillColor));
     check("carte des alertes colorée avec la palette des niveaux", [...cols].every((c) => ["#d7ebd2", "#f2d16b", "#e8893a", "#b2262e"].includes(c)), [...cols].join(" "));
     check("légende des niveaux d'alerte", /Vigilance/.test($("legend").textContent) && /Alerte maximale/.test($("legend").textContent));
+  check("rubrique repliable", $("cmpcard").classList.contains("collapsed")); h3.click();
     $("layer").value = "l"; $("layer").dispatchEvent(new w.Event("change"));
   }
   const respPath = path.join(docs, "data", slug, "response.json");

@@ -31,7 +31,14 @@
     <div class="maphdr" id="hdrA" hidden></div>
     <div class="maphdr b" id="hdrB" hidden></div>
     <div class="crumbs" id="crumbs"></div>
-    <div class="legend" id="legend"></div>
+    <div class="mapctl" id="mapctl">
+      <button type="button" id="fsbtn" class="mcbtn" aria-pressed="false" title="Carte en plein écran">⛶ Plein écran</button>
+      <button type="button" id="panelbtn" class="mcbtn" aria-pressed="true" title="Afficher ou masquer le panneau">☰ Panneau</button>
+    </div>
+    <div class="legendbox" id="legendbox">
+      <button type="button" id="lgtoggle" class="mcbtn" aria-expanded="true" title="Réduire ou afficher la légende">Légende ▾</button>
+      <div class="legend" id="legend"></div>
+    </div>
   </div>
   <aside id="panel">
     <div id="results">
