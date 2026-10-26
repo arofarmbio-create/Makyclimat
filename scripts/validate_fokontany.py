@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 import requests
 
-from common import country_docs_dir, grid_dir, load_config, read_units, write_json
+from common import DATA_DIR, country_docs_dir, grid_dir, load_config, read_units, write_json
 from validate_events import VAL_DIR, auc, confusion, fetch_ibtracs, footprint, loeo, project, train
 
 EVENTS = {"EMSR197": ("Enawo", 2017), "EMSR264": ("Ava", 2018), "EMSR274": ("Eliakim", 2018), "EMSR564": ("Batsirai", 2022),
@@ -35,6 +35,7 @@ EVENTS = {"EMSR197": ("Enawo", 2017), "EMSR264": ("Ava", 2018), "EMSR274": ("Eli
 H = {"User-Agent": "Mozilla/5.0 MakyClimat (recherche doctorale)"}
 AREA_CRS = "EPSG:6933"
 COLS = ["cov34", "cov50", "cov64", "lrp", "lratio"]
+TERRAIN = ["lhand5", "lhand15", "lslope", "lelev", "lriver", "lpopdens"]
 
 
 def list_zips(code):
@@ -59,9 +60,11 @@ def read_layers(code, tmp: Path):
     with ThreadPoolExecutor(6) as ex:
         dirs = list(ex.map(lambda u: fetch_zip(u, tmp / code), urls))
     aoi, fl, bl = [], [], []
+    names = set()
     for d in dirs:
         for shp in glob.glob(f"{d}/**/*.shp", recursive=True):
             nm = Path(shp).name
+            names.add(re.sub(r"EMSR\d+_[A-Z0-9]+_[A-Z]+_[A-Za-z0-9]+_", "", nm))
             kind = "aoi" if "areaOfInterest" in nm else "flood" if "observedEvent" in nm else "bld" if re.search(r"builtUp[PA]_", nm) else None
             if not kind:
                 continue
@@ -83,6 +86,8 @@ def read_layers(code, tmp: Path):
                 b = g[["damage_gra", "geometry"]].copy()
                 b["geometry"] = b.geometry.representative_point()
                 bl.append(b)
+    if not (aoi or fl or bl):
+        print("  couches non reconnues, exemples :", sorted(names)[:12], "; archives :", [u.split("/")[-1] for u in urls[:4]])
     cat = lambda L: gpd.GeoDataFrame(pd.concat(L, ignore_index=True), crs=4326) if L else gpd.GeoDataFrame({"geometry": []}, crs=4326)  # noqa: E731
     return cat(aoi), cat(fl), cat(bl)
 
@@ -156,6 +161,13 @@ def main() -> None:
         z = np.load(p, allow_pickle=True)
         if (z["codes"] == leaves.pcode.values).all():
             annual = z["rx3"]
+    hy = pd.read_csv(DATA_DIR / a.country / "external" / "hydro.csv")
+    hy = hy[hy.pcode.isin(set(leaves.pcode))].pivot_table(index="pcode", columns="indicateur", values="valeur").reset_index()
+    ter = leaves[["pcode", "pop", "area_km2"]].merge(hy, on="pcode", how="left")
+    ter["lhand5"] = np.log1p(ter.hand_lt5_pct); ter["lhand15"] = np.log1p(ter.hand_lt15_pct)
+    ter["lslope"] = np.log1p(ter.slope_mean_pct); ter["lelev"] = np.log1p(ter.elev_mean_m.clip(lower=0))
+    ter["lriver"] = np.log1p(ter.river_max_km2); ter["lpopdens"] = np.log1p(ter["pop"].fillna(0) / ter.area_km2.clip(lower=0.01))
+    ter = ter[["pcode"] + TERRAIN]
     fok = load_fokontany()
     fok = fok[fok.pcode.isin(set(leaves.pcode))].reset_index(drop=True)
     d_all = fetch_ibtracs()
@@ -194,7 +206,7 @@ def main() -> None:
             N = annual.shape[0]
             df["lrp"] = np.log(np.clip((N + 1) / (1 + (annual >= rx3[None, :]).sum(axis=0)), 1, N + 1))
             df["lratio"] = np.log(np.maximum(rx3 / np.maximum(np.median(annual, axis=0), 1.0), 0.05))
-        m = tr.merge(df, on="pcode")
+        m = tr.merge(df, on="pcode").merge(ter, on="pcode", how="left")
         m = m[m.evalue].copy()
         m["evenement"] = code
         rows.append(m)
@@ -204,18 +216,26 @@ def main() -> None:
     feat["pos"] = feat["pos"].astype(bool)
     VAL_DIR.mkdir(exist_ok=True)
     pd.DataFrame(summary).to_csv(VAL_DIR / "ems_resume.csv", index=False)
-    use = [c for c in COLS if c in feat and feat[c].std() > 0]
+    feat = feat.dropna(subset=TERRAIN).reset_index(drop=True)
+    feat["pos_inond"] = feat.flood_frac >= 0.05
+    feat["pos_bati"] = feat.n_dmg >= 1
+    haz = [c for c in COLS if c in feat and feat[c].std() > 0]
     out = {"evenements": summary}
-    variants = {"vent seul": [c for c in ["cov34", "cov50", "cov64"] if c in use], "pluie seule": [c for c in ["lrp", "lratio"] if c in use], "vent et pluie": use}
-    res_f, oof_best = {}, None
-    for name, cols in variants.items():
-        if not cols:
-            continue
-        r = loeo(feat, cols, with_oof=True)
-        oof = r.pop("_oof")
-        res_f[name] = {"colonnes": cols, **r}
-        if name == "vent et pluie":
-            oof_best = oof
+    variants = {"vent et pluie": haz, "terrain seul": TERRAIN, "vent, pluie et terrain": haz + TERRAIN}
+    res_f, oof_best, final = {}, None, {}
+    for cible, col in [("touche (bâtiment endommagé ou inondé)", "pos"), ("inondé", "pos_inond"), ("bâtiments détruits ou endommagés", "pos_bati")]:
+        f = feat.copy()
+        f["pos"] = feat[col].astype(bool)
+        res_f[cible] = {}
+        for name, cols in variants.items():
+            r = loeo(f, cols, with_oof=True)
+            oof = r.pop("_oof")
+            res_f[cible][name] = {"colonnes": cols, "positifs": int(f.pos.sum()), "n": int(len(f)), **r}
+            if col == "pos" and name == "vent, pluie et terrain":
+                oof_best = oof
+                mu, sd, b0, b = train(f[cols].values, f["pos"].values)
+                final[name] = {"colonnes": cols, "moyenne": mu.tolist(), "ecart_type": sd.tolist(), "intercept": b0, "coefficients": b.tolist()}
+    feat["pos"] = feat["pos"].astype(bool)
     out["fokontany"] = res_f
     # agrégation à la commune : touchée si un fokontany évalué l'est ; probabilité = maximum
     if oof_best is not None:
@@ -227,18 +247,15 @@ def main() -> None:
             per.append({"evenement": ev, "communes_evaluees": int(len(g)), "communes_touchees": int(g.pos.sum()), "auc": auc(g.p.values, g.pos.values)})
         out["communes"] = {"auc_global": auc(com.p.values, com.pos.values), "par_evenement": per}
         com.to_csv(VAL_DIR / "ems_communes_oof.csv", index=False)
-    pd.DataFrame([{"variante": n, **v["global"]} for n, v in res_f.items()]).to_csv(VAL_DIR / "ems_modeles_fokontany.csv", index=False)
-    pd.DataFrame([{"variante": n, **r} for n, v in res_f.items() for r in v["par_evenement"]]).to_csv(VAL_DIR / "ems_fokontany_par_evenement.csv", index=False)
-    final = {}
-    for n, cols in variants.items():
-        if cols:
-            mu, sd, b0, b = train(feat[cols].values, feat["pos"].values)
-            final[n] = {"colonnes": cols, "moyenne": mu.tolist(), "ecart_type": sd.tolist(), "intercept": b0, "coefficients": b.tolist()}
+    flat = [{"cible": c, "variante": n, **{k: v for k, v in r["global"].items()}} for c, d in res_f.items() for n, r in d.items()]
+    pd.DataFrame(flat).to_csv(VAL_DIR / "ems_modeles_fokontany.csv", index=False)
+    pd.DataFrame([{"cible": c, "variante": n, **r} for c, d in res_f.items() for n, v in d.items() for r in v["par_evenement"]]).to_csv(VAL_DIR / "ems_fokontany_par_evenement.csv", index=False)
     out["modele"] = final
     out["generated"] = dt.date.today().isoformat()
     write_json(VAL_DIR / "ems_resultats.json", out)
-    print(pd.DataFrame([{"variante": n, **v["global"]} for n, v in res_f.items()]).round(3).to_string())
-    print(pd.DataFrame([{"variante": n, **{k: r[k] for k in ("evenement", "auc", "pod", "far")}} for n, v in res_f.items() for r in v["par_evenement"] if n == "vent et pluie"]).round(2).to_string())
+    print(pd.DataFrame(flat)[["cible", "variante", "auc", "brier", "brier_climato", "pod", "far"]].round(3).to_string())
+    first = list(res_f)[0]
+    print(pd.DataFrame([{"variante": n, **{k: r[k] for k in ("evenement", "auc", "pod", "far")}} for n, v in res_f[first].items() for r in v["par_evenement"]]).round(2).to_string())
     print(out.get("communes", {}).get("auc_global"), out.get("communes", {}).get("par_evenement"))
 
 
