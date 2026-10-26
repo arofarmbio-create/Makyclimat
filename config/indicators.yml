@@ -862,3 +862,93 @@ indicators:
     source: "MakyClimat : modèle de terrain (HAND, altitude, pente, rivière, densité) appris sur les dégâts cartographiés par satellite (Copernicus EMS, 6 cyclones) ; évalué en laissant un événement de côté (AUC 0,80 au fokontany) ; conditionnel à un aléa réel, pas une prévision de crue"
     frequency: Ponctuelle
     status: active
+  # ---------------- CULTURES ET BÂTI EXPOSÉS (calculés par MakyClimat : WorldCover x HAND) ----------------
+  - id: cult_ha
+    label: Surface cultivée (WorldCover)
+    unit: "ha"
+    format: int
+    aggregate: none
+    sectors: [agriculture, food]
+    sdg: ["2.3"]
+    national: [axe1]
+    source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
+    frequency: Ponctuelle
+    status: active
+  - id: cult_basse5_ha
+    label: Surface cultivée à moins de 5 m au-dessus d'un cours d'eau (exposition aux crues)
+    unit: "ha"
+    format: int
+    aggregate: none
+    sectors: [agriculture, food, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1]
+    source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
+    frequency: Ponctuelle
+    status: active
+  - id: cult_basse15_ha
+    label: Surface cultivée à moins de 15 m au-dessus d'un cours d'eau
+    unit: "ha"
+    format: int
+    aggregate: none
+    sectors: [agriculture, food, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1]
+    source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
+    frequency: Ponctuelle
+    status: active
+  - id: cult_basse5_pct
+    label: Part de la surface cultivée à moins de 5 m au-dessus d'un cours d'eau (exposition aux crues)
+    unit: "% de la surface cultivée"
+    format: pct
+    aggregate: none
+    sectors: [agriculture, food, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1]
+    source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
+    frequency: Ponctuelle
+    status: active
+  - id: cult_basse15_pct
+    label: Part de la surface cultivée à moins de 15 m au-dessus d'un cours d'eau
+    unit: "% de la surface cultivée"
+    format: pct
+    aggregate: none
+    sectors: [agriculture, food, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1]
+    source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
+    frequency: Ponctuelle
+    status: active
+  - id: bati_ha
+    label: Surface bâtie (WorldCover)
+    unit: "ha"
+    format: int
+    aggregate: none
+    sectors: [shelter, drr]
+    sdg: ["11.1"]
+    national: [axe1]
+    source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
+    frequency: Ponctuelle
+    status: active
+  - id: bati_basse5_ha
+    label: Surface bâtie à moins de 5 m au-dessus d'un cours d'eau (exposition aux crues)
+    unit: "ha"
+    format: int
+    aggregate: none
+    sectors: [shelter, drr]
+    sdg: ["11.5"]
+    national: [axe1]
+    source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
+    frequency: Ponctuelle
+    status: active
+  - id: bati_basse5_pct
+    label: Part de la surface bâtie à moins de 5 m au-dessus d'un cours d'eau (exposition aux crues)
+    unit: "% de la surface bâtie"
+    format: pct
+    aggregate: none
+    sectors: [shelter, drr]
+    sdg: ["11.5"]
+    national: [axe1]
+    source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
+    frequency: Ponctuelle
+    status: active
+
