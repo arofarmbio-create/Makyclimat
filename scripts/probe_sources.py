@@ -1,47 +1,41 @@
-"""Sonde : événements d'éboulement NASA COOLR pour Madagascar."""
+"""Sonde : trouver les couches du visualiseur NASA des éboulements (portail Earthdata)."""
+import json
+import re
 import traceback
-import requests
-import pandas as pd
 
+import pandas as pd
+import requests
+
+P = "https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/"
 out = []
-cands = ["https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides?f=json",
-         "https://gis.earthdata.nasa.gov/gis05/rest/services?f=json",
-         "https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/FeatureServer?f=json",
-         "https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/MapServer?f=json",
-         "https://maps.nccs.nasa.gov/arcgis/rest/services?f=json",
-         "https://maps.nccs.nasa.gov/mapping/rest/services/COOLR?f=json",
-         "https://data.humdata.org/api/3/action/package_search?q=landslide%20madagascar&rows=10",
-         "https://data.humdata.org/api/3/action/package_search?q=desinventar%20madagascar&rows=10"]
+
+
+def get(u, **kw):
+    r = requests.get(u, timeout=60, **kw)
+    out.append(f"{u[:150]} -> {r.status_code} {len(r.text)} car.")
+    return r
+
+
 try:
-    base = None
-    for c in cands:
+    r = get(P + "a7b17eff544a4ce5ae045c32dbb99f7b/data", params={"f": "json"})
+    txt = r.text
+    urls = sorted(set(re.findall(r'https?://[^"\\ ]+(?:FeatureServer|MapServer)[^"\\ ]*', txt)))
+    ids = sorted(set(re.findall(r'"(?:itemId|webmap|id)"\s*:\s*"([0-9a-f]{32})"', txt)))
+    out.append("urls de services : " + json.dumps(urls[:20]))
+    out.append("ids : " + json.dumps(ids[:20]))
+    for i in ids[:6]:
+        rr = get(P + i, params={"f": "json"})
         try:
-            rr = requests.get(c, timeout=40)
-            out.append(f"{c} -> {rr.status_code} {rr.text[:700]!r}")
-            if rr.ok and '"fields"' in rr.text and base is None:
-                base = c
+            j = rr.json()
+            out.append(f"   {i}: {j.get('type')} | {j.get('title')} | {j.get('url')}")
+            if j.get("type") == "Web Map":
+                d = get(P + i + "/data", params={"f": "json"}).json()
+                for l in d.get("operationalLayers", []):
+                    out.append(f"      couche: {l.get('title')} | {l.get('url')}")
         except Exception as e:
-            out.append(f"{c} -> erreur {e}")
-    if base:
-        rows, off = [], 0
-        while True:
-            q = requests.get(base + "/query", params={"f": "json", "where": "1=1", "geometry": "42,-26,52,-11", "geometryType": "esriGeometryEnvelope",
-                             "inSR": 4326, "spatialRel": "esriSpatialRelIntersects", "outFields": "*", "returnGeometry": "true", "outSR": 4326,
-                             "resultOffset": off, "resultRecordCount": 1000}, timeout=120)
-            j = q.json()
-            feats = j.get("features", [])
-            for f in feats:
-                a = dict(f["attributes"]); g = f.get("geometry") or {}
-                a["lon"], a["lat"] = g.get("x"), g.get("y")
-                rows.append(a)
-            if len(feats) < 1000:
-                break
-            off += 1000
-        df = pd.DataFrame(rows)
-        out.append(f"adresse retenue : {base} ; événements dans l'emprise : {len(df)}")
-        if len(df):
-            df.to_csv("validation/coolr_madagascar_brut.csv", index=False)
-            out.append(df.head(8).to_string())
+            out.append("   illisible " + str(e))
+    cand = [u for u in urls if "COOLR" in u or "andslide" in u]
+    out.append("candidats : " + json.dumps(cand))
 except Exception:
     out.append(traceback.format_exc())
 open("data/_probe.txt", "w").write("\n".join(out) + "\n")
