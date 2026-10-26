@@ -1,11 +1,4 @@
-data/mdg/soilwater/status.json -> 200 972 octets
-   {"steps":{"sols et occupation du sol":{"ok":true,"seconds":0.0},"évapotranspiration de référence":{"ok":true,"seconds":3601.8},"pluie mensuelle":{"ok":true,"seconds":38.5}},"limits":["Bilan mensuel : 
-data/mdg/soilwater/series.json -> 200 615403 octets
-data/mdg/catalogue.json -> 200 34955 octets
-   'soil' present: True
-   'sol_' present: False
-   'recharge' present: True
-   'nappe' present: True
-   'humidite' present: False
-   'ipc' present: True
-   'hapi' present: False
+data/mdg/catalogue.json -> 200 39107 octets
+indicateurs cultures/bâti publiés : cult_ha, cult_basse5_ha, cult_basse15_ha, cult_basse5_pct, cult_basse15_pct, bati_ha, bati_basse5_ha, bati_basse5_pct
+data/mdg/index.json -> 200 1231508 octets
+cult_ présent dans index.json : False
