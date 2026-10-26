@@ -89,6 +89,15 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   w.document.querySelector(".ptab[data-g=sit]").click();
   check("indicateurs en cascade : thèmes et indicateurs groupés", w.document.querySelectorAll("#layertheme option").length >= 3 && w.document.querySelectorAll("#layer optgroup").length >= 3 && w.document.querySelector("#layer").selectedOptions[0].parentNode.dataset.theme === $("layertheme").value);
   check("chiffres clés épinglés en haut du panneau", !!w.document.querySelector(".pstick #kpis"));
+  (function () {
+    var lv = $("layerlvl"), ts = $("layertheme");
+    check("niveau par défaut Essentiel, thèmes techniques masqués", lv.value === "1" && Array.prototype.every.call(ts.options, (o) => o !== "Relief et hydrologie (calcul)"));
+    lv.value = "3"; lv.dispatchEvent(new w.Event("change"));
+    check("niveau Données techniques : thème relief/hydrologie proposé, indicateur basculé", Array.prototype.some.call(ts.options, (o) => o.value === "Relief et hydrologie (calcul)") && themeOfSel());
+    lv.value = "1"; lv.dispatchEvent(new w.Event("change"));
+    function themeOfSel() { var o = $("layer").options[$("layer").selectedIndex]; return o && o.parentNode.dataset.lvl === "3"; }
+  })();
+
   check("fiche chocs JIAF : bouton présent et export sans erreur", !!$("exportshocks") && (function () { try { $("exportshocks").click(); return true; } catch (e) { return false; } })());
   w.document.querySelector('nav.tabs [data-tab=map]').click();
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);

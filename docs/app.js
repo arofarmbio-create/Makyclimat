@@ -998,20 +998,29 @@
     b.innerHTML = '<i style="background:' + col + '"></i>ENSO : ' + esc(e.phase_label) + " (ONI " + (e.oni > 0 ? "+" : "") + String(e.oni).replace(".", ",") + ", " + esc(e.season) + ")";
   }
 
-  /* Indicateurs rangés par thème (menu en cascade : thème, puis indicateur) */
+  /* Indicateurs rangés par thème (menu en cascade : niveau de détail, thème, puis indicateur).
+     Niveau 1 = essentiel pour décider où agir ; 2 = analyse pour spécialistes ; 3 = données techniques de calcul
+     (relief, hydrologie), utiles aux experts mais pas à une lecture de terrain directe. */
+  var LVL_LABEL = { 1: "Essentiel", 2: "Analyse avancée", 3: "Données techniques" };
   var THEMES = ["Sécheresse et pluie", "Alertes à 7 jours", "Population et ciblage", "Cyclones", "Inondation, eau et terrain",
-    "Cultures, bâti et routes", "Événements et réponse", "Indice couplé", "Autres indicateurs"];
+    "Cultures, bâti et routes", "Événements et réponse", "Indice couplé",
+    "Sécheresse : analyse approfondie", "Relief et hydrologie (calcul)", "Autres indicateurs"];
+  var THEME_LEVEL = { "Sécheresse et pluie": 1, "Alertes à 7 jours": 1, "Population et ciblage": 1, "Cyclones": 1,
+    "Inondation, eau et terrain": 1, "Cultures, bâti et routes": 2, "Événements et réponse": 1, "Indice couplé": 2,
+    "Sécheresse : analyse approfondie": 2, "Relief et hydrologie (calcul)": 3, "Autres indicateurs": 3 };
   function themeOf(id) {
     var k = String(id).replace(/^x:/, "");
     if (/^ew/.test(id)) return THEMES[1];
     if (id === "cx") return THEMES[7];
     if (/^(ev_|r[bgpf]$)/.test(id)) return THEMES[6];
-    if (/^(l|pc|pa|ex|w)$/.test(id) || /^(spi|sm_|recharge|rain_|whc|enso_)/.test(k)) return THEMES[0];
+    if (/^(l|pc)$/.test(id)) return THEMES[0];
+    if (/^(pa|ex|w)$/.test(id) || /^(spi|sm_|recharge|rain_trend|enso_)/.test(k)) return THEMES[8];
     if (/^(e|t|g|p)$/.test(id) || /^(ipc_|poverty)/.test(k)) return THEMES[2];
     if (/^choc_cyc/.test(k)) return THEMES[3];
-    if (/^(choc_crue|hand_|susc_|cn2|river|slope|elev)/.test(k)) return THEMES[4];
+    if (/^(choc_crue|hand_)/.test(k)) return THEMES[4];
+    if (/^(susc_|cn2|river|slope|elev|whc)/.test(k)) return THEMES[9];
     if (/^(cult|bati|route)/.test(k)) return THEMES[5];
-    return THEMES[8];
+    return THEMES[10];
   }
   function groupLayers(sel) {
     if (!sel) return;
@@ -1020,17 +1029,20 @@
     sel.innerHTML = "";
     THEMES.forEach(function (t) {
       if (!by[t]) return;
-      var g = document.createElement("optgroup"); g.label = t; g.dataset.theme = t;
+      var g = document.createElement("optgroup"); g.label = t; g.dataset.theme = t; g.dataset.lvl = THEME_LEVEL[t] || 2;
       by[t].forEach(function (o) { g.appendChild(o); });
       sel.appendChild(g);
     });
     if (cur) sel.value = cur;
   }
   function setupThemeCascade() {
-    var sel = $("layer"), ts = $("layertheme");
+    var sel = $("layer"), ts = $("layertheme"), lv = $("layerlvl");
     if (!ts) return;
+    function curLevel() { return lv ? +lv.value : 1; }
     function fill() {
-      var have = Array.prototype.map.call(sel.querySelectorAll("optgroup"), function (g) { return g.dataset.theme; });
+      var groups = Array.prototype.slice.call(sel.querySelectorAll("optgroup"));
+      var have = groups.filter(function (g) { return +g.dataset.lvl === curLevel(); }).map(function (g) { return g.dataset.theme; });
+      if (!have.length) have = groups.map(function (g) { return g.dataset.theme; });
       var cur = ts.value;
       ts.innerHTML = "";
       have.forEach(function (t) { var o = document.createElement("option"); o.value = t; o.textContent = t; ts.appendChild(o); });
@@ -1043,18 +1055,25 @@
         if (g.hidden === on) g.hidden = !on; if (g.disabled === on) g.disabled = !on;
       });
     }
-    function sync() {
+    function sync(skipLevel) {
       var o = sel.options[sel.selectedIndex];
-      if (o && o.parentNode.dataset && o.parentNode.dataset.theme && ts.value !== o.parentNode.dataset.theme) ts.value = o.parentNode.dataset.theme;
+      if (o && o.parentNode.dataset && o.parentNode.dataset.theme) {
+        if (!skipLevel && lv && lv.value !== o.parentNode.dataset.lvl) { lv.value = o.parentNode.dataset.lvl; fill(); }
+        if (ts.value !== o.parentNode.dataset.theme) ts.value = o.parentNode.dataset.theme;
+      }
       filter();
     }
+    if (lv) lv.addEventListener("change", function () { fill(); filter();
+      var g = Array.prototype.filter.call(sel.querySelectorAll("optgroup"), function (x) { return x.dataset.theme === ts.value; })[0];
+      if (g && g.firstChild) { sel.value = g.firstChild.value; S.layer = sel.value; restyle(); }
+    });
     ts.addEventListener("change", function () {
       filter();
       var g = Array.prototype.filter.call(sel.querySelectorAll("optgroup"), function (x) { return x.dataset.theme === ts.value; })[0];
       if (g && g.firstChild) { sel.value = g.firstChild.value; S.layer = sel.value; restyle(); }
     });
-    sel.addEventListener("change", sync);
-    S.syncTheme = function () { fill(); sync(); };
+    sel.addEventListener("change", function () { sync(false); });
+    S.syncTheme = function () { fill(); sync(true); };
     S.syncTheme();
   }
 

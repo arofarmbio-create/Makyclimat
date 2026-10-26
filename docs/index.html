@@ -50,8 +50,13 @@
       <ul id="resultlist" hidden></ul>
     </div>
     <div>
-      <label class="field" for="layertheme">Indicateur affiché : thème, puis indicateur</label>
-      <select id="layertheme" aria-label="Thème de l'indicateur"></select>
+      <label class="field" for="layer">Indicateur affiché : niveau de détail, thème, puis indicateur</label>
+      <select id="layerlvl" aria-label="Niveau de détail">
+        <option value="1" selected>Essentiel (pour décider où agir)</option>
+        <option value="2">Analyse avancée (spécialistes)</option>
+        <option value="3">Données techniques (relief, hydrologie)</option>
+      </select>
+      <select id="layertheme" aria-label="Thème de l'indicateur" style="margin-top:6px"></select>
       <select id="layer" aria-label="Indicateur" style="margin-top:6px"></select>
     </div>
     <div class="card" id="profcard" hidden>
@@ -70,8 +75,11 @@
       <h3>Eau et terrain</h3>
       <div class="note" id="hydnote"></div>
       <label class="check"><input type="checkbox" id="hrivers"> Cours d'eau (épaisseur = ordre de Strahler)</label>
+      <div class="note small">À quoi ça sert : repérer par où l'eau peut monter près d'une zone, et pourquoi une pluie en amont peut inonder une zone où il ne pleut pas.</div>
       <label class="check"><input type="checkbox" id="hbasins"> Grands bassins versants</label>
+      <div class="note small">À quoi ça sert : le découpage de base utilisé pour calculer les zones basses inondables. Peu utile à lire directement pour décider où agir.</div>
       <label class="check"><input type="checkbox" id="hsubs"> Sous-bassins (jonctions de rivières)</label>
+      <div class="note small">À quoi ça sert : le même découpage en plus fin, pour un travail hydrologique détaillé, pas pour une décision rapide.</div>
       <div class="note">Calcul MakyClimat sur le modèle de terrain Copernicus (maille ~550 m) : cours d'eau dès 100 km² drainés. Les petits bassins et les ruisseaux ne sont pas résolus. La hauteur au-dessus du drainage (HAND) indique une susceptibilité à l'inondation, pas une carte de crue.</div>
     </div>
     <div class="card" id="cyccard" hidden>

@@ -233,3 +233,4 @@ body.mapfull .crumbs { right: 250px; }
 .pstick select, .pstick input[type=search] { padding: 6px 9px; }
 .pstick { gap: 6px; }
 .ptab { padding: 6px 4px; }
+.note.small { font-size: 11px; opacity: .8; margin: -2px 0 6px 24px; }
