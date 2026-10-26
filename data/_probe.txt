@@ -1,6 +1,2 @@
-index.json -> 200 1231508 car.; cult_ : 0; susc_inond_pct : 0; cult_basse5_pct : 0
-   début : [["MG11102010010","Mahatsinjo",4,"MG11","MG11102","MG11102010"],["MG11102010009","Ambohidrazaka",4,"MG11","MG11102","MG11102010"],["MG11102010008","Ambodivoanjo",4,"MG11","MG11102","MG11102010"],["MG11102010002","Ankazobe",4,"MG11","MG11102","MG11102010"],["MG11102010006","Ankadindratombo",4,"MG11",
-meta.json -> 200 31155 car.; cult_ : 5; susc_inond_pct : 0; cult_basse5_pct : 1
+meta.json -> 200 31388 car.; cult_ : 5; susc_inond_pct : 1; susc_inond_pct : 1
    début : {"enso":{"oni":2.16,"season":"JAS 2026","phase":"E","phase_label":"El Niño"},"has_history":true,"scenarios":{"season":"2026-2027","observed_share":0.0,"years":[1982,2026],"hist_years":[1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,
-geo/meta.json -> 404 9379 car.; cult_ : 0; susc_inond_pct : 0; cult_basse5_pct : 0
-   début : <!DOCTYPE html> <html>   <head>     <meta http-equiv="Content-type" content="text/html; charset=utf-8">     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; connect-src 'self'">     <title>Page not found &middot; GitHub Pages</title>  
