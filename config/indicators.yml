@@ -850,3 +850,15 @@ indicators:
     source: HeiGIT GAIA (WorldPop, OpenStreetMap) via HDX
     frequency: Ponctuelle
     status: active
+  # ---------------- SUSCEPTIBILITÉ AUX INONDATIONS (modèle validé sur les dégâts cartographiés par satellite) ----------------
+  - id: susc_inond_pct
+    label: Susceptibilité aux inondations (probabilité estimée d'être inondé ou endommagé quand un cyclone ou une crue touche la zone)
+    unit: "%"
+    format: pct
+    aggregate: popmean
+    sectors: [drr, shelter, wash, health, agriculture]
+    sdg: ["11.5", "13.1"]
+    national: [axe1, eau]
+    source: "MakyClimat : modèle de terrain (HAND, altitude, pente, rivière, densité) appris sur les dégâts cartographiés par satellite (Copernicus EMS, 6 cyclones) ; évalué en laissant un événement de côté (AUC 0,80 au fokontany) ; conditionnel à un aléa réel, pas une prévision de crue"
+    frequency: Ponctuelle
+    status: active

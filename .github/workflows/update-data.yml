@@ -71,6 +71,8 @@ jobs:
         run: |
           set -o pipefail
           python scripts/compute_metrics.py --country "$COUNTRY" 2>&1 | tee data/_compute_log.txt
+      - name: Susceptibilité aux inondations (modèle validé, sans réseau)
+        run: python scripts/build_susceptibility.py --country "$COUNTRY" || echo "Susceptibilité indisponible"
       - name: Calendrier cultural (recommandations officielles et fenêtres saisies)
         run: python scripts/build_calendar.py --country "$COUNTRY"
       - name: Générer le catalogue

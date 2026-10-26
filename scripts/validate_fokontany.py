@@ -238,10 +238,13 @@ def main() -> None:
             r = loeo(f, cols, with_oof=True)
             oof = r.pop("_oof")
             res_f[cible][name] = {"colonnes": cols, "positifs": int(f.pos.sum()), "n": int(len(f)), **r}
-            if col == "pos" and name == "vent, pluie et terrain":
-                oof_best = oof
+            if col == "pos":
+                if name == "vent, pluie et terrain":
+                    oof_best = oof
                 mu, sd, b0, b = train(f[cols].values, f["pos"].values)
-                final[name] = {"colonnes": cols, "moyenne": mu.tolist(), "ecart_type": sd.tolist(), "intercept": b0, "coefficients": b.tolist()}
+                final[name] = {"colonnes": cols, "moyenne": mu.tolist(), "ecart_type": sd.tolist(), "intercept": b0, "coefficients": b.tolist(),
+                               "auc_laisser_un_de_cote": res_f[cible][name]["global"]["auc"], "brier": res_f[cible][name]["global"]["brier"],
+                               "brier_climato": res_f[cible][name]["global"]["brier_climato"], "n": int(len(f)), "positifs": int(f.pos.sum())}
     feat["pos"] = feat["pos"].astype(bool)
     out["fokontany"] = res_f
     # agrégation à la commune : touchée si un fokontany évalué l'est ; probabilité = maximum

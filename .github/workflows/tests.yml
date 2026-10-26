@@ -33,6 +33,7 @@ jobs:
           python tests/test_seasonal.py
           python tests/test_calendar.py
           python tests/test_validate_events.py
+          python tests/test_susceptibility.py
           python tests/test_soilwater.py
           python tests/test_soilwater_build.py
           python scripts/compute_metrics.py --country demo
