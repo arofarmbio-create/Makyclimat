@@ -1,0 +1,20 @@
+variable,seuil_brut,seuil_lisible,n_regions_signalees,tp,fp,fn,tn,pod,far,evenements_couverts,evenements_avec_impact,part_evenements_couverts
+cov34,0.01,≥ 1 % de la population dans le rayon de vent ≥ 34 nœuds,134,35,99,2,176,0.9459459459459459,0.7388059701492538,13,13,1.0
+cov34,0.05,≥ 5 % de la population dans le rayon de vent ≥ 34 nœuds,124,35,89,2,186,0.9459459459459459,0.717741935483871,13,13,1.0
+cov34,0.1,≥ 10 % de la population dans le rayon de vent ≥ 34 nœuds,118,34,84,3,191,0.918918918918919,0.711864406779661,13,13,1.0
+cov34,0.2,≥ 20 % de la population dans le rayon de vent ≥ 34 nœuds,114,32,82,5,193,0.8648648648648649,0.7192982456140351,13,13,1.0
+cov34,0.3,≥ 30 % de la population dans le rayon de vent ≥ 34 nœuds,104,31,73,6,202,0.8378378378378378,0.7019230769230769,13,13,1.0
+cov34,0.5,≥ 50 % de la population dans le rayon de vent ≥ 34 nœuds,93,28,65,9,210,0.7567567567567568,0.6989247311827957,12,13,0.92
+cov34,0.7,≥ 70 % de la population dans le rayon de vent ≥ 34 nœuds,86,26,60,11,215,0.7027027027027027,0.6976744186046512,10,13,0.77
+cov64,0.01,≥ 1 % de la population dans le rayon de vent ≥ 64 nœuds (force cyclonique),18,14,4,23,271,0.3783783783783784,0.2222222222222222,7,13,0.54
+cov64,0.05,≥ 5 % de la population dans le rayon de vent ≥ 64 nœuds (force cyclonique),15,11,4,26,271,0.2972972972972973,0.26666666666666666,6,13,0.46
+cov64,0.1,≥ 10 % de la population dans le rayon de vent ≥ 64 nœuds (force cyclonique),10,7,3,30,272,0.1891891891891892,0.3,5,13,0.38
+cov64,0.2,≥ 20 % de la population dans le rayon de vent ≥ 64 nœuds (force cyclonique),8,6,2,31,273,0.16216216216216217,0.25,5,13,0.38
+cov64,0.3,≥ 30 % de la population dans le rayon de vent ≥ 64 nœuds (force cyclonique),7,5,2,32,273,0.13513513513513514,0.2857142857142857,5,13,0.38
+rp90,1.5,pluie sur 3 jours d'une période de retour locale ≥ 1.5 ans,107,25,82,12,193,0.6756756756756757,0.7663551401869159,11,13,0.85
+rp90,2.0,pluie sur 3 jours d'une période de retour locale ≥ 2 ans,93,21,72,16,203,0.5675675675675675,0.7741935483870968,11,13,0.85
+rp90,3.0,pluie sur 3 jours d'une période de retour locale ≥ 3 ans,70,15,55,22,220,0.40540540540540543,0.7857142857142857,9,13,0.69
+rp90,5.0,pluie sur 3 jours d'une période de retour locale ≥ 5 ans,50,11,39,26,236,0.2972972972972973,0.78,8,13,0.62
+rp90,8.0,pluie sur 3 jours d'une période de retour locale ≥ 8 ans,32,8,24,29,251,0.21621621621621623,0.75,6,13,0.46
+rp90,10.0,pluie sur 3 jours d'une période de retour locale ≥ 10 ans,17,6,11,31,264,0.16216216216216217,0.6470588235294118,5,13,0.38
+rp90,15.0,pluie sur 3 jours d'une période de retour locale ≥ 15 ans,17,6,11,31,264,0.16216216216216217,0.6470588235294118,5,13,0.38
