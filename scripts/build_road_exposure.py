@@ -65,32 +65,44 @@ def accumulate(pts, wts, ids, hand, sea, lon0, lat0, res, n):
     return (np.bincount(u[good], weights=wt[good], minlength=n), np.bincount(u[low], weights=wt[low], minlength=n))
 
 
-def fetch_roads(bbox, tiles=(3, 4)):
-    """Géométries (liste de listes de (lon, lat)) des routes principales, par tuiles pour limiter la taille des réponses."""
+def fetch_roads(bbox, tiles=(4, 6), cache=None):
+    """Géométries (liste de listes de (lon, lat)) des routes principales, par petites tuiles (reprise possible grâce au cache)."""
     lon0, lat0, lon1, lat1 = bbox
     xs, ys = np.linspace(lon0, lon1, tiles[0] + 1), np.linspace(lat0, lat1, tiles[1] + 1)
-    seen, lines = set(), []
+    store = json.loads(cache.read_text()) if cache is not None and cache.exists() else {}
     for i in range(tiles[0]):
         for j in range(tiles[1]):
-            q = (f'[out:json][timeout:300];way["highway"~"^(trunk|primary|secondary|tertiary)$"]({ys[j]:.4f},{xs[i]:.4f},{ys[j+1]:.4f},{xs[i+1]:.4f});out geom;')
-            data = None
+            key = f"{i},{j}"
+            if key in store:
+                continue
+            q = (f'[out:json][timeout:120];way["highway"~"^(trunk|primary|secondary|tertiary)$"]({ys[j]:.4f},{xs[i]:.4f},{ys[j+1]:.4f},{xs[i+1]:.4f});out geom;')
+            data, t0 = None, time.time()
             for k in range(6):
                 try:
-                    r = requests.post(MIRRORS[k % len(MIRRORS)], data={"data": q}, timeout=400, headers={"User-Agent": "MakyClimat (recherche doctorale)"})
+                    r = requests.post(MIRRORS[k % len(MIRRORS)], data={"data": q}, timeout=150, headers={"User-Agent": "MakyClimat (recherche doctorale)"})
                     if r.ok:
                         data = r.json()
                         break
+                    print(f"tuile {key} : HTTP {r.status_code} ({MIRRORS[k % len(MIRRORS)]})", flush=True)
                 except Exception as ex:  # noqa: BLE001
-                    print("overpass:", ex)
-                time.sleep(15 * (k + 1))
+                    print(f"tuile {key} : {type(ex).__name__}", flush=True)
+                time.sleep(10)
             if data is None:
-                raise RuntimeError(f"Overpass indisponible pour la tuile {i},{j}")
-            for e in data.get("elements", []):
-                if e["id"] in seen or "geometry" not in e:
-                    continue
+                print(f"tuile {key} abandonnée", flush=True)
+                continue
+            store[key] = [{"id": e["id"], "g": [(p["lon"], p["lat"]) for p in e["geometry"]]} for e in data.get("elements", []) if "geometry" in e]
+            print(f"tuile {key} : {len(store[key])} routes en {time.time() - t0:.0f} s", flush=True)
+            if cache is not None:
+                cache.write_text(json.dumps(store))
+    missing = [f"{i},{j}" for i in range(tiles[0]) for j in range(tiles[1]) if f"{i},{j}" not in store]
+    if missing:
+        raise RuntimeError(f"tuiles manquantes : {missing} (relancer pour reprendre)")
+    seen, lines = set(), []
+    for v in store.values():
+        for e in v:
+            if e["id"] not in seen:
                 seen.add(e["id"])
-                lines.append([(p["lon"], p["lat"]) for p in e["geometry"]])
-            print(f"tuile {i},{j} : {len(lines)} routes cumulées")
+                lines.append([tuple(p) for p in e["g"]])
     return lines
 
 
@@ -115,7 +127,7 @@ def main() -> None:
     shapes = [(geoms[c], i + 1) for i, c in enumerate(leaves.pcode) if c in geoms]
     ids = rasterio.features.rasterize(shapes, out_shape=(h, w), transform=Affine(res, 0, lon0, 0, -res, lat0), fill=0, dtype="int32")
     n = len(leaves) + 1
-    lines = fetch_roads(load_config(a.country)["map"]["bbox"])
+    lines = fetch_roads(load_config(a.country)["map"]["bbox"], cache=country_data_dir(a.country) / "_osm_routes_cache.json")
     P, W = [], []
     for ln in lines:
         p, wt = densify(ln)
