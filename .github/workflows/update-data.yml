@@ -75,6 +75,15 @@ jobs:
         run: python scripts/build_flood_shock.py --country "$COUNTRY" || echo "Choc crue indisponible"
       - name: Indice de vulnérabilité cumulative (expérimental, non validé) — ignoré en cas d'indisponibilité
         run: python scripts/build_vuln_cumul.py --country "$COUNTRY" || echo "Vulnérabilité cumulative indisponible"
+      - name: Prix du riz (WFP/HDX, donnée candidate non affichée) — ignoré en cas d'indisponibilité
+        run: |
+          python scripts/connector_wfp_prices.py || echo "Prix WFP indisponibles"
+          if [ -f validation/wfp_prix_riz_candidat.csv ]; then
+            git config user.name "makyclimat-bot"
+            git config user.email "makyclimat-bot@users.noreply.github.com"
+            git add -f validation/wfp_prix_riz_candidat.csv
+            git diff --cached --quiet || (git commit -m "Prix du riz WFP (donnée candidate, non affichée sur le site)" && git pull --rebase origin main && git push)
+          fi
       - name: Calculer les indicateurs
         run: |
           set -o pipefail

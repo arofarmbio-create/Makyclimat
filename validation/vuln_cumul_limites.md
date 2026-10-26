@@ -37,6 +37,13 @@ diversité agricole), une autre subir un seul choc sur un terrain déjà fragile
 ## Pour l'améliorer
 
 1. Une source de prix ou d'inflation par district, même trimestrielle (PAM/VAM, INSTAT, FEWS NET).
+   **Une première source a été trouvée et branchée en collecte silencieuse** : le jeu de données ouvert
+   « WFP Food Prices for Madagascar » (HDX), prix du riz par marché, mensuel, depuis 2004. Le script
+   `scripts/connector_wfp_prices.py` le télécharge à chaque mise à jour et écrit
+   `validation/wfp_prix_riz_candidat.csv` (écart du prix du riz au prix médian des 3 années précédentes,
+   par région). **Ce fichier n'est pas encore affiché sur le site** : il faut d'abord vérifier, une fois
+   collecté, la couverture réelle (quelles régions, quelle continuité des mois) et relier les noms de
+   région WFP aux codes pcode de MakyClimat avant toute intégration à l'indice.
 2. Des données de dégâts réels (voir la demande adressée au BNGRC) pour calibrer la sévérité attribuée
    à chaque classe de vent et à chaque seuil de SPI, au lieu des poids actuels choisis de façon
    raisonnée.
