@@ -8,17 +8,15 @@ ava-2018: 2018-01-01..2018-01-10, rayons de vent manquants 0/28 positions >= 34 
 freddy-2023: 2023-02-20..2023-03-09, rayons de vent manquants 2/36 positions >= 34 kt, pluie=oui
 alvaro-2024: 2023-12-30..2024-01-04, rayons de vent manquants 2/12 positions >= 34 kt, pluie=oui
 gezani-2026: 2026-02-08..2026-02-18, rayons de vent manquants 0/32 positions >= 34 kt, pluie=oui
-        variante   auc  brier  brier_climato  dans_les_5_premieres  dans_les_8_premieres   pod   far  tp  fp  fn
-0      vent seul  0.78   0.11           0.12                  0.69                  0.82  0.61  0.75  19  56  12
-1    pluie seule  0.72   0.11           0.12                  0.37                  0.59  0.58  0.78  18  62  13
-2  vent et pluie  0.81   0.12           0.12                  0.70                  0.92  0.77  0.68  24  52   7
-       evenement  n_regions  n_documentees  auc_cov34  auc_cov64  auc_lrp  auc_lratio  auc_rx3
-0    alvaro-2024         24              3       0.92       0.67     0.90        0.90     0.76
-1       ava-2018         24              3       0.87       1.00     0.65        0.59     0.76
-2  batsirai-2022         24              5       0.85       0.77     0.70        0.68     0.85
-3     belna-2019         24              2       1.00       1.00     0.23        0.18     0.30
-4     enawo-2017         24              4       0.52       0.69     0.88        0.90     0.95
-5    freddy-2023         24              6       0.93       0.67     0.74        0.75     0.80
-6    gamane-2024         24              3       0.83       0.83     0.90        0.97     0.95
-7    gezani-2026         24              1       0.78       0.50     0.35        0.65     0.96
-8      jude-2025         24              4       0.86       0.50     0.79        0.76     0.61
+trajectoire introuvable geralda-1994
+hudah-2000: 2000-04-01..2000-04-06, rayons de vent manquants 15/15 positions >= 34 kt, pluie=oui
+Traceback (most recent call last):
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_events.py", line 310, in <module>
+    main()
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_events.py", line 264, in main
+    cov, miss, n34 = footprint(g[(g.time >= near.time.min() - pd.Timedelta(hours=12)) & (g.time <= near.time.max() + pd.Timedelta(hours=12))].reset_index(drop=True), leaves.lon.values, leaves.lat.values)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_events.py", line 179, in footprint
+    cov[k] |= d <= r[q]
+                   ~^^^
+IndexError: index 4 is out of bounds for axis 0 with size 4
