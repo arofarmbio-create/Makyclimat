@@ -1,35 +1,39 @@
-"""Sondage ad hoc (GitHub Actions) : sources d'eau souterraine pour Madagascar."""
+"""Sondage ad hoc (GitHub Actions) : vérifier ce qui est réellement en ligne sur le site publié."""
+import json
 import re
 
 import requests
 
-H = {"User-Agent": "Mozilla/5.0 MakyClimat (recherche doctorale)"}
+B = "https://arofarmbio-create.github.io/Makyclimat/"
 out = []
 
 
-def get(u, **kw):
+def get(path):
     try:
-        return requests.get(u, timeout=90, headers=H, **kw)
+        r = requests.get(B + path, timeout=60, headers={"Cache-Control": "no-cache"})
+        return r
     except Exception as e:  # noqa: BLE001
-        out.append(f"{u}: ERREUR {e}")
+        out.append(f"{path}: ERREUR {e}")
 
 
-r = get("https://www2.bgs.ac.uk/africaGroundwaterAtlas/downloadGIS.html")
-if r is not None:
-    out.append(f"BGS page -> {r.status_code}")
-    for m in re.findall(r'href="([^"]*)"[^>]*>([^<]*adagascar[^<]*)<', r.text):
-        out.append(f"   lien Madagascar : {m}")
-    zips = re.findall(r'href="([^"]+\.zip)"', r.text)
-    out.append(f"   {len(zips)} archives sur la page, exemples : {zips[:4]}")
-    out += ["   ~ " + z for z in zips if "adag" in z.lower() or "MDG" in z or "mg" in z.lower().split("/")[-1][:3]]
-for u in ["https://data.waterpointdata.org/resource/jwn9-ihcz.json?$select=count(*)&clean_country_name=Madagascar",
-          "https://data.waterpointdata.org/resource/jwn9-ihcz.json?$select=count(*)&country_name=Madagascar",
-          "https://data.waterpointdata.org/resource/eqje-vguj.json?$select=count(*)&clean_country_name=Madagascar"]:
-    r = get(u)
+for p in ["", "data/mdg/calendrier.json", "data/mdg/validation.json", "data/mdg/seasonal.json", "data/mdg/cyclones.json", "data/mdg/index.json",
+          "data/mdg/response.json", "data/catalogue.json", "data/mdg/catalogue.json", "data/mdg/hydro/meta.json"]:
+    r = get(p)
     if r is not None:
-        out.append(f"WPDx {u.split('resource/')[1][:60]} -> {r.status_code} {r.text[:200]}")
-r = get("https://data.waterpointdata.org/resource/jwn9-ihcz.json?$limit=2&clean_country_name=Madagascar")
-if r is not None:
-    out.append("WPDx exemple : " + r.text[:900])
+        out.append(f"{p or '/'} -> {r.status_code} {len(r.content)} octets")
+        if r.status_code == 200 and p == "":
+            out.append("   Cyclones passés: " + str("cycsrc" in r.text) + " ; Prévision saisonnière: " + str("seas" in r.text))
+for p in ["data/mdg/catalogue.json", "data/catalogue.json"]:
+    r = get(p)
+    if r is not None and r.status_code == 200:
+        t = r.text
+        for k in ["susc_inond_pct", "crue_rp100_ecoles_pct", "dhs_", "osm_ecoles", "cyc_nb_100km", "seas_anom_pct", "hapi", "ipc"]:
+            out.append(f"   catalogue contient {k}: {k in t}")
+r = get("data/mdg/index.json")
+if r is not None and r.status_code == 200:
+    out.append("   index.json début: " + r.text[:300])
+r = get("app.js")
+if r is not None and r.status_code == 200:
+    out.append(f"app.js: calendarSection={'calendarSection' in r.text}, setupSeasonal={'setupSeasonal' in r.text}, setupCyclones={'setupCyclones' in r.text}")
 open("data/_probe.txt", "w", encoding="utf-8").write("\n".join(out))
 print("\n".join(out))
