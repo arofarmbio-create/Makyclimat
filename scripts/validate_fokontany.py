@@ -96,19 +96,36 @@ def load_fokontany():
     return g
 
 
+def _valid_union(gdf):
+    import shapely
+    from shapely.ops import unary_union
+    return unary_union([shapely.make_valid(g) for g in gdf.geometry if g is not None and not g.is_empty])
+
+
+def _inter_area(fp, other):
+    """Surface (m²) de l'intersection de chaque polygone de fp avec `other` (uniquement les candidats)."""
+    import geopandas as gpd
+    out = np.zeros(len(fp))
+    idx = fp.sindex.query(other, predicate="intersects")
+    if len(idx):
+        sub = gpd.GeoSeries(fp.geometry.values[idx], crs=fp.crs)
+        out[idx] = sub.intersection(other).area.values
+    return out
+
+
 def truth_for(fok, aoi, fl, bl):
     """DataFrame par fokontany : couverture cartographiée, fraction inondée, bâtiments détruits/endommagés/évalués."""
     import geopandas as gpd
+    import shapely
     out = pd.DataFrame({"pcode": fok.pcode.values, "cover": 0.0, "flood_frac": 0.0, "n_dmg": 0, "n_bld": 0})
     fp = fok.to_crs(AREA_CRS)
-    idx = out.set_index("pcode").index
+    fp["geometry"] = [shapely.make_valid(g) for g in fp.geometry]
     if len(aoi):
-        a = aoi.to_crs(AREA_CRS).dissolve().geometry.iloc[0]
-        inter = fp.geometry.intersection(a).area
-        out["cover"] = (inter / fok.area_m2.values).clip(0, 1).values
+        a = _valid_union(aoi.to_crs(AREA_CRS))
+        out["cover"] = np.clip(_inter_area(fp, a) / fok.area_m2.values, 0, 1)
     if len(fl):
-        f = fl.to_crs(AREA_CRS).dissolve().geometry.iloc[0]
-        out["flood_frac"] = (fp.geometry.intersection(f).area / fok.area_m2.values).clip(0, 1).values
+        f = _valid_union(fl.to_crs(AREA_CRS))
+        out["flood_frac"] = np.clip(_inter_area(fp, f) / fok.area_m2.values, 0, 1)
     if len(bl):
         j = gpd.sjoin(bl, fok[["pcode", "geometry"]], how="inner", predicate="within")
         j["dmg"] = j.damage_gra.astype(str).str.lower().isin(["destroyed", "damaged"])
