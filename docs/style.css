@@ -190,3 +190,15 @@ body.mapfull .crumbs { right: 250px; }
   body.mapfull .legendbox { bottom: 10px; }
   body.mapfull:not(.nopanel) .legendbox { bottom: calc(55vh + 20px); }
 }
+
+/* Bulles d'aide */
+#tipbubble { position: fixed; z-index: 2000; max-width: 280px; background: #1d2b24; color: #fff; font-size: 13px; line-height: 1.35;
+  padding: 7px 10px; border-radius: 8px; box-shadow: 0 3px 12px rgba(0,0,0,.35); pointer-events: none; opacity: 0; transition: opacity .12s; }
+#tipbubble.on { opacity: 1; }
+[data-tip] { cursor: help; }
+#panel h3[data-tip], .field[data-tip] { text-decoration: underline dotted var(--muted); text-underline-offset: 3px; }
+.page.help h3 { margin-top: 22px; }
+.helptoc { background: var(--chip); border-radius: var(--radius); padding: 8px 12px; font-size: 14px; line-height: 1.9; }
+.helptoc a { color: var(--brand); }
+.help details { border-top: 1px solid var(--line); padding: 6px 0; }
+.help summary { cursor: pointer; font-weight: 600; }

@@ -21,6 +21,7 @@
     <button role="tab" data-tab="catalogue" aria-selected="false">Indicateurs et ODD</button>
     <button role="tab" data-tab="sources" aria-selected="false">Sources</button>
     <button role="tab" data-tab="method" aria-selected="false">Méthode</button>
+    <button role="tab" data-tab="help" aria-selected="false" id="helptab">? Aide</button>
   </nav>
 </header>
 
@@ -33,6 +34,7 @@
     <div class="crumbs" id="crumbs"></div>
     <div class="mapctl" id="mapctl">
       <button type="button" id="fsbtn" class="mcbtn" aria-pressed="false" title="Carte en plein écran">⛶ Plein écran</button>
+      <button type="button" id="helpbtn" class="mcbtn" title="Aide : comprendre le site et son fonctionnement">? Aide</button>
       <button type="button" id="panelbtn" class="mcbtn" aria-pressed="true" title="Afficher ou masquer le panneau">☰ Panneau</button>
     </div>
     <div class="legendbox" id="legendbox">
@@ -186,6 +188,61 @@
 </div></section>
 
 <section id="tab-method" class="tab"><div class="page" id="methodtext"></div></section>
+
+<section id="tab-help" class="tab"><div class="page help">
+  <h2>Aide : comprendre MakyClimat</h2>
+  <p>MakyClimat suit la pluie, la température et l'humidité du sol à Madagascar, prévoit les risques (sécheresse, inondation, cyclone, éboulement, chaleur) et montre où agir en priorité, de la région jusqu'au fokontany. Les chiffres sont des estimations indicatives et ne remplacent pas les analyses officielles (IPC, BNGRC, Météo Madagascar).</p>
+  <nav class="helptoc">
+    <a href="#h-start">Démarrer en 30 secondes</a> · <a href="#h-map">Lire la carte</a> · <a href="#h-panel">Le panneau</a> · <a href="#h-alert">Niveaux d'alerte</a> · <a href="#h-who">Qui l'utilise comment</a> · <a href="#h-trust">Fiabilité et limites</a> · <a href="#h-phone">Sur téléphone</a> · <a href="#h-faq">Questions fréquentes</a>
+  </nav>
+  <h3 id="h-start">Démarrer en 30 secondes</h3>
+  <ol>
+    <li>Sur l'onglet <b>Carte</b>, tapez le nom de votre commune ou fokontany dans la barre de recherche, ou cliquez directement sur la carte.</li>
+    <li>La fiche de la zone s'affiche : niveau d'alerte, population concernée, risques à 7 jours et pour la saison, conseils.</li>
+    <li>Changez l'<b>indicateur affiché</b> pour voir autre chose sur la carte (pluie, sécheresse, inondation, cultures exposées…).</li>
+    <li>Le bouton <b>Vue simple « Chez moi »</b> (en haut) donne une version courte, avec de grands caractères, pour le grand public.</li>
+  </ol>
+  <h3 id="h-map">Lire la carte</h3>
+  <ul>
+    <li><b>Couleurs :</b> la légende (en bas à gauche) explique chaque teinte. Plus c'est foncé ou rouge, plus le niveau est élevé.</li>
+    <li><b>Descendre dans le détail :</b> région, puis district, commune, fokontany. Le fil d'Ariane en haut de la carte permet de remonter.</li>
+    <li><b>Plein écran :</b> le bouton « ⛶ Plein écran » agrandit la carte. « ☰ Panneau » masque ou affiche le panneau. « Légende » la réduit. « Échap » quitte le plein écran.</li>
+    <li><b>Bulles d'aide :</b> passez le curseur (ou touchez longuement sur téléphone) sur un bouton ou un titre souligné en pointillé : une courte explication apparaît puis disparaît.</li>
+  </ul>
+  <h3 id="h-panel">Le panneau de droite</h3>
+  <ul>
+    <li><b>Scénarios de la saison :</b> comparer une saison sèche, normale ou pluvieuse (prévision saisonnière).</li>
+    <li><b>Eau et terrain, Cyclones passés :</b> humidité du sol, zones basses inondables, trajectoires et zones de vent des cyclones.</li>
+    <li><b>Historique et réponse, Priorités, Qui fait quoi où :</b> saisons passées, zones à cibler en priorité et organisations déjà présentes (si les données sont fournies).</li>
+    <li><b>Comparer :</b> deux cartes côte à côte, ou la différence entre deux périodes ou deux indicateurs.</li>
+    <li><b>Indicateurs couplés :</b> combiner jusqu'à 3 indicateurs en un seul indice de 0 à 100.</li>
+    <li><b>Simulation « et si ? » :</b> multiplier la pluie observée pour voir l'effet d'une saison plus sèche ou plus humide. C'est un test de sensibilité, pas une prévision.</li>
+    <li><b>Exporter / Imprimer :</b> télécharger la vue en CSV ou l'imprimer en PDF ; le lien de la page garde la zone affichée et peut être partagé.</li>
+    <li>Cliquez sur le titre d'une rubrique pour la replier.</li>
+  </ul>
+  <h3 id="h-alert">Niveaux d'alerte</h3>
+  <p>Vigilance, Alerte, Alerte élevée, Alerte maximale : plus le niveau monte, plus l'impact probable est important. Les seuils actuels sont provisoires et doivent être validés avec le BNGRC et Météo Madagascar.</p>
+  <h3 id="h-who">Qui l'utilise comment</h3>
+  <ul>
+    <li><b>Ménages et communautés :</b> vue simple, conseils pratiques pour les jours et la saison à venir.</li>
+    <li><b>Communes et autorités :</b> alertes, population exposée, zones à surveiller.</li>
+    <li><b>ONU, ONG, bailleurs :</b> ciblage des zones prioritaires, comparaison de saisons, exports pour les plans de réponse.</li>
+  </ul>
+  <h3 id="h-trust">Fiabilité et limites</h3>
+  <ul>
+    <li>Les données viennent de sources réelles (satellites de pluie, réanalyses météo, cartes d'occupation du sol, relief, base mondiale des cyclones). Aucune donnée simulée n'est affichée comme réelle.</li>
+    <li>Les modèles sont testés sur des événements passés (cyclones, inondations) ; les résultats chiffrés sont dans l'onglet <b>Méthode</b>.</li>
+    <li><b>Exposition n'est pas dégât :</b> « cultures en zone basse » signifie des cultures situées là où l'eau peut monter, pas des pertes constatées.</li>
+    <li>Les prévisions saisonnières donnent des probabilités modestes ; la prévision à 7 jours est plus fiable que la saisonnière.</li>
+  </ul>
+  <h3 id="h-phone">Sur téléphone</h3>
+  <p>Touchez « ⛶ Plein écran » pour voir la carte seule, puis « ☰ Panneau » pour faire apparaître les détails en bas de l'écran. La légende est repliée au départ ; touchez « Légende » pour l'ouvrir.</p>
+  <h3 id="h-faq">Questions fréquentes</h3>
+  <details><summary>D'où viennent les données et à quelle fréquence sont-elles mises à jour ?</summary><p>De sources ouvertes, actualisées automatiquement. L'onglet <b>Sources</b> indique la date de chaque jeu de données.</p></details>
+  <details><summary>Pourquoi une zone apparaît-elle grise ?</summary><p>Il n'y a pas de donnée disponible pour cet indicateur à cet endroit. Rien n'est inventé pour combler le vide.</p></details>
+  <details><summary>Puis-je utiliser les chiffres dans un rapport ?</summary><p>Oui, en citant MakyClimat et les sources d'origine, et en précisant qu'il s'agit d'estimations indicatives.</p></details>
+  <details><summary>Une erreur ou une idée d'amélioration ?</summary><p>Signalez-la à l'équipe du projet ; les retours de terrain servent à valider et corriger les modèles.</p></details>
+</div></section>
 
 <footer>MakyClimat — projet de doctorat. Les chiffres sont des estimations indicatives qui ne remplacent pas les analyses officielles (IPC, BNGRC, Météo Madagascar). Fond de carte © contributeurs OpenStreetMap.</footer>
 

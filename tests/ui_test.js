@@ -73,6 +73,14 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   check("légende réaffichée", !$("legendbox").classList.contains("closed"));
   var h3 = w.document.querySelector("#cmpcard > h3"); h3.click();
   check("rubrique repliable", $("cmpcard").classList.contains("collapsed")); h3.click();
+  check("bulles d'aide posées", w.document.querySelectorAll("[data-tip]").length > 15);
+  $("export").dispatchEvent(new w.Event("mouseover", { bubbles: true }));
+  check("bulle visible au survol", $("tipbubble").classList.contains("on") && /CSV/.test($("tipbubble").textContent));
+  w.document.body.dispatchEvent(new w.Event("mouseover", { bubbles: true }));
+  check("bulle masquée hors survol", !$("tipbubble").classList.contains("on"));
+  $("helpbtn").click();
+  check("aide : onglet ouvert", $("tab-help").classList.contains("active") && /Démarrer en 30 secondes/.test($("tab-help").textContent));
+  $("helpbtn").click(); w.document.querySelector('nav.tabs [data-tab=map]').click();
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
   const metaJson = JSON.parse(fs.readFileSync(path.join(docs, "data", slug, "meta.json"), "utf8"));
   const nHist = fs.existsSync(path.join(docs, "data", slug, "response.json")) ? 6 : 0;

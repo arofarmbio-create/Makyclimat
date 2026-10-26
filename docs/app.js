@@ -121,6 +121,75 @@
     sync();
   }
 
+  /* ---------- Bulles d'aide ---------- */
+  var TIPS = {
+    "#modebtn": "Version courte avec grands caractères : niveau d'alerte et conseils pour votre zone.",
+    "#through": "Date jusqu'à laquelle les pluies observées sont à jour.",
+    "#fcbadge": "Date de la dernière prévision météo utilisée.",
+    "#enso": "Phase d'ENSO (El Niño / La Niña) : influence la pluie de la saison.",
+    "label[for=q]": "Tapez un nom pour aller directement à la zone.",
+    "label[for=layer]": "Choisissez ce que la carte colorie : pluie, sécheresse, inondation, cultures exposées…",
+    "label[for=profile]": "Le tableau des risques s'adapte à votre métier ou situation.",
+    "#scncard > h3": "Comparer une saison sèche, normale ou pluvieuse. Clic pour replier.",
+    "#profcard > h3": "Choisissez votre profil pour des conseils adaptés. Clic pour replier.",
+    "#hydcard > h3": "Humidité du sol, zones basses inondables et rivières. Clic pour replier.",
+    "#cyccard > h3": "Trajectoires et zones de vent des cyclones passés. Clic pour replier.",
+    "#histcard > h3": "Comparer la saison actuelle aux saisons passées. Clic pour replier.",
+    "#respcard > h3": "Où agir en priorité selon le risque et la population. Clic pour replier.",
+    "#whocard > h3": "Organisations présentes par zone et par secteur. Clic pour replier.",
+    "#cmpcard > h3": "Deux cartes côte à côte, ou la différence entre deux périodes. Clic pour replier.",
+    "#cxcard > h3": "Combiner jusqu'à 3 indicateurs en un indice de 0 à 100. Clic pour replier.",
+    "#modeseg [data-mode=single]": "Une seule carte.",
+    "#modeseg [data-mode=split]": "Deux cartes côte à côte, qui se déplacent ensemble.",
+    "#modeseg [data-mode=diff]": "Carte de la différence : rouge = plus de risque en B, bleu = moins.",
+    "#cxgo": "Calcule l'indice combiné et l'affiche sur la carte.",
+    "#cxcopy": "Copie un lien qui rouvre exactement cette carte.",
+    "#sim": "Multiplie la pluie observée pour tester une saison plus sèche ou plus humide. Pas une prévision.",
+    "#simreset": "Revient aux données réellement observées.",
+    "#export": "Télécharge les zones de cette vue au format CSV (Excel).",
+    "#print": "Imprime la vue ou l'enregistre en PDF.",
+    "#viewtitle": "Chiffres clés de la zone actuellement affichée.",
+    "#fsbtn": "Agrandit la carte sur tout l'écran (Échap pour quitter).",
+    "#panelbtn": "Masque ou affiche le panneau de détails.",
+    "#lgtoggle": "Réduit ou affiche la légende des couleurs.",
+    "#helpbtn": "Explication du site et de son fonctionnement.",
+    "#crumbs": "Fil d'Ariane : cliquez pour remonter à une zone plus large."
+  };
+  function setupTips() {
+    Object.keys(TIPS).forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(function (el) {
+        el.setAttribute("data-tip", TIPS[sel]);
+        if (!/^(button|select|input|a)$/i.test(el.tagName) && !el.hasAttribute("tabindex")) el.tabIndex = 0;
+      });
+    });
+    var bub = document.createElement("div"); bub.id = "tipbubble"; bub.setAttribute("role", "tooltip"); document.body.appendChild(bub);
+    var timer = null;
+    function hide() { bub.classList.remove("on"); clearTimeout(timer); }
+    function show(el) {
+      var t = el.getAttribute("data-tip"); if (!t) return;
+      bub.textContent = t; bub.classList.add("on");
+      var r = el.getBoundingClientRect(), bw = bub.offsetWidth, bh = bub.offsetHeight;
+      var x = Math.max(8, Math.min(r.left, window.innerWidth - bw - 8));
+      var y = r.bottom + 8; if (y + bh > window.innerHeight - 8) y = Math.max(8, r.top - bh - 8);
+      bub.style.left = x + "px"; bub.style.top = y + "px";
+    }
+    function target(e) { return e.target && e.target.closest ? e.target.closest("[data-tip]") : null; }
+    document.addEventListener("mouseover", function (e) { var el = target(e); if (el) show(el); else hide(); });
+    document.addEventListener("mouseout", function (e) { if (target(e)) hide(); });
+    document.addEventListener("focusin", function (e) { var el = target(e); if (el) show(el); });
+    document.addEventListener("focusout", hide);
+    document.addEventListener("click", function () { hide(); });
+    document.addEventListener("touchstart", function (e) {
+      var el = target(e); if (!el) { hide(); return; }
+      clearTimeout(timer); timer = setTimeout(function () { show(el); timer = setTimeout(hide, 3500); }, 450);
+    }, { passive: true });
+    document.addEventListener("touchend", function () { clearTimeout(timer); }, { passive: true });
+    document.addEventListener("scroll", hide, true);
+    $("helpbtn").addEventListener("click", function () {
+      document.body.classList.remove("mapfull", "nopanel"); $("helptab").click(); window.scrollTo(0, 0);
+    });
+  }
+
   /* ---------- Carte ---------- */
   function setupMap() {
     var c = S.meta.map;
@@ -1673,7 +1742,7 @@
       $("through").textContent = "Pluie jusqu'au " + fmtDate(S.meta.data_through);
       document.title = "MakyClimat — " + S.meta.country;
       renderEnso(); renderForecastBadge();
-      setupMap(); setupControls(); setupErgonomics();
+      setupMap(); setupControls(); setupErgonomics(); setupTips();
       var hash = location.hash.replace("#", "").split("/").filter(Boolean).slice(0, 3);
       var p = hash.length ? ensureIndex().then(function () {
         S.path = hash.map(function (c) { return { pcode: c, name: S.nameOf[c] || c }; });
