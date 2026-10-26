@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_hapi.py", line 111, in <module>
+    main()
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_hapi.py", line 78, in main
+    ipc = fetch_all(FOOD_SECURITY, {"location_code": iso, "ipc_phase": "3+", "ipc_type": "current"}, app_id)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_hapi.py", line 34, in fetch_all
+    r.raise_for_status()
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://hapi.humdata.org/api/v2/food-security-nutrition-poverty/food-security?location_code=MDG&ipc_phase=3%2B&ipc_type=current&app_identifier=bWFreWNsaW1hdDphcm9mYXJtYmlvQGdtYWlsLmNvbQ&limit=10000&offset=0&output_format=json
+HAPI indisponible, indicateurs externes non mis à jour
