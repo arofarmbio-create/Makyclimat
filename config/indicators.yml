@@ -868,7 +868,7 @@ indicators:
     unit: "ha"
     format: int
     aggregate: none
-    sectors: [agriculture, food]
+    sectors: [agriculture, food_security]
     sdg: ["2.3"]
     national: [axe1]
     source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
@@ -879,7 +879,7 @@ indicators:
     unit: "ha"
     format: int
     aggregate: none
-    sectors: [agriculture, food, drr]
+    sectors: [agriculture, food_security, drr]
     sdg: ["2.4", "13.1"]
     national: [axe1]
     source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
@@ -890,7 +890,7 @@ indicators:
     unit: "ha"
     format: int
     aggregate: none
-    sectors: [agriculture, food, drr]
+    sectors: [agriculture, food_security, drr]
     sdg: ["2.4", "13.1"]
     national: [axe1]
     source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
@@ -901,7 +901,7 @@ indicators:
     unit: "% de la surface cultivée"
     format: pct
     aggregate: none
-    sectors: [agriculture, food, drr]
+    sectors: [agriculture, food_security, drr]
     sdg: ["2.4", "13.1"]
     national: [axe1]
     source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
@@ -912,7 +912,7 @@ indicators:
     unit: "% de la surface cultivée"
     format: pct
     aggregate: none
-    sectors: [agriculture, food, drr]
+    sectors: [agriculture, food_security, drr]
     sdg: ["2.4", "13.1"]
     national: [axe1]
     source: "ESA WorldCover 2021 (10 m) croisé avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique près d'un cours d'eau, pas une hauteur d'eau ni un dégât (la colonne « cultures » de HeiGIT est vide pour Madagascar)"
