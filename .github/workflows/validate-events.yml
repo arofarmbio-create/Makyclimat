@@ -37,6 +37,9 @@ jobs:
       - name: Validation
         shell: bash
         run: python scripts/validate_events.py --country "${{ github.event.inputs.country || 'mdg' }}" 2>&1 | tee validation/_journal.txt
+      - name: Déclencheurs d'action anticipée (seuils simples, exploratoire)
+        shell: bash
+        run: python scripts/build_triggers.py 2>&1 | tee validation/_journal_declencheurs.txt
       - name: Enregistrer dans le dépôt
         if: always()
         run: |
