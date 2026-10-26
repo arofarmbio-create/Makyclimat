@@ -1,8 +1,12 @@
-https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides?f=json -> 404 '<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n'
-https://gis.earthdata.nasa.gov/gis05/rest/services?f=json -> 404 '<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n'
-https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/FeatureServer?f=json -> 404 '<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n'
-https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/MapServer?f=json -> 404 '<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n'
-https://maps.nccs.nasa.gov/arcgis/rest/services?f=json -> erreur HTTPSConnectionPool(host='maps.nccs.nasa.gov', port=443): Max retries exceeded with url: /arcgis/rest/services?f=json (Caused by NewConnectionError("HTTPSConnection(host='maps.nccs.nasa.gov', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable"))
-https://maps.nccs.nasa.gov/mapping/rest/services/COOLR?f=json -> erreur HTTPSConnectionPool(host='maps.nccs.nasa.gov', port=443): Max retries exceeded with url: /mapping/rest/services/COOLR?f=json (Caused by NewConnectionError("HTTPSConnection(host='maps.nccs.nasa.gov', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable"))
-https://data.humdata.org/api/3/action/package_search?q=landslide%20madagascar&rows=10 -> 200 '{"help": "https://data.humdata.org/api/3/action/help_show?name=package_search", "success": true, "result": {"count": 0, "facets": {}, "expanded": {}, "results": [], "sort": "score desc, last_modified desc", "search_facets": {"pivot": {}, "queries": []}, "facet_pivot": {}, "facet_queries": {}}}'
-https://data.humdata.org/api/3/action/package_search?q=desinventar%20madagascar&rows=10 -> 200 '{"help": "https://data.humdata.org/api/3/action/help_show?name=package_search", "success": true, "result": {"count": 0, "facets": {}, "expanded": {}, "results": [], "sort": "score desc, last_modified desc", "search_facets": {"pivot": {}, "queries": []}, "facet_pivot": {}, "facet_queries": {}}}'
+https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/a7b17eff544a4ce5ae045c32dbb99f7b/data -> 200 86857 car.
+urls de services : []
+ids : ["316937f6b8934de7ba69b45c4688598c"]
+https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/316937f6b8934de7ba69b45c4688598c -> 200 17190 car.
+   316937f6b8934de7ba69b45c4688598c: Web Map | Landslide Viewer (web map) | 
+https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/316937f6b8934de7ba69b45c4688598c/data -> 200 65389 car.
+      couche: Infrastructure | None
+      couche: Landslide Hazard Model (LHASA) Input and Output Datasets | None
+      couche: External Landslide Catalogs (Referenced) | None
+      couche: NASA Cooperative Open Online Landslide Repository (COOLR) Polygons | None
+      couche: NASA Cooperative Open Online Landslide Repository (COOLR) Points | None
+candidats : []
