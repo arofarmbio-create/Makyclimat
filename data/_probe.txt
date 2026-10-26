@@ -1,177 +1,30 @@
--- page 8 : ALAOTRA MANGORO Culture Riz plateaux Nerica 9, Nerica 11, B22 Culture Riz bas-fond Variétés MKX, Mihary
--- page 9 : ALAOTRA Culture Riz bas-fond Culture Riz bas-fond Variétés Tsemaka, Makalioka, Dista
--- page 10 : ALAOTRA Culture Riz plateaux Culture Riz plateaux Variétés FotsiamboB 22
--- page 11 : MANGORO Culture Riz bas-fond Culture Riz bas-fond Variétés Madikatra, IR 64, S231
--- page 12 : MANGORO Culture Riz plateaux Culture Riz plateaux Variétés Nerica4
--- page 13 : AMBATOSOA Culture Riz bas-fond Culture Riz bas-fond Variétés FOFIFA 198, 2787, Fy Vary32
--- page 14 : AMBATOSOA Culture Riz plateaux Variétés Nerica4
--- page 15 : AMORON'I MANIA Culture Riz plateaux B22, F161 Culture Riz bas-fond Variétés X265, FOFIFA 160, FOFIFA 195, FOFIFA 196
--- page 16 : AMORON'I MANIA Culture Riz bas-fond Culture Riz plateaux Variétés FOFIFA 173
--- page 17 : ANALAMANGA Culture Riz bas-fond Culture Riz bas-fond Variétés Madikatra
--- page 18 : ANALAMANGA Culture Riz plateaux B22,Nerica 4 Culture Riz plateaux Variétés FOFIFA 196, FOFIFA 173, CHHOMRONG DHAN, FOFIFA 186
--- page 19 : ANALANJIROFO Culture Riz bas-fond Culture Riz bas-fond Variétés IR64, FOFIFA198, 2787
--- page 20 : ANALANJIROFO Culture Riz plateaux Variétés Nerica4
--- page 21 : ANOSY Culture Riz bas-fond Culture Riz plateaux Variétés Nerica 14
-== mots page 9 (x0,top,taille,texte) colonne de gauche et titres
-57,41,13,ALAOTRA
-57,286,13,ALAOTRA
-232,48,9,Culture
-489,48,10,Riz
-504,48,10,bas-fond
-231,63,9,Variétés
-475,63,10,Sebota
-505,63,10,70,
-520,63,10,281,
-540,63,10,406
-240,42,9,Culture
-497,41,10,Riz
-511,41,10,bas-fond
-238,55,9,Variétés
-467,54,10,Tsemaka,
-508,54,10,Makalioka,
-556,54,10,Dista
-244,67,9,Cycle
-512,66,10,Long
-== rectangles colorés page 9 (x0,top,w,h,couleur) hors fonds clairs
-313 rectangles
-201,38,105,13,(0.184, 0.365, 0.541)
-306,38,433,13,(0.184, 0.365, 0.541)
-201,44,90,15,(0.329, 0.51, 0.208)
-291,44,447,15,(0.329, 0.51, 0.208)
-201,51,105,13,(0.184, 0.365, 0.541)
-306,51,433,13,(0.184, 0.365, 0.541)
-201,59,90,15,(0.329, 0.51, 0.208)
-291,59,447,15,(0.329, 0.51, 0.208)
-201,64,105,13,(0.184, 0.365, 0.541)
-306,64,433,13,(0.184, 0.365, 0.541)
-201,74,90,15,(0.329, 0.51, 0.208)
-291,74,447,15,(0.329, 0.51, 0.208)
-201,76,105,13,(0.184, 0.365, 0.541)
-306,76,54,13,(1.0, 0.675, 0.561)
-360,76,54,13,(1.0, 0.675, 0.561)
-414,76,54,13,(1.0, 0.675, 0.561)
-468,76,54,13,(1.0, 0.675, 0.561)
-522,76,54,13,(1.0, 0.675, 0.561)
-576,76,54,13,(1.0, 0.675, 0.561)
-630,76,54,13,(1.0, 0.675, 0.561)
-684,76,54,13,(1.0, 0.675, 0.561)
-201,89,90,15,(0.329, 0.51, 0.208)
-201,89,105,13,(0.184, 0.365, 0.541)
-291,89,56,15,(1.0, 0.851, 0.4)
-306,89,18,13,(1.0, 0.675, 0.561)
-324,89,18,13,(1.0, 0.675, 0.561)
-342,89,18,13,(1.0, 0.675, 0.561)
-347,89,56,15,(1.0, 0.851, 0.4)
-360,89,18,13,(1.0, 0.675, 0.561)
-378,89,18,13,(1.0, 0.675, 0.561)
-396,89,18,13,(1.0, 0.675, 0.561)
-403,89,56,15,(1.0, 0.851, 0.4)
-414,89,18,13,(1.0, 0.675, 0.561)
-432,89,18,13,(1.0, 0.675, 0.561)
-450,89,18,13,(1.0, 0.675, 0.561)
-459,89,56,15,(1.0, 0.851, 0.4)
-468,89,18,13,(1.0, 0.675, 0.561)
-486,89,18,13,(1.0, 0.675, 0.561)
-504,89,18,13,(1.0, 0.675, 0.561)
-515,89,56,15,(1.0, 0.851, 0.4)
-522,89,18,13,(1.0, 0.675, 0.561)
-540,89,18,13,(1.0, 0.675, 0.561)
-558,89,18,13,(1.0, 0.675, 0.561)
-571,89,56,15,(1.0, 0.851, 0.4)
-576,89,18,13,(1.0, 0.675, 0.561)
-594,89,18,13,(1.0, 0.675, 0.561)
-612,89,18,13,(1.0, 0.675, 0.561)
-627,89,56,15,(1.0, 0.851, 0.4)
-630,89,18,13,(1.0, 0.675, 0.561)
-648,89,18,13,(1.0, 0.675, 0.561)
-666,89,18,13,(1.0, 0.675, 0.561)
-683,89,56,15,(1.0, 0.851, 0.4)
-684,89,18,13,(1.0, 0.675, 0.561)
-702,89,18,13,(1.0, 0.675, 0.561)
-720,89,18,13,(1.0, 0.675, 0.561)
-201,101,105,13,(0.184, 0.365, 0.541)
-324,101,18,13,(0.0, 0.69, 0.941)
-342,101,18,13,(0.0, 0.69, 0.941)
-360,101,18,13,(0.0, 0.69, 0.941)
-378,101,18,13,(0.753, 0.0, 0.0)
-201,104,90,18,(0.329, 0.51, 0.208)
-291,104,19,18,(1.0, 0.851, 0.4)
-310,104,19,18,(1.0, 0.851, 0.4)
-328,104,19,18,(1.0, 0.851, 0.4)
-347,104,19,18,(1.0, 0.851, 0.4)
-366,104,19,18,(1.0, 0.851, 0.4)
-384,104,19,18,(1.0, 0.851, 0.4)
-403,104,19,18,(1.0, 0.851, 0.4)
-422,104,19,18,(1.0, 0.851, 0.4)
-440,104,19,18,(1.0, 0.851, 0.4)
-459,104,19,18,(1.0, 0.851, 0.4)
-478,104,19,18,(1.0, 0.851, 0.4)
-496,104,19,18,(1.0, 0.851, 0.4)
-515,104,19,18,(1.0, 0.851, 0.4)
-533,104,19,18,(1.0, 0.851, 0.4)
-552,104,19,18,(1.0, 0.851, 0.4)
-571,104,19,18,(1.0, 0.851, 0.4)
-589,104,19,18,(1.0, 0.851, 0.4)
-608,104,19,18,(1.0, 0.851, 0.4)
-627,104,19,18,(1.0, 0.851, 0.4)
-645,104,19,18,(1.0, 0.851, 0.4)
-664,104,19,18,(1.0, 0.851, 0.4)
-683,104,19,18,(1.0, 0.851, 0.4)
-701,104,19,18,(1.0, 0.851, 0.4)
-720,104,19,18,(1.0, 0.851, 0.4)
-201,114,105,13,(0.184, 0.365, 0.541)
-396,114,18,13,(0.0, 0.69, 0.941)
-414,114,18,13,(0.753, 0.0, 0.0)
-201,122,90,15,(0.329, 0.51, 0.208)
-366,122,19,15,(0.0, 0.69, 0.941)
-384,122,19,15,(0.0, 0.69, 0.941)
-403,122,19,15,(0.0, 0.69, 0.941)
-422,122,19,15,(0.0, 0.69, 0.941)
-440,122,19,15,(0.0, 0.69, 0.941)
-201,127,105,13,(0.184, 0.365, 0.541)
-432,127,18,13,(0.0, 0.69, 0.941)
-450,127,18,13,(0.753, 0.0, 0.0)
-201,137,90,15,(0.329, 0.51, 0.208)
-403,137,19,15,(0.0, 0.69, 0.941)
-422,137,19,15,(0.0, 0.69, 0.941)
-201,139,71,50,(0.184, 0.365, 0.541)
-272,139,34,13,(0.184, 0.365, 0.541)
-324,139,18,13,(0.0, 0.69, 0.941)
-342,139,18,13,(0.0, 0.69, 0.941)
-360,139,18,13,(0.0, 0.69, 0.941)
-378,139,18,13,(0.753, 0.0, 0.0)
-201,152,90,15,(0.329, 0.51, 0.208)
-272,152,34,13,(0.184, 0.365, 0.541)
-432,152,18,13,(0.0, 0.69, 0.941)
-440,152,19,15,(0.0, 0.69, 0.941)
-450,152,18,13,(0.753, 0.0, 0.0)
-459,152,19,15,(0.0, 0.69, 0.941)
-272,164,34,13,(0.184, 0.365, 0.541)
-468,164,18,13,(0.0, 0.69, 0.941)
-486,164,18,13,(0.753, 0.0, 0.0)
-201,167,62,30,(0.329, 0.51, 0.208)
-263,167,29,15,(0.329, 0.51, 0.208)
-366,167,19,15,(0.0, 0.69, 0.941)
-384,167,19,15,(0.0, 0.69, 0.941)
-403,167,19,15,(0.0, 0.69, 0.941)
-422,167,19,15,(0.0, 0.69, 0.941)
-440,167,19,15,(0.0, 0.69, 0.941)
-272,177,34,13,(0.184, 0.365, 0.541)
-504,177,18,13,(0.0, 0.69, 0.941)
-522,177,18,13,(0.753, 0.0, 0.0)
-263,182,29,15,(0.329, 0.51, 0.208)
-478,182,19,15,(0.0, 0.69, 0.941)
-496,182,19,15,(0.0, 0.69, 0.941)
-201,190,71,25,(0.184, 0.365, 0.541)
-272,190,34,13,(0.184, 0.365, 0.541)
-468,190,18,13,(0.0, 0.69, 0.941)
-486,190,18,13,(0.753, 0.0, 0.0)
-201,197,62,15,(0.329, 0.51, 0.208)
-263,197,29,15,(0.329, 0.51, 0.208)
-478,197,19,15,(0.0, 0.69, 0.941)
-496,197,19,15,(0.0, 0.69, 0.941)
-272,202,34,13,(0.184, 0.365, 0.541)
-504,202,18,13,(0.0, 0.69, 0.941)
-522,202,18,13,(0.753, 0.0, 0.0)
-201,212,90,15,(0.329, 0.51, 0.208)
-== entêtes de mois : Octobre@302,93; Novembre@353,93; Décembre@410,93; Janvier@472,93; Février@528,93; Mars@588,93; Avril@645,93; Mai@703,93; Octobre@302,316; Novembre@353,316; Décembre@410,316; Janvier@472,316; Février@528,316; Mars@588,316; Avril@645,316; Mai@703,316; Octobre@316,79; Novembre@365,79; Décembre@420,79; Janvier@480,79; Février@535,79; Mars@593,79; Avril@648,79; Mai@703,79; Octobre@305,314; Novembre@356,314; Décembre@412,314; Janvier@474,314; Février@530,314; Mars@589,314; Avril@646,314; Mai@703,314
+== https://emergency.copernicus.eu/mapping/list-of-components/EMSR564 -> 404 9678 octets
+   debut:  <!doctype html> <html lang="en"> <head> <meta charset="utf-8"> <title> Page not found | Copernicus EMS </title> <meta name="description" content=""> <meta name="viewport" content="width=device
+== https://emergency.copernicus.eu/mapping/list-of-components/EMSR565 -> 404 9678 octets
+   debut:  <!doctype html> <html lang="en"> <head> <meta charset="utf-8"> <title> Page not found | Copernicus EMS </title> <meta name="description" content=""> <meta name="viewport" content="width=device
+== https://emergency.copernicus.eu/EMSR564 -> 404 9678 octets
+   debut:  <!doctype html> <html lang="en"> <head> <meta charset="utf-8"> <title> Page not found | Copernicus EMS </title> <meta name="description" content=""> <meta name="viewport" content="width=device
+== https://mapping.emergency.copernicus.eu/activations/EMSR564/ -> 200 36148 octets
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI01_DEL_PRODUCT_r1_RTP01_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI02_DEL_PRODUCT_r1_RTP01_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI03_DEL_PRODUCT_r1_RTP01_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI05_GRA_PRODUCT_r1_RTP01_v2_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI06_GRA_PRODUCT_r1_VECTORS_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI07_GRA_MONIT01_r1_RTP01_v2_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI07_GRA_PRODUCT_r1_RTP01_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI08_GRA_PRODUCT_r1_RTP01_v1_vector.zip
+   debut:  <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <link rel="shortcut icon" href="/static/images/favicon.ico" /> <title> EMSR564 | Copernicus EMS On Demand Mapping </title> 
+== https://data.jrc.ec.europa.eu/dataset/a2de6b9f-5d90-458d-9e5c-7fda53a94703 -> 200 65884 octets
+   debut: <!DOCTYPE html> <html lang="en"><head><meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta content="IE=edge" http-equiv="X-UA-Compatible"> <base href="/"> <link rel="shortcut icon" href="_content/JRC.ODCAT.ECL.v4/ec/4.11.0/static/favicon
+== https://data.jrc.ec.europa.eu/api/3/action/package_show?id=a2de6b9f-5d90-458d-9e5c-7fda53a94703 -> 200 14895 octets
+   debut: {"help":"Returns metadata of a single dataset (package) and its resources.","success":true,"result":{"id":"a2de6b9f-5d90-458d-9e5c-7fda53a94703","name":"a2de6b9f-5d90-458d-9e5c-7fda53a94703","type":"dataset","title":"Tropical Cyclone Batsirai in Madagascar (2022-02-04)","notes":"Activation time (UTC
+== https://rapidmapping.emergency.copernicus.eu/EMSR564/ -> 200 36148 octets
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI01_DEL_PRODUCT_r1_RTP01_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI02_DEL_PRODUCT_r1_RTP01_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI03_DEL_PRODUCT_r1_RTP01_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI05_GRA_PRODUCT_r1_RTP01_v2_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI06_GRA_PRODUCT_r1_VECTORS_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI07_GRA_MONIT01_r1_RTP01_v2_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI07_GRA_PRODUCT_r1_RTP01_v1_vector.zip
+   https://cems-mapping-website.s3.eu-west-1.amazonaws.com/static/activations/EMSR564/EMSR564_AOI08_GRA_PRODUCT_r1_RTP01_v1_vector.zip
+   debut:  <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <link rel="shortcut icon" href="/static/images/favicon.ico" /> <title> EMSR564 | Copernicus EMS On Demand Mapping </title> 
