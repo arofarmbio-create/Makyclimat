@@ -1,0 +1,35 @@
+EMSR197 Enawo: zones cartographiées 0, polygones inondés 0, bâtiments gradés 0, fokontany évalués 0, touchés 0
+EMSR264 Ava: zones cartographiées 0, polygones inondés 0, bâtiments gradés 0, fokontany évalués 0, touchés 0
+EMSR274 Eliakim: zones cartographiées 0, polygones inondés 0, bâtiments gradés 0, fokontany évalués 0, touchés 0
+EMSR564 Batsirai: zones cartographiées 8, polygones inondés 2330, bâtiments gradés 37141, fokontany évalués 245, touchés 100
+Traceback (most recent call last):
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_fokontany.py", line 229, in <module>
+    main()
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_fokontany.py", line 155, in main
+    tr = truth_for(fok, aoi, fl, bl)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_fokontany.py", line 107, in truth_for
+    inter = fp.geometry.intersection(a).area
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/base.py", line 4882, in intersection
+    return _binary_geo("intersection", self, other, align, grid_size=grid_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/base.py", line 83, in _binary_geo
+    geoms, index = _delegate_binary_method(op, this, other, align, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/base.py", line 74, in _delegate_binary_method
+    data = getattr(a_this, op)(other, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/array.py", line 868, in intersection
+    self._binary_method("intersection", self, other, grid_size=grid_size),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/array.py", line 806, in _binary_method
+    return getattr(shapely, op)(left._data, right, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/shapely/decorators.py", line 184, in wrapper
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/shapely/set_operations.py", line 165, in intersection
+    return lib.intersection(a, b, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+shapely.errors.GEOSException: TopologyException: side location conflict at 4603671.7260403754 -2846286.1414829269. This can occur if the input geometry is invalid.
