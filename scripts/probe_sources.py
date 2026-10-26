@@ -1,16 +1,15 @@
-"""Sondage ad hoc : vérifier l'humidité du sol et l'IPC sur le site publié."""
-import requests
-
-B = "https://arofarmbio-create.github.io/Makyclimat/"
+"""Sonde : vérifie le site publié (catalogue des indicateurs cultures et bâti)."""
+import json, requests
+BASE = "https://arofarmbio-create.github.io/Makyclimat/"
 out = []
-for p in ["data/mdg/soilwater/status.json", "data/mdg/soilwater/series.json", "data/mdg/catalogue.json"]:
-    r = requests.get(B + p, timeout=60)
-    out.append(f"{p} -> {r.status_code} {len(r.content)} octets")
-    if p.endswith("catalogue.json") and r.ok:
+for rel in ["data/mdg/catalogue.json", "data/mdg/index.json"]:
+    r = requests.get(BASE + rel, timeout=60)
+    out.append(f"{rel} -> {r.status_code} {len(r.content)} octets")
+    if rel.endswith("catalogue.json") and r.ok:
+        ids = [i["id"] for i in r.json()["indicators"] if i["id"].startswith(("cult_", "bati_"))]
+        out.append("indicateurs cultures/bâti publiés : " + ", ".join(ids))
+    if rel.endswith("index.json") and r.ok:
         t = r.text
-        for k in ["soil", "sol_", "recharge", "nappe", "humidite", "ipc", "hapi"]:
-            out.append(f"   '{k}' present: {k in t}")
-    if p.endswith("status.json") and r.ok:
-        out.append("   " + r.text[:200].replace("\n", " "))
-open("data/_probe.txt", "w", encoding="utf-8").write("\n".join(out))
+        out.append("cult_ présent dans index.json : %s" % ("cult_" in t))
+open("data/_probe.txt", "w").write("\n".join(out) + "\n")
 print("\n".join(out))
