@@ -1,35 +1,35 @@
-"""Sondage ad hoc (GitHub Actions) : repérer les activations Copernicus EMS qui concernent Madagascar."""
+"""Sondage ad hoc (GitHub Actions) : sources d'eau souterraine pour Madagascar."""
 import re
-from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
-H = {"User-Agent": "Mozilla/5.0 MakyClimat"}
+H = {"User-Agent": "Mozilla/5.0 MakyClimat (recherche doctorale)"}
+out = []
 
 
-def look(n):
-    code = f"EMSR{n}"
+def get(u, **kw):
     try:
-        r = requests.get(f"https://rapidmapping.emergency.copernicus.eu/{code}/", timeout=40, headers=H)
-        if r.status_code != 200:
-            return None
-        t = r.text
-        if "adagascar" not in t:
-            return None
-        title = re.search(r"<title>\s*(.*?)\s*</title>", t, re.S)
-        h1 = re.findall(r"(?:Tropical|Flood|Storm|Cyclone|Landslide)[^<\n]{0,90}", t)[:2]
-        links = sorted(set(re.findall(r"https://cems-mapping-website[^\"'\s<>]+_vector\.zip", t)))
-        kinds = {}
-        for l in links:
-            k = re.search(r"_(DEL|GRA|REF)_", l)
-            key = k.group(1) if k else "?"
-            kinds[key] = kinds.get(key, 0) + 1
-        return f"{code} | {title.group(1) if title else ''} | {h1} | zips {kinds}"
+        return requests.get(u, timeout=90, headers=H, **kw)
     except Exception as e:  # noqa: BLE001
-        return f"{code} erreur {e}"
+        out.append(f"{u}: ERREUR {e}")
 
 
-with ThreadPoolExecutor(16) as ex:
-    res = [r for r in ex.map(look, range(150, 1100)) if r]
-open("data/_probe.txt", "w", encoding="utf-8").write("\n".join(res))
-print("\n".join(res))
+r = get("https://www2.bgs.ac.uk/africaGroundwaterAtlas/downloadGIS.html")
+if r is not None:
+    out.append(f"BGS page -> {r.status_code}")
+    for m in re.findall(r'href="([^"]*)"[^>]*>([^<]*adagascar[^<]*)<', r.text):
+        out.append(f"   lien Madagascar : {m}")
+    zips = re.findall(r'href="([^"]+\.zip)"', r.text)
+    out.append(f"   {len(zips)} archives sur la page, exemples : {zips[:4]}")
+    out += ["   ~ " + z for z in zips if "adag" in z.lower() or "MDG" in z or "mg" in z.lower().split("/")[-1][:3]]
+for u in ["https://data.waterpointdata.org/resource/jwn9-ihcz.json?$select=count(*)&clean_country_name=Madagascar",
+          "https://data.waterpointdata.org/resource/jwn9-ihcz.json?$select=count(*)&country_name=Madagascar",
+          "https://data.waterpointdata.org/resource/eqje-vguj.json?$select=count(*)&clean_country_name=Madagascar"]:
+    r = get(u)
+    if r is not None:
+        out.append(f"WPDx {u.split('resource/')[1][:60]} -> {r.status_code} {r.text[:200]}")
+r = get("https://data.waterpointdata.org/resource/jwn9-ihcz.json?$limit=2&clean_country_name=Madagascar")
+if r is not None:
+    out.append("WPDx exemple : " + r.text[:900])
+open("data/_probe.txt", "w", encoding="utf-8").write("\n".join(out))
+print("\n".join(out))
