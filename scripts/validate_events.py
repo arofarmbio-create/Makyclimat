@@ -42,11 +42,11 @@ def auc(score, pos) -> float:
 
 
 def fit_logit(X, y, lam=1.0):
-    """Régression logistique L2, classes équilibrées ; X déjà standardisé. Retourne (intercept, coefficients)."""
+    """Régression logistique L2 (probabilités calibrées, sans pondération des classes) ; X déjà standardisé. Retourne (intercept, coefficients)."""
     from scipy.optimize import minimize
     X = np.asarray(X, float); y = np.asarray(y, float)
     n, k = X.shape
-    w = np.where(y == 1, 0.5 / max(y.sum(), 1), 0.5 / max((1 - y).sum(), 1)) * n
+    w = np.ones(n)
 
     def f(b):
         z = b[0] + X @ b[1:]
@@ -106,13 +106,18 @@ def loeo(feat: pd.DataFrame, cols: list[str], lam=1.0) -> dict:
         oof[te] = predict(m, feat.loc[te, cols].values)
         t = best_threshold(predict(m, feat.loc[tr, cols].values), feat.loc[tr, "pos"].values)
         tp, fp, fn, pod, far, f1 = confusion(oof[te] >= t, feat.loc[te, "pos"].values)
+        order = np.argsort(-oof[te])
+        posv = feat.loc[te, "pos"].values[order]
+        k5 = float(posv[:5].sum() / max(posv.sum(), 1))
+        k8 = float(posv[:8].sum() / max(posv.sum(), 1))
         per.append({"evenement": held, "auc": auc(oof[te], feat.loc[te, "pos"].values), "seuil": t, "tp": tp, "fp": fp, "fn": fn,
-                    "pod": pod, "far": far, "f1": f1})
+                    "pod": pod, "far": far, "f1": f1, "dans_les_5_premieres": k5, "dans_les_8_premieres": k8})
     ok = np.isfinite(oof)
     y = feat["pos"].values.astype(float)
     pooled = {"auc": auc(oof[ok], y[ok]), "brier": float(np.mean((oof[ok] - y[ok]) ** 2)),
               "brier_climato": float(np.mean((y[ok].mean() - y[ok]) ** 2))}
     tp = sum(p["tp"] for p in per); fp = sum(p["fp"] for p in per); fn = sum(p["fn"] for p in per)
+    pooled.update({"dans_les_5_premieres": float(np.mean([q["dans_les_5_premieres"] for q in per])), "dans_les_8_premieres": float(np.mean([q["dans_les_8_premieres"] for q in per]))})
     pooled.update({"pod": tp / (tp + fn) if tp + fn else float("nan"), "far": fp / (tp + fp) if tp + fp else float("nan"), "tp": tp, "fp": fp, "fn": fn})
     bins = []
     for lo, hi in [(0, .2), (.2, .4), (.4, .6), (.6, .8), (.8, 1.0001)]:
