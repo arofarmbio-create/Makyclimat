@@ -8,10 +8,10 @@ ava-2018: 2018-01-01..2018-01-10, rayons de vent manquants 0/28 positions >= 34 
 freddy-2023: 2023-02-20..2023-03-09, rayons de vent manquants 2/36 positions >= 34 kt, pluie=oui
 alvaro-2024: 2023-12-30..2024-01-04, rayons de vent manquants 2/12 positions >= 34 kt, pluie=oui
 gezani-2026: 2026-02-08..2026-02-18, rayons de vent manquants 0/32 positions >= 34 kt, pluie=oui
-        variante   auc  brier  brier_climato   pod   far  tp  fp  fn
-0      vent seul  0.79   0.19           0.12  0.61  0.75  19  56  12
-1    pluie seule  0.74   0.21           0.12  0.58  0.78  18  62  13
-2  vent et pluie  0.82   0.19           0.12  0.84  0.68  26  56   5
+        variante   auc  brier  brier_climato  dans_les_5_premieres  dans_les_8_premieres   pod   far  tp  fp  fn
+0      vent seul  0.78   0.11           0.12                  0.69                  0.82  0.61  0.75  19  56  12
+1    pluie seule  0.72   0.11           0.12                  0.37                  0.59  0.58  0.78  18  62  13
+2  vent et pluie  0.81   0.12           0.12                  0.70                  0.92  0.77  0.68  24  52   7
        evenement  n_regions  n_documentees  auc_cov34  auc_cov64  auc_lrp  auc_lratio  auc_rx3
 0    alvaro-2024         24              3       0.92       0.67     0.90        0.90     0.76
 1       ava-2018         24              3       0.87       1.00     0.65        0.59     0.76
