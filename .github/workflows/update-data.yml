@@ -67,12 +67,12 @@ jobs:
       - name: Débits de rivière prévus (GloFAS via Open-Meteo) — ignorés en cas d'indisponibilité
         run: |
           python scripts/update_floods.py --country "$COUNTRY" || echo "Débits indisponibles, alertes de crue non mises à jour"
+      - name: Susceptibilité aux inondations (modèle validé, sans réseau)
+        run: python scripts/build_susceptibility.py --country "$COUNTRY" || echo "Susceptibilité indisponible"
       - name: Calculer les indicateurs
         run: |
           set -o pipefail
           python scripts/compute_metrics.py --country "$COUNTRY" 2>&1 | tee data/_compute_log.txt
-      - name: Susceptibilité aux inondations (modèle validé, sans réseau)
-        run: python scripts/build_susceptibility.py --country "$COUNTRY" || echo "Susceptibilité indisponible"
       - name: Calendrier cultural (recommandations officielles et fenêtres saisies)
         run: python scripts/build_calendar.py --country "$COUNTRY"
       - name: Générer le catalogue
