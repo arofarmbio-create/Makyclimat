@@ -27,7 +27,7 @@ def main() -> None:
     path = grid_dir(a.country) / "rx3_annual.npz"
     done = {}
     if path.exists():
-        z = np.load(path)
+        z = np.load(path, allow_pickle=True)
         if len(z["codes"]) == len(leaves) and (z["codes"] == leaves.pcode.values).all():
             done = {int(s): m for s, m in zip(z["seasons"], z["rx3"])}
     sampler = None
@@ -43,7 +43,7 @@ def main() -> None:
         done[y] = roll3_max(v)
         print(f"saison {y}: médiane nationale du maximum 3 j = {np.nanmedian(done[y]):.0f} mm ({miss} jours absents)", flush=True)
         seasons = sorted(done)
-        np.savez_compressed(path, seasons=np.array(seasons), rx3=np.vstack([done[s] for s in seasons]).astype("float32"), codes=leaves.pcode.values)
+        np.savez_compressed(path, seasons=np.array(seasons), rx3=np.vstack([done[s] for s in seasons]).astype("float32"), codes=leaves.pcode.values.astype(str))
     print(f"{len(done)} saisons enregistrées")
 
 
