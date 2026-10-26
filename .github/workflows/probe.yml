@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install requests pandas numpy pyyaml shapely pdfplumber
+      - run: pip install requests pandas numpy pyyaml shapely pdfplumber geopandas pyogrio
       - run: python scripts/probe_sources.py
       - name: Enregistrer le résultat
         run: |
