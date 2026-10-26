@@ -1004,10 +1004,12 @@
   var LVL_LABEL = { 1: "Essentiel", 2: "Analyse avancée", 3: "Données techniques" };
   var THEMES = ["Sécheresse et pluie", "Alertes à 7 jours", "Population et ciblage", "Cyclones", "Inondation, eau et terrain",
     "Cultures, bâti et routes", "Événements et réponse", "Indice couplé",
-    "Sécheresse : analyse approfondie", "Relief et hydrologie (calcul)", "Autres indicateurs"];
+    "Sécheresse : analyse approfondie", "Relief et hydrologie (calcul)",
+    "Vulnérabilité cumulative (expérimental, non validé)", "Autres indicateurs"];
   var THEME_LEVEL = { "Sécheresse et pluie": 1, "Alertes à 7 jours": 1, "Population et ciblage": 1, "Cyclones": 1,
     "Inondation, eau et terrain": 1, "Cultures, bâti et routes": 2, "Événements et réponse": 1, "Indice couplé": 2,
-    "Sécheresse : analyse approfondie": 2, "Relief et hydrologie (calcul)": 3, "Autres indicateurs": 3 };
+    "Sécheresse : analyse approfondie": 2, "Relief et hydrologie (calcul)": 3,
+    "Vulnérabilité cumulative (expérimental, non validé)": 2, "Autres indicateurs": 3 };
   function themeOf(id) {
     var k = String(id).replace(/^x:/, "");
     if (/^ew/.test(id)) return THEMES[1];
@@ -1019,8 +1021,9 @@
     if (/^choc_cyc/.test(k)) return THEMES[3];
     if (/^(choc_crue|hand_)/.test(k)) return THEMES[4];
     if (/^(susc_|cn2|river|slope|elev|whc)/.test(k)) return THEMES[9];
+    if (/^vuln_cumul/.test(k)) return THEMES[10];
     if (/^(cult|bati|route)/.test(k)) return THEMES[5];
-    return THEMES[10];
+    return THEMES[11];
   }
   function groupLayers(sel) {
     if (!sel) return;

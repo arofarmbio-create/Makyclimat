@@ -1108,3 +1108,37 @@ indicators:
     source: "OpenStreetMap (© contributeurs, ODbL) via Overpass, routes trunk/primary/secondary/tertiary, croisées avec la HAND de MakyClimat (Copernicus GLO-90) ; exposition topographique, pas une coupure constatée ; OSM n'est pas un recensement"
     frequency: Ponctuelle
     status: active
+  # ---------------- Vulnérabilité cumulative (expérimental, non validé) ----------------
+  - id: vuln_cumul_idx
+    label: "Indice de vulnérabilité cumulative (0-100) : chocs cyclone et sécheresse accumulés sur ~3,5 ans, le plus récent pesant davantage"
+    unit: "indice 0-100"
+    format: float
+    aggregate: popmean
+    sectors: [drr, early_recovery, food_security]
+    sdg: ["1.5", "13.1"]
+    national: [axe1, solidarite]
+    source: "MakyClimat, calcul propre à partir de l'historique des cyclones (IBTrACS) et du SPI-3 régional (CHIRPS) ; n'inclut ni inflation, ni prix, ni pouvoir d'achat, ni enquête de résilience (données non disponibles par fokontany) — voir validation/vuln_cumul_limites.md"
+    frequency: Recalculé à chaque mise à jour
+    status: active
+  - id: vuln_cumul_cyc
+    label: "Vulnérabilité cumulative : part due aux cyclones (0-100)"
+    unit: "indice 0-100"
+    format: float
+    aggregate: popmean
+    sectors: [drr]
+    sdg: ["13.1"]
+    national: [axe1]
+    source: "MakyClimat, calcul propre à partir de l'historique des cyclones (IBTrACS) ; voir validation/vuln_cumul_limites.md"
+    frequency: Recalculé à chaque mise à jour
+    status: active
+  - id: vuln_cumul_sech
+    label: "Vulnérabilité cumulative : part due à la sécheresse (0-100)"
+    unit: "indice 0-100"
+    format: float
+    aggregate: popmean
+    sectors: [food_security, drr]
+    sdg: ["1.5", "13.1"]
+    national: [axe1, solidarite]
+    source: "MakyClimat, calcul propre à partir du SPI-3 régional (CHIRPS) ; voir validation/vuln_cumul_limites.md"
+    frequency: Recalculé à chaque mise à jour
+    status: active

@@ -73,6 +73,8 @@ jobs:
         run: python scripts/build_shocks.py --country "$COUNTRY" --recent || echo "Chocs indisponibles"
       - name: Choc crue (période de retour du débit récent, format JIAF) — ignoré en cas d'indisponibilité
         run: python scripts/build_flood_shock.py --country "$COUNTRY" || echo "Choc crue indisponible"
+      - name: Indice de vulnérabilité cumulative (expérimental, non validé) — ignoré en cas d'indisponibilité
+        run: python scripts/build_vuln_cumul.py --country "$COUNTRY" || echo "Vulnérabilité cumulative indisponible"
       - name: Calculer les indicateurs
         run: |
           set -o pipefail
