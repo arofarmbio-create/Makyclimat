@@ -1,21 +1,23 @@
+rapport R50/R34 = exp(-1.144 + 0.0045 x vent), écart-type résiduel 0.29 (log), n = 5180
+rapport R64/R34 = exp(-1.717 + 0.0047 x vent), écart-type résiduel 0.26 (log), n = 3220
 enawo-2017: 17465 fokontany, vent>=34: 17404, >=64: 1236, pluie=oui
 batsirai-2022: 11429 fokontany, vent>=34: 10251, >=64: 974, pluie=oui
 emnati-2022: 10528 fokontany, vent>=34: 9784, >=64: 781, pluie=oui
-belna-2019: 11149 fokontany, vent>=34: 740, >=64: 35, pluie=oui
+belna-2019: 11149 fokontany, vent>=34: 740, >=64: 78, pluie=oui
 gamane-2024: 4468 fokontany, vent>=34: 476, >=64: 14, pluie=oui
 jude-2025: 7671 fokontany, vent>=34: 3115, >=64: 0, pluie=oui
 ava-2018: 12625 fokontany, vent>=34: 9817, >=64: 543, pluie=oui
 freddy-2023: 11368 fokontany, vent>=34: 5804, >=64: 343, pluie=oui
 alvaro-2024: 8299 fokontany, vent>=34: 911, >=64: 1, pluie=oui
-gezani-2026: 12108 fokontany, vent>=34: 4239, >=64: 0, pluie=oui
-       evenement       nom  fokontany_concernes  pop_vent_34kt  pop_vent_50kt  pop_vent_64kt  fokontany_vent_64kt rayons_manquants
-0     enawo-2017     Enawo                17465       24862785        4265860        1596686                 1236             4/21
-1  batsirai-2022  Batsirai                11429       15399449        4036651        1313911                  974             2/20
-2    emnati-2022    Emnati                10528       13408179        4565392        1031105                  781             0/18
-3     belna-2019     Belna                11149         993963         198037          42568                   35             0/18
-4    gamane-2024    Gamane                 4468         770819         112124          21835                   14             2/10
-5      jude-2025      Jude                 7671        3280897              0              0                    0             5/24
-6       ava-2018       Ava                12625       15284623        8269596         911625                  543             0/28
-7    freddy-2023    Freddy                11368        6982979        2636950         434130                  343             2/36
-8    alvaro-2024    Alvaro                 8299        1393398         211950           3339                    1             2/12
-9    gezani-2026    Gezani                12108        7717716              0              0                    0             0/32
+gezani-2026: 12108 fokontany, vent>=34: 4239, >=64: 414, pluie=oui
+       evenement       nom  fokontany_concernes  pop_vent_34kt  pop_vent_50kt  pop_vent_64kt  fokontany_vent_64kt rayons_manquants  positions_R50_R64_estimees
+0     enawo-2017     Enawo                17465       24862785        4869717        1596686                 1236             4/21                           3
+1  batsirai-2022  Batsirai                11429       15399449        4036651        1313911                  974             2/20                           1
+2    emnati-2022    Emnati                10528       13408179        4565392        1031105                  781             0/18                           2
+3     belna-2019     Belna                11149         993963         198037          81711                   78             0/18                           2
+4    gamane-2024    Gamane                 4468         770819         112124          21835                   14             2/10                           0
+5      jude-2025      Jude                 7671        3280897        1408373              0                    0             5/24                          18
+6       ava-2018       Ava                12625       15284623        8269596         911625                  543             0/28                           0
+7    freddy-2023    Freddy                11368        6982979        2651530         434130                  343             2/36                           6
+8    alvaro-2024    Alvaro                 8299        1393398         211950           3339                    1             2/12                           0
+9    gezani-2026    Gezani                12108        7717716        1672089         751355                  414             0/32                          56
