@@ -1,2 +1,2 @@
 variable,seuil_lisible,tp,fp,fn,tn,pod,far,evenements_couverts,evenements_avec_impact,part_evenements_couverts
-cov34>=0.10 OU rp90>=5,vent ≥ 34 nds sur 10 % de la population OU pluie 3j de retour ≥ 5 ans,35,101,2,174,0.9459459459459459,0.7426470588235294,13,13,1.0
+cov34>=0.10 OU rp90>=5,vent ≥ 34 nds sur 10 % de la population OU pluie 3j de retour ≥ 5 ans,41,114,3,226,0.9318181818181818,0.7354838709677419,16,16,1.0
