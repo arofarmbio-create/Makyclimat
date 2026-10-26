@@ -1142,3 +1142,15 @@ indicators:
     source: "MakyClimat, calcul propre à partir du SPI-3 régional (CHIRPS) ; voir validation/vuln_cumul_limites.md"
     frequency: Recalculé à chaque mise à jour
     status: active
+  - id: prix_riz_ecart_pct
+    label: "Écart du prix du riz au prix médian des 3 années précédentes, même mois (région) — Grand Sud/Sud-Est seulement, couverture WFP récente"
+    unit: "%"
+    format: float
+    aggregate: none
+    inherit: down
+    sectors: [food_security]
+    sdg: ["1.1", "2.1"]
+    national: [solidarite]
+    source: "WFP/HDX, Food Prices for Madagascar (prix du riz par marché, mensuel) ; région, pas fokontany ; affiché seulement si le dernier relevé a moins de 6 mois ; n'est PAS corrigé de l'inflation générale (prix nominal) ; voir validation/vuln_cumul_limites.md"
+    frequency: Mensuel, si disponible
+    status: active

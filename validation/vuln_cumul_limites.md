@@ -37,13 +37,21 @@ diversité agricole), une autre subir un seul choc sur un terrain déjà fragile
 ## Pour l'améliorer
 
 1. Une source de prix ou d'inflation par district, même trimestrielle (PAM/VAM, INSTAT, FEWS NET).
-   **Une première source a été trouvée et branchée en collecte silencieuse** : le jeu de données ouvert
-   « WFP Food Prices for Madagascar » (HDX), prix du riz par marché, mensuel, depuis 2004. Le script
-   `scripts/connector_wfp_prices.py` le télécharge à chaque mise à jour et écrit
-   `validation/wfp_prix_riz_candidat.csv` (écart du prix du riz au prix médian des 3 années précédentes,
-   par région). **Ce fichier n'est pas encore affiché sur le site** : il faut d'abord vérifier, une fois
-   collecté, la couverture réelle (quelles régions, quelle continuité des mois) et relier les noms de
-   région WFP aux codes pcode de MakyClimat avant toute intégration à l'indice.
+   **Une source a été trouvée, vérifiée et affichée séparément** : le jeu de données ouvert « WFP Food
+   Prices for Madagascar » (HDX), prix du riz par marché, mensuel, depuis 2004. Le script
+   `scripts/connector_wfp_prices.py` le télécharge à chaque mise à jour, écrit l'historique complet dans
+   `validation/wfp_prix_riz_candidat.csv` et l'indicateur `prix_riz_ecart_pct` (écart au prix médian des
+   3 années précédentes, même mois) dans `data/mdg/external/`, affiché sur la carte sous le thème
+   « Vulnérabilité cumulative (expérimental) », **à part, jamais combiné** à `vuln_cumul_idx`.
+   **Couverture réelle, vérifiée sur les données collectées :** 22 régions nommées sur l'historique
+   complet (2004-2026), mais seules **5-6 régions du Grand Sud et du Sud-Est** ont un relevé de moins de
+   6 mois à ce jour (Androy, Anosy, Atsimo Andrefana, Atsimo Atsinanana, Vatovavy, Fitovinany) — les 17
+   autres régions n'ont plus de relevé depuis 2014-2019 et sont donc exclues de l'affichage plutôt que
+   montrées comme à jour. C'est cohérent avec le bulletin WFP, qui suit spécifiquement le Grand Sud en
+   crise alimentaire. Limites supplémentaires à garder en tête : prix nominal du riz seul (pas un panier
+   alimentaire complet, pas corrigé de l'inflation générale) ; la région Vatovavy Fitovinany (fusionnée
+   dans la source WFP d'avant la scission administrative de 2009) a sa valeur dupliquée sur les deux
+   régions actuelles, ce qui n'est qu'une approximation.
 2. Des données de dégâts réels (voir la demande adressée au BNGRC) pour calibrer la sévérité attribuée
    à chaque classe de vent et à chaque seuil de SPI, au lieu des poids actuels choisis de façon
    raisonnée.

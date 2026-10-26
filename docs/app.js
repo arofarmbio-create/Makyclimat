@@ -1021,7 +1021,7 @@
     if (/^choc_cyc/.test(k)) return THEMES[3];
     if (/^(choc_crue|hand_)/.test(k)) return THEMES[4];
     if (/^(susc_|cn2|river|slope|elev|whc)/.test(k)) return THEMES[9];
-    if (/^vuln_cumul/.test(k)) return THEMES[10];
+    if (/^(vuln_cumul|prix_riz)/.test(k)) return THEMES[10];
     if (/^(cult|bati|route)/.test(k)) return THEMES[5];
     return THEMES[11];
   }

@@ -102,13 +102,68 @@ def main() -> None:
 
     n_months = out["mois"].nunique()
     n_regions = out["adm1_label"].nunique()
-    coverage_note = (f"Prix WFP (riz) : {len(out)} lignes, {n_regions} régions nommées (Admin1 WFP, pas encore reliées "
-                      f"aux codes pcode MakyClimat), {n_months} mois — couverture à vérifier avant tout usage dans l'outil.")
+    coverage_note = (f"Prix WFP (riz) : {len(out)} lignes, {n_regions} régions nommées (Admin1 WFP), {n_months} mois.")
     print(coverage_note)
     dest = ROOT / "validation" / "wfp_prix_riz_candidat.csv"
     dest.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(dest, index=False)
-    print(f"Écrit (données candidates, non affichées sur le site) : {dest}")
+    print(f"Écrit (archive complète, pour inspection) : {dest}")
+
+    write_indicator(out)
+
+
+# Correspondance nom de région WFP -> pcode région MakyClimat (units.csv, niveau 1).
+# "Vatovavy Fitovinany" : les deux régions actuelles (séparées depuis 2009) étaient encore comptées
+# ensemble par WFP à l'époque ; on duplique la même valeur sur les deux, en le disant dans la source.
+ADM1_MAP = {
+    "Alaotra Mangoro": ["MG33"], "Amoron I Mania": ["MG22"], "Analamanga": ["MG11"], "Analanjirofo": ["MG32"],
+    "Androy": ["MG52"], "Anosy": ["MG53"], "Atsimo Andrefana": ["MG51"], "Atsimo Atsinanana": ["MG25"],
+    "Atsinanana": ["MG31"], "Betsiboka": ["MG43"], "Boeny": ["MG41"], "Bongolava": ["MG14"], "Diana": ["MG71"],
+    "Haute Matsiatra": ["MG21"], "Ihorombe": ["MG24"], "Itasy": ["MG13"], "Melaky": ["MG44"], "Menabe": ["MG54"],
+    "Sava": ["MG72"], "Sofia": ["MG42"], "Vakinankaratra": ["MG12"], "Vatovavy Fitovinany": ["MG26", "MG27"],
+}
+
+
+MAX_STALENESS_DAYS = 185  # ~6 mois : au-delà, le dernier prix connu n'est plus un état "actuel", on ne l'affiche pas
+
+
+def write_indicator(out: pd.DataFrame) -> None:
+    """Écrit le DERNIER écart de prix connu par région dans data/mdg/external/ (format standard pcode,
+    indicateur,valeur,date,source : lu automatiquement par compute_metrics.py, hérité vers les niveaux
+    inférieurs via indicators.yml : inherit: down). Une région dont le dernier prix date de plus de
+    MAX_STALENESS_DAYS est EXCLUE plutôt que d'afficher un chiffre périmé comme s'il était actuel : en
+    pratique, la couverture récente du bulletin WFP ne porte que sur le Grand Sud et le Sud-Est (régions
+    en crise alimentaire suivie de près), les autres régions n'ont plus de relevé depuis 2014-2019."""
+    latest = (out.dropna(subset=["ecart_prix_pct"]).sort_values("mois").groupby("adm1_label").last().reset_index())
+    today = pd.Timestamp.today()
+    latest["age_days"] = (today - pd.to_datetime(latest["mois"])).dt.days
+    stale = latest[latest["age_days"] > MAX_STALENESS_DAYS]["adm1_label"].tolist()
+    latest = latest[latest["age_days"] <= MAX_STALENESS_DAYS]
+    if stale:
+        print(f"Prix WFP : {len(stale)} région(s) avec un dernier prix trop ancien (> {MAX_STALENESS_DAYS} j), exclues : {stale}")
+    rows = []
+    unmapped = []
+    for r in latest.itertuples():
+        pcodes = ADM1_MAP.get(r.adm1_label)
+        if not pcodes:
+            unmapped.append(r.adm1_label)
+            continue
+        src = "WFP/HDX (prix du riz, écart au prix médian des 3 années précédentes, même mois)"
+        if len(pcodes) > 1:
+            src += " ; région fusionnée Vatovavy-Fitovinany dans la source, valeur dupliquée sur les 2 régions actuelles"
+        for pc in pcodes:
+            rows.append({"pcode": pc, "indicateur": "prix_riz_ecart_pct", "valeur": r.ecart_prix_pct, "date": r.mois, "source": src})
+    if unmapped:
+        print(f"Prix WFP : régions non reliées à un pcode (ignorées) : {unmapped}")
+    dest = ROOT / "data" / "mdg" / "external" / "prix_riz_ecart.csv"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if not rows:
+        print("Prix WFP : aucune région récente reliée à un pcode — indicateur non écrit.")
+        if dest.exists():
+            dest.unlink()
+        return
+    pd.DataFrame(rows).to_csv(dest, index=False)
+    print(f"Prix WFP : indicateur écrit pour {len(rows)} régions (données récentes seulement) -> {dest}")
 
 
 if __name__ == "__main__":
