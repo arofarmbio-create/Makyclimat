@@ -9,7 +9,7 @@ Exposé ≠ sinistré : la comparaison avec le modèle se fera sur le classement
 
 ## Résultats (octobre 2026)
 
-**Niveau région, 9 cyclones (rapports OCHA/IFRC/presse)** : `cyclones_*.csv`, `modele_cyclone.json`. Classement vent + pluie : AUC 0,81 ; 92 % des régions citées sont dans les 8 premières sur 24. Probabilités non calibrées.
+**Niveau région, 13 cyclones 1994-2026 (rapports OCHA/IFRC/presse, dont 4 cyclones historiques 1994-2013 ajoutés en octobre 2026 — voir `evenements_historiques_note.md`)** : `cyclones_*.csv`, `modele_cyclone.json`. Classement vent + pluie : AUC 0,83 ; 87 % des régions citées sont dans les 8 premières sur 24. Probabilités non calibrées. (3 cyclones historiques supplémentaires — Eline 2000, Elita 2004, Giovanna 2012 — comptent dans la base nationale mais sont exclus de ce test région par région faute de liste de régions touchées utilisable.)
 
 **Niveau fokontany et commune, 6 activations Copernicus EMS (satellite)** : `ems_*.csv`, `ems_resultats.json`, journal `_journal_ems.txt`.
 - Vérité : zones inondées et bâtiments classés par satellite, uniquement dans les zones cartographiées (AOI). Touché = bâtiment détruit ou endommagé, ou au moins 5 % de la surface inondée.
