@@ -65,7 +65,8 @@ def read_layers(code, tmp: Path):
         for shp in glob.glob(f"{d}/**/*.shp", recursive=True):
             nm = Path(shp).name
             names.add(re.sub(r"EMSR\d+_[A-Z0-9]+_[A-Z]+_[A-Za-z0-9]+_", "", nm))
-            kind = "aoi" if "areaOfInterest" in nm else "flood" if "observedEvent" in nm else "bld" if re.search(r"builtUp[PA]_", nm) else None
+            kind = ("aoi" if re.search(r"areaOfInterest|area_of_interest", nm) else "flood" if re.search(r"observedEvent|observed_event", nm)
+                    else "bld" if re.search(r"builtUp[PA]_|built_up_[pa]\.|built_up_[pa]_", nm) else "crisis" if "crisis_information" in nm else None)
             if not kind:
                 continue
             try:
@@ -82,8 +83,14 @@ def read_layers(code, tmp: Path):
                 ev = g.get("event_type", pd.Series([""] * len(g))).astype(str)
                 nt = g.get("notation", pd.Series([""] * len(g))).astype(str)
                 fl.append(g[ev.str.contains("Flood", case=False) | nt.str.contains("Flood", case=False)][["geometry"]])
-            elif kind == "bld" and "damage_gra" in g:
-                b = g[["damage_gra", "geometry"]].copy()
+            elif kind == "crisis":
+                print("  crisis_information :", Path(shp).name[-40:], list(g.columns)[:10], {c: g[c].astype(str).value_counts().head(5).to_dict() for c in g.columns if c.lower().startswith(("dmg", "damage", "event", "obj_desc", "notation"))})
+            elif kind == "bld":
+                dc = next((c for c in g.columns if c.lower() in ("damage_gra", "dmg_grade", "damage_grade") or "damage" in c.lower()), None)
+                if dc is None:
+                    print("  built_up sans classe de dégât :", Path(shp).name[-30:], list(g.columns)[:10])
+                    continue
+                b = g[[dc, "geometry"]].rename(columns={dc: "damage_gra"}).copy()
                 b["geometry"] = b.geometry.representative_point()
                 bl.append(b)
     if not (aoi or fl or bl):
