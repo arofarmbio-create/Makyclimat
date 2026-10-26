@@ -1,4 +1,4 @@
-meta.json 32989 car.
+meta.json 33424 car.
 spi3: 1
 spi6: 1
 spi12: 1
@@ -9,4 +9,7 @@ choc_cyc_nb: 1
 choc_cyc_dernier_jours: 1
 susc_inond_pct: 1
 cult_basse5_pct: 1
+choc_crue_retour_ans: 1
+choc_crue_ratio_q2: 1
+page Fiabilité en ligne : True
 page : rubrique JIAF dans app.js : True
