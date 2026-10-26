@@ -1,0 +1,20 @@
+overpass: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+tuile 0,0 : 625 routes cumulées
+overpass: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+tuile 0,1 : 981 routes cumulées
+tuile 0,2 : 1257 routes cumulées
+tuile 0,3 : 2744 routes cumulées
+tuile 1,0 : 4562 routes cumulées
+tuile 1,1 : 10063 routes cumulées
+overpass: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+tuile 1,2 : 11799 routes cumulées
+overpass: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+tuile 1,3 : 12088 routes cumulées
+overpass: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+tuile 2,0 : 12088 routes cumulées
+overpass: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+overpass: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+tuile 2,1 : 12443 routes cumulées
+tuile 2,2 : 13652 routes cumulées
+tuile 2,3 : 15492 routes cumulées
+Routes principales : 23,065 km, dont 26.5 % à moins de 5 m au-dessus d'un cours d'eau ; distance médiane fokontany-route 3.7 km ; 65499 valeurs
