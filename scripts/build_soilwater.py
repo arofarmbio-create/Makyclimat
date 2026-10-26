@@ -343,7 +343,8 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     sm_z = C.monthly_standardized(rel, month0)
     rech12 = C.rolling_sum(X, 12)
     rz = C.monthly_standardized(rech12, month0)
-    spis = {f"spi{n}": C.spi(Pc, n, month0)[T - 1] for n in (3, 6, 12)}       # SPI de l'OMM sur le dernier mois complet
+    spi_full = {f"spi{n}": C.spi(Pc, n, month0) for n in (3, 6, 12)}
+    spis = {k: v[T - 1] for k, v in spi_full.items()}                       # SPI de l'OMM sur le dernier mois complet
     last = T - 1
     cal = np.array([(month0 - 1 + t) % 12 for t in range(T)])
     smn = np.stack([np.nanmean(rel[cal == m], axis=0) for m in range(12)])       # normale mensuelle du stock relatif
@@ -364,6 +365,22 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     for k, v in spis.items():
         lv[k] = leaf_series(v)
     zm = zone_means(units, lv)
+    try:                                                                   # historique SPI par région (moyenne des fokontany) pour la validation
+        recs = []
+        start = max(0, T - 12 * 12)
+        for t in range(start, T):
+            ym = (labels[t] if isinstance(labels[t], str) else str(labels[t]))
+            row = {k: leaf_series(v[t]) for k, v in spi_full.items()}
+            dfm = pd.DataFrame({"adm1": leaves.adm1.values, **row})
+            g = dfm.groupby("adm1").mean().reset_index()
+            g.insert(0, "mois", ym)
+            recs.append(g)
+        from common import DATA_DIR
+        vd = DATA_DIR.parent / "validation"
+        vd.mkdir(exist_ok=True)
+        pd.concat(recs).round(2).to_csv(vd / "spi_regions.csv", index=False)
+    except Exception as ex:  # noqa: BLE001
+        print("historique SPI non écrit :", ex)
     rows = []
     date = dt.date.today().isoformat()
     for i, pc in enumerate(leaves.pcode):
