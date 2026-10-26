@@ -1,21 +1,11 @@
-/ -> 200 11010 octets
-   Cyclones passés: True ; Prévision saisonnière: True
-data/mdg/calendrier.json -> 200 1972 octets
-data/mdg/validation.json -> 200 10068 octets
-data/mdg/seasonal.json -> 200 17631 octets
-data/mdg/cyclones.json -> 200 264495 octets
-data/mdg/index.json -> 200 1231508 octets
-data/mdg/response.json -> 200 341625 octets
-data/catalogue.json -> 404 9379 octets
+data/mdg/soilwater/status.json -> 200 972 octets
+   {"steps":{"sols et occupation du sol":{"ok":true,"seconds":0.0},"évapotranspiration de référence":{"ok":true,"seconds":3601.8},"pluie mensuelle":{"ok":true,"seconds":38.5}},"limits":["Bilan mensuel : 
+data/mdg/soilwater/series.json -> 200 615403 octets
 data/mdg/catalogue.json -> 200 34955 octets
-data/mdg/hydro/meta.json -> 200 10748 octets
-   catalogue contient susc_inond_pct: True
-   catalogue contient crue_rp100_ecoles_pct: True
-   catalogue contient dhs_: True
-   catalogue contient osm_ecoles: True
-   catalogue contient cyc_nb_100km: True
-   catalogue contient seas_anom_pct: True
-   catalogue contient hapi: False
-   catalogue contient ipc: True
-   index.json début: [["MG11102010010","Mahatsinjo",4,"MG11","MG11102","MG11102010"],["MG11102010009","Ambohidrazaka",4,"MG11","MG11102","MG11102010"],["MG11102010008","Ambodivoanjo",4,"MG11","MG11102","MG11102010"],["MG11102010002","Ankazobe",4,"MG11","MG11102","MG11102010"],["MG11102010006","Ankadindratombo",4,"MG11",
-app.js: calendarSection=True, setupSeasonal=True, setupCyclones=True
+   'soil' present: True
+   'sol_' present: False
+   'recharge' present: True
+   'nappe' present: True
+   'humidite' present: False
+   'ipc' present: True
+   'hapi' present: False
