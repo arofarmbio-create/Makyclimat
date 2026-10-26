@@ -40,6 +40,52 @@ def wind_class(cov: dict) -> np.ndarray:
     return out
 
 
+def _quad_cols(k):
+    return [f"USA_R{k}_{q}" for q in ("NE", "SE", "SW", "NW")]
+
+
+def fit_ratios(d: pd.DataFrame):
+    """Rapport empirique R50/R34 et R64/R34 en fonction du vent maximal (kt, 1 min), appris sur les positions où le JTWC a publié les rayons :
+    log(R_k / R34) = a + b * vent, par régression des moindres carrés sur toutes les paires quadrant/position à rayons > 0.
+    Retourne {k: (a, b, écart-type résiduel, n)}."""
+    out = {}
+    v = pd.to_numeric(d["USA_WIND"], errors="coerce").values
+    r34 = np.column_stack([pd.to_numeric(d[c], errors="coerce").values for c in _quad_cols(34)])
+    for k in (50, 64):
+        rk = np.column_stack([pd.to_numeric(d[c], errors="coerce").values for c in _quad_cols(k)])
+        m = np.isfinite(rk) & np.isfinite(r34) & (rk > 0) & (r34 > 0) & np.isfinite(v)[:, None]
+        vv = np.repeat(v[:, None], 4, axis=1)[m]
+        y = np.log(rk[m] / r34[m])
+        A = np.c_[np.ones(len(vv)), vv]
+        coef, *_ = np.linalg.lstsq(A, y, rcond=None)
+        out[k] = (float(coef[0]), float(coef[1]), float(np.std(y - A @ coef)), int(len(vv)))
+    return out
+
+
+def fill_radii(g: pd.DataFrame, ratios: dict) -> tuple[pd.DataFrame, int]:
+    """Complète R50/R64 absents (aucun quadrant publié) quand le vent maximal atteint ce seuil, avec le rapport empirique à R34.
+    Le rayon estimé ne dépasse jamais R34. Retourne (tableau complété, nombre de positions complétées)."""
+    g = g.copy()
+    n = 0
+    v = pd.to_numeric(g["USA_WIND"], errors="coerce").values
+    r34 = np.column_stack([pd.to_numeric(g[c], errors="coerce").values for c in _quad_cols(34)])
+    for k in (50, 64):
+        cols = _quad_cols(k)
+        rk = np.column_stack([pd.to_numeric(g[c], errors="coerce").values for c in cols])
+        miss = ~np.isfinite(rk).any(axis=1) & np.isfinite(v) & (v >= k) & np.isfinite(r34).any(axis=1)
+        a, b, _, _ = ratios[k]
+        est = np.minimum(r34 * np.exp(a + b * v[:, None]), r34)
+        if k == 64:                                     # R64 <= R50 (valeurs déjà complétées ou publiées)
+            r50 = np.column_stack([pd.to_numeric(g[c], errors="coerce").values for c in _quad_cols(50)])
+            est = np.where(np.isfinite(r50), np.minimum(est, r50), est)
+        for j, c in enumerate(cols):
+            col = pd.to_numeric(g[c], errors="coerce").values.copy()
+            col[miss] = est[miss, j]
+            g[c] = col
+        n += int(miss.sum())
+    return g, n
+
+
 def track_distance(xc, yc, tt, X, Y, substeps=6):
     """Distance minimale (km) de chaque point (X, Y) à la trajectoire polygonale (xc, yc) et instant du passage au plus près.
     tt : instants (datetime64) des positions ; l'instant est interpolé linéairement le long du segment."""
@@ -80,6 +126,9 @@ def main() -> None:
             annual = z["rx3"]
     from scipy.spatial import cKDTree
     d_all = fetch_ibtracs()
+    ratios = fit_ratios(d_all)
+    for k, (a, b, sd, n) in ratios.items():
+        print(f"rapport R{k}/R34 = exp({a:.3f} + {b:.4f} x vent), écart-type résiduel {sd:.2f} (log), n = {n}")
     LX, LY = project(leaves.lon.values, leaves.lat.values)
     tree = cKDTree(np.c_[LX, LY])
     sampler, out, summ = None, [], []
@@ -97,6 +146,7 @@ def main() -> None:
         if near.empty:
             continue
         gg = g[(g.time >= near.time.min() - pd.Timedelta(hours=12)) & (g.time <= near.time.max() + pd.Timedelta(hours=12))].reset_index(drop=True)
+        gg, filled = fill_radii(gg, ratios)
         cov, miss, n34 = footprint(gg, leaves.lon.values, leaves.lat.values)
         cls = wind_class(cov)
         xc, yc = project(gg.LON.values, gg.LAT.values)
@@ -120,7 +170,7 @@ def main() -> None:
         pop = leaves["pop"].fillna(0).values
         summ.append({"evenement": e.id, "nom": e.nom, "fokontany_concernes": int(keep.sum()),
                      **{f"pop_vent_{k}kt": int(pop[cls >= k].sum()) for k in (34, 50, 64)},
-                     "fokontany_vent_64kt": int((cls >= 64).sum()), "rayons_manquants": f"{miss}/{n34}"})
+                     "fokontany_vent_64kt": int((cls >= 64).sum()), "rayons_manquants": f"{miss}/{n34}", "positions_R50_R64_estimees": filled})
         print(f"{e.id}: {keep.sum()} fokontany, vent>=34: {(cls >= 34).sum()}, >=64: {(cls >= 64).sum()}, pluie={'oui' if np.isfinite(rx3).any() else 'non'}")
     VAL_DIR.mkdir(exist_ok=True)
     pd.concat(out).to_csv(VAL_DIR / "chocs_cyclones_fokontany.csv", index=False)
