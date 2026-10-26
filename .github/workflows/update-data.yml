@@ -48,7 +48,14 @@ jobs:
         env:
           HAPI_APP_IDENTIFIER: ${{ secrets.HAPI_APP_IDENTIFIER }}
         run: |
-          python scripts/connector_hapi.py --country "$COUNTRY" || echo "HAPI indisponible, indicateurs externes non mis à jour"
+          (python scripts/connector_hapi.py --country "$COUNTRY" || echo "HAPI indisponible, indicateurs externes non mis à jour") 2>&1 | tee validation/_journal_hapi.txt
+      - name: Enregistrer le journal HAPI
+        if: always()
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add -f validation/_journal_hapi.txt 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Journal HAPI (diagnostic)" && git pull --rebase origin main && git push)
       - name: Accessibilité aux services et aux routes (HeiGIT via HDX) — ignorée en cas d'indisponibilité
         run: |
           python scripts/connector_heigit.py --country "$COUNTRY" || echo "HeiGIT indisponible, indicateurs d'accessibilité non mis à jour"
