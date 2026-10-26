@@ -93,7 +93,7 @@ def best_threshold(p, y):
     return best
 
 
-def loeo(feat: pd.DataFrame, cols: list[str], lam=1.0) -> dict:
+def loeo(feat: pd.DataFrame, cols: list[str], lam=1.0, with_oof=False) -> dict:
     """Évaluation en laissant chaque événement de côté."""
     evs = sorted(feat.evenement.unique())
     oof = np.full(len(feat), np.nan)
@@ -124,7 +124,10 @@ def loeo(feat: pd.DataFrame, cols: list[str], lam=1.0) -> dict:
         m = ok & (oof >= lo) & (oof < hi)
         if m.sum():
             bins.append({"de": lo, "a": min(hi, 1.0), "n": int(m.sum()), "annoncee": float(oof[m].mean()), "observee": float(y[m].mean())})
-    return {"par_evenement": per, "global": pooled, "fiabilite": bins}
+    res = {"par_evenement": per, "global": pooled, "fiabilite": bins}
+    if with_oof:
+        res["_oof"] = oof
+    return res
 
 
 def evaluate(feat: pd.DataFrame) -> dict:
