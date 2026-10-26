@@ -23,6 +23,9 @@ def main():
     from scipy.spatial import cKDTree
     d = pd.read_csv(VAL / "coolr_rapports_madagascar.csv")
     d["date"] = pd.to_datetime(d.event_date, unit="ms").dt.date
+    # rapport de 2009 « Mananjary, côte sud-est » : coordonnées du catalogue (-18,53 ; 47,32) incompatibles avec la côte sud-est ; un fokontany
+    # « Manajary » existe aussi à Antananarivo (près de Mahamasina) : lieu incertain, écarté du test.
+    d = d[~((d.event_date == d.event_date.iloc[0]) & d.location_description.str.contains("southeastern coast"))] if d.location_description.str.contains("southeastern coast").any() else d
     units = read_units(a.country)
     leaves = units[units.level == 4].reset_index(drop=True)
     bbox = load_config(a.country)["map"]["bbox"]
