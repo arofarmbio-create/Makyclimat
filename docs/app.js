@@ -610,10 +610,7 @@
     h += row("Cibles potentiels", MC.fmtInt(m.t) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "t")) + "</b>" : ""));
     if (m.vs !== undefined) h += row("Part vulnérable retenue", Math.round(m.vs * 100) + " % " +
       (m.vi === 1 ? "(donnée fournie)" : m.vi === 2 ? "(IPC phase 3 ou plus)" : "(valeur par défaut provisoire)"));
-    (S.meta.external || []).forEach(function (x) {
-      var xv = m.x ? m.x[x.id] : undefined;
-      if (xv !== undefined) h += row(x.label, fmtLayer("x:" + x.id, xv));
-    });
+    h += externalIndicatorsByTheme(m);
     h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + shockSection(m) + scenarioTable(m) + seasonSection(f) + calendarSection(f) + hydroSection(f) + soilSection(f) + histSection(f);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
     h += planSection(m);
@@ -1037,6 +1034,25 @@
       sel.appendChild(g);
     });
     if (cur) sel.value = cur;
+  }
+  // Regroupe les indicateurs externes de la fiche zone par thème (même logique que groupLayers
+  // pour le sélecteur de couches), pour remplacer la liste plate par des sous-titres thématiques.
+  function externalIndicatorsByTheme(m) {
+    var by = {};
+    (S.meta.external || []).forEach(function (x) {
+      var xv = m.x ? m.x[x.id] : undefined;
+      if (xv === undefined || xv === null) return;
+      var t = themeOf("x:" + x.id);
+      (by[t] = by[t] || []).push({ x: x, xv: xv });
+    });
+    var h = "";
+    THEMES.forEach(function (t) {
+      if (!by[t]) return;
+      h += '<div class="zonegroup"><div class="zonegrouptitle">' + esc(t) + "</div>";
+      by[t].forEach(function (p) { h += row(p.x.label, fmtLayer("x:" + p.x.id, p.xv)); });
+      h += "</div>";
+    });
+    return h;
   }
   function setupThemeCascade() {
     var sel = $("layer"), ts = $("layertheme"), lv = $("layerlvl");

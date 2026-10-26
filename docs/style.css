@@ -56,6 +56,10 @@ input[type=range] { width: 100%; accent-color: var(--brand); }
 .row span:first-child { color: var(--muted); }
 .note { font-size: 12px; color: var(--muted); }
 .note.warn { color: var(--warn); }
+.zonegroup { margin-top: 10px; }
+.zonegroup:first-child { margin-top: 0; }
+.zonegrouptitle { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .02em;
+  color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 2px; margin-bottom: 2px; }
 button.btn { border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 8px; padding: 7px 12px;
   cursor: pointer; font: inherit; }
 button.btn.primary { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
