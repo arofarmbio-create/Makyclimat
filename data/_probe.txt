@@ -1,40 +1,18 @@
-EMSR197 | EMSR197
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone ENAWO-17 in Madagascar', 'Storm'] | zips {'?': 14}
-EMSR264 | EMSR264
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Tropical cyclone AVA- Madagascar', 'Storm'] | zips {'?': 37}
-EMSR274 | EMSR274
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Tropical cyclone Eliakim in Madagascar', 'Storm'] | zips {'?': 21}
-EMSR415 | EMSR415
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone Belna in Mayotte- France', 'Storm'] | zips {}
-EMSR424 | EMSR424
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Flood and Landslide in Madagascar', 'Flood'] | zips {'DEL': 8, '?': 2}
-EMSR559 | EMSR559
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Flood in Madagascar', 'Flood'] | zips {'DEL': 4, 'GRA': 4}
-EMSR564 | EMSR564
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone Batsirai in Madagascar', 'Storm'] | zips {'DEL': 3, 'GRA': 5}
-EMSR565 | EMSR565
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone Emnati in Madagascar', 'Storm'] | zips {'DEL': 8, 'GRA': 2}
-EMSR645 | EMSR645
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Tropical Storm Cheneso in Madagascar', 'Storm'] | zips {'DEL': 10, 'GRA': 9, '?': 4}
-EMSR652 | EMSR652
-            
-            
-            | Copernicus EMS On Demand Mapping | ['Tropical Cyclone Freddy in Madagascar', 'Storm'] | zips {'REF': 2, 'DEL': 1, 'GRA': 4}
+BGS page -> 200
+   0 archives sur la page, exemples : []
+WPDx jwn9-ihcz.json?$select=count(*)&clean_country_name=Madagasca -> 404 {
+  "error" : true,
+  "message" : "Not found"
+}
+
+WPDx jwn9-ihcz.json?$select=count(*)&country_name=Madagascar -> 404 {
+  "error" : true,
+  "message" : "Not found"
+}
+
+WPDx eqje-vguj.json?$select=count(*)&clean_country_name=Madagasca -> 200 [{"count_1":"0"}]
+
+WPDx exemple : {
+  "error" : true,
+  "message" : "Not found"
+}
