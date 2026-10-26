@@ -46,12 +46,13 @@
   <aside id="panel">
     <div id="results">
       <label class="field" for="q">Rechercher une région, un district, une commune ou un fokontany</label>
-      <input id="q" type="search" autocomplete="off" placeholder="ex. Ambovombe">
+      <input id="q" type="search" autocomplete="off" placeholder="Rechercher une zone (ex. Ambovombe)" aria-label="Rechercher une zone">
       <ul id="resultlist" hidden></ul>
     </div>
     <div>
-      <label class="field" for="layer">Indicateur affiché</label>
-      <select id="layer"></select>
+      <label class="field" for="layertheme">Indicateur affiché : thème, puis indicateur</label>
+      <select id="layertheme" aria-label="Thème de l'indicateur"></select>
+      <select id="layer" aria-label="Indicateur" style="margin-top:6px"></select>
     </div>
     <div class="card" id="profcard" hidden>
       <h3>Mon profil</h3>

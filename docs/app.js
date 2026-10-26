@@ -88,6 +88,74 @@
   function resizeMaps() {
     setTimeout(function () { if (S.map && S.map.invalidateSize) S.map.invalidateSize(); if (S.map2 && S.map2.invalidateSize) S.map2.invalidateSize(); }, 60);
   }
+  /* Panneau en onglets : l'essentiel (situation, fiche de zone, classement, exports) est en haut, sans défilement interminable */
+  function setupPanelTabs() {
+    var panel = $("panel");
+    if (!panel || panel.querySelector(".pstick")) return;
+    var simCard = $("sim").closest(".card");
+    var groups = [
+      { g: "sit", label: "Situation", tip: "Chiffres clés de la vue, fiche de la zone choisie, classement des zones et exports.",
+        nodes: [$("info"), $("rank").parentNode, panel.querySelector(":scope > .note")] },
+      { g: "rep", label: "Réponse", tip: "Priorités de réponse, qui fait quoi où, historique des événements et profil.",
+        nodes: [$("respcard"), $("whocard"), $("histcard"), $("profcard")] },
+      { g: "ana", label: "Analyse", tip: "Scénarios de la saison, comparaison de cartes, indicateurs couplés, simulation « et si ? ».",
+        nodes: [$("scncard"), $("cmpcard"), $("cxcard"), simCard] },
+      { g: "cou", label: "Couches", tip: "Cyclones passés, cours d'eau et bassins à afficher sur la carte.",
+        nodes: [$("cyccard"), $("hydcard")] }];
+    var stick = document.createElement("div"); stick.className = "pstick";
+    stick.appendChild($("results"));
+    stick.appendChild($("layer").parentNode);
+    var kp = $("kpis").parentNode; kp.classList.add("kpiwrap"); stick.appendChild(kp);
+    var bar = document.createElement("div"); bar.className = "ptabs"; bar.setAttribute("role", "tablist");
+    stick.appendChild(bar);
+    panel.insertBefore(stick, panel.firstChild);
+    var boxes = {};
+    groups.forEach(function (gr) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "ptab"; b.setAttribute("role", "tab"); b.dataset.g = gr.g; b.textContent = gr.label;
+      b.setAttribute("data-tip", gr.tip);
+      b.addEventListener("click", function () { show(gr.g); });
+      bar.appendChild(b);
+      var d = document.createElement("div"); d.className = "pgroup"; d.dataset.g = gr.g;
+      gr.nodes.forEach(function (n) { if (n) d.appendChild(n); });
+      panel.appendChild(d);
+      boxes[gr.g] = { btn: b, box: d };
+    });
+    var cur = "sit";
+    function show(g) {
+      cur = g;
+      Object.keys(boxes).forEach(function (k) {
+        var on = k === g;
+        if (boxes[k].box.hidden === on) boxes[k].box.hidden = !on;
+        boxes[k].btn.setAttribute("aria-selected", on ? "true" : "false");
+        boxes[k].btn.classList.toggle("on", on);
+      });
+      if (g !== "sit") { try { panel.scrollTop = 0; } catch (e) {} }
+    }
+    function refresh() {
+      Object.keys(boxes).forEach(function (k) {
+        var any = Array.prototype.some.call(boxes[k].box.children, function (c) { return !c.hidden; });
+        if (boxes[k].btn.hidden === any) boxes[k].btn.hidden = !any;
+      });
+      if (boxes[cur].btn.hidden) show("sit");
+    }
+    show("sit"); refresh();
+    try { new MutationObserver(refresh).observe(panel, { attributes: true, attributeFilter: ["hidden"], subtree: true }); } catch (e) {}
+    document.addEventListener("mc-select", function () {
+      show("sit");
+      try { $("info").scrollIntoView({ block: "nearest" }); panel.scrollTop = 0; } catch (e) {}
+      jump();
+    });
+    /* téléphone : le panneau est sous la carte, un bouton y mène sans chercher */
+    var jb = document.createElement("button");
+    jb.type = "button"; jb.id = "jumpbtn"; jb.className = "mcbtn"; jb.hidden = true; jb.textContent = "▼ Fiche de la zone";
+    $("mapwrap").appendChild(jb);
+    jb.addEventListener("click", function () { panel.scrollIntoView({ behavior: "smooth", block: "start" }); jb.hidden = true; });
+    function jump() { jb.hidden = !(S.selected && window.matchMedia && window.matchMedia("(max-width: 860px)").matches && !document.body.classList.contains("mapfull")); }
+    window.addEventListener("scroll", function () { if (!jb.hidden) { var r = panel.getBoundingClientRect(); if (r.top < window.innerHeight * 0.6) jb.hidden = true; } }, { passive: true });
+  }
+  function pingSelect() { try { document.dispatchEvent(new Event("mc-select")); } catch (e) {} }
+
   function setupErgonomics() {
     var body = document.body, fs = $("fsbtn"), pb = $("panelbtn"), lg = $("lgtoggle"), box = $("legendbox");
     var small = false;
@@ -380,7 +448,7 @@
     }).catch(function (e) { console.error(e); alert("Erreur de chargement : " + e.message); });
   }
 
-  function restyle() { if (!S.view) return; computeBreaks(); restyleGeo(); refresh(); syncURL(); }
+  function restyle() { if (!S.view) return; if (S.syncTheme) S.syncTheme(); computeBreaks(); restyleGeo(); refresh(); syncURL(); }
 
   function specTitle(spec) {
     if (spec.diff) return "Différence B − A : " + layerDef(spec.layer).label + " (" + periodName(spec.diff[1].scn) + " moins " + periodName(spec.diff[0].scn) + ")";
@@ -415,6 +483,7 @@
     S.selected = f;
     restyleGeo();
     renderInfo();
+    pingSelect();
   }
 
   function drill(f) {
@@ -571,7 +640,7 @@
     $("rank").querySelectorAll("tr.link").forEach(function (tr) {
       tr.addEventListener("click", function () {
         var f = rows[+tr.dataset.i].f;
-        S.selected = f; restyleGeo(); renderInfo();
+        S.selected = f; restyleGeo(); renderInfo(); pingSelect();
         S.geo.eachLayer(function (l) { if (l.feature.properties.c === f.properties.c) S.map.fitBounds(l.getBounds(), { padding: [40, 40], maxZoom: 11 }); });
       });
     });
@@ -929,6 +998,66 @@
     b.innerHTML = '<i style="background:' + col + '"></i>ENSO : ' + esc(e.phase_label) + " (ONI " + (e.oni > 0 ? "+" : "") + String(e.oni).replace(".", ",") + ", " + esc(e.season) + ")";
   }
 
+  /* Indicateurs rangés par thème (menu en cascade : thème, puis indicateur) */
+  var THEMES = ["Sécheresse et pluie", "Alertes à 7 jours", "Population et ciblage", "Cyclones", "Inondation, eau et terrain",
+    "Cultures, bâti et routes", "Événements et réponse", "Indice couplé", "Autres indicateurs"];
+  function themeOf(id) {
+    var k = String(id).replace(/^x:/, "");
+    if (/^ew/.test(id)) return THEMES[1];
+    if (id === "cx") return THEMES[7];
+    if (/^(ev_|r[bgpf]$)/.test(id)) return THEMES[6];
+    if (/^(l|pc|pa|ex|w)$/.test(id) || /^(spi|sm_|recharge|rain_|whc|enso_)/.test(k)) return THEMES[0];
+    if (/^(e|t|g|p)$/.test(id) || /^(ipc_|poverty)/.test(k)) return THEMES[2];
+    if (/^choc_cyc/.test(k)) return THEMES[3];
+    if (/^(choc_crue|hand_|susc_|cn2|river|slope|elev)/.test(k)) return THEMES[4];
+    if (/^(cult|bati|route)/.test(k)) return THEMES[5];
+    return THEMES[8];
+  }
+  function groupLayers(sel) {
+    if (!sel) return;
+    var cur = sel.value, opts = Array.prototype.slice.call(sel.querySelectorAll("option")), by = {};
+    opts.forEach(function (o) { var t = themeOf(o.value); (by[t] = by[t] || []).push(o); });
+    sel.innerHTML = "";
+    THEMES.forEach(function (t) {
+      if (!by[t]) return;
+      var g = document.createElement("optgroup"); g.label = t; g.dataset.theme = t;
+      by[t].forEach(function (o) { g.appendChild(o); });
+      sel.appendChild(g);
+    });
+    if (cur) sel.value = cur;
+  }
+  function setupThemeCascade() {
+    var sel = $("layer"), ts = $("layertheme");
+    if (!ts) return;
+    function fill() {
+      var have = Array.prototype.map.call(sel.querySelectorAll("optgroup"), function (g) { return g.dataset.theme; });
+      var cur = ts.value;
+      ts.innerHTML = "";
+      have.forEach(function (t) { var o = document.createElement("option"); o.value = t; o.textContent = t; ts.appendChild(o); });
+      ts.value = have.indexOf(cur) >= 0 ? cur : (have[0] || "");
+    }
+    function filter() {
+      var t = ts.value;
+      sel.querySelectorAll("optgroup").forEach(function (g) {
+        var on = g.dataset.theme === t;
+        if (g.hidden === on) g.hidden = !on; if (g.disabled === on) g.disabled = !on;
+      });
+    }
+    function sync() {
+      var o = sel.options[sel.selectedIndex];
+      if (o && o.parentNode.dataset && o.parentNode.dataset.theme && ts.value !== o.parentNode.dataset.theme) ts.value = o.parentNode.dataset.theme;
+      filter();
+    }
+    ts.addEventListener("change", function () {
+      filter();
+      var g = Array.prototype.filter.call(sel.querySelectorAll("optgroup"), function (x) { return x.dataset.theme === ts.value; })[0];
+      if (g && g.firstChild) { sel.value = g.firstChild.value; S.layer = sel.value; restyle(); }
+    });
+    sel.addEventListener("change", sync);
+    S.syncTheme = function () { fill(); sync(); };
+    S.syncTheme();
+  }
+
   /* ---------- Contrôles ---------- */
   function setupControls() {
     var sel = $("layer");
@@ -941,6 +1070,7 @@
       var o = document.createElement("option"); o.value = l.id; o.textContent = l.label; sel.appendChild(o);
     });
     sel.addEventListener("change", function () { S.layer = sel.value; restyle(); });
+    groupLayers(sel);
     setupScenarios(); setupProfiles(); setupCompare(); setupResponse(); setupWho(); readURL();
     $("modebtn").addEventListener("click", function () {
       S.simple = !S.simple;
@@ -1109,6 +1239,8 @@
         if (!sel) return;
         defs.forEach(function (d) { var o = document.createElement("option"); o.value = d[0]; o.textContent = d[1]; sel.appendChild(o); });
       });
+      groupLayers($("layer")); groupLayers($("layerB"));
+      if (S.syncTheme) S.syncTheme();
       readURL();
       if (S.view) restyle();
     }).catch(function () { /* pas d'historique disponible */ });
@@ -1559,6 +1691,7 @@
     $("layerB").value = S.layerB;
     $("layerB").addEventListener("change", function () { S.layerB = $("layerB").value; restyle(); });
     var sB = $("scnB");
+    groupLayers($("layerB"));
     sB.innerHTML = $("scn").innerHTML;
     if (S.meta.scenarios) {
       // par défaut : la saison passée la plus récente pour comparer avec la situation actuelle
@@ -1663,7 +1796,7 @@
       tries++;
       if (S.view && S.view.lvl === entry.l) {
         var f = S.view.feats.filter(function (x) { return x.properties.c === entry.c; })[0];
-        if (f) { S.selected = f; restyleGeo(); renderInfo();
+        if (f) { S.selected = f; restyleGeo(); renderInfo(); pingSelect();
           S.geo.eachLayer(function (l) { if (l.feature.properties.c === entry.c) S.map.fitBounds(l.getBounds(), { padding: [40, 40], maxZoom: 12 }); }); }
         clearInterval(t);
       }
@@ -1817,7 +1950,7 @@
       $("through").textContent = "Pluie jusqu'au " + fmtDate(S.meta.data_through);
       document.title = "MakyClimat — " + S.meta.country;
       renderEnso(); renderForecastBadge();
-      setupMap(); setupControls(); setupErgonomics(); setupTips();
+      setupMap(); setupControls(); setupPanelTabs(); setupThemeCascade(); setupErgonomics(); setupTips();
       var hash = location.hash.replace("#", "").split("/").filter(Boolean).slice(0, 3);
       var p = hash.length ? ensureIndex().then(function () {
         S.path = hash.map(function (c) { return { pcode: c, name: S.nameOf[c] || c }; });

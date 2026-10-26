@@ -83,6 +83,12 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   $("helpbtn").click(); w.document.querySelector('nav.tabs [data-tab=map]').click();
   w.document.querySelector('nav.tabs [data-tab=trust]').click();
   check("page Fiabilité", $("tab-trust").classList.contains("active") && /Validé/.test($("tab-trust").textContent) && /Non validé/.test($("tab-trust").textContent));
+  check("panneau en onglets : Situation affichée, 4 onglets, autres groupes masqués", w.document.querySelectorAll(".ptab").length === 4 && !w.document.querySelector(".pgroup[data-g=sit]").hidden && w.document.querySelector(".pgroup[data-g=ana]").hidden && w.document.querySelector(".pgroup[data-g=sit]").contains($("info")) && w.document.querySelector(".pgroup[data-g=sit]").contains($("export")));
+  w.document.querySelector(".ptab[data-g=ana]").click();
+  check("onglet Analyse : comparer et simulation visibles", !w.document.querySelector(".pgroup[data-g=ana]").hidden && w.document.querySelector(".pgroup[data-g=sit]").hidden && w.document.querySelector(".pgroup[data-g=ana]").contains($("sim")));
+  w.document.querySelector(".ptab[data-g=sit]").click();
+  check("indicateurs en cascade : thèmes et indicateurs groupés", w.document.querySelectorAll("#layertheme option").length >= 3 && w.document.querySelectorAll("#layer optgroup").length >= 3 && w.document.querySelector("#layer").selectedOptions[0].parentNode.dataset.theme === $("layertheme").value);
+  check("chiffres clés épinglés en haut du panneau", !!w.document.querySelector(".pstick #kpis"));
   check("fiche chocs JIAF : bouton présent et export sans erreur", !!$("exportshocks") && (function () { try { $("exportshocks").click(); return true; } catch (e) { return false; } })());
   w.document.querySelector('nav.tabs [data-tab=map]').click();
   check("badge de date", /Pluie jusqu'au/.test($("through").textContent), $("through").textContent);
