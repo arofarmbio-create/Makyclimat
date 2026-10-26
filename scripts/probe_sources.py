@@ -30,8 +30,15 @@ try:
             out.append(f"   {i}: {j.get('type')} | {j.get('title')} | {j.get('url')}")
             if j.get("type") == "Web Map":
                 d = get(P + i + "/data", params={"f": "json"}).json()
+                def walk(l, depth=0):
+                    out.append("   " * (depth + 3) + f"{l.get('title')} | {l.get('url')} | {l.get('itemId')} | {l.get('layerType')}")
+                    for k in ("layers", "featureCollection"):
+                        v = l.get(k)
+                        if isinstance(v, list):
+                            for x in v:
+                                walk(x, depth + 1)
                 for l in d.get("operationalLayers", []):
-                    out.append(f"      couche: {l.get('title')} | {l.get('url')}")
+                    walk(l)
         except Exception as e:
             out.append("   illisible " + str(e))
     cand = [u for u in urls if "COOLR" in u or "andslide" in u]
