@@ -1,9 +1,9 @@
 date,lieu,declencheur,morts,precision,fokontany,pluie_3j_mm,mediane_maxima_annuels_mm,periode_retour_ans,pente_moy_pct
-2009-04-06,Mananjary in the southeastern coast,downpour,5,5km,MG11104110011,,106.0,,2.97
-2017-03-07,"Vatomandry, Toamasina Province, Madagascar",downpour,16,5km,MG31307010006,,205.0,,0.11
-2012-02-27,town of Ifanadiana,tropical_cyclone,73,5km,MG26206011001,,193.0,,3.41
-2012-02-18,between Antananarivo and Toamasina,tropical_cyclone,0,unknown,MG33314070001,,144.0,,2.41
-2015-01-14,Ambohidempona,downpour,3,1km,MG11119001006,,112.0,,3.27
-2015-01-29,Antananarivo,rain,8,25km,MG11103070001,,112.0,,1.12
-2010-03-15,Mananjary District,tropical_cyclone,8,unknown,MG26209230014,,215.0,,3.99
-2016-05-13,"Manjavela, in the district of Vohipeno",unknown,7,50km,MG27212010007,,200.0,,0.61
+2009-04-06,Mananjary in the southeastern coast,downpour,5,5km,MG11104110011,52.0,106.0,1.0,2.97
+2017-03-07,"Vatomandry, Toamasina Province, Madagascar",downpour,16,5km,MG31307010006,134.0,205.0,1.0,0.11
+2012-02-27,town of Ifanadiana,tropical_cyclone,73,5km,MG26206011001,0.0,193.0,1.0,3.41
+2012-02-18,between Antananarivo and Toamasina,tropical_cyclone,0,unknown,MG33314070001,0.0,144.0,1.0,2.41
+2015-01-14,Ambohidempona,downpour,3,1km,MG11119001006,44.0,112.0,1.0,3.27
+2015-01-29,Antananarivo,rain,8,25km,MG11103070001,0.0,112.0,1.0,1.12
+2010-03-15,Mananjary District,tropical_cyclone,8,unknown,MG26209230014,169.0,215.0,1.1,3.99
+2016-05-13,"Manjavela, in the district of Vohipeno",unknown,7,50km,MG27212010007,4.0,200.0,1.0,0.61
