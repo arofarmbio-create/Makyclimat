@@ -2,34 +2,16 @@ EMSR197 Enawo: zones cartographiées 0, polygones inondés 0, bâtiments gradés
 EMSR264 Ava: zones cartographiées 0, polygones inondés 0, bâtiments gradés 0, fokontany évalués 0, touchés 0
 EMSR274 Eliakim: zones cartographiées 0, polygones inondés 0, bâtiments gradés 0, fokontany évalués 0, touchés 0
 EMSR564 Batsirai: zones cartographiées 8, polygones inondés 2330, bâtiments gradés 37141, fokontany évalués 245, touchés 100
-Traceback (most recent call last):
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_fokontany.py", line 229, in <module>
-    main()
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_fokontany.py", line 155, in main
-    tr = truth_for(fok, aoi, fl, bl)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/validate_fokontany.py", line 107, in truth_for
-    inter = fp.geometry.intersection(a).area
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/base.py", line 4882, in intersection
-    return _binary_geo("intersection", self, other, align, grid_size=grid_size)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/base.py", line 83, in _binary_geo
-    geoms, index = _delegate_binary_method(op, this, other, align, *args, **kwargs)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/base.py", line 74, in _delegate_binary_method
-    data = getattr(a_this, op)(other, *args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/array.py", line 868, in intersection
-    self._binary_method("intersection", self, other, grid_size=grid_size),
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/geopandas/array.py", line 806, in _binary_method
-    return getattr(shapely, op)(left._data, right, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/shapely/decorators.py", line 184, in wrapper
-    result = func(*args, **kwargs)
-             ^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/shapely/set_operations.py", line 165, in intersection
-    return lib.intersection(a, b, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-shapely.errors.GEOSException: TopologyException: side location conflict at 4603671.7260403754 -2846286.1414829269. This can occur if the input geometry is invalid.
+EMSR565 Emnati: zones cartographiées 10, polygones inondés 8412, bâtiments gradés 38432, fokontany évalués 291, touchés 168
+EMSR645 Cheneso: zones cartographiées 23, polygones inondés 11671, bâtiments gradés 66413, fokontany évalués 1038, touchés 406
+EMSR652 Freddy: zones cartographiées 7, polygones inondés 10, bâtiments gradés 32714, fokontany évalués 48, touchés 28
+        variante    auc  brier  brier_climato  dans_les_5_premieres  dans_les_8_premieres   pod    far   tp   fp   fn
+0      vent seul  0.597  0.255          0.245                 0.054                 0.085  0.41  0.488  288  275  414
+1    pluie seule  0.346  0.293          0.245                 0.027                 0.041  0.44  0.668  309  622  393
+2  vent et pluie  0.517  0.322          0.245                 0.046                 0.084  0.39  0.391  274  176  428
+        variante evenement   auc   pod   far
+0  vent et pluie   EMSR564  0.61  0.78  0.52
+1  vent et pluie   EMSR565  0.83  0.97  0.21
+2  vent et pluie   EMSR645  0.36  0.03  0.76
+3  vent et pluie   EMSR652  0.80  0.71  0.26
+0.565664036817883 [{'evenement': 'EMSR564', 'communes_evaluees': 43, 'communes_touchees': 32, 'auc': 0.6605113636363636}, {'evenement': 'EMSR565', 'communes_evaluees': 49, 'communes_touchees': 36, 'auc': 0.8269230769230769}, {'evenement': 'EMSR645', 'communes_evaluees': 133, 'communes_touchees': 80, 'auc': 0.3744103773584906}, {'evenement': 'EMSR652', 'communes_evaluees': 9, 'communes_touchees': 8, 'auc': 1.0}]
