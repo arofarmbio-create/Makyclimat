@@ -22,7 +22,8 @@ def look(n):
         kinds = {}
         for l in links:
             k = re.search(r"_(DEL|GRA|REF)_", l)
-            kinds[k.group(1) if k else "?"] = kinds.get(k.group(1) if k else "?", 0) + 1
+            key = k.group(1) if k else "?"
+            kinds[key] = kinds.get(key, 0) + 1
         return f"{code} | {title.group(1) if title else ''} | {h1} | zips {kinds}"
     except Exception as e:  # noqa: BLE001
         return f"{code} erreur {e}"
