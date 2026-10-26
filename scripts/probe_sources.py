@@ -1,15 +1,11 @@
-"""Sonde : vérifie le site publié (catalogue des indicateurs cultures et bâti)."""
-import json, requests
-BASE = "https://arofarmbio-create.github.io/Makyclimat/"
+"""Sonde : vérifie les valeurs cultures/bâti sur le site publié."""
+import requests, re
+BASE = "https://arofarmbio-create.github.io/Makyclimat/data/mdg/"
 out = []
-for rel in ["data/mdg/catalogue.json", "data/mdg/index.json"]:
+for rel in ["index.json", "meta.json", "geo/meta.json"]:
     r = requests.get(BASE + rel, timeout=60)
-    out.append(f"{rel} -> {r.status_code} {len(r.content)} octets")
-    if rel.endswith("catalogue.json") and r.ok:
-        ids = [i["id"] for i in r.json()["indicators"] if i["id"].startswith(("cult_", "bati_"))]
-        out.append("indicateurs cultures/bâti publiés : " + ", ".join(ids))
-    if rel.endswith("index.json") and r.ok:
-        t = r.text
-        out.append("cult_ présent dans index.json : %s" % ("cult_" in t))
+    t = r.text
+    out.append(f"{rel} -> {r.status_code} {len(t)} car.; cult_ : {len(re.findall('cult_', t))}; susc_inond_pct : {len(re.findall('susc_inond_pct', t))}; cult_basse5_pct : {len(re.findall('cult_basse5_pct', t))}")
+    out.append("   début : " + t[:300].replace("\n", " "))
 open("data/_probe.txt", "w").write("\n".join(out) + "\n")
 print("\n".join(out))
