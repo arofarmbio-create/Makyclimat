@@ -31,7 +31,8 @@ from common import DATA_DIR, country_docs_dir, grid_dir, load_config, read_units
 from validate_events import VAL_DIR, auc, confusion, fetch_ibtracs, footprint, loeo, project, train
 
 EVENTS = {"EMSR197": ("Enawo", 2017), "EMSR264": ("Ava", 2018), "EMSR274": ("Eliakim", 2018), "EMSR564": ("Batsirai", 2022),
-          "EMSR565": ("Emnati", 2022), "EMSR645": ("Cheneso", 2023), "EMSR652": ("Freddy", 2023)}
+          "EMSR565": ("Emnati", 2022), "EMSR645": ("Cheneso", 2023), "EMSR652": ("Freddy", 2023),
+          "EMSR424": ("Diane", 2020), "EMSR559": ("Ana", 2022), "EMSR863": ("Fytia", 2026), "EMSR867": ("Gezani", 2026)}
 H = {"User-Agent": "Mozilla/5.0 MakyClimat (recherche doctorale)"}
 AREA_CRS = "EPSG:6933"
 COLS = ["cov34", "cov50", "cov64", "lrp", "lratio"]
