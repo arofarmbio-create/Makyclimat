@@ -1,6 +1,6 @@
 """Sonde : événements d'éboulement NASA COOLR pour Madagascar."""
 import json, requests, pandas as pd
-base = "https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/FeatureServer/0"
+base = "https://gis.earthdata.nasa.gov/gis05/rest/services/Landslides/COOLR_Events_Points/MapServer/0"
 import traceback
 out = []
 try:
