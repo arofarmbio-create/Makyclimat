@@ -53,7 +53,7 @@
   var EW_ICON = { rain: "🌧", wind: "💨", heat: "🌡", dry: "☀", flood: "🌊" };
   var HAZ = ["rain", "wind", "heat", "dry", "flood"];
 
-  var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null, scn: "", simple: false,
+  var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null, scn: "",
             view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all", profile: "ong",
             mode: "single", layerB: "pc", scnB: "", sp: [], br: [], map2: null, geo2: null, hist: null, anc: null, hf: null, hagg: {}, evLayer: null,
             cx: { items: [{ k: "pc", w: 1, dir: -1 }, { k: "e", w: 1, dir: 1 }, { k: "", w: 1, dir: 1 }], op: "mean" } };
@@ -191,7 +191,6 @@
 
   /* ---------- Bulles d'aide ---------- */
   var TIPS = {
-    "#modebtn": "Version courte avec grands caractères : niveau d'alerte et conseils pour votre zone.",
     "#through": "Date jusqu'à laquelle les pluies observées sont à jour.",
     "#fcbadge": "Date de la dernière prévision météo utilisée.",
     "#enso": "Phase d'ENSO (El Niño / La Niña) : influence la pluie de la saison.",
@@ -592,12 +591,16 @@
 
   function row(a, b) { return '<div class="row"><span>' + a + "</span><span>" + b + "</span></div>"; }
 
+  function acc(label, body, open) {
+    var b = (body || "").trim();
+    if (!b) return "";
+    return '<details class="zsec"' + (open ? " open" : "") + '><summary>' + label + "</summary>" + b + "</details>";
+  }
+
   function renderInfo() {
     var f = S.selected, box = $("info");
-    if (!f && S.simple) { box.innerHTML = "<h3>Chez moi</h3><p class='bigprompt'>Tapez le nom de votre fokontany, de votre commune ou de votre district dans la recherche, ou touchez votre zone sur la carte.</p>"; return; }
     if (!f) { box.innerHTML = '<div class="note">Cliquez sur une zone de la carte pour voir ses indicateurs. Cliquez une seconde fois pour explorer ses sous-zones.</div>'; return; }
     var m = S.view.metrics[f.properties.c] || {};
-    if (S.simple) { box.innerHTML = simpleCard(f, m); return; }
     var lvlLabel = S.meta.levels[S.view.lvl].label;
     var h = "<h3>" + esc(lvlLabel) + "</h3><div style='font-size:17px;font-weight:700;margin-bottom:6px'>" + esc(f.properties.n) + "</div>";
     h += row("Population (estimation)", MC.fmtInt(m.p));
@@ -612,16 +615,21 @@
     if (m.vs !== undefined) h += row("Vulnérabilité économique retenue", Math.round(m.vs * 100) + " % " +
       (m.vi === 1 ? "(donnée fournie)" : m.vi === 2 ? "(IPC phase 3 ou plus — insécurité alimentaire)" : "(taux de pauvreté national, valeur par défaut provisoire)"));
     h += externalIndicatorsByTheme(m);
-    h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + shockSection(m) + scenarioTable(m) + seasonSection(f) + calendarSection(f) + hydroSection(f) + soilSection(f) + histSection(f);
-    if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
-    h += planSection(m);
+    // Fiche de zone en sections pliables plutôt qu'un long défilement unique : les deux sections les plus
+    // actionnables (alerte à 7 jours, risques/conseils) sont ouvertes par défaut, le reste se déplie à la demande.
+    var hist = (S.meta.has_history ? '<div id="histbox" class="hist"></div>' : "") + histSection(f);
+    h += acc("Alerte précoce, 7 prochains jours", forecastSection(m), true);
+    h += acc("Risques, alertes et conseils", risksSection(m, false) + alertsSection(m) + planSection(m), true);
+    h += acc("Scénarios de la saison et calendrier cultural", scenarioTable(m) + seasonSection(f) + calendarSection(f) + householdSeasonAdvice(m), false);
+    h += acc("Chocs récents et historique", shockSection(m) + hist, false);
+    h += acc("Eau dans le sol et hydrologie", hydroSection(f) + soilSection(f), false);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
     if (S.view.lvl === 4) h += '<div class="note warn" style="margin-top:6px">Au niveau fokontany, les limites et la population sont des estimations anciennes : à utiliser comme indication à confirmer sur le terrain.</div>';
     if (S.view.lvl < 4) h += '<div style="margin-top:8px"><button class="btn primary" id="drillbtn">Explorer les sous-zones ▸</button></div>';
     box.innerHTML = h;
     var db = $("drillbtn");
     if (db) db.addEventListener("click", function () { drill(f); });
-    if (S.meta.has_history && !S.simple) drawHistory(f);
+    if (S.meta.has_history) drawHistory(f);
   }
 
   function renderRank() {
@@ -860,34 +868,6 @@
     sel.addEventListener("change", function () { S.profile = sel.value; renderInfo(); });
   }
 
-  function simpleCard(f, m) {
-    var sc = S.meta.scenarios, pb = S.meta.playbook;
-    var name = esc(f.properties.n);
-    if (!sc || !m.sc || m.pa === undefined || m.pa === null) {
-      return "<h3>Chez moi</h3><div class='bigname'>" + name + "</div><p>Pas assez de données pour cette zone.</p>";
-    }
-    var pa = m.pa, tier = pa >= 0.5 ? ["élevé", "#b2262e"] : pa >= 0.25 ? ["moyen", "#e8893a"] : ["faible", "#3b8a3e"];
-    var tenth = Math.round(pa * 10);
-    var wet = m.sc.hum && m.p && m.sc.hum[4] > 0.2 * m.p;
-    var h = "<h3>Chez moi</h3><div class='bigname'>" + name + "</div>" + simpleAlerts(m) + "<h3>La saison à venir</h3>" +
-      "<div class='risk' style='border-color:" + tier[1] + "'><b style='color:" + tier[1] + "'>Risque de saison trop sèche : " + tier[0] + "</b>" +
-      "<div>Saison " + esc(sc.season.replace("-", "–")) + " : sur 10 saisons comparables aux années passées, environ <b>" + tenth + "</b> ont été trop sèches pour cette zone.</div></div>";
-    if (sc.observed_share > 0 && m.pc !== undefined) h += "<p>Pluie tombée jusqu'ici : <b>" + Math.round(m.pc) + " %</b> de la normale.</p>";
-    else h += "<p>La saison des pluies n'a pas encore commencé.</p>";
-    var e = S.meta.enso;
-    if (e) h += "<p>Le Pacifique est actuellement en phase <b>" + esc(e.phase_label) + "</b>." +
-      (m.x && m.x.enso_el_pct !== undefined && e.phase === "E" ? " Lors des El Niño passés, cette zone a reçu en moyenne <b>" + Math.round(m.x.enso_el_pct) + " %</b> de la pluie normale." : "") +
-      (m.x && m.x.enso_la_pct !== undefined && e.phase === "L" ? " Lors des La Niña passées, cette zone a reçu en moyenne <b>" + Math.round(m.x.enso_la_pct) + " %</b> de la pluie normale." : "") + "</p>";
-    if (pb && pb.household) {
-      var list = pa >= 0.25 ? pb.household.dry : pb.household.normal;
-      h += "<h3>Ce que vous pouvez faire</h3><ul class='advice'>" + list.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
-      if (wet) h += "<h3>Si les pluies sont très fortes</h3><ul class='advice'>" + pb.household.wet.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
-    }
-    h += risksSection(m, true);
-    return h + "<div class='note'>Information indicative, calculée à partir des saisons passées : ce n'est pas une prévision de la météo. Écoutez la météo et les consignes du fokontany, de la commune et du BNGRC.</div>";
-  }
-
-
   /* ---------- Alerte précoce (prévision) ---------- */
   function ewMessage(h, m) {
     var ev = m.ev || [];
@@ -900,7 +880,7 @@
   }
 
   function forecastSection(m) {
-    var F = S.meta.forecast;
+    var F = S.meta.forecast, pb = S.meta.playbook;
     if (!F || !m.ew) return "";
     var lvlNames = F.level_names, mx = Math.max.apply(null, m.ew);
     var h = '<div class="ew"><h3>Alerte précoce, 7 prochains jours</h3>';
@@ -911,6 +891,8 @@
         (S.view.lvl < 4 && m.ewp && m.ewp[i] > 0 ? " · " + MC.fmtInt(m.ewp[i]) + " pers. exposées" +
           (m.ewt && m.ewt[i] > 0 ? " (dont ≈" + MC.fmtInt(m.ewt[i]) + " cible, vulnérabilité économique)" : "") +
           (m.ewe5 && m.ewe5[i] > 0 ? " · ≈" + MC.fmtInt(m.ewe5[i]) + " enfants -5 ans" : "") : "") + "</span></div>";
+      if (lv > 0 && pb && pb.household_alert && pb.household_alert[hz])
+        h += "<ul class='advice'>" + pb.household_alert[hz].map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
     });
     if (!F.in_rain_season) h += '<div class="note">Hors saison des pluies : l\'alerte « période sèche » est désactivée.</div>';
     if (mx === 0) h += '<div class="note">Aucune alerte prévue pour cette zone dans les 7 prochains jours.</div>';
@@ -931,23 +913,18 @@
     return h;
   }
 
-  function fmtDateTime(iso) {
-    try { var d = new Date(iso); return d.toLocaleString("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }); } catch (e) { return iso; }
+  function householdSeasonAdvice(m) {
+    var pb = S.meta.playbook;
+    if (!pb || !pb.household || m.pa === undefined || m.pa === null) return "";
+    var pa = m.pa, wet = m.sc && m.sc.hum && m.p && m.sc.hum[4] > 0.2 * m.p;
+    var list = pa >= 0.25 ? pb.household.dry : pb.household.normal;
+    var h = "<h4>Ce que vous pouvez faire</h4><ul class='advice'>" + list.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    if (wet) h += "<h4>Si les pluies sont très fortes</h4><ul class='advice'>" + pb.household.wet.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    return h;
   }
 
-  function simpleAlerts(m) {
-    var F = S.meta.forecast, pb = S.meta.playbook;
-    if (!F || !m.ew) return "";
-    var h = "<h3>Alerte pour les 7 prochains jours</h3>", any = false;
-    HAZ.forEach(function (hz, i) {
-      if (m.ew[i] > 0) {
-        any = true;
-        h += "<div class='risk' style='border-color:" + EW_COLORS[m.ew[i]] + "'><b>" + EW_ICON[hz] + " " + esc(F.hazard_labels[hz]) + " : " + esc(F.level_names[m.ew[i]]) + "</b><div>" + esc(ewMessage(hz, m)) + "</div>" +
-          (pb && pb.household_alert && pb.household_alert[hz] ? "<ul class='advice'>" + pb.household_alert[hz].map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" : "") + "</div>";
-      }
-    });
-    if (!any) h += "<p>Aucune alerte prévue chez vous dans les 7 prochains jours.</p>";
-    return h + "<div class='note'>Mise à jour : " + esc(fmtDateTime(F.fetched_at)) + ". Écoutez aussi la radio, la Météo et le BNGRC.</div>";
+  function fmtDateTime(iso) {
+    try { var d = new Date(iso); return d.toLocaleString("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }); } catch (e) { return iso; }
   }
 
   /* ---------- Historique climat et ENSO ---------- */
@@ -1113,13 +1090,6 @@
     sel.addEventListener("change", function () { S.layer = sel.value; restyle(); });
     groupLayers(sel);
     setupScenarios(); setupProfiles(); setupCompare(); setupResponse(); setupWho(); readURL();
-    $("modebtn").addEventListener("click", function () {
-      S.simple = !S.simple;
-      $("modebtn").setAttribute("aria-pressed", S.simple ? "true" : "false");
-      $("modebtn").textContent = S.simple ? "Vue experte" : "Vue simple « Chez moi »";
-      document.body.classList.toggle("simple", S.simple);
-      renderInfo();
-    });
     var sim = $("sim"), nf = S.meta.rain_factors.length, neutral = S.meta.rain_factors.indexOf(1);
     sim.max = nf - 1; sim.value = neutral;
     function apply() {

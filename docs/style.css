@@ -109,12 +109,11 @@ footer { padding: 10px 16px; font-size: 12px; color: var(--muted); border-top: 1
 .plan summary { cursor: pointer; }
 .plan ul { margin: 4px 0 6px 18px; padding: 0; }
 .sectoralerts { background: #eef6ff; border-radius: 6px; padding: 6px 8px; margin: 8px 0; }
-#modebtn { margin-left: 8px; }
-.bigname { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
 .risk { border-left: 6px solid #999; padding: 8px 10px; background: #fafafa; margin: 8px 0; font-size: 16px; }
 .advice { font-size: 16px; line-height: 1.45; margin-left: 18px; padding: 0; }
-.bigprompt { font-size: 17px; }
-body.simple #info { font-size: 16px; }
+details.zsec { border-top: 1px solid var(--line); margin: 6px 0; padding: 4px 0; }
+details.zsec summary { cursor: pointer; font-weight: 600; padding: 4px 2px; }
+details.zsec[open] summary { margin-bottom: 4px; }
 
 .ewdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; border: 1px solid #0003; }
 .ew { margin: 8px 0; }
@@ -141,7 +140,6 @@ table.hind th:first-child, table.hind td:first-child { text-align: center; }
 .seg .btn[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
 .cxrow { display: grid; grid-template-columns: 1fr; gap: 3px; margin: 6px 0; padding-bottom: 6px; border-bottom: 1px dashed var(--line); }
 .lgsep { border: 0; border-top: 1px solid var(--line); margin: 6px 0; }
-body.simple #cmpcard, body.simple #cxcard { display: none; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .checks { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 4px; }
 label.check { font-size: 13px; display: inline-flex; align-items: center; gap: 4px; margin: 2px 0; }
@@ -149,7 +147,6 @@ label.check { font-size: 13px; display: inline-flex; align-items: center; gap: 4
 .hist2 table.hind2 { font-size: 12px; width: 100%; }
 .hist2 .hind2 th, .hist2 .hind2 td { text-align: right; padding: 2px 4px; border-bottom: 1px solid #e3e3e3; }
 .hist2 .hind2 th:first-child, .hist2 .hind2 td:first-child { text-align: left; }
-body.simple #histcard { display: none; }
 
 #respcard .rtab { width: 100%; font-size: 12px; border-collapse: collapse; margin-top: 6px; }
 #respcard .rtab th, #respcard .rtab td { text-align: left; vertical-align: top; padding: 4px 5px; border-bottom: 1px solid #e3e3e3; }

@@ -284,11 +284,10 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     $("scn").value = "hum"; $("scn").dispatchEvent(new w.Event("change"));
     check("les chiffres changent selon le scénario", $("kpis").textContent !== kSec, kSec + " → " + $("kpis").textContent);
     $("scn").value = ""; $("scn").dispatchEvent(new w.Event("change"));
-    // vue simple « Chez moi »
-    $("modebtn").click();
-    if (metaJson.forecast) check("vue simple : alerte des 7 prochains jours avec conseils", /Alerte pour les 7 prochains jours/.test($("info").textContent));
-    check("vue simple : message clair et conseils", /Risque de saison trop sèche/.test($("info").textContent) && /Ce que vous pouvez faire/.test($("info").textContent));
-    $("modebtn").click();
+    // fiche de zone unique (vue simple/experte fusionnées) : sections pliables avec conseils pratiques
+    if (metaJson.forecast) check("alerte des 7 prochains jours avec conseils par aléa", /Alerte précoce, 7 prochains jours/.test($("info").textContent));
+    check("conseils de saison dans la section « Scénarios »", /Ce que vous pouvez faire/.test($("info").textContent));
+    check("fiche de zone organisée en sections pliables", $("info").querySelectorAll("details.zsec").length >= 3);
   }
   // toutes les couches colorent la carte sans erreur
   for (let i = 0; i < $("layer").options.length; i++) {
