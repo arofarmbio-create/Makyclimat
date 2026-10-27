@@ -1142,6 +1142,18 @@ indicators:
     source: "MakyClimat, calcul propre à partir du SPI-3 régional (CHIRPS) ; voir validation/vuln_cumul_limites.md"
     frequency: Recalculé à chaque mise à jour
     status: active
+  # ---------------- Potentiel pour point d'eau peu profond (expérimental, non validé) ----------------
+  - id: potentiel_eau_pct
+    label: "Potentiel relatif pour point d'eau peu profond / forage (0-100, classement entre fokontany, PAS une probabilité de succès)"
+    unit: "indice 0-100"
+    format: float
+    aggregate: popmean
+    sectors: [wash, drr]
+    sdg: ["6.1"]
+    national: [axe1, eau]
+    source: "MakyClimat : classement multicritère (recharge 40 %, proximité du réseau de drainage HAND 25 %, pente inversée 20 %, capacité de rétention du sol 15 %) ; construction raisonnée, PAS calibrée sur des données réelles de forage (aucune disponible) ; n'inclut pas la géologie ; présélection pour étude de terrain uniquement — voir validation/groundwater_limites.md"
+    frequency: Recalculé à chaque mise à jour
+    status: active
   - id: prix_riz_ecart_pct
     label: "Écart du prix du riz au prix médian des 3 années précédentes, même mois (région) — Grand Sud/Sud-Est seulement, couverture WFP récente"
     unit: "%"

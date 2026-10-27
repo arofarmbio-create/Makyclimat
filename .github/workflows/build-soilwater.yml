@@ -27,6 +27,8 @@ jobs:
         run: pip install -r requirements.txt
       - name: Eau dans le sol
         run: python scripts/build_soilwater.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Potentiel pour point d'eau peu profond (expérimental, non validé) — ignoré si hydro.csv absent
+        run: python scripts/build_groundwater.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Potentiel eau indisponible"
       - name: Enregistrer dans le dépôt (même en cas d'échec partiel, pour garder le cache et l'état)
         if: always()
         run: |
