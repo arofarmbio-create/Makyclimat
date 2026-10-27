@@ -155,9 +155,14 @@ par décision éditoriale isolée.
 
 ## 6. Limites transversales et perspectives (état au 27 octobre 2026)
 
-- **Corroboration externe en attente :** une vérification croisée avec la base EM-DAT (CRED, Louvain) sur
-  les bilans humains des cyclones est en attente d'inscription de l'utilisateur sur le site (accès non
-  automatisable, EM-DAT exige un compte).
+- **Corroboration externe avec EM-DAT (CRED, UCLouvain) effectuée le 27/10/2026** — voir
+  `validation/emdat_corroboration.md` pour le détail événement par événement. Usage interne uniquement
+  (licence CC BY-NC-ND de l'archive, confirmé avec l'utilisateur) : aucune donnée EM-DAT brute ou dérivée
+  n'est republiée sur le site public. Résultat résumé : les chiffres de « personnes touchées » de
+  `evenements.csv` concordent quasi exactement avec EM-DAT pour 7/9 événements comparables ; les bilans de
+  décès sont systématiquement plus bas côté MKC (sources = rapports de situation précoces, pas des bilans
+  consolidés finaux) — à lire comme une limite documentée, pas une erreur. Aucune incohérence
+  structurelle détectée.
 - **Donnée de dégâts réels manquante pour calibrer les seuils d'action anticipée** (demande adressée au
   BNGRC, réponse en attente).
 - **Géologie absente** du module eau souterraine — piste prioritaire identifiée pour passer ce module au
