@@ -2,7 +2,10 @@
 
 Source : British Geological Survey, Africa Groundwater Atlas — "Africa Groundwater Atlas Country Hydrogeology Maps"
 (MacDonald et al./BGS, publié 2019-2021), shapefile Madagascar à l'échelle 1:5 000 000.
-Téléchargement : https://africangroundwateratlas.org/downloads/Madagascar.zip (gratuit, pas d'inscription).
+Téléchargement : la page de téléchargement existe sous deux domaines proches (africangroundwateratlas.org et
+africagroundwateratlas.org, orthographe variable selon le miroir) et le nom exact du fichier a changé au moins une
+fois ; plutôt que de figer une URL qui casse au premier changement, ce connecteur lit la page de téléchargement et
+en extrait lui-même le lien « Madagascar » (gratuit, pas d'inscription).
 Licence : CC BY-SA — réutilisation et modification permises (y compris commerciale), à condition de citer la source et de
 distribuer les travaux dérivés sous la même licence. Citation : « British Geological Survey. Africa Groundwater Atlas
 Country Hydrogeology Maps. » Voir https://africagroundwateratlas.org/.
@@ -28,6 +31,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import io
+import re
 import zipfile
 from pathlib import Path
 
@@ -36,10 +40,28 @@ import requests
 
 from common import country_data_dir, read_units
 
-ZIP_URL = "https://africangroundwateratlas.org/downloads/Madagascar.zip"
+DOWNLOAD_PAGES = ["https://africagroundwateratlas.org/downloadGIS.html", "https://africangroundwateratlas.org/downloadGIS.html"]
 SOURCE = ("British Geological Survey, Africa Groundwater Atlas Country Hydrogeology Maps (1:5 000 000), licence CC BY-SA — "
-          "https://africangroundwateratlas.org/ ; échelle continentale, pas un sondage de terrain, voir validation/groundwater_limites.md")
+          "https://africagroundwateratlas.org/ ; échelle continentale, pas un sondage de terrain, voir validation/groundwater_limites.md")
 H = {"User-Agent": "MakyClimat (projet de doctorat climat Madagascar ; contact : voir dépôt GitHub arofarmbio-create/Makyclimat)"}
+
+
+def find_madagascar_zip_url() -> str:
+    """Lit la page de téléchargement de l'Atlas et en extrait le lien « Madagascar » (le nom exact du fichier et le
+    domaine ont déjà changé une fois ; on ne les fige donc pas en dur)."""
+    last_err: Exception | None = None
+    for page_url in DOWNLOAD_PAGES:
+        try:
+            r = requests.get(page_url, timeout=60, headers=H)
+            r.raise_for_status()
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            continue
+        m = re.search(r'href="([^"]*[Mm]adagascar[^"]*\.zip)"', r.text)
+        if m:
+            url = m.group(1)
+            return url if url.startswith("http") else re.sub(r"/[^/]*$", "/" + url.lstrip("/"), page_url)
+    raise RuntimeError(f"lien Madagascar introuvable sur {DOWNLOAD_PAGES} (dernière erreur : {last_err})")
 
 # productivité (classes documentées du User Guide BGS Africa Groundwater Atlas) : rang 0-100 et débit médian indicatif (L/s)
 PRODUCTIVITY = {
@@ -49,7 +71,8 @@ PRODUCTIVITY = {
 
 def fetch_shapefile_dir(tmp: Path) -> Path:
     tmp.mkdir(parents=True, exist_ok=True)
-    r = requests.get(ZIP_URL, timeout=120, headers=H)
+    zip_url = find_madagascar_zip_url()
+    r = requests.get(zip_url, timeout=120, headers=H)
     r.raise_for_status()
     zipfile.ZipFile(io.BytesIO(r.content)).extractall(tmp)
     return tmp

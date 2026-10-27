@@ -7,6 +7,14 @@ Accès : GeoTIFF via le service WCS GeoServer de l'UNESCO-IHP ("Depth to groundw
 données avec l'autorisation du BGS (permis CP17/019). © British Geological Survey / NERC — tous droits réservés sur la
 grille elle-même ; MakyClimat n'affiche PAS la grille mais uniquement une valeur agrégée par fokontany, avec attribution
 complète et lien vers la source, conformément à l'usage prévu par cette republication.
+
+État constaté (27/10/2026) : ce service WCS répond 404 — la page du jeu de données sur ihp-wins.unesco.org ne liste
+plus que la légende et les métadonnées, le raster semble avoir été retiré de cette plateforme. Le fichier existe
+toujours sur bgs.ac.uk ("Africa depth to groundwater map XYZ ASCII file"), mais derrière un bouton WordPress Download
+Manager qui ne donne pas de lien direct sans navigateur — hors de portée d'un script headless. Ce connecteur reste en
+place (échoue proprement via le `|| echo` du workflow, voir .github/workflows/build-soilwater.yml) pour le jour où la
+donnée redevient accessible par un lien stable ; en attendant, `water_table_depth_m` n'est pas produit et
+build_groundwater.py se rabat automatiquement sur les critères restants (voir validation/groundwater_limites.md).
 Limite essentielle : résolution ~5 km, modélisée à partir de la géologie et du climat (PAS de mesure de puits malgache) ;
 à lire comme un ORDRE DE GRANDEUR régional de la profondeur de la nappe, jamais une prévision pour un site précis. Voir
 validation/groundwater_limites.md.

@@ -4,18 +4,24 @@
 `susc_inond_pct` (dégâts satellite) : c'est une construction raisonnée, jamais comparée à un résultat
 de forage réel malgache, faute de donnée.
 
-## Mise à jour : géologie et profondeur de nappe réelles ajoutées
+## Mise à jour : géologie réelle ajoutée ; profondeur de nappe en attente d'une source accessible
 
 Une carte géologique/hydrogéologique de Madagascar existe bel et bien en accès libre : l'**Africa
 Groundwater Atlas** du British Geological Survey (shapefile pays, 1:5 000 000, licence CC BY-SA,
-https://africangroundwateratlas.org/). Elle donne, pour chaque zone, le type d'aquifère (socle
+https://africagroundwateratlas.org/). Elle donne, pour chaque zone, le type d'aquifère (socle
 cristallin, sédimentaire consolidé/non consolidé, volcanique, karst) et sa classe de productivité
-(débit indicatif en L/s). De même, une **profondeur de nappe publiée à l'échelle continentale** existe
+(débit indicatif en L/s). Elle est maintenant intégrée (voir `scripts/connector_geology.py`), ce qui
+corrige la lacune géologique signalée dans la version précédente de cette note.
+
+Une **profondeur de nappe publiée à l'échelle continentale** existe aussi dans la littérature
 (MacDonald, Bonsor, Ó Dochartaigh & Taylor, 2012, *Environ. Res. Lett.* 7:024009 ; profondeur : Bonsor &
-MacDonald 2011, BGS OR/11/067 ; grille ~5 km, republiée par l'UNESCO-IHP avec l'autorisation du BGS).
-Les deux sont maintenant intégrées (voir `scripts/connector_geology.py` et
-`scripts/connector_watertable.py`), ce qui corrige les deux lacunes les plus importantes signalées dans
-la version précédente de cette note.
+MacDonald 2011, BGS OR/11/067 ; grille ~5 km), mais **n'est, à ce jour, pas accessible par un lien de
+téléchargement stable** : le service qui la republiait (UNESCO-IHP) a retiré le fichier de sa
+plateforme, et la version hébergée par le BGS lui-même est derrière un bouton de téléchargement
+JavaScript sans URL directe (hors de portée d'un script automatisé sans navigateur). Le connecteur
+(`scripts/connector_watertable.py`) reste en place et prêt à fonctionner le jour où une source stable
+sera identifiée ; en attendant, `water_table_depth_m` n'est pas produit et le score ci-dessous se
+rabat automatiquement sur les 5 critères restants (voir "Pour l'améliorer encore").
 
 ## Ce qu'il calcule
 
@@ -25,7 +31,7 @@ percentile (0-1) sur l'ensemble du pays avant pondération :
 | Critère | Poids | Source | Sens |
 |---|---|---|---|
 | Productivité d'aquifère (`aquifer_productivity_pct`) | 30 % | BGS Africa Groundwater Atlas (géologie réelle, 1:5 000 000) | Plus haut = mieux |
-| Profondeur de nappe (`water_table_depth_m`) | 20 % | MacDonald et al. (2012), grille ~5 km | Plus bas = mieux (inversé) |
+| Profondeur de nappe (`water_table_depth_m`) | 20 % | MacDonald et al. (2012), grille ~5 km — **actuellement sans donnée, source pas encore accessible, voir ci-dessus** | Plus bas = mieux (inversé) |
 | Recharge standardisée sur 12 mois (`recharge12_z`) | 25 % | Bilan de Thornthwaite-Mather (CHIRPS + ET0 ERA5-Land) | Plus haut = mieux |
 | Part de la zone à moins de 15 m au-dessus du cours d'eau (`hand_lt15_pct`) | 8 % | HAND, Copernicus GLO-90 | Plus haut = mieux |
 | Pente moyenne (`slope_mean_pct`) | 9 % | Copernicus GLO-90 | Plus bas = mieux (inversé) |
