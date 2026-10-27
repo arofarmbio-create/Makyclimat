@@ -16,7 +16,8 @@ DOCS_DIR = ROOT / "docs"
 INPUTS_DIR = ROOT / "inputs"
 
 UNIT_COLUMNS = ["level", "pcode", "name", "parent", "adm1", "adm2", "adm3",
-                "lon", "lat", "area_km2", "pop", "pop_year", "pop_source"]
+                "lon", "lat", "area_km2", "pop", "pop_year", "pop_source",
+                "pop_under5", "pop_under5_year", "pop_under5_source"]
 
 
 def load_config(slug: str) -> dict:

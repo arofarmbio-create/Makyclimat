@@ -332,6 +332,11 @@ def main() -> None:
         s, given = share_for(units.at[i, "pcode"])
         units.at[i, "vs"], units.at[i, "vs_in"] = s, given
     pop = units["pop"].fillna(0).values
+    # Enfants de moins de 5 ans (grille WorldPop âge/sexe, voir build_population_grid_under5.py) : comptage
+    # démographique, jamais pondéré par la vulnérabilité économique (même principe que les structures mWater/
+    # HeiGIT -- un enfant n'est pas "plus exposé" selon le revenu du quartier, voir plus haut). Colonne absente
+    # tant que le script n'a pas été lancé pour ce pays : vaut alors 0 partout, enfants5 non calculé.
+    pop5 = units["pop_under5"].fillna(0).values if "pop_under5" in units.columns else np.zeros(len(units))
     leafmask = leaf.values
     lvl_leaf = units.lvl.values
     exp_leaf = np.where(leafmask & (lvl_leaf >= min_lvl), pop, 0.0)
@@ -544,6 +549,7 @@ def main() -> None:
         import scenarios as SC2
         nU2 = len(units)
         popL0 = pop[LI0]
+        pop5L0 = pop5[LI0]
         area2 = units.area_km2.fillna(0).values
 
         def lift2(v, fill=0.0):
@@ -558,6 +564,10 @@ def main() -> None:
         # l'exposition saisonnière : ne jamais afficher seulement un comptage brut là où un comptage pondéré
         # par la vulnérabilité économique existe partout ailleurs dans le pipeline (voir audit du 27/10/2026).
         tgt_u = {h: SC2.rollup_sum(units, leafmask, lift2(np.where(EWL["lv"][h] >= 2, popL0 * vsL0, 0.0))) for h in EW.HAZARDS}
+        # Enfants -5 ans en zone d'alerte précoce (tous aléas météo à 7 jours : pluie, vent, chaleur, sécheresse,
+        # crue) -- grille WorldPop âge/sexe (voir build_population_grid_under5.py), même logique que ppl_u/tgt_u
+        # mais pour la population -5 ans ; jamais pondéré par vs (voir note sur pop5 ci-dessus). Tâche n°45.
+        enf5_u = {h: SC2.rollup_sum(units, leafmask, lift2(np.where(EWL["lv"][h] >= 2, pop5L0, 0.0))) for h in EW.HAZARDS}
         nums_u = {k: SC2.rollup_max(units, leafmask, lift2(v, fill=0.0)) for k, v in EWL["nums"].items()}
         nd = min(10, fcst["precip"].shape[1] - fcst["t0"])
         denA = SC2.rollup_sum(units, leafmask, lift2(np.ones(len(LI0))) * area2)
@@ -570,7 +580,8 @@ def main() -> None:
                     u = np.where(denA > 0, tot / denA, np.nan)
                 u[LI0] = arr_[:, fcst["t0"] + j]
                 store.append(u)
-        EWU = {"lv": lv_u, "ppl": ppl_u, "tgt": tgt_u, "nums": nums_u, "p": np.array(daily_p), "t": np.array(daily_t)}
+        EWU = {"lv": lv_u, "ppl": ppl_u, "tgt": tgt_u, "e5": enf5_u, "nums": nums_u,
+               "p": np.array(daily_p), "t": np.array(daily_t)}
 
     def pack(i: int) -> dict:
         r = units.iloc[i]
@@ -603,6 +614,7 @@ def main() -> None:
             d["ew"] = [int(EWU["lv"][h][i]) for h in EW.HAZARDS]
             d["ewp"] = [int(round(EWU["ppl"][h][i])) for h in EW.HAZARDS]
             d["ewt"] = [int(round(EWU["tgt"][h][i])) for h in EW.HAZARDS]
+            d["ewe5"] = [int(round(EWU["e5"][h][i])) for h in EW.HAZARDS]
             nm = EWU["nums"]
             fr = nm["flood_ratio"][i]
             d["ev"] = [round(float(nm["rain_max"][i]), 1), round(float(nm["rain_3d"][i]), 1), round(float(nm["tmax_max"][i]), 1),

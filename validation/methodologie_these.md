@@ -195,12 +195,25 @@ par décision éditoriale isolée.
   couvre pas la région, aucune valeur n'est produite (pas de valeur par défaut inventée). Limite à lever
   si des données d'âge/sexe par petite zone deviennent disponibles (voir aussi l'enfants-de-moins-de-5-ans
   ci-dessous, bloqué sur le même type de donnée).
-- **Enfants de moins de 5 ans exposés, tous aléas (WorldPop âge/sexe) : en attente.** Une grille 100 m
-  (WorldPop, Madagascar 2016, bandes d'âge 0 et 1-4 ans) a été identifiée comme source réelle (pas une
-  construction) pour étendre l'indicateur enfants-exposés au-delà des inondations (`crue_rp10_enfants5`/
-  `crue_rp100_enfants5`, HeiGIT/HDX, déjà en place mais limité aux crues et au niveau district). Le
-  téléchargement (2 fichiers de ~55 Mo) a réussi via le navigateur, mais le rapatriement vers
-  l'environnement de calcul a échoué à plusieurs reprises (connexion lente) — reporté, pas abandonné.
+- **Enfants de moins de 5 ans exposés, tous aléas (WorldPop âge/sexe) : fait.** Étend l'indicateur
+  enfants-exposés au-delà des inondations (`crue_rp10_enfants5`/`crue_rp100_enfants5`, HeiGIT/HDX, déjà en
+  place mais limité aux crues et au niveau district) à tous les aléas météo suivis à 7 jours (pluie, vent,
+  chaleur, sécheresse, crue). Source : grille WorldPop « Age and Sex Structures » R2025A, 100 m, contrainte
+  (Madagascar, bandes d'âge 0 an et 1-4 ans, sommées) — une mesure directe par pixel, pas une construction.
+  Contrairement à la grille de population totale (`build_population_grid.py`, millésime republié sur HDX),
+  cette grille d'âge/sexe n'a pas de miroir HDX connu : `build_population_grid_under5.py` la télécharge
+  directement chez WorldPop/Southampton à chaque exécution (comme le fait déjà `build_population_grid.py`
+  pour la grille HDX), puis en fait la même somme zonale par fokontany, écrite dans la colonne `pop_under5`
+  de `units.csv`. Dans `compute_metrics.py`, cette population -5 ans alimente l'alerte précoce à 7 jours
+  exactement comme `ppl`/`tgt` (voir audit ci-dessous) : un comptage brut par aléa (`ewe5`), **jamais pondéré
+  par la vulnérabilité économique** — un enfant n'est pas « plus exposé » selon le revenu du quartier, même
+  principe que les structures mWater/HeiGIT (comptage démographique, dimension affichée séparément de `vs`).
+  Affiché à côté de l'exposé brut et de la cible dans la fiche de zone et la section « Action anticipée ».
+  Limite assumée : les bandes d'âge WorldPop ne datent que de 2016 (dernier millésime publié pour ce jeu de
+  données), donc la part -5 ans dans la population totale est figée à cette année de référence même si la
+  population totale, elle, est mise à jour (grille HDX 2025) — écart mineur, documenté par `pop_under5_year`
+  dans `units.csv`. Si le téléchargement WorldPop échoue (réseau, millésime retiré), `pop_under5` existante
+  est conservée tel quel — aucune valeur n'est inventée.
 - **Audit du 27/10/2026 : vulnérabilité économique appliquée partout dans les scénarios — une lacune
   trouvée et corrigée.** Vérification systématique de tous les calculs produisant un nombre de
   personnes exposées (`e`/`t` principal, simulation de sensibilité `sens_e`/`sens_t`, scénarios de fin

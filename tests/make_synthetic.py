@@ -56,6 +56,10 @@ def main() -> None:
     for u in units:
         u["pop"] = int(rng.integers(300, 3000)) if u["level"] == 4 else np.nan
         u["pop_year"], u["pop_source"] = 2018, "SIMULÉ"
+        # Enfants -5 ans SIMULÉS : part fixe (~15 %, ordre de grandeur plausible pour Madagascar) du total,
+        # pour exercer le chemin de calcul enfants5/EWU (tâche n°45) sans dépendre d'une vraie grille WorldPop.
+        u["pop_under5"] = round(u["pop"] * 0.15, 1) if u["level"] == 4 else np.nan
+        u["pop_under5_year"], u["pop_under5_source"] = 2016, "SIMULÉ"
     # cumuls de population
     import pandas as pd
     df = pd.DataFrame(units)
@@ -63,6 +67,8 @@ def main() -> None:
         sums = df[df.level == 4].groupby(key)["pop"].sum()
         m = df.level == lv
         df.loc[m, "pop"] = df.loc[m, "pcode"].map(sums)
+        sums5 = df[df.level == 4].groupby(key)["pop_under5"].sum()
+        df.loc[m, "pop_under5"] = df.loc[m, "pcode"].map(sums5)
     write_boundaries("demo", df.to_dict("records"), geoms)
     # indicateurs externes simulés (format standard des connecteurs)
     ext = Path(__file__).resolve().parents[1] / "data" / "demo" / "external"

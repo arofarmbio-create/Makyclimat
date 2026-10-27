@@ -287,6 +287,8 @@ def test_forecast_alerts() -> None:
     check("zone calme sans alerte pluie/vent/chaleur", all(sum(d[pc]["ew"][:3]) == 0 for pc in quiet[:50]))
     check("alerte précoce à 7 jours : cible pondérée par la vulnérabilité économique (jamais seulement l'exposé brut)",
           north and all(d[pc]["ewt"][0] <= d[pc]["ewp"][0] and abs(d[pc]["ewt"][0] - round(d[pc]["ewp"][0] * d[pc]["vs"])) <= 1 for pc in north))
+    check("alerte précoce à 7 jours : enfants -5 ans exposés (tous aléas), cohérents avec la part simulée de 15 %",
+          north and all(d[pc]["ewe5"][0] <= d[pc]["ewp"][0] and abs(d[pc]["ewe5"][0] - round(d[pc]["ewp"][0] * 0.15)) <= 1 for pc in north))
     com = units[units.level == 3].reset_index(drop=True)
     kids0 = leaves[leaves.adm3 == com.pcode[0]].pcode
     kids1 = leaves[leaves.adm3 == com.pcode[1]].pcode
@@ -295,9 +297,12 @@ def test_forecast_alerts() -> None:
     check("crue : 1,2 × la crue de 2 ans -> vigilance", all(d[pc]["ew"][4] == 1 for pc in kids1))
     r = top["adm1"]
     check("région : niveau maximal des fokontany et personnes en alerte",
-          all(len(v["ew"]) == 5 and len(v["ewp"]) == 5 and len(v["ewt"]) == 5 for v in r.values()) and max(v["ew"][0] for v in r.values()) >= 2)
+          all(len(v["ew"]) == 5 and len(v["ewp"]) == 5 and len(v["ewt"]) == 5 and len(v["ewe5"]) == 5 for v in r.values())
+          and max(v["ew"][0] for v in r.values()) >= 2)
     check("région : cible pondérée <= exposé brut pour chaque aléa météo à 7 jours",
           all(all(v["ewt"][k] <= v["ewp"][k] for k in range(5)) for v in r.values()))
+    check("région : enfants -5 ans exposés <= exposé brut pour chaque aléa météo à 7 jours",
+          all(all(v["ewe5"][k] <= v["ewp"][k] for k in range(5)) for v in r.values()))
     nd = [len(v["fr"]) for v in r.values()]
     check("série quotidienne de 10 jours de pluie et de température", all(n == 10 for n in nd))
     # la prévision change les scénarios (ceinture sèche : zéro pluie pendant 17 jours)

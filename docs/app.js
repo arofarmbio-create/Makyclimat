@@ -908,7 +908,8 @@
       h += '<div class="row ewrow"><span><i class="ewdot" style="background:' + EW_COLORS[lv] + '"></i>' + EW_ICON[hz] + " <b>" + esc(F.hazard_labels[hz]) + "</b>" +
         (lv > 0 ? " : " + esc(ewMessage(hz, m)) : "") + "</span><span>" + esc(lvlNames[lv]) +
         (S.view.lvl < 4 && m.ewp && m.ewp[i] > 0 ? " · " + MC.fmtInt(m.ewp[i]) + " pers. exposées" +
-          (m.ewt && m.ewt[i] > 0 ? " (dont ≈" + MC.fmtInt(m.ewt[i]) + " cible, vulnérabilité économique)" : "") : "") + "</span></div>";
+          (m.ewt && m.ewt[i] > 0 ? " (dont ≈" + MC.fmtInt(m.ewt[i]) + " cible, vulnérabilité économique)" : "") +
+          (m.ewe5 && m.ewe5[i] > 0 ? " · ≈" + MC.fmtInt(m.ewe5[i]) + " enfants -5 ans" : "") : "") + "</span></div>";
     });
     if (!F.in_rain_season) h += '<div class="note">Hors saison des pluies : l\'alerte « période sèche » est désactivée.</div>';
     if (mx === 0) h += '<div class="note">Aucune alerte prévue pour cette zone dans les 7 prochains jours.</div>';
@@ -1501,9 +1502,11 @@
         var popIdx = -1, pop = 0;
         (x.m.ewp || []).forEach(function (v, i) { if (x.m.ew[i] >= 2 && v > pop) { pop = v; popIdx = i; } });
         var tgt = popIdx >= 0 && x.m.ewt ? x.m.ewt[popIdx] : 0;
+        var enf5 = popIdx >= 0 && x.m.ewe5 ? x.m.ewe5[popIdx] : 0;
         var share = pop > 0 && x.m.p > 0 ? " (" + (100 * pop / x.m.p < 1 ? "moins de 1" : Math.round(100 * pop / x.m.p)) + " % de la population de la zone)" : "";
         var cible = tgt > 0 ? " dont ≈" + MC.fmtInt(tgt) + " cible (vulnérabilité économique)" : "";
-        return "<li><b>" + esc(x.n) + "</b> : " + esc(F.level_names[x.ew]) + " (" + esc(hz.join(", ")) + ")" + (pop > 0 ? " · ≈ " + MC.fmtInt(pop) + " pers." + share + cible : "") + "</li>";
+        var enfants = enf5 > 0 ? " dont ≈" + MC.fmtInt(enf5) + " enfants -5 ans" : "";
+        return "<li><b>" + esc(x.n) + "</b> : " + esc(F.level_names[x.ew]) + " (" + esc(hz.join(", ")) + ")" + (pop > 0 ? " · ≈ " + MC.fmtInt(pop) + " pers." + share + cible + enfants : "") + "</li>";
       }).join("") + "</ul>";
     }
     $("rant").innerHTML = ah;
