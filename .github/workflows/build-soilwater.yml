@@ -32,6 +32,8 @@ jobs:
       - name: Profondeur de nappe (MGMERL, mesures réelles de forages) — ignorée en cas d'indisponibilité
         run: |
           (python scripts/connector_watertable.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Profondeur de nappe indisponible") 2>&1 | tee validation/_journal_watertable.txt
+      - name: Qualité de l'eau — conductivité électrique (MGMERL, mesures réelles) — ignorée en cas d'indisponibilité
+        run: python scripts/connector_mgmerl_quality.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Conductivité indisponible"
       - name: Enregistrer le journal de diagnostic temporaire (profondeur de nappe)
         if: always()
         run: |

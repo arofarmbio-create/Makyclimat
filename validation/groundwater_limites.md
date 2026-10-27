@@ -29,6 +29,18 @@ relevés les plus récents sur 25 271 forages enregistrés, assignation par plus
 rayon de 15 km → **environ 30 % des fokontany** reçoivent une valeur, les autres restent sans donnée
 plutôt que d'en recevoir une inventée).
 
+MGMERL fournit aussi des mesures réelles de **conductivité électrique** (µS/cm, indicateur indirect de
+salinité/minéralisation), maintenant intégrées séparément dans `data/<pays>/external/water_quality.csv`
+(`conductivity_uscm`, voir `scripts/connector_mgmerl_quality.py`, ~23 % des fokontany couverts). Cet
+indicateur répond au point 3 de "Pour l'améliorer encore" ci-dessous (couche qualité/salinité, utile
+notamment en zone côtière). **Il n'entre volontairement PAS dans le score `potentiel_eau_pct`** : une
+conductivité élevée est un signal de risque qui peut coexister avec un site par ailleurs favorable — le
+fondre dans une note positive unique masquerait ce risque. Conformément au principe du projet (exposition
+≠ dommage ≠ besoin), il reste un indicateur à lire à côté du score, jamais mélangé dedans. MakyClimat ne
+le classe pas "bon"/"mauvais" : la conductivité seule ne suffit pas à juger la potabilité (composition
+ionique, normes retenues), donc seule la valeur mesurée est publiée, à charge pour l'utilisateur de
+l'interpréter avec les seuils pertinents pour son usage.
+
 ## Ce qu'il calcule
 
 Pour chaque fokontany, un classement relatif de 0 à 100 combinant 6 critères, chacun transformé en rang
@@ -97,8 +109,10 @@ continentale, peuvent très bien ne pas refléter une structure locale favorable
 2. Des retours réels de forages malgaches (succès/échec, débit, profondeur) auprès d'ONG WASH ou du
    ministère de l'Eau — même quelques dizaines de points suffiraient pour une première validation
    croisée et un calibrage statistique des poids.
-3. Une couche de qualité/salinité de l'eau souterraine dans les zones côtières, où l'intrusion saline
-   limite l'usage même d'un forage par ailleurs productif.
+3. **Partiellement fait** : une couche de conductivité électrique (`conductivity_uscm`, MGMERL) est
+   intégrée depuis le 27/10/2026 (~23 % du pays). Reste à faire : élargir sa couverture (même piste que
+   le point 4) et, si une donnée de composition ionique devient disponible, affiner au-delà de la seule
+   conductivité pour les zones côtières à risque d'intrusion saline.
 4. Élargir la couverture de la profondeur de nappe au-delà des ~30 % actuels : obtenir un accès membre
    à MGMERL (export complet des 25 271 forages plutôt que les ~1000 relevés les plus récents visibles
    publiquement), ou croiser avec d'autres bases WASH malgaches (ONG, ministère de l'Eau), ou relâcher

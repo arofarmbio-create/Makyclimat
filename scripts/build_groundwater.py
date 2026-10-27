@@ -4,9 +4,9 @@ Ce que c'est : un classement relatif (0-100) des fokontany d'un pays selon 6 cri
 pondérée (méthode d'analyse multicritère standard, utilisée en l'absence de données de forage réelles) :
   - aquifer_productivity_pct (30 %) : classe de productivité de l'aquifère RÉELLE (géologie/hydrogéologie,
     BGS Africa Groundwater Atlas — voir connector_geology.py) — le facteur géologique proprement dit.
-  - water_table_depth_m       (20 %, inversé) : profondeur de nappe publiée à l'échelle continentale
-    (MacDonald et al. 2012 — voir connector_watertable.py) — plus la nappe est proche de la surface, mieux
-    c'est noté.
+  - water_table_depth_m       (20 %, inversé) : niveau statique d'eau RÉEL, mesuré sur des forages
+    malgaches (MGMERL — voir connector_watertable.py, couverture ~30 % du pays) — plus la nappe est
+    proche de la surface, mieux c'est noté.
   - recharge12_z              (25 %) : indice standardisé de recharge hydrique sur 12 mois (bilan de
     Thornthwaite-Mather, CHIRPS + ET0 ERA5-Land ; voir build_soilwater.py).
   - hand_lt15_pct              (8 %) : part de la zone à moins de 15 m au-dessus du cours d'eau le plus
@@ -18,12 +18,13 @@ Chaque critère est transformé en rang percentile (0-1) sur l'ensemble des foko
 pondération, pour que des unités différentes soient comparables.
 
 Ce que ce n'est PAS, et pourquoi ce n'est "Non validé" (pas "Approximation", encore moins "Validé") :
-  1. La géologie et la profondeur de nappe sont maintenant RÉELLES (cartes publiées, voir ci-dessus), mais
-     à une échelle continentale grossière (1:5 000 000 et ~5 km) — aucune des deux ne résout une faille ou
-     une structure locale précise.
-  2. AUCUNE donnée réelle de forage malgache (succès, débit, profondeur, salinité) n'existe à notre
-     connaissance pour calibrer ou valider les poids choisis. C'est une construction raisonnée, pas un
-     modèle appris sur des résultats réels.
+  1. La géologie reste à l'échelle continentale grossière (BGS, 1:5 000 000) — pas de faille ni de
+     structure locale résolue. La profondeur de nappe, elle, est une mesure réelle (MGMERL) mais
+     ponctuelle et partielle (~30 % du pays, rayon 15 km d'un forage mesuré) : les 70 % restants n'ont
+     aucune valeur pour ce critère.
+  2. Les mesures MGMERL donnent des NIVEAUX réels, pas des RÉSULTATS de forage (succès/échec, débit) qui
+     permettraient de calibrer statistiquement les poids choisis. C'est toujours une construction
+     raisonnée, pas un modèle appris sur des résultats de forage réels.
   3. Une zone HAND basse (bien notée ici) est aussi une zone plus exposée aux inondations et au risque de
      contamination d'un puits peu profond — compromis documenté, pas résolu par ce score.
   4. Usage prévu : présélection de zones à visiter en priorité pour une étude hydrogéologique de terrain
@@ -46,7 +47,7 @@ import pandas as pd
 from common import country_data_dir, read_units
 
 SRC = ("MakyClimat : classement multicritère (productivité d'aquifère réelle BGS Africa Groundwater Atlas 30 %, "
-       "profondeur de nappe publiée MacDonald et al. 2012 inversée 20 %, recharge CHIRPS/ET0 25 %, proximité du "
+       "niveau statique d'eau réel MGMERL inversé 20 % (~30 % du pays couvert), recharge CHIRPS/ET0 25 %, proximité du "
        "réseau de drainage HAND 8 %, pente inversée 9 %, capacité de rétention du sol SoilGrids 8 %) ; construction "
        "raisonnée, PAS calibrée sur des données réelles de forage malgaches (aucune disponible) ; présélection pour "
        "étude de terrain uniquement, jamais une décision de forage — voir validation/groundwater_limites.md")
