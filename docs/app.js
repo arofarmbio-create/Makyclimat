@@ -624,6 +624,8 @@
     // actionnables (alerte à 7 jours, risques/conseils) sont ouvertes par défaut, le reste se déplie à la demande.
     var hist = (S.meta.has_history ? '<div id="histbox" class="hist"></div>' : "") + histSection(f);
     h += acc("Alerte précoce, 7 prochains jours", forecastSection(m), true);
+    var F0 = S.meta.forecast;
+    h += acc("Tendance indicative, jour " + (F0 && F0.trend ? F0.trend.day_from : 8) + " à " + (F0 && F0.trend ? F0.trend.day_to : 16), trendSection(m), false);
     h += acc("Risques, alertes et conseils", risksSection(m, false) + alertsSection(m) + planSection(m), true);
     h += acc("Scénarios de la saison et calendrier cultural", scenarioTable(m) + seasonSection(f) + calendarSection(f) + householdSeasonAdvice(m), false);
     h += acc("Chocs récents et historique", shockSection(m) + hist, false);
@@ -891,7 +893,7 @@
     var F = S.meta.forecast, pb = S.meta.playbook;
     if (!F || !m.ew) return "";
     var lvlNames = F.level_names, mx = Math.max.apply(null, m.ew);
-    var h = '<div class="ew"><h3>Alerte précoce, 7 prochains jours</h3>';
+    var h = '<div class="ew ew7">';
     HAZ.forEach(function (hz, i) {
       var lv = m.ew[i];
       h += '<div class="row ewrow"><span><i class="ewdot" style="background:' + EW_COLORS[lv] + '"></i>' + EW_ICON[hz] + " <b>" + esc(F.hazard_labels[hz]) + "</b>" +
@@ -918,6 +920,23 @@
       h += svg + '</svg><div class="note">Barres : pluie (mm/jour). Points orange : température maximale (plus haut = plus chaud).' + (S.view.lvl > 3 ? "" : " Moyenne de la zone.") + "</div>";
     }
     h += '<div class="note">Prévision du modèle météo, mise à jour ' + esc(fmtDateTime(F.fetched_at)) + ". Maille d'environ 28 km : à lire comme une indication par zone ; les bulletins officiels de Météo Madagascar et du BNGRC priment.</div></div>";
+    return h;
+  }
+
+  function trendSection(m) {
+    // Tendance indicative à 8-16 jours : mêmes données de prévision (déjà récupérées sur 16 jours), mais
+    // fiabilité météo nettement plus faible au-delà d'une semaine -- jamais de population/cible affichée
+    // ici, seulement un niveau de tendance par aléa (voir validation/methodologie_these.md).
+    var F = S.meta.forecast;
+    if (!F || !F.trend || !m.ew2) return "";
+    var lvlNames = F.level_names, mx = Math.max.apply(null, m.ew2);
+    var h = '<div class="ew ew2"><div class="note warn" style="margin-bottom:6px">Fiabilité plus faible qu\'à 7 jours : signal indicatif, à confirmer par les bulletins officiels au fur et à mesure. Aucune population exposée n\'est calculée sur cette fenêtre.</div>';
+    HAZ.forEach(function (hz, i) {
+      var lv = m.ew2[i];
+      h += '<div class="row ewrow"><span><i class="ewdot" style="background:' + EW_COLORS[lv] + '"></i>' + EW_ICON[hz] + " <b>" + esc(F.hazard_labels[hz]) + "</b></span><span>" + esc(lvlNames[lv]) + "</span></div>";
+    });
+    if (mx === 0) h += '<div class="note">Aucune tendance notable pour cette zone entre le jour ' + F.trend.day_from + " et le jour " + F.trend.day_to + ".</div>";
+    h += "</div>";
     return h;
   }
 

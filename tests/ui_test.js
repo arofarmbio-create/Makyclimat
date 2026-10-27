@@ -122,7 +122,8 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
   }
   if (metaJson.forecast) {
     check("badge de prévision", !$("fcbadge").hidden && /Prévision du/.test($("fcbadge").textContent));
-    check("panneau d'alerte précoce : 5 aléas et graphique de 10 jours", $("info").querySelectorAll(".ewrow").length === 5 && /<svg[^>]*Pluie prévue/.test($("info").innerHTML));
+    check("panneau d'alerte précoce : 5 aléas et graphique de 10 jours", $("info").querySelectorAll(".ew7 .ewrow").length === 5 && /<svg[^>]*Pluie prévue/.test($("info").innerHTML));
+    check("tendance indicative 8-16 jours : 5 aléas, distincte de l'alerte à 7 jours", $("info").querySelectorAll(".ew2 .ewrow").length === 5);
     $("layer").value = "ewm"; $("layer").dispatchEvent(new w.Event("change"));
     const cols = new Set(currentLayers.map((l) => l._style.fillColor));
     check("carte des alertes colorée avec la palette des niveaux", [...cols].every((c) => ["#d7ebd2", "#f2d16b", "#e8893a", "#b2262e"].includes(c)), [...cols].join(" "));

@@ -285,6 +285,14 @@ def test_forecast_alerts() -> None:
     check("plus de 15 jours secs au sud -> alerte période sèche", south and all(d[pc]["ew"][3] >= 2 for pc in south))
     quiet = [pc for pc in leaves.pcode if pc not in set(north) | set(south) | set(west)]
     check("zone calme sans alerte pluie/vent/chaleur", all(sum(d[pc]["ew"][:3]) == 0 for pc in quiet[:50]))
+    # Tendance 8-16 jours (ew2) : même méthode que l'alerte à 7 jours (ew), sur la fenêtre suivante déjà
+    # présente dans forecast.npz mais jamais lue au-delà du jour 7 jusqu'ici (audit du 27/10/2026).
+    check("pluie forte simulée au jour 10 (fenêtre 8-16j) : visible dans ew2 mais pas dans ew (alerte 0-7j)",
+          north and all(d[pc]["ew2"][0] >= 2 and d[pc]["ew"][0] <= 1 for pc in north))
+    check("tendance 8-16 jours : aucune population/cible calculée dessus (signal de niveau seulement)",
+          all(len(d[pc]["ew2"]) == 5 and "ew2p" not in d[pc] and "ew2t" not in d[pc] for pc in north))
+    check("tendance 8-16 jours : plage de jours correcte dans meta.json (forecast.trend)",
+          meta["forecast"]["trend"] == {"day_from": 8, "day_to": 16})
     check("alerte précoce à 7 jours : cible pondérée par la vulnérabilité économique (jamais seulement l'exposé brut)",
           north and all(d[pc]["ewt"][0] <= d[pc]["ewp"][0] and abs(d[pc]["ewt"][0] - round(d[pc]["ewp"][0] * d[pc]["vs"])) <= 1 for pc in north))
     check("alerte précoce à 7 jours : enfants -5 ans exposés (tous aléas), cohérents avec la part simulée de 15 %",

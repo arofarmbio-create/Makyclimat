@@ -398,40 +398,68 @@ def main() -> None:
             print("Prévision ignorée : périmée ou ne contient pas la date du jour.")
     s_m0, e_m0 = cfg["rainfall"]["season_start_month"], cfg["rainfall"]["season_end_month"]
     in_rain = (today.month >= s_m0 or today.month <= e_m0) if s_m0 > e_m0 else (s_m0 <= today.month <= e_m0)
-    EWL = None   # niveaux d'alerte par fokontany
+    EWL = None   # niveaux d'alerte par fokontany (0-7 jours)
+    EWL2 = None  # tendance indicative 8-16 jours (mêmes données déjà récupérées par update_forecast.py/update_floods.py --
+                 # forecast_days=16 -- mais jusqu'ici seuls les 7 premiers jours étaient exploités ; fiabilité
+                 # météorologique nettement plus faible au-delà d'une semaine, donc jamais utilisée pour les
+                 # populations exposées/cibles, seulement un niveau de tendance affiché à part -- audit du 27/10/2026)
+    th_path = country_data_dir(args.country) / "flood_thresholds.csv"
+    ff_path = grid_dir(args.country) / "flood_forecast.npz"
+    flood_src_ok = False
+    if fcst is not None and th_path.exists() and ff_path.exists():
+        th = pd.read_csv(th_path, dtype={"pcode": str}).set_index("pcode")
+        zf = load_grid(ff_path)
+        fdates = [str(x) for x in zf["dates"]]
+        if today.isoformat() in fdates:
+            f0 = fdates.index(today.isoformat())
+            rl = cfg["flood"]["return_levels"]
+            flood_src_ok = True
+
+    def flood_levels_for(day_lo: int, day_hi: int):
+        """Niveau de crue (0-3) pour la fenêtre [day_lo, day_hi) de jours de prévision, même méthode que l'alerte à 7 jours."""
+        flood_lv = np.zeros(len(LI0), dtype=int)
+        flood_ratio = np.full(len(LI0), np.nan)
+        flood_q = np.full(len(LI0), np.nan)
+        if not flood_src_ok:
+            return flood_lv, flood_ratio, flood_q
+        lo, hi = f0 + day_lo, min(f0 + day_hi, zf["q"].shape[1])
+        if hi <= lo:
+            return flood_lv, flood_ratio, flood_q
+        qmax = {pc: float(np.nanmax(zf["q"][i, lo:hi])) if np.isfinite(zf["q"][i, lo:hi]).any() else np.nan
+                for i, pc in enumerate(zf["pcode"].astype(str))}
+        for k, i in enumerate(LI0):
+            c = units.at[i, "adm3"]
+            if c in th.index and c in qmax and np.isfinite(qmax[c]):
+                row = th.loc[c]
+                q2 = row.get("q2", np.nan)
+                if np.isfinite(q2) and q2 >= cfg["flood"]["min_q2_m3s"]:
+                    flood_q[k], flood_ratio[k] = qmax[c], qmax[c] / q2
+                    flood_lv[k] = 3 if qmax[c] >= row.get(f"q{rl[2]}", np.inf) else 2 if qmax[c] >= row.get(f"q{rl[1]}", np.inf) \
+                        else 1 if qmax[c] >= q2 else 0
+        return flood_lv, flood_ratio, flood_q
+
     if fcst is not None:
         horizon = cfg["forecast"].get("horizon_days", 7)
         fut = slice(fcst["t0"], None)
         lv, nums = EW.compute(fcst["precip"][:, fut], fcst["tmax"][:, fut], fcst["gust"][:, fut], cfg["alerts"], in_rain, horizon)
-        # crues de rivière (modèle GloFAS) : débit prévu / crue de 2, 5, 20 ans de la commune
-        flood_lv = np.zeros(len(LI0), dtype=int)
-        flood_ratio = np.full(len(LI0), np.nan)
-        flood_q = np.full(len(LI0), np.nan)
-        th_path, ff_path = country_data_dir(args.country) / "flood_thresholds.csv", grid_dir(args.country) / "flood_forecast.npz"
-        flood_info = {"available": False}
-        if th_path.exists() and ff_path.exists():
-            th = pd.read_csv(th_path, dtype={"pcode": str}).set_index("pcode")
-            zf = load_grid(ff_path)
-            fdates = [str(x) for x in zf["dates"]]
-            if today.isoformat() in fdates:
-                f0 = fdates.index(today.isoformat())
-                qmax = {pc: float(np.nanmax(zf["q"][i, f0:f0 + horizon])) if np.isfinite(zf["q"][i, f0:f0 + horizon]).any() else np.nan
-                        for i, pc in enumerate(zf["pcode"].astype(str))}
-                rl = cfg["flood"]["return_levels"]
-                for k, i in enumerate(LI0):
-                    c = units.at[i, "adm3"]
-                    if c in th.index and c in qmax and np.isfinite(qmax[c]):
-                        row = th.loc[c]
-                        q2 = row.get("q2", np.nan)
-                        if np.isfinite(q2) and q2 >= cfg["flood"]["min_q2_m3s"]:
-                            flood_q[k], flood_ratio[k] = qmax[c], qmax[c] / q2
-                            flood_lv[k] = 3 if qmax[c] >= row.get(f"q{rl[2]}", np.inf) else 2 if qmax[c] >= row.get(f"q{rl[1]}", np.inf) \
-                                else 1 if qmax[c] >= q2 else 0
-                flood_info = {"available": True, "fetched_at": str(zf["fetched_at"]), "n_communes": int(len(th)),
-                              "n_valid_thresholds": int(th.q2.notna().sum())}
+        flood_lv, flood_ratio, flood_q = flood_levels_for(0, horizon)
+        flood_info = {"available": flood_src_ok, "fetched_at": str(zf["fetched_at"]) if flood_src_ok else None,
+                      "n_communes": int(len(th)) if flood_src_ok else 0, "n_valid_thresholds": int(th.q2.notna().sum()) if flood_src_ok else 0}
         lv["flood"] = flood_lv
         nums["flood_ratio"], nums["flood_q"] = flood_ratio, flood_q
         EWL = {"lv": lv, "nums": nums, "horizon": horizon, "flood": flood_info}
+
+        # Tendance 8-16 jours : même calcul de niveaux (pluie/vent/chaleur/sécheresse/crue), sur la fenêtre
+        # suivante déjà présente dans forecast.npz (forecast_days=16) mais jamais lue jusqu'ici au-delà du jour 7.
+        total_days = fcst["precip"].shape[1] - fcst["t0"]
+        if total_days > horizon:
+            d0, d1 = horizon, total_days
+            fut2 = slice(fcst["t0"] + d0, fcst["t0"] + d1)
+            lv2, nums2 = EW.compute(fcst["precip"][:, fut2], fcst["tmax"][:, fut2], fcst["gust"][:, fut2], cfg["alerts"], in_rain, d1 - d0)
+            flood_lv2, flood_ratio2, flood_q2 = flood_levels_for(d0, d1)
+            lv2["flood"] = flood_lv2
+            nums2["flood_ratio"], nums2["flood_q"] = flood_ratio2, flood_q2
+            EWL2 = {"lv": lv2, "nums": nums2, "day_from": d0 + 1, "day_to": d1}
 
     # --- Scénarios de fin de saison (ensemble d'analogues, voir scripts/scenarios.py) ---
     import scenarios as SC
@@ -583,6 +611,15 @@ def main() -> None:
         EWU = {"lv": lv_u, "ppl": ppl_u, "tgt": tgt_u, "e5": enf5_u, "nums": nums_u,
                "p": np.array(daily_p), "t": np.array(daily_t)}
 
+    # Tendance 8-16 jours : seul le niveau de tendance par zone est remonté (aucune population exposée/cible
+    # calculée dessus -- fiabilité météo trop faible au-delà d'une semaine pour en faire un chiffre d'action,
+    # voir validation/methodologie_these.md). Affichée à part de l'alerte précoce à 7 jours, jamais fondue avec elle.
+    EWU2 = None
+    if EWL2 is not None:
+        import scenarios as SC2b
+        lv_u2 = {h: SC2b.rollup_max(units, leafmask, lift2(EWL2["lv"][h])).astype(int) for h in EW.HAZARDS}
+        EWU2 = {"lv": lv_u2, "day_from": EWL2["day_from"], "day_to": EWL2["day_to"]}
+
     def pack(i: int) -> dict:
         r = units.iloc[i]
         d = {"p": int(r["pop"]) if pd.notna(r["pop"]) else None}
@@ -628,6 +665,10 @@ def main() -> None:
                        round(float(fr), 2) if fr > 0 else None, round(float(nm["flood_q"][i]), 1) if nm["flood_q"][i] > 0 else None]
             d["fr"] = [None if not np.isfinite(x) else int(round(float(x))) for x in EWU["p"][:, i]]
             d["ft"] = [None if not np.isfinite(x) else int(round(float(x))) for x in EWU["t"][:, i]]
+        if EWU2 is not None:
+            # Tendance 8-16 jours : niveau par aléa uniquement (pas de population), fiabilité plus faible,
+            # jamais mélangée avec "ew" (alerte précoce 0-7 jours).
+            d["ew2"] = [int(EWU2["lv"][h][i]) for h in EW.HAZARDS]
         al = sector_alerts.get(r["pcode"])
         if al:
             d["al"] = al
@@ -666,7 +707,8 @@ def main() -> None:
             "fetched_at": fcst["fetched_at"], "first": fcst["dates"][0], "last": fcst["dates"][-1], "today": today.isoformat(),
             "horizon_days": EWL["horizon"], "hazards": EW.HAZARDS, "hazard_labels": EW.HAZARD_LABEL, "level_names": EW.LEVEL_NAME,
             "thresholds": cfg["alerts"], "flood": EWL["flood"], "in_rain_season": bool(in_rain),
-            "n_days_series": int(EWU["p"].shape[0])},
+            "n_days_series": int(EWU["p"].shape[0]),
+            "trend": None if EWU2 is None else {"day_from": EWU2["day_from"], "day_to": EWU2["day_to"]}},
         "sector_names": [{"id": x["id"], "label": x["label"]} for x in load_yaml("sectors.yml")["sectors"]],
         "country": cfg["name"], "slug": cfg["slug"], "iso3": cfg["iso3"],
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
