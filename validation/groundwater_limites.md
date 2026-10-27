@@ -4,7 +4,7 @@
 `susc_inond_pct` (dégâts satellite) : c'est une construction raisonnée, jamais comparée à un résultat
 de forage réel malgache, faute de donnée.
 
-## Mise à jour : géologie réelle ajoutée ; Madagascar hors de l'emprise de la carte de profondeur de nappe
+## Mise à jour : géologie réelle ajoutée ; profondeur de nappe désormais mesurée (MGMERL), plus continentale
 
 Une carte géologique/hydrogéologique de Madagascar existe bel et bien en accès libre : l'**Africa
 Groundwater Atlas** du British Geological Survey (shapefile pays, 1:5 000 000, licence CC BY-SA,
@@ -13,18 +13,21 @@ cristallin, sédimentaire consolidé/non consolidé, volcanique, karst) et sa cl
 (débit indicatif en L/s). Elle est maintenant intégrée (voir `scripts/connector_geology.py`), ce qui
 corrige la lacune géologique signalée dans la version précédente de cette note.
 
-Une **profondeur de nappe publiée à l'échelle continentale** existe aussi dans la littérature
-(MacDonald, Bonsor, Ó Dochartaigh & Taylor, 2012, *Environ. Res. Lett.* 7:024009 ; profondeur : Bonsor &
-MacDonald 2011, BGS OR/11/067 ; grille ~5 km, fichier XYZ ASCII catégoriel VS/S/SM/M/D/VD). Le fichier
-source a été obtenu directement auprès du BGS et inspecté point par point : **son emprise s'arrête à
-40,8°E en Afrique australe/orientale et ne couvre pas Madagascar** (l'île, à 43°E–51°E, n'a jamais été
-incluse dans cette étude continentale — plusieurs études « Afrique » excluent explicitement les îles).
-Ce n'est donc pas un problème d'accès au fichier mais une absence de couverture géographique : aucun
-retraitement du fichier ne peut produire une valeur pour Madagascar. Le connecteur
-(`scripts/connector_watertable.py`) reste en place, documente cette limite précise, et continue de se
-dégrader proprement ; `water_table_depth_m` n'est pas produit et le score ci-dessous se rabat
-automatiquement sur les 5 critères restants (voir "Pour l'améliorer encore" pour la piste à explorer :
-une étude spécifique à Madagascar plutôt que la carte continentale).
+La **profondeur de nappe publiée à l'échelle continentale** (MacDonald, Bonsor, Ó Dochartaigh & Taylor,
+2012, *Environ. Res. Lett.* 7:024009 ; profondeur : Bonsor & MacDonald 2011, BGS OR/11/067 ; grille
+~5 km) a été définitivement écartée pour Madagascar : le fichier source, obtenu directement auprès du
+BGS, inspecté point par point, a une emprise qui s'arrête à 40,8°E et ne couvre pas l'île (43°E–51°E) —
+aucun retraitement ne pouvait y remédier.
+
+À la place, `water_table_depth_m` est maintenant produit à partir de **mesures réelles de forages
+malgaches**, extraites de **MGMERL** (mgmerl.org), plateforme publique de suivi des ressources en eau de
+Madagascar (mWater, avec l'appui de l'UNICEF). Contrairement à la grille continentale, ce ne sont pas
+des valeurs modélisées : chaque valeur vient d'un relevé de terrain réel (niveau statique d'eau mesuré
+sur un forage, avec coordonnées GPS et date). Voir `scripts/connector_watertable.py` pour la méthode
+complète et ses limites (extraction manuelle faute d'API publique accessible, échantillon des ~1000
+relevés les plus récents sur 25 271 forages enregistrés, assignation par plus proche voisin dans un
+rayon de 15 km → **environ 30 % des fokontany** reçoivent une valeur, les autres restent sans donnée
+plutôt que d'en recevoir une inventée).
 
 ## Ce qu'il calcule
 
@@ -34,7 +37,7 @@ percentile (0-1) sur l'ensemble du pays avant pondération :
 | Critère | Poids | Source | Sens |
 |---|---|---|---|
 | Productivité d'aquifère (`aquifer_productivity_pct`) | 30 % | BGS Africa Groundwater Atlas (géologie réelle, 1:5 000 000) | Plus haut = mieux |
-| Profondeur de nappe (`water_table_depth_m`) | 20 % | MacDonald et al. (2012), grille ~5 km — **actuellement sans donnée, Madagascar hors de l'emprise de cette étude continentale, voir ci-dessus** | Plus bas = mieux (inversé) |
+| Profondeur de nappe (`water_table_depth_m`) | 20 % | MGMERL — mesures réelles de forages, ~30 % des fokontany (voir ci-dessus) | Plus bas = mieux (inversé) |
 | Recharge standardisée sur 12 mois (`recharge12_z`) | 25 % | Bilan de Thornthwaite-Mather (CHIRPS + ET0 ERA5-Land) | Plus haut = mieux |
 | Part de la zone à moins de 15 m au-dessus du cours d'eau (`hand_lt15_pct`) | 8 % | HAND, Copernicus GLO-90 | Plus haut = mieux |
 | Pente moyenne (`slope_mean_pct`) | 9 % | Copernicus GLO-90 | Plus bas = mieux (inversé) |
@@ -46,15 +49,16 @@ moins 70 % des critères disponibles n'est pas noté (pas de valeur inventée).
 
 ## Ce qu'il NE calcule PAS, et pourquoi c'est encore « non validé »
 
-1. **Géologie et profondeur de nappe à l'échelle continentale seulement.** La carte BGS est au
-   1:5 000 000 et la grille de profondeur à ~5 km : ni l'une ni l'autre ne résout une faille, une
-   structure locale ou une variation de nappe à l'échelle d'un village. Elles donnent un ordre de
-   grandeur régional, pas un diagnostic de site.
-2. **Aucune donnée réelle de forage malgache** (succès, débit, profondeur de la nappe mesurée, salinité,
-   qualité de l'eau) pour calibrer ou valider les poids choisis (30/20/25/8/9/8). Les poids reflètent un
-   raisonnement hydrologique de bon sens — la géologie et la profondeur de nappe pèsent maintenant plus
-   que la recharge climatique, car elles sont documentées comme les facteurs les plus déterminants d'un
-   forage réel — mais ce n'est toujours pas un ajustement statistique sur des résultats réels.
+1. **Géologie à l'échelle continentale seulement, profondeur de nappe ponctuelle et partielle.** La
+   carte BGS est au 1:5 000 000 : elle ne résout aucune faille ni structure locale, c'est un ordre de
+   grandeur régional. La profondeur de nappe MGMERL, elle, est une mesure réelle mais ponctuelle (un
+   forage, pas une zone) et ne couvre qu'environ 30 % des fokontany (rayon de 15 km) — les 70 % restants
+   n'ont toujours aucune valeur pour ce critère, pas une valeur approximative.
+2. **Pas encore de calibrage statistique des poids sur des résultats réels de forage malgache**
+   (succès/échec, débit, salinité). Les poids (30/20/25/8/9/8) reflètent un raisonnement hydrologique de
+   bon sens — la géologie et la profondeur de nappe pèsent plus que la recharge climatique, documentées
+   comme les facteurs les plus déterminants d'un forage réel — mais MGMERL donne des *niveaux* mesurés,
+   pas des *résultats de forage* (succès/débit) qui permettraient de valider ou ajuster ces poids.
 3. **Compromis non résolu, affiché mais pas corrigé :** une zone HAND basse (proche d'un cours d'eau,
    bien notée ici car la nappe y est souvent moins profonde) est aussi plus exposée aux inondations et
    au risque de contamination d'un puits peu profond (voir `susc_inond_pct`, qui mesure justement ce
@@ -95,10 +99,10 @@ continentale, peuvent très bien ne pas refléter une structure locale favorable
    croisée et un calibrage statistique des poids.
 3. Une couche de qualité/salinité de l'eau souterraine dans les zones côtières, où l'intrusion saline
    limite l'usage même d'un forage par ailleurs productif.
-4. Une étude de profondeur de nappe **spécifique à Madagascar** (BRGM/PGRM, thèses ou rapports de forage
-   nationaux) : la carte continentale de MacDonald et al. (2012) a été écartée après vérification directe
-   du fichier source — elle ne couvre pas l'île (voir ci-dessus) — donc seule une source propre à
-   Madagascar peut combler ce critère.
+4. Élargir la couverture de la profondeur de nappe au-delà des ~30 % actuels : obtenir un accès membre
+   à MGMERL (export complet des 25 271 forages plutôt que les ~1000 relevés les plus récents visibles
+   publiquement), ou croiser avec d'autres bases WASH malgaches (ONG, ministère de l'Eau), ou relâcher
+   prudemment le rayon de 15 km avec un indicateur de confiance décroissant selon la distance.
 
 Tant que ces données manquent, l'indicateur reste étiqueté « non validé » et n'est jamais présenté comme
 une recommandation de forage.

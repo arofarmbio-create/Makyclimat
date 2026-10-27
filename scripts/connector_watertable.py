@@ -1,26 +1,43 @@
-"""Connecteur profondeur de la nappe (niveau statique) : carte continentale publiée (MacDonald et al. 2012).
+"""Connecteur profondeur de la nappe (niveau statique) : mesures réelles de forages malgaches (MGMERL).
 
-Source : "Quantitative maps of groundwater resources in Africa" (MacDonald, Bonsor, Dochartaigh & Taylor, 2012,
-Environmental Research Letters, DOI 10.1088/1748-9326/7/2/024009 ; profondeur de nappe : Bonsor & MacDonald, 2011,
-rapport BGS OR/11/067) — grille continentale à ~5 km, échelle nominale 1:20 000 000.
-Accès : GeoTIFF via le service WCS GeoServer de l'UNESCO-IHP ("Depth to groundwater in Africa"), qui republie les
-données avec l'autorisation du BGS (permis CP17/019). © British Geological Survey / NERC — tous droits réservés sur la
-grille elle-même ; MakyClimat n'affiche PAS la grille mais uniquement une valeur agrégée par fokontany, avec attribution
-complète et lien vers la source, conformément à l'usage prévu par cette republication.
+Historique : ce connecteur visait initialement la carte continentale de MacDonald et al. (2012)/BGS
+("Quantitative maps of groundwater resources in Africa"), republiée par l'UNESCO-IHP. Son service WCS
+répond 404 depuis le 27/10/2026, mais surtout le fichier source obtenu directement auprès du BGS a été
+inspecté point par point : **son emprise s'arrête à 40,8°E et ne couvre PAS Madagascar** (l'île, à
+43°E-51°E, n'a jamais été incluse dans cette étude continentale). Cette source a donc été abandonnée
+définitivement pour Madagascar — voir l'historique git de ce fichier pour le détail de cette vérification.
 
-État constaté (27/10/2026) : ce service WCS répond 404 (ressource retirée de la plateforme UNESCO-IHP). Le fichier
-source a depuis été obtenu directement auprès du BGS ("Africa depth to groundwater map XYZ ASCII file",
-~1 000 000 points, classes catégorielles VS/S/SM/M/D/VD) et inspecté point par point : **son emprise s'arrête à
-40,8°E en latitudes sud et ne couvre PAS Madagascar** (l'île, à 43°E-51°E, n'a jamais été incluse dans cette étude
-continentale — plusieurs études « Afrique » excluent explicitement les îles). Ce n'est donc pas un problème d'accès
-mais une absence de couverture géographique, qu'aucun retraitement du fichier ne peut combler. Ce connecteur reste en
-place (échoue proprement via le `|| echo` du workflow, voir .github/workflows/build-soilwater.yml) pour le jour où une
-source propre à Madagascar (étude BRGM/PGRM, thèse, rapport de forage national) sera identifiée ; en attendant,
-`water_table_depth_m` n'est pas produit et build_groundwater.py se rabat automatiquement sur les critères restants
-(voir validation/groundwater_limites.md).
-Limite essentielle : résolution ~5 km, modélisée à partir de la géologie et du climat (PAS de mesure de puits malgache) ;
-à lire comme un ORDRE DE GRANDEUR régional de la profondeur de la nappe, jamais une prévision pour un site précis. Voir
-validation/groundwater_limites.md.
+Source actuelle : **MGMERL** (mgmerl.org), plateforme publique de suivi des ressources en eau de
+Madagascar (mWater), initiée avec l'appui de l'UNICEF. Données réelles de terrain : niveau statique
+d'eau mesuré sur des forages/puits malgaches, avec coordonnées GPS et date du relevé — PAS une grille
+interpolée ni une modélisation.
+
+Méthode d'obtention — **IMPORTANT, à relire avant de "corriger" ce connecteur** : MGMERL n'expose aucune
+API publique ni export CSV accessible sans être membre de l'organisation mWater propriétaire du projet
+(le bouton "Export Data" du tableau de bord renvoie "client not found" pour tout compte non membre,
+y compris un compte mWater fraîchement créé — vérifié le 27/10/2026). Les données ont donc été extraites
+manuellement : lecture des tableaux déjà rendus dans le DOM du tableau de bord public (accessible sans
+connexion), export en CSV côté navigateur, puis copiées ici. Le tableau de bord limite l'affichage aux
+~1000 relevés les plus récents (sur 25 271 forages enregistrés au total dans MGMERL au 27/10/2026) : ce
+n'est donc PAS un échantillon aléatoire ni exhaustif, mais les relevés les plus récents disponibles.
+**Rafraîchissement** : pas automatisé (pas d'accès programmatique) ; à refaire manuellement
+périodiquement en répétant cette extraction et en remplaçant inputs/mgmerl/mgmerl_niveau_statique.csv.
+Fichier source : inputs/mgmerl/mgmerl_niveau_statique.csv (extrait le 27/10/2026).
+
+Méthode d'assignation : plus proche voisin. Pour chaque fokontany, on cherche le point de mesure MGMERL
+le plus proche ; au-delà de WATERTABLE_MAX_DIST_KM (15 km), on ne produit PAS de valeur plutôt que
+d'inventer une mesure à une distance déraisonnable. Si plusieurs relevés existent pour le même point
+(même "ID unique"), seul le plus récent est conservé.
+
+Limites essentielles :
+  - Couverture partielle et non uniforme : seuls les fokontany à moins de 15 km d'un forage mesuré
+    reçoivent une valeur (environ 29 % du pays au moment de l'extraction — densité réelle du réseau
+    MGMERL, pas un artefact du seuil).
+  - Biais de sélection : MGMERL échantillonne les forages SUIVIS (souvent desservis par un partenaire
+    WASH), pas un maillage systématique du territoire.
+  - "Niveau statique" ponctuel, pas une moyenne saisonnière : varie avec la saison et l'année du relevé
+    (relevés mélangés 2023-2026 dans l'extrait actuel).
+Voir validation/groundwater_limites.md pour le détail et les pistes d'amélioration.
 Sortie : data/<pays>/external/watertable.csv (pcode, indicateur=water_table_depth_m, valeur en mètres, date, source)
 Usage : python scripts/connector_watertable.py --country mdg
 """
@@ -28,76 +45,80 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import io
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import requests
 
-from common import country_data_dir, load_config, read_units
+from common import ROOT, country_data_dir, read_units
 
-WCS_URL = "https://ihp-wins.unesco.org/geoserver/wcs"
-SOURCE = ("MacDonald et al. (2012) Environ. Res. Lett. 7:024009 ; profondeur de nappe : Bonsor & MacDonald (2011) BGS OR/11/067 ; "
-          "grille continentale ~5 km, republiée par l'UNESCO-IHP avec l'autorisation du British Geological Survey/NERC (© tous droits "
-          "réservés sur la grille d'origine) — ordre de grandeur régional, pas une mesure locale, voir validation/groundwater_limites.md")
-H = {"User-Agent": "MakyClimat (projet de doctorat climat Madagascar ; contact : voir dépôt GitHub arofarmbio-create/Makyclimat)"}
-
-
-def fetch_geotiff(bbox, timeout: int = 180) -> bytes:
-    lon_min, lat_min, lon_max, lat_max = bbox
-    params = {
-        "service": "WCS", "request": "GetCoverage", "version": "2.0.1",
-        "coverageId": "geonode__depth_to_groundwater_africa1", "format": "image/tiff",
-        "subset": [f"Long({lon_min},{lon_max})", f"Lat({lat_min},{lat_max})"],
-        "outputCrs": "EPSG:4326",
-    }
-    r = requests.get(WCS_URL, params=params, timeout=timeout, headers=H)
-    r.raise_for_status()
-    if not r.content.startswith(b"II") and not r.content.startswith(b"MM"):
-        raise RuntimeError(f"réponse WCS inattendue (pas un GeoTIFF) : {r.content[:200]!r}")
-    return r.content
+MGMERL_CSV = ROOT / "inputs" / "mgmerl" / "mgmerl_niveau_statique.csv"
+MGMERL_EXTRACTION_DATE = "2026-10-27"
+WATERTABLE_MAX_DIST_KM = 15.0
+KM_PER_DEG_LAT = 111.0
+SOURCE = (f"MGMERL (mgmerl.org, plateforme publique de suivi des ressources en eau de Madagascar, mWater) — "
+          f"relevés réels de niveau statique d'eau sur forages/puits, extraits manuellement le {MGMERL_EXTRACTION_DATE} "
+          f"(export programmatique indisponible pour un compte non membre) ; assignés par plus proche voisin, "
+          f"{WATERTABLE_MAX_DIST_KM:.0f} km max — voir validation/groundwater_limites.md")
 
 
-def sample(tiff_bytes: bytes, lons, lats) -> np.ndarray:
-    import rasterio
-    with rasterio.io.MemoryFile(tiff_bytes) as mem, mem.open() as src:
-        band = src.read(1).astype("float64")
-        nodata = src.nodata
-        if nodata is not None:
-            band[band == nodata] = np.nan
-        band[band < 0] = np.nan
-        rows, cols = rasterio.transform.rowcol(src.transform, lons, lats)
-        rows = np.clip(np.asarray(rows), 0, band.shape[0] - 1)
-        cols = np.clip(np.asarray(cols), 0, band.shape[1] - 1)
-        return band[rows, cols]
+def load_mgmerl(path: Path = MGMERL_CSV) -> pd.DataFrame:
+    df = pd.read_csv(path)
+    coords = df["Coordonnées GPS"].str.split(",", expand=True).astype(float)
+    df["lat"], df["lon"] = coords[0], coords[1]
+    df["valeur"] = pd.to_numeric(df["Niveau statique d'eau"], errors="coerce")
+    df["date_releve"] = pd.to_datetime(df["Date du rapport"], errors="coerce")
+    df = df.dropna(subset=["lat", "lon", "valeur"])
+    # un même forage peut être relevé plusieurs fois (même "ID unique") : ne garder que le plus récent
+    df = df.sort_values("date_releve").drop_duplicates("ID unique", keep="last")
+    return df.reset_index(drop=True)
 
 
-def compute(tiff_bytes: bytes, leaves: pd.DataFrame) -> pd.DataFrame:
-    vals = sample(tiff_bytes, leaves.lon.to_numpy(), leaves.lat.to_numpy())
+def assign_nearest(points: pd.DataFrame, leaves: pd.DataFrame, max_dist_km: float = WATERTABLE_MAX_DIST_KM) -> pd.DataFrame:
+    """Assigne à chaque fokontany la valeur du point MGMERL le plus proche, dans la limite de max_dist_km.
+    Distance approximée en degrés->km (correction cos(latitude) pour la longitude) : suffisant à l'échelle
+    du seuil utilisé (quelques dizaines de km), pas une projection géodésique précise."""
+    from scipy.spatial import cKDTree
+    lat0 = np.radians(leaves.lat.to_numpy().mean())
+    lon_scale = np.cos(lat0)  # corrige l'aplatissement des degrés de longitude à cette latitude
+    pts_xy = np.column_stack([points.lon.to_numpy() * lon_scale, points.lat.to_numpy()])
+    leaves_xy = np.column_stack([leaves.lon.to_numpy() * lon_scale, leaves.lat.to_numpy()])
+    tree = cKDTree(pts_xy)
+    dist_deg, idx = tree.query(leaves_xy)
+    dist_km = dist_deg * KM_PER_DEG_LAT
+    within = dist_km <= max_dist_km
     date = dt.date.today().isoformat()
-    out = pd.DataFrame({"pcode": leaves.pcode, "indicateur": "water_table_depth_m", "valeur": np.round(vals, 1), "date": date})
-    out = out.dropna()
+    out = pd.DataFrame({
+        "pcode": leaves.pcode.to_numpy()[within],
+        "indicateur": "water_table_depth_m",
+        "valeur": np.round(points.valeur.to_numpy()[idx[within]], 2),
+        "date": date,
+    })
     out["source"] = SOURCE
     return out
+
+
+def compute(leaves: pd.DataFrame, mgmerl_path: Path = MGMERL_CSV) -> pd.DataFrame:
+    points = load_mgmerl(mgmerl_path)
+    return assign_nearest(points, leaves)
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
     args = ap.parse_args()
-    cfg = load_config(args.country)
-    bbox = cfg["map"]["bbox"]
-    tiff_bytes = fetch_geotiff(bbox)
     units = read_units(args.country)
     leaves = units[units.level == units.level.max()]
-    out = compute(tiff_bytes, leaves)
+    out = compute(leaves)
     ext = country_data_dir(args.country) / "external"
     ext.mkdir(parents=True, exist_ok=True)
     out.to_csv(ext / "watertable.csv", index=False)
     if len(out):
-        print(f"Profondeur de nappe (MacDonald et al. 2012) : {len(out)}/{len(leaves)} fokontany, médiane {out.valeur.median():.1f} m.")
+        print(f"Profondeur de nappe (MGMERL, mesures réelles) : {len(out)}/{len(leaves)} fokontany "
+              f"({100*len(out)/len(leaves):.0f} %), médiane {out.valeur.median():.1f} m, "
+              f"dans un rayon de {WATERTABLE_MAX_DIST_KM:.0f} km d'un forage mesuré.")
     else:
-        print("Profondeur de nappe : aucune valeur exploitable (grille vide ou hors emprise).")
+        print("Profondeur de nappe : aucune valeur exploitable (fichier MGMERL vide ou illisible).")
 
 
 if __name__ == "__main__":

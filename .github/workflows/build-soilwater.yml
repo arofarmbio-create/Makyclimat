@@ -30,7 +30,7 @@ jobs:
       - name: Géologie et type d'aquifère (BGS Africa Groundwater Atlas) — ignorée en cas d'indisponibilité
         run: |
           (python scripts/connector_geology.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Géologie/aquifère indisponible") 2>&1 | tee validation/_journal_geology.txt
-      - name: Profondeur de nappe publiée (MacDonald et al. 2012, via UNESCO-IHP) — ignorée en cas d'indisponibilité
+      - name: Profondeur de nappe (MGMERL, mesures réelles de forages) — ignorée en cas d'indisponibilité
         run: |
           (python scripts/connector_watertable.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Profondeur de nappe indisponible") 2>&1 | tee validation/_journal_watertable.txt
       - name: Enregistrer les journaux de diagnostic temporaires (géologie, profondeur de nappe)
