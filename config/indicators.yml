@@ -897,6 +897,18 @@ indicators:
     source: "© contributeurs OpenStreetMap (ODbL), via Overpass ; à comparer à la liste officielle du Ministère de la Santé"
     frequency: Hebdomadaire
     status: active
+  # ---------------- SERVICES RECENSÉS (mWater Portal) : comptage réel par organisations de terrain, pas un registre officiel ----------------
+  - id: mwater_sante
+    label: "Formations sanitaires recensées sur mWater Portal (CSB/CHRD/CHU et assimilés, avec GPS ; couverture nettement plus complète qu'OSM mais pas un registre officiel du Ministère de la Santé)"
+    unit: "formations sanitaires"
+    format: int
+    aggregate: sum
+    sectors: [health, wash, drr]
+    sdg: ["3.8"]
+    national: [axe1]
+    source: "mWater Portal (portal.mwater.co), entrepôt communautaire alimenté par des ONG/ministères/MGMERL-UNICEF ; export manuel filtré par pays le 27/10/2026 ; assigné par point dans polygone"
+    frequency: Ponctuelle
+    status: active
   - id: osm_hopitaux
     label: "Hôpitaux cartographiés dans OpenStreetMap (nombre minimal)"
     unit: "hôpitaux"

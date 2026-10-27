@@ -162,6 +162,16 @@ par décision éditoriale isolée.
   BNGRC, réponse en attente).
 - **Géologie absente** du module eau souterraine — piste prioritaire identifiée pour passer ce module au
   niveau « Approximation ».
+- **Formations sanitaires (`mwater_sante`, ajouté le 27/10/2026) :** source mWater Portal (entrepôt
+  communautaire alimenté par des ONG/ministères, dont MGMERL/UNICEF), 3 837 établissements avec GPS,
+  assignés par point dans polygone (pas une approximation de distance) — 2 589/17 465 fokontany (15 %)
+  avec au moins une formation sanitaire. Couverture nettement supérieure à `osm_sante` (cartographie
+  bénévole OpenStreetMap), mais **ce n'est toujours pas le registre officiel du Ministère de la Santé
+  Publique** (environ 3 000-3 300 CSB officiels recensés par ailleurs ; les 3 837 ici peuvent inclure des
+  doublons, établissements fermés non retirés, ou catégories plus larges que les seuls CSB publics).
+  Étiqueté « Approximation », pas « Validé ». Extraction manuelle (pas d'API publique identifiée) — à
+  refaire périodiquement. Écoles (EPP/CSB scolaires) : même démarche engagée sur mWater Portal, export
+  interrompu par une déconnexion du navigateur, à reprendre.
 - **Couverture Copernicus EMS limitée** aux zones urbaines/accessibles cartographiées quelques jours après
   l'événement — un biais structurel du jeu de vérité de terrain lui-même, pas seulement du modèle qui s'y
   calibre, à discuter explicitement dans la thèse comme limite de toute validation basée sur l'imagerie de

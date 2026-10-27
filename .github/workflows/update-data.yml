@@ -53,6 +53,9 @@ jobs:
       - name: Écoles et formations sanitaires cartographiées (OpenStreetMap) — ignorées en cas d'indisponibilité
         run: |
           python scripts/connector_osm_services.py --country "$COUNTRY" || echo "OpenStreetMap indisponible, comptes de services non mis à jour"
+      - name: Formations sanitaires recensées sur mWater Portal (comptage réel, fichier source extrait manuellement)
+        run: |
+          python scripts/connector_mwater_services.py --country "$COUNTRY" || echo "mWater indisponible, formations sanitaires non mises à jour"
       - name: Santé, eau et assainissement par région (enquête DHS) — ignorés en cas d'indisponibilité
         run: |
           python scripts/connector_dhs.py --country "$COUNTRY" || echo "DHS indisponible, indicateurs de santé non mis à jour"
