@@ -1,2 +1,2 @@
-[diag] fokontany avec HGComb assigné (non-null) : 17113/17465 ; parmi eux, productivity_code() a échoué pour 17113
+[diag] fokontany avec HGComb assigné (non-null) : 17113/17465 ; parmi eux, productivity_code() a échoué pour 17113 ; exemples de valeurs HGComb brutes rencontrées : ['B-L/LM', 'B-L/LM', 'B-L/LM', 'B-L/LM', 'B-L/LM', 'B-L/LM', 'B-L/LM', 'U-LM/VH', 'B-L/LM', 'B-L/LM', 'B-L/LM', 'B-L/LM', 'B-L/LM', 'B-L/LM', 'B-L/LM']
 Géologie/aquifère (BGS Africa Groundwater Atlas) : 0/17465 fokontany avec une classe de productivité.
