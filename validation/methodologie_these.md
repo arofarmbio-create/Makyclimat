@@ -115,6 +115,16 @@ coefficients appris stockés dans `validation/*.json`, jamais recalculés silenc
   (SPI ≤ -1,91, rangs 1, 3 et 8 sur 24), contre des régions témoins du nord restées normales.
 - **Nature du test, assumée explicitement :** comparaison descriptive à 3 régions citées, pas un test
   statistique au sens strict (`validation/secheresse_spi.md`).
+- **Test POD/FAR du seuil opérationnel (`validation/secheresse_pod_far.md`, audit du 27/10/2026) :**
+  même méthode que pour les cyclones, appliquée aux 6 paires région-saison du seul épisode documenté
+  (Androy/Anosy/Atsimo Andrefana, 2020-21 et 2021-22). Résultat dit franchement : le seuil actuel
+  (pluie < 75 % de la normale) **rate la moitié de l'épisode** (POD 0,50) ; aucun indicateur testé seul
+  (pluie saisonnière, SPI-3/6/12 ponctuel) ne fait mieux que le hasard dans une fenêtre d'un mois ; seul
+  le minimum du SPI-12 sur la saison entière atteint un POD de 1,00, mais avec un FAR de 0,96 (inutilisable
+  comme règle de décision). Hypothèse la plus probable : l'insécurité alimentaire qui en résulte vient de
+  **plusieurs saisons déficitaires cumulées**, pas d'un seul mauvais mois — aucun indicateur instantané ne
+  peut structurellement voir cet effet. **N = 1 événement documenté** : bien trop peu pour calibrer un
+  seuil, seulement assez pour confirmer que la mention « PROVISOIRE » du code reste justifiée.
 
 ### 4.4 Indices composites expérimentaux — étiquetés « non validé » par construction
 
