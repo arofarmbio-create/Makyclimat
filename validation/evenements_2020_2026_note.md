@@ -22,7 +22,18 @@ utilisera automatiquement comme vérité de terrain satellite (bâtiments gradé
    bilan UNICEF plus récent (flash update #2, 14 févr. 2026) cite 41 morts — chiffres cohérents entre
    eux, pas de correction nécessaire.
 
-**Ce que ça change concrètement :** la base passe de 18 à 21 cyclones recensés dans `evenements.csv`,
-et le pipeline de validation fokontany (satellite, le test le plus rigoureux car basé sur des dégâts
-réellement observés et pas seulement une région citée dans un rapport) passe de 7 à 11 activations EMS
-utilisables. À recalculer via le workflow « 10 - Validation au niveau fokontany (Copernicus EMS) ».
+**Ce que ça change concrètement :** la base passe de 18 à 21 cyclones recensés dans `evenements.csv`.
+**Correction après la première exécution réelle (26 oct. 2026) :** sur les 4 codes EMS ajoutés, un seul
+s'est révélé exploitable par le pipeline fokontany — **EMSR424 (Diane)**. Les 3 autres ont échoué à
+l'exécution, honnêtement constaté plutôt que supposé :
+- **EMSR559 (Ana)** : le fichier téléchargé n'est pas une archive zip valide (erreur "File is not a zip
+  file") — probablement un lien de téléchargement différent de celui des autres activations, ou un
+  produit non disponible sous cette forme ; non résolu, à reprendre si le temps le permet.
+- **EMSR863 (Fytia)** et **EMSR867 (Gezani)** : aucune couche reconnue (0 zone cartographiée) — ces
+  activations ne semblent pas encore publier de produit vectoriel exploitable (bâtiments gradés / zones
+  inondées) au moment du test, ou utilisent une nomenclature de fichiers différente.
+
+Le pipeline de validation fokontany (satellite, le test le plus rigoureux car basé sur des dégâts
+réellement observés et pas seulement une région citée dans un rapport) passe donc de **7 à 8**
+activations EMS utilisables, pas 11 comme anticipé avant la première exécution. Résultats détaillés :
+`ems_resultats.json`, `ems_resume.csv` ; synthèse dans `validation/README.md`.
