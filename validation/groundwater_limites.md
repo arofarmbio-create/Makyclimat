@@ -4,7 +4,7 @@
 `susc_inond_pct` (dégâts satellite) : c'est une construction raisonnée, jamais comparée à un résultat
 de forage réel malgache, faute de donnée.
 
-## Mise à jour : géologie réelle ajoutée ; profondeur de nappe en attente d'une source accessible
+## Mise à jour : géologie réelle ajoutée ; Madagascar hors de l'emprise de la carte de profondeur de nappe
 
 Une carte géologique/hydrogéologique de Madagascar existe bel et bien en accès libre : l'**Africa
 Groundwater Atlas** du British Geological Survey (shapefile pays, 1:5 000 000, licence CC BY-SA,
@@ -15,13 +15,16 @@ corrige la lacune géologique signalée dans la version précédente de cette no
 
 Une **profondeur de nappe publiée à l'échelle continentale** existe aussi dans la littérature
 (MacDonald, Bonsor, Ó Dochartaigh & Taylor, 2012, *Environ. Res. Lett.* 7:024009 ; profondeur : Bonsor &
-MacDonald 2011, BGS OR/11/067 ; grille ~5 km), mais **n'est, à ce jour, pas accessible par un lien de
-téléchargement stable** : le service qui la republiait (UNESCO-IHP) a retiré le fichier de sa
-plateforme, et la version hébergée par le BGS lui-même est derrière un bouton de téléchargement
-JavaScript sans URL directe (hors de portée d'un script automatisé sans navigateur). Le connecteur
-(`scripts/connector_watertable.py`) reste en place et prêt à fonctionner le jour où une source stable
-sera identifiée ; en attendant, `water_table_depth_m` n'est pas produit et le score ci-dessous se
-rabat automatiquement sur les 5 critères restants (voir "Pour l'améliorer encore").
+MacDonald 2011, BGS OR/11/067 ; grille ~5 km, fichier XYZ ASCII catégoriel VS/S/SM/M/D/VD). Le fichier
+source a été obtenu directement auprès du BGS et inspecté point par point : **son emprise s'arrête à
+40,8°E en Afrique australe/orientale et ne couvre pas Madagascar** (l'île, à 43°E–51°E, n'a jamais été
+incluse dans cette étude continentale — plusieurs études « Afrique » excluent explicitement les îles).
+Ce n'est donc pas un problème d'accès au fichier mais une absence de couverture géographique : aucun
+retraitement du fichier ne peut produire une valeur pour Madagascar. Le connecteur
+(`scripts/connector_watertable.py`) reste en place, documente cette limite précise, et continue de se
+dégrader proprement ; `water_table_depth_m` n'est pas produit et le score ci-dessous se rabat
+automatiquement sur les 5 critères restants (voir "Pour l'améliorer encore" pour la piste à explorer :
+une étude spécifique à Madagascar plutôt que la carte continentale).
 
 ## Ce qu'il calcule
 
@@ -31,7 +34,7 @@ percentile (0-1) sur l'ensemble du pays avant pondération :
 | Critère | Poids | Source | Sens |
 |---|---|---|---|
 | Productivité d'aquifère (`aquifer_productivity_pct`) | 30 % | BGS Africa Groundwater Atlas (géologie réelle, 1:5 000 000) | Plus haut = mieux |
-| Profondeur de nappe (`water_table_depth_m`) | 20 % | MacDonald et al. (2012), grille ~5 km — **actuellement sans donnée, source pas encore accessible, voir ci-dessus** | Plus bas = mieux (inversé) |
+| Profondeur de nappe (`water_table_depth_m`) | 20 % | MacDonald et al. (2012), grille ~5 km — **actuellement sans donnée, Madagascar hors de l'emprise de cette étude continentale, voir ci-dessus** | Plus bas = mieux (inversé) |
 | Recharge standardisée sur 12 mois (`recharge12_z`) | 25 % | Bilan de Thornthwaite-Mather (CHIRPS + ET0 ERA5-Land) | Plus haut = mieux |
 | Part de la zone à moins de 15 m au-dessus du cours d'eau (`hand_lt15_pct`) | 8 % | HAND, Copernicus GLO-90 | Plus haut = mieux |
 | Pente moyenne (`slope_mean_pct`) | 9 % | Copernicus GLO-90 | Plus bas = mieux (inversé) |
@@ -92,6 +95,10 @@ continentale, peuvent très bien ne pas refléter une structure locale favorable
    croisée et un calibrage statistique des poids.
 3. Une couche de qualité/salinité de l'eau souterraine dans les zones côtières, où l'intrusion saline
    limite l'usage même d'un forage par ailleurs productif.
+4. Une étude de profondeur de nappe **spécifique à Madagascar** (BRGM/PGRM, thèses ou rapports de forage
+   nationaux) : la carte continentale de MacDonald et al. (2012) a été écartée après vérification directe
+   du fichier source — elle ne couvre pas l'île (voir ci-dessus) — donc seule une source propre à
+   Madagascar peut combler ce critère.
 
 Tant que ces données manquent, l'indicateur reste étiqueté « non validé » et n'est jamais présenté comme
 une recommandation de forage.

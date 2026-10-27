@@ -8,13 +8,16 @@ données avec l'autorisation du BGS (permis CP17/019). © British Geological Sur
 grille elle-même ; MakyClimat n'affiche PAS la grille mais uniquement une valeur agrégée par fokontany, avec attribution
 complète et lien vers la source, conformément à l'usage prévu par cette republication.
 
-État constaté (27/10/2026) : ce service WCS répond 404 — la page du jeu de données sur ihp-wins.unesco.org ne liste
-plus que la légende et les métadonnées, le raster semble avoir été retiré de cette plateforme. Le fichier existe
-toujours sur bgs.ac.uk ("Africa depth to groundwater map XYZ ASCII file"), mais derrière un bouton WordPress Download
-Manager qui ne donne pas de lien direct sans navigateur — hors de portée d'un script headless. Ce connecteur reste en
-place (échoue proprement via le `|| echo` du workflow, voir .github/workflows/build-soilwater.yml) pour le jour où la
-donnée redevient accessible par un lien stable ; en attendant, `water_table_depth_m` n'est pas produit et
-build_groundwater.py se rabat automatiquement sur les critères restants (voir validation/groundwater_limites.md).
+État constaté (27/10/2026) : ce service WCS répond 404 (ressource retirée de la plateforme UNESCO-IHP). Le fichier
+source a depuis été obtenu directement auprès du BGS ("Africa depth to groundwater map XYZ ASCII file",
+~1 000 000 points, classes catégorielles VS/S/SM/M/D/VD) et inspecté point par point : **son emprise s'arrête à
+40,8°E en latitudes sud et ne couvre PAS Madagascar** (l'île, à 43°E-51°E, n'a jamais été incluse dans cette étude
+continentale — plusieurs études « Afrique » excluent explicitement les îles). Ce n'est donc pas un problème d'accès
+mais une absence de couverture géographique, qu'aucun retraitement du fichier ne peut combler. Ce connecteur reste en
+place (échoue proprement via le `|| echo` du workflow, voir .github/workflows/build-soilwater.yml) pour le jour où une
+source propre à Madagascar (étude BRGM/PGRM, thèse, rapport de forage national) sera identifiée ; en attendant,
+`water_table_depth_m` n'est pas produit et build_groundwater.py se rabat automatiquement sur les critères restants
+(voir validation/groundwater_limites.md).
 Limite essentielle : résolution ~5 km, modélisée à partir de la géologie et du climat (PAS de mesure de puits malgache) ;
 à lire comme un ORDRE DE GRANDEUR régional de la profondeur de la nappe, jamais une prévision pour un site précis. Voir
 validation/groundwater_limites.md.
