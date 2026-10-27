@@ -1,4 +1,5 @@
   fichier ignoré (colonnes pcode, indicateur, valeur requises) : vuln_cumul.csv
+  indicateurs non déclarés dans config/indicators.yml (ignorés) : ['conductivity_uscm']
   7 lignes ignorées (pcode inconnu), par exemple : ['MG32-XXX', 'MG52-XXX', 'MDG-XXX']
 Prévision saisonnière appliquée (144 zones fournies).
 Indicateurs écrits : données de pluie jusqu'au 2026-04-30 ; exposés au niveau national : 3,325,839 ; cibles : 519,460
