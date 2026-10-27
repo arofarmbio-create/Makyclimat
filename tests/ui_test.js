@@ -23,15 +23,17 @@ let mapCount = 0;
 const markerGroups = [];
 const hydroLayers = {};
 let cycGroup = null;
+let emsLiveLayer = null;
 let layersB = [];
 w.L = {
-  map() { return { id: ++mapCount, setView() { return this; }, fitBounds() {}, removeLayer(l) { if (l && l.kind) delete hydroLayers[l.kind]; if (l === cycGroup) cycGroup = null; }, invalidateSize() {}, on() {}, getCenter() { return [0, 0]; }, getZoom() { return 5; } }; },
+  map() { return { id: ++mapCount, setView() { return this; }, fitBounds() {}, removeLayer(l) { if (l && l.kind) delete hydroLayers[l.kind]; if (l === cycGroup) cycGroup = null; if (l === emsLiveLayer) emsLiveLayer = null; }, invalidateSize() {}, on() {}, getCenter() { return [0, 0]; }, getZoom() { return 5; } }; },
   tileLayer() { return { addTo() {} }; },
   polyline(ll, o) { return { ll, o, bindTooltip() { return this; } }; },
   circleMarker(ll, o) { return { ll, o, bindTooltip() { return this; } }; },
   layerGroup(ms) { markerGroups.push(ms); const g = { ms, addTo() { if (ms.length && ms.every((m) => m.ll && Array.isArray(m.ll[0]))) cycGroup = g; return this; } }; return g; },
   geoJSON(fc, opts) {
     if (opts.hydro) { const o = { fc, kind: opts.hydro, addTo() { hydroLayers[opts.hydro] = o; return o; } }; return o; }
+    if (opts.emsLive) { const o = { fc, addTo() { emsLiveLayer = o; return o; } }; return o; }
     const layers = fc.features.map((f) => {
       const layer = { feature: f, on(ev, fn) { if (ev === "click") handlers[f.properties.c] = fn; },
                       bindTooltip(fn) { this._tip = fn; }, getBounds() { return {}; }, _style: opts.style(f) };
@@ -366,6 +368,18 @@ async function waitFor(fn, ms = 4000) { const t0 = Date.now(); while (Date.now()
     check("cyclones : filtre d'intensité minimale", (cycGroup ? cycGroup.ms.length : 0) === expect(0, 9999, 64, false), cycGroup ? String(cycGroup.ms.length) : "");
     $("cyshow").checked = false; $("cyshow").dispatchEvent(new w.Event("change"));
     check("cyclones : couche retirée à la décoche", cycGroup === null);
+  }
+  const emsMetaFile = path.join(docs, "data", slug, "ems_live_meta.json");
+  if (fs.existsSync(emsMetaFile)) {
+    const EM = JSON.parse(fs.readFileSync(emsMetaFile, "utf8"));
+    check("EMS en direct : carte visible", await waitFor(() => !$("emscard").hidden));
+    if (EM.events && EM.events.length) {
+      check("EMS en direct : note décrit l'activation", /EMSR/.test($("emsnote").innerHTML));
+      $("emsshow").checked = true; $("emsshow").dispatchEvent(new w.Event("change"));
+      check("EMS en direct : couche ajoutée à la carte", await waitFor(() => emsLiveLayer !== null));
+      $("emsshow").checked = false; $("emsshow").dispatchEvent(new w.Event("change"));
+      check("EMS en direct : couche retirée à la décoche", emsLiveLayer === null);
+    }
   }
   console.log(failures ? `\n${failures} ÉCHEC(S)` : "\nTous les tests de l'interface passent.");
   process.exit(failures ? 1 : 0);

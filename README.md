@@ -187,3 +187,11 @@ La carte « Qui fait quoi où » croise, pour les zones prioritaires de la vue, 
 `scripts/connector_osm_services.py` compte, par fokontany, les écoles (`osm_ecoles`), les formations sanitaires (`osm_sante`) et les hôpitaux (`osm_hopitaux`) cartographiés dans OpenStreetMap (API Overpass, licence ODbL). Les communes, districts et régions en font la somme. Fichier rafraîchi au plus une fois par semaine.
 
 **Limite essentielle** : ce sont des comptes minimaux, pas un recensement. En zone rurale, beaucoup d'écoles et de CSB ne sont pas cartographiés : un zéro signifie « rien de cartographié », pas « aucun service ». Pour une analyse de couverture, déposer la liste officielle (Éducation, Santé) dans `inputs/indicateurs/` au format `pcode, indicateur, valeur, date, source`.
+
+## Potentiel pour point d'eau peu profond (forage/puits) — expérimental, non validé
+
+`scripts/build_groundwater.py` classe les fokontany de 0 à 100 selon 4 critères de terrain déjà calculés par MakyClimat (recharge hydrique, proximité du réseau de drainage, pente, rétention du sol), sans aucune géologie ni donnée réelle de forage pour calibrer les poids. Calculé automatiquement après `build_soilwater.py` (workflow « 6 - Eau dans le sol »). Usage prévu : présélection de zones à visiter pour une étude hydrogéologique de terrain, jamais une décision de forage. Détails et limites : `validation/groundwater_limites.md`.
+
+## Cartographie de crise Copernicus EMS en quasi temps réel
+
+`scripts/connector_ems_live.py` interroge l'API publique de Copernicus EMS Rapid Mapping à chaque mise à jour (toutes les 6 h) pour détecter une activation en cours ou récente sur Madagascar, et affiche directement sur la carte les zones déjà cartographiées par satellite (zones inondées), sans attendre un ajout manuel à la base de validation. « Quasi temps réel » signifie vérifié à chaque cycle de mise à jour, pas un flux continu ; l'imagerie elle-même n'est généralement disponible que 1 à 3 jours après l'événement, et ne couvre que les zones cartographiées (souvent les villes et zones accessibles). Réutilise la même extraction de couches vectorielles que `scripts/validate_fokontany.py`. Si aucune activation n'est en cours, la carte l'indique simplement plutôt que de rester silencieuse.

@@ -82,6 +82,8 @@ jobs:
             git add -f validation/wfp_prix_riz_candidat.csv
             git diff --cached --quiet || (git commit -m "Prix du riz WFP (donnée candidate, non affichée sur le site)" && git pull --rebase origin main && git push)
           fi
+      - name: Cartographie de crise Copernicus EMS en quasi temps réel (zones inondées actives) — ignorée en cas d'indisponibilité
+        run: python scripts/connector_ems_live.py --country "$COUNTRY" || echo "Cartographie EMS en direct indisponible"
       - name: Calculer les indicateurs
         run: |
           set -o pipefail

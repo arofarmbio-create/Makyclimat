@@ -1659,6 +1659,45 @@
     $("cycnote").innerHTML = "<b>" + sel.length + "</b> systèmes affichés (saisons " + a + " à " + b + "). Couleur = intensité maximale (échelle du RSMC La Réunion) ; trait épais = cyclone tropical (64 kt ou plus).";
   }
 
+  /* ---------- Cartographie de crise Copernicus EMS en quasi temps réel (zones inondées actives) ---------- */
+  function setupEmsLive() {
+    return getJSON("ems_live_meta.json").then(function (M) {
+      S.emsLive = { meta: M, layer: null };
+      $("emscard").hidden = false;
+      if (!M.events || !M.events.length) {
+        $("emsnote").textContent = "Aucune activation Copernicus EMS en cours ou récente pour Madagascar (vérifié le " + esc((M.checked_at || "").slice(0, 10)) + ").";
+        $("emsshow").disabled = true;
+        return;
+      }
+      var n = M.events.reduce(function (s, e) { return s + (e.n_zones_inondees || 0); }, 0);
+      $("emsnote").innerHTML = M.events.map(function (e) {
+        return "<b>" + esc(e.title || e.code) + "</b> (" + esc(e.code) + (e.closed ? ", clôturée" : ", en cours") + ") : " +
+          (e.n_zones_inondees ? e.n_zones_inondees + " zone(s) inondée(s) cartographiée(s)" : "aucune zone exploitable pour le moment") +
+          ' — <a href="' + esc(e.lien) + '" target="_blank" rel="noopener">fiche EMS</a>';
+      }).join("<br>") + "<br>Vérifié le " + esc((M.checked_at || "").slice(0, 10)) + ".";
+      $("emsshow").disabled = n === 0;
+      $("emsshow").addEventListener("change", toggleEmsLive);
+    }).catch(function () { /* pas de fichier ems_live_meta.json pour ce pays (étape ignorée côté pipeline) */ });
+  }
+  function toggleEmsLive() {
+    var E = S.emsLive;
+    if (!E) return;
+    if (E.layer) { S.map.removeLayer(E.layer); E.layer = null; }
+    if (!$("emsshow").checked) return;
+    getJSON("ems_live.geojson").then(function (fc) {
+      if (!$("emsshow").checked || E.layer) return;
+      E.layer = L.geoJSON(fc, {
+        emsLive: true,
+        style: function () { return { color: "#1f6fb2", weight: 1, fillColor: "#1f6fb2", fillOpacity: 0.35 }; },
+        onEachFeature: function (f, lyr) {
+          var p = f.properties || {};
+          lyr.bindTooltip(esc(p.event_title || p.event_code || "") + " — zone inondée cartographiée (satellite, Copernicus EMS)" +
+            (p.activation_time ? ", activée le " + esc(String(p.activation_time).slice(0, 10)) : ""));
+        },
+      }).addTo(S.map);
+    }).catch(function (e) { console.warn(e); });
+  }
+
   function seasonPhaseOf(date) {
     var sc = S.meta.scenarios;
     if (!sc || !sc.hist_phases) return null;
@@ -2002,6 +2041,7 @@
       setupSeasonal();
       setupCalendar();
       setupCyclones();
+      setupEmsLive();
     }).catch(function (e) { console.error(e); showEmpty("Chargement impossible : " + e.message); });
   }
   init();
