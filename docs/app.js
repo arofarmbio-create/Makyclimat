@@ -1600,6 +1600,8 @@
       Object.keys(defs).forEach(function (id) {
         $(id).addEventListener("change", function () { toggleHydro(defs[id][0], defs[id][1], $(id).checked); });
       });
+      getJSON("hydro/units_sub.json").then(function (U) { S.hydro.usub = U.u; }).catch(function () {});
+      getJSON("hydro/subbasin_balance.json").then(function (B) { S.hydro.subbal = B.u; S.hydro.subbalDate = B.generated; }).catch(function () {});
       return getJSON("hydro/units.json").then(function (U) { S.hydro.units = U.u; }).catch(function () {});
     }).catch(function () { /* pas d'hydrologie calculée pour ce pays */ });
   }
@@ -1615,13 +1617,39 @@
       H.layers[kind] = L.geoJSON(fc, { style: style, hydro: kind, interactive: false }).addTo(S.map);
     }).catch(function (e) { console.warn(e); });
   }
+  var SUBBAL_LABELS = {
+    recharge12_mm: ["Excédent hydrique (12 derniers mois)", " mm"], recharge12_z: ["Indice relatif de nappe", " écart-type"],
+    whc_mm: ["Réserve utile du sol", " mm"], sm_rel_pct: ["Humidité relative du sol", " %"],
+    spi3: ["SPI-3 (sécheresse court terme)", ""], spi6: ["SPI-6", ""], spi12: ["SPI-12 (long terme)", ""],
+    hand_lt15_pct: ["Zone à moins de 15 m du drainage", " %"], slope_mean_pct: ["Pente moyenne", " %"],
+    aquifer_productivity_pct: ["Productivité d'aquifère (classement BGS)", "/100"],
+    aquifer_yield_lsec_mid: ["Débit indicatif de la classe d'aquifère", " L/s"], water_table_depth_m: ["Profondeur de nappe publiée (régionale)", " m"],
+  };
+  function subbasinSection(f) {
+    var H = S.hydro;
+    if (!H || !H.usub || !H.subbal) return "";
+    var sid = H.usub[f.properties.c];
+    var bal = sid && H.subbal[String(sid)];
+    if (!bal) return "";
+    var rows = Object.keys(SUBBAL_LABELS).filter(function (k) { return bal[k] !== undefined; }).map(function (k) {
+      var lab = SUBBAL_LABELS[k];
+      var n = bal[k];
+      var txt = isFinite(n) ? n.toLocaleString("fr-FR", { maximumFractionDigits: Math.abs(n) < 10 ? 2 : 1 }) : "n/d";
+      return "<tr><td>" + esc(lab[0]) + "</td><td>" + txt + esc(lab[1]) + "</td></tr>";
+    }).join("");
+    if (!rows) return "";
+    return '<h4>Bilan hydrique du sous-bassin (expérimental, non validé)</h4><table class="rtab">' + rows + "</table>" +
+      '<p class="note small">Moyenne pondérée par surface des indicateurs des ' + (bal.n_fokontany || "?") + " fokontany du sous-bassin (" + esc(H.subbalDate || "") +
+      "). Géologie et profondeur de nappe viennent de cartes publiées à l'échelle régionale (BGS Africa Groundwater Atlas ; MacDonald et al. 2012), PAS d'un forage malgache réel — " +
+      "présélection pour étude de terrain, jamais une décision de forage. Voir validation/groundwater_limites.md.</p>";
+  }
   function hydroSection(f) {
     var H = S.hydro;
     if (!H || !H.units || !H.units[f.properties.c]) return "";
     var b = H.meta.basins.filter(function (x) { return x.id === H.units[f.properties.c]; })[0];
     if (!b) return "";
     return '<h4>Bassin versant</h4><p class="note">Cette zone se draine vers le bassin <b>' + esc(b.name) + "</b> (" + MC.fmtInt(b.area_km2) + " km², " + MC.fmtInt(b.pop) +
-      " habitants). Un cyclone ou une crue en amont peut toucher les zones en aval ; le nom du bassin est celui de la commune de son embouchure.</p>";
+      " habitants). Un cyclone ou une crue en amont peut toucher les zones en aval ; le nom du bassin est celui de la commune de son embouchure.</p>" + subbasinSection(f);
   }
 
   /* ---------- Cyclones passés (IBTrACS) ---------- */

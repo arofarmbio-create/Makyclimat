@@ -43,6 +43,9 @@ jobs:
           python tests/test_wfp_prices.py
           python tests/test_triggers.py
           python tests/test_connector_hapi.py
+          python tests/test_connector_geology.py
+          python tests/test_connector_watertable.py
+          python tests/test_subbasin_balance.py
           python tests/test_groundwater.py
           python tests/test_ems_live.py
           python scripts/compute_metrics.py --country demo

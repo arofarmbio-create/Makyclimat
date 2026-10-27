@@ -141,6 +141,8 @@ def test_hapi() -> None:
     calls = []
 
     class R:
+        ok = True
+        status_code = 200
         def __init__(self, data): self._d = data
         def raise_for_status(self): pass
         def json(self): return {"data": self._d}

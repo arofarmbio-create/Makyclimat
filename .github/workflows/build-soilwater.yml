@@ -27,12 +27,27 @@ jobs:
         run: pip install -r requirements.txt
       - name: Eau dans le sol
         run: python scripts/build_soilwater.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Géologie et type d'aquifère (BGS Africa Groundwater Atlas) — ignorée en cas d'indisponibilité
+        run: |
+          (python scripts/connector_geology.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Géologie/aquifère indisponible") 2>&1 | tee validation/_journal_geology.txt
+      - name: Profondeur de nappe publiée (MacDonald et al. 2012, via UNESCO-IHP) — ignorée en cas d'indisponibilité
+        run: |
+          (python scripts/connector_watertable.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Profondeur de nappe indisponible") 2>&1 | tee validation/_journal_watertable.txt
+      - name: Enregistrer les journaux de diagnostic temporaires (géologie, profondeur de nappe)
+        if: always()
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add -f validation/_journal_geology.txt validation/_journal_watertable.txt 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Journaux de diagnostic temporaires (géologie, profondeur de nappe)" && git pull --rebase origin main && git push)
       - name: Potentiel pour point d'eau peu profond (expérimental, non validé) — ignoré si hydro.csv absent
         run: python scripts/build_groundwater.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Potentiel eau indisponible"
+      - name: Bilan hydrique par sous-bassin versant (expérimental, non validé) — ignoré si hydro_units.csv absent
+        run: python scripts/build_subbasin_balance.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Bilan par sous-bassin indisponible"
       - name: Enregistrer dans le dépôt (même en cas d'échec partiel, pour garder le cache et l'état)
         if: always()
         run: |
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f docs/data data validation/spi_regions.csv 2>/dev/null || git add docs/data data
-          git diff --cached --quiet || (git commit -m "Eau dans le sol : bilan hydrique mensuel" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Eau dans le sol : bilan hydrique mensuel, géologie, profondeur de nappe, sous-bassins" && git pull --rebase origin main && git push)

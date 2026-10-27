@@ -54,9 +54,23 @@ def test_compute_drops_fokontany_with_too_few_criteria():
     assert len(out) == 0   # aucun critère disponible -> rien publié plutôt qu'une valeur inventée
 
 
+def test_compute_uses_geology_and_watertable_when_present():
+    leaves = pd.DataFrame({"pcode": ["A", "B"]})
+    hydro = pd.DataFrame({"pcode": ["A", "A", "B", "B"], "indicateur": ["hand_lt15_pct", "slope_mean_pct"] * 2, "valeur": [50, 20, 50, 20]})
+    soilwater = pd.DataFrame({"pcode": ["A", "A", "B", "B"], "indicateur": ["recharge12_z", "whc_mm"] * 2, "valeur": [0.0, 100, 0.0, 100]})
+    # A : aquifère très productif, nappe peu profonde (favorable) ; B : l'inverse. Mêmes autres critères -> A doit gagner.
+    geology = pd.DataFrame({"pcode": ["A", "B"], "indicateur": "aquifer_productivity_pct", "valeur": [95, 10]})
+    watertable = pd.DataFrame({"pcode": ["A", "B"], "indicateur": "water_table_depth_m", "valeur": [3.0, 60.0]})
+    out = compute(hydro, soilwater, leaves, geology, watertable)
+    a = out.set_index("pcode").loc["A", "valeur"]
+    b = out.set_index("pcode").loc["B", "valeur"]
+    assert a > b
+
+
 if __name__ == "__main__":
     test_pct_rank_basic()
     test_pct_rank_keeps_nan()
     test_compute_scores_0_100_and_ranks_correctly()
     test_compute_drops_fokontany_with_too_few_criteria()
+    test_compute_uses_geology_and_watertable_when_present()
     print("OK : tests build_groundwater")

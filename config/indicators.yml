@@ -415,6 +415,39 @@ indicators:
     source: "Saxton & Rawls (2006) sur SoilGrids ; profondeurs racinaires FAO-56 par occupation du sol (WorldCover)"
     frequency: Ponctuelle
     status: active
+  - id: aquifer_productivity_pct
+    label: "Productivité d'aquifère (classement 0-100 de la classe BGS : socle, sédimentaire, volcanique, karst)"
+    unit: "indice 0-100"
+    format: float
+    aggregate: none
+    sectors: [wash, drr]
+    sdg: ["6.1"]
+    national: [axe1, eau]
+    source: "British Geological Survey, Africa Groundwater Atlas Country Hydrogeology Maps (1:5 000 000, CC BY-SA) ; échelle continentale, pas un sondage de terrain — voir validation/groundwater_limites.md"
+    frequency: Ponctuelle
+    status: active
+  - id: aquifer_yield_lsec_mid
+    label: "Débit indicatif médian de la classe d'aquifère (ordre de grandeur, PAS une prévision de débit de forage)"
+    unit: L/s
+    format: float
+    aggregate: none
+    sectors: [wash]
+    sdg: ["6.1"]
+    national: [eau]
+    source: "British Geological Survey, Africa Groundwater Atlas (classes de productivité : VL <0,1 ; L 0,1-0,5 ; LM 0,5-2 ; M 2-5 ; H 5-20 ; VH >20 L/s)"
+    frequency: Ponctuelle
+    status: active
+  - id: water_table_depth_m
+    label: Profondeur de nappe publiée à l'échelle régionale (ordre de grandeur, pas une mesure locale)
+    unit: m
+    format: float
+    aggregate: none
+    sectors: [wash, agriculture]
+    sdg: ["6.1"]
+    national: [eau]
+    source: "MacDonald et al. (2012) Environ. Res. Lett. 7:024009 ; Bonsor & MacDonald (2011) BGS OR/11/067 ; grille continentale ~5 km, republiée par l'UNESCO-IHP avec l'autorisation du BGS/NERC — voir validation/groundwater_limites.md"
+    frequency: Ponctuelle
+    status: active
   - id: cn2
     label: Courbe-numéro de ruissellement (CN, condition moyenne ; plus élevé = plus de ruissellement)
     unit: indice
@@ -1151,7 +1184,7 @@ indicators:
     sectors: [wash, drr]
     sdg: ["6.1"]
     national: [axe1, eau]
-    source: "MakyClimat : classement multicritère (recharge 40 %, proximité du réseau de drainage HAND 25 %, pente inversée 20 %, capacité de rétention du sol 15 %) ; construction raisonnée, PAS calibrée sur des données réelles de forage (aucune disponible) ; n'inclut pas la géologie ; présélection pour étude de terrain uniquement — voir validation/groundwater_limites.md"
+    source: "MakyClimat : classement multicritère (productivité d'aquifère réelle BGS 30 %, profondeur de nappe publiée MacDonald et al. 2012 inversée 20 %, recharge CHIRPS/ET0 25 %, HAND 8 %, pente inversée 9 %, réserve utile du sol 8 %) ; construction raisonnée, PAS calibrée sur des données réelles de forage malgaches (aucune disponible) ; présélection pour étude de terrain uniquement — voir validation/groundwater_limites.md"
     frequency: Recalculé à chaque mise à jour
     status: active
   - id: prix_riz_ecart_pct
