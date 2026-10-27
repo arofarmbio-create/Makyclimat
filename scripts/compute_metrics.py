@@ -271,6 +271,20 @@ def main() -> None:
     # IPC phase 3+ fournie directement (jamais agrégée) : sert de part vulnérable là où elle existe
     vs_ipc = {pc: v["ipc_phase3plus_pct"] / 100 for pc, v in ext_direct.items()
               if "ipc_phase3plus_pct" in v and 0 <= v["ipc_phase3plus_pct"] <= 100}
+
+    # Formations sanitaires / écoles mWater situées dans un fokontany actuellement en zone d'alerte (niveau
+    # courant >= seuil d'exposition) : un COMPTAGE de structures, jamais pondéré par la vulnérabilité
+    # économique (une structure n'est pas "plus vulnérable" selon le revenu des ménages autour d'elle -- cette
+    # dimension reste affichée séparément, voir "vs" / "Vulnérabilité économique retenue" sur la fiche de zone).
+    leaf_mask0 = (units.level == 4).values
+    exposed_leaf0 = leaf_mask0 & (units.lvl.values >= min_lvl)
+    for i in np.where(exposed_leaf0)[0]:
+        pc = units.at[i, "pcode"]
+        vals = ext_direct.get(pc, {})
+        for src_id, new_id in (("mwater_sante", "mwater_sante_expose"), ("mwater_ecoles", "mwater_ecoles_expose")):
+            if src_id in vals:
+                ext_direct.setdefault(pc, {})[new_id] = vals[src_id]
+
     ext_all = aggregate_external(units, ext_direct, ext_defs) if ext_direct else {}
 
     # --- Feuilles (fokontany) : exposition, cibles, sensibilité ---

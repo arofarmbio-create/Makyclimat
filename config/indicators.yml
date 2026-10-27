@@ -931,6 +931,28 @@ indicators:
     source: "mWater Portal (portal.mwater.co), entrepôt communautaire alimenté par des ONG/ministères/MGMERL-UNICEF ; export manuel filtré par pays le 27/10/2026 ; assigné par point dans polygone"
     frequency: Ponctuelle
     status: active
+  - id: mwater_sante_expose
+    label: "Formations sanitaires (mWater) en zone d'alerte actuelle (niveau courant >= seuil d'exposition) — comptage de structures, jamais pondéré par la vulnérabilité économique"
+    unit: "formations sanitaires"
+    format: int
+    aggregate: sum
+    sectors: [health, wash, drr]
+    sdg: ["3.8", "13.1"]
+    national: [axe1]
+    source: "mWater Portal, croisé avec le niveau d'alerte pluviométrique courant de MakyClimat (voir compute_metrics.py) ; indique une structure dans une zone touchée, pas un dégât ni un besoin"
+    frequency: "Mise à jour avec les données de pluie (dékadaire)"
+    status: active
+  - id: mwater_ecoles_expose
+    label: "Écoles (mWater) en zone d'alerte actuelle (niveau courant >= seuil d'exposition) — comptage de structures, jamais pondéré par la vulnérabilité économique"
+    unit: "écoles"
+    format: int
+    aggregate: sum
+    sectors: [education, wash, drr]
+    sdg: ["4.1", "13.1"]
+    national: [axe1]
+    source: "mWater Portal, croisé avec le niveau d'alerte pluviométrique courant de MakyClimat (voir compute_metrics.py) ; indique une structure dans une zone touchée, pas un dégât ni un besoin"
+    frequency: "Mise à jour avec les données de pluie (dékadaire)"
+    status: active
   - id: osm_hopitaux
     label: "Hôpitaux cartographiés dans OpenStreetMap (nombre minimal)"
     unit: "hôpitaux"
