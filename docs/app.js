@@ -608,8 +608,8 @@
     h += row("Niveau d'alerte", esc(levelName(m.l)) + (isSim() ? " → <b>" + esc(levelName(val(m, "l"))) + "</b>" : ""));
     h += row("Population exposée", MC.fmtInt(m.e) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "e")) + "</b>" : ""));
     h += row("Cibles potentiels", MC.fmtInt(m.t) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "t")) + "</b>" : ""));
-    if (m.vs !== undefined) h += row("Part vulnérable retenue", Math.round(m.vs * 100) + " % " +
-      (m.vi === 1 ? "(donnée fournie)" : m.vi === 2 ? "(IPC phase 3 ou plus)" : "(valeur par défaut provisoire)"));
+    if (m.vs !== undefined) h += row("Vulnérabilité économique retenue", Math.round(m.vs * 100) + " % " +
+      (m.vi === 1 ? "(donnée fournie)" : m.vi === 2 ? "(IPC phase 3 ou plus — insécurité alimentaire)" : "(taux de pauvreté national, valeur par défaut provisoire)"));
     h += externalIndicatorsByTheme(m);
     h += forecastSection(m) + risksSection(m, false) + alertsSection(m) + shockSection(m) + scenarioTable(m) + seasonSection(f) + calendarSection(f) + hydroSection(f) + soilSection(f) + histSection(f);
     if (S.meta.has_history) h += '<div id="histbox" class="hist"></div>';
@@ -1990,8 +1990,8 @@
       m.sources[0].baseline[0] + "–" + m.sources[0].baseline[1] + " pour la même période. Les niveaux d'alerte actuels sont : " + seuils +
       ". <b>Ces seuils sont provisoires</b> et doivent être calibrés avec la Météo, le BNGRC et le groupe IPC sur des crises passées.</p>" +
       "<h3>2. Population exposée</h3><p>Population des fokontany dont le niveau d'alerte atteint « " + esc(levelName(m.exposure_min_level)) + " » ou plus, puis cumul vers les communes, districts et régions.</p>" +
-      "<h3>3. Cibles potentiels</h3><p>Population exposée × part vulnérable. Par défaut, la part vulnérable est de " + Math.round(m.default_vulnerable_share * 100) +
-      " % (valeur provisoire, approximation fondée sur la pauvreté nationale). Par ordre de priorité, elle est remplacée (1) par les valeurs du fichier <code>inputs/vulnerabilite.csv</code>, puis (2) par la part de population en IPC phase 3 ou plus (OCHA/HAPI) là où une analyse existe, héritée par les sous-zones.</p>" +
+      "<h3>3. Cibles potentiels</h3><p>Population exposée × <b>vulnérabilité économique</b> : la part de la population exposée qui, à ressources égales face au même aléa, est la moins capable d'y faire face (les ménages pauvres plus que les ménages aisés — l'exposition au point 2 est géographique et la même pour tous dans la zone ; ce facteur ajoute la dimension économique, distincte). Par défaut, cette part est de " + Math.round(m.default_vulnerable_share * 100) +
+      " % (valeur provisoire, approximation fondée sur le taux de pauvreté national). Par ordre de priorité, elle est remplacée (1) par les valeurs du fichier <code>inputs/vulnerabilite.csv</code>, puis (2) par la part de population en IPC phase 3 ou plus — insécurité alimentaire, un proxy de vulnérabilité économique (OCHA/HAPI) — là où une analyse existe, héritée par les sous-zones.</p>" +
       (m.has_history ? "<h3>Changement climatique et ENSO</h3><p>Pour chaque saison des pluies depuis 1982, la pluie CHIRPS est comparée à la normale " + m.sources[0].baseline[0] + "–" + m.sources[0].baseline[1] +
         ". La saison est classée <b>El Niño</b> (indice ONI de la NOAA moyen ≥ +0,5), <b>La Niña</b> (≤ −0,5) ou neutre. Pour chaque zone, l'outil calcule : la <b>tendance</b> de la pluie saisonnière (régression linéaire, points de % de la normale par décennie) et sa significativité ; la <b>pluie moyenne lors des El Niño et des La Niña passés</b> ; la <b>corrélation</b> avec l'ONI. " +
         "Limites : 40 à 45 saisons seulement (peu de saisons de chaque phase), classement ENSO simplifié, pluie satellitaire (CHIRPS) et non pluviomètres, et aucune projection climatique future à ce stade (modèles CMIP6 prévus). Ces résultats décrivent le passé : ils ne prédisent pas la prochaine saison.</p>" : "") +

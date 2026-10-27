@@ -158,22 +158,43 @@ def tm_step(w_prev, p, pet, whc):
     return w, aet, surplus
 
 
-def run_balance(precip, pet_clim, whc, month0, spinup_years=3):
+def run_balance(precip, pet_clim, whc, month0, cn2=None, spinup_years=3):
     """Série mensuelle. precip : (T, N) mm ; pet_clim : (12, N) mm/mois ; month0 : mois (1-12) du premier pas ; whc : (N,).
-    Retourne stock (T, N), évapotranspiration réelle (T, N), excédent (T, N). Le stock initial vient d'une mise en route sur les premiers mois."""
+    cn2 : CN (condition II) par cellule (N,), optionnel. S'il est fourni, le ruissellement SCS-CN (Hawkins et al. 1985 ;
+    condition antécédente déduite du stock relatif du pas précédent) est retiré de la pluie AVANT le bilan du sol — X
+    (l'excédent retourné) ne représente alors que l'eau infiltrée au-delà de la réserve utile (la recharge nette de
+    ruissellement), et Q (ruissellement) est retourné séparément. Sans cn2 (par défaut), le comportement est inchangé :
+    toute la pluie entre dans le bilan du sol et Q = 0 partout (X = tout le surplus, ruissellement et recharge confondus,
+    comme avant la séparation du ruissellement).
+    Limite connue : SCS-CN est conçu pour un événement de pluie isolé, pas un cumul mensuel ; appliqué ici au pas mensuel
+    comme approximation documentée (pas de données journalières disponibles à l'échelle du pays).
+    Retourne stock (T, N), évapotranspiration réelle (T, N), excédent/recharge (T, N), ruissellement (T, N). Le stock
+    initial vient d'une mise en route sur les premiers mois."""
     T, N = precip.shape
     w = whc * 0.5
     months = [((month0 - 1 + t) % 12) for t in range(T)]
+
+    def split(w_state, p):
+        if cn2 is None:
+            return p, np.zeros_like(p)
+        rel = np.divide(w_state, whc, out=np.zeros_like(w_state), where=whc > 0)
+        cn = cn_for_moisture(cn2, rel)
+        q = np.minimum(scs_runoff(p, cn), p)
+        return p - q, q
+
     for _ in range(spinup_years):                       # mise en route : on rejoue la 1re année
         for t in range(min(12, T)):
-            w, _, _ = tm_step(w, precip[t], pet_clim[months[t]], whc)
+            p_eff, _ = split(w, precip[t])
+            w, _, _ = tm_step(w, p_eff, pet_clim[months[t]], whc)
     W = np.zeros((T, N))
     A = np.zeros((T, N))
     X = np.zeros((T, N))
+    Q = np.zeros((T, N))
     for t in range(T):
-        w, a, x = tm_step(w, precip[t], pet_clim[months[t]], whc)
-        W[t], A[t], X[t] = w, a, x
-    return W, A, X
+        p_eff, q = split(w, precip[t])
+        w, a, x = tm_step(w, p_eff, pet_clim[months[t]], whc)
+        W[t], A[t], X[t], Q[t] = w, a, x, q
+    return W, A, X, Q
 
 
 # ---------------- Indices standardisés (scores normaux) ----------------

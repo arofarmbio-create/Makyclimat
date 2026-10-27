@@ -48,7 +48,8 @@ def test_balance():
     pet = np.full((12, N), 100.0)
     P = np.zeros((48, N))
     P[:, 0] = np.tile([250, 250, 200, 120, 40, 10, 5, 5, 10, 40, 100, 200], 4)   # saison humide puis saison sèche
-    W, A, X = C.run_balance(P, pet, whc, month0=1)
+    W, A, X, Q = C.run_balance(P, pet, whc, month0=1)
+    assert (Q == 0).all(), "sans cn2, pas de ruissellement séparé (comportement historique conservé)"
     assert (W[:, 0] >= -1e-9).all() and (W[:, 0] <= 100 + 1e-9).all(), "stock hors [0, WHC]"
     assert (A <= pet[0] + 1e-9).all(), "ET réelle > ET potentielle"
     # conservation de l'eau sur la période : somme P = somme AET + somme excédent + variation de stock (stock initial inconnu -> bilan sur les pas, w0 = valeur après mise en route)
@@ -56,6 +57,24 @@ def test_balance():
     assert abs(d - (W[-1, 0] - W[0, 0] + (A[0, 0] - 0))) < 1e3   # ordre de grandeur (le stock initial dépend de la mise en route)
     assert W[:, 1].max() == 0 or W[:, 1].max() < 1e-6, "sans pluie, le stock doit s'épuiser"
     assert X[:, 0].sum() > 0 and X[:, 2].sum() >= 0
+
+
+def test_balance_with_runoff_cn():
+    """Avec cn2 fourni, une partie de la pluie ruisselle (Q > 0) et la recharge (X) baisse d'autant —
+    pas de double comptage : P = AET + Q + X + variation de stock."""
+    N = 2
+    whc = np.array([100.0, 100.0])
+    pet = np.full((12, N), 100.0)
+    P = np.zeros((48, N))
+    P[:, 0] = np.tile([250, 250, 200, 120, 40, 10, 5, 5, 10, 40, 100, 200], 4)
+    cn2 = np.array([95.0, 95.0])    # CN élevé -> ruissellement important (ex. zone bâtie, sol quasi imperméable)
+    W, A, X, Q = C.run_balance(P, pet, whc, month0=1, cn2=cn2)
+    W0, A0, X0, Q0 = C.run_balance(P, pet, whc, month0=1)   # référence sans séparation du ruissellement
+    assert Q[:, 0].sum() > 0, "un CN élevé doit produire du ruissellement"
+    assert X[:, 0].sum() < X0[:, 0].sum(), "la recharge nette de ruissellement doit être inférieure à l'excédent brut"
+    # conservation : P = AET + Q + X + variation de stock (ordre de grandeur, stock initial dépend de la mise en route)
+    d = P[:, 0].sum() - A[:, 0].sum() - Q[:, 0].sum() - X[:, 0].sum()
+    assert abs(d - (W[-1, 0] - W[0, 0])) < 1e3
 
 
 def test_balance_conservation_exact():

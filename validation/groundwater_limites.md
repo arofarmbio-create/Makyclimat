@@ -59,6 +59,28 @@ Méthode : analyse multicritère par somme pondérée (« weighted overlay »), 
 l'absence de données de forage malgaches pour entraîner un modèle statistique. Un fokontany sans au
 moins 70 % des critères disponibles n'est pas noté (pas de valeur inventée).
 
+## Mise à jour du 27/10/2026 : infiltration et ruissellement désormais séparés (SCS-CN)
+
+Jusqu'ici, `recharge12_mm`/`recharge12_z` comptait **tout l'excédent de pluie** au-delà de la réserve
+utile du sol (bilan de Thornthwaite-Mather) comme recharge — sans distinguer ce qui s'infiltre
+réellement vers la nappe de ce qui ruisselle en surface vers les rivières. Le code de la méthode
+SCS-CN (courbe-numéro, USDA-NRCS NEH-4) existait déjà dans `scripts/soilwater_core.py`
+(`scs_runoff`, `cn_for_moisture`), avec CN par cellule déjà calculé à partir de l'occupation du sol
+(WorldCover) et du groupe hydrologique (texture SoilGrids), mais n'était jamais appelé.
+
+Il est maintenant branché (`scripts/build_soilwater.py` → `C.run_balance(..., cn2=...)`) : à chaque pas
+mensuel, le ruissellement est calculé (condition antécédente selon le stock d'eau du sol du mois
+précédent, Hawkins et al. 1985) et retiré de la pluie **avant** qu'elle n'entre dans le bilan du sol.
+`recharge12_mm`/`recharge12_z` ne comptent donc plus que l'eau réellement infiltrée au-delà de la réserve
+utile — le ruissellement est désormais publié séparément (`runoff12_mm`), pour ne pas le perdre.
+
+**Limite documentée de cette amélioration** : SCS-CN est une méthode conçue pour un événement de pluie
+isolé (durée de l'ordre de l'heure/jour), pas pour un cumul mensuel — elle est appliquée ici au pas
+mensuel comme approximation, faute de données de pluie journalière disponibles à l'échelle du pays. Elle
+tend donc à sous-estimer le ruissellement réel (les épisodes intenses à l'intérieur d'un mois pluvieux
+ruissellent davantage qu'une moyenne mensuelle lissée ne le suggère) — donc à légèrement surestimer la
+recharge. C'est un biais conservateur dans le bon sens pour la recharge, mais à garder en tête.
+
 ## Ce qu'il NE calcule PAS, et pourquoi c'est encore « non validé »
 
 1. **Géologie à l'échelle continentale seulement, profondeur de nappe ponctuelle et partielle.** La

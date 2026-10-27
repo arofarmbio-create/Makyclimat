@@ -9,7 +9,9 @@ Méthode (version 1, à calibrer et valider scientifiquement) :
      pondérée par la surface pour les unités qui ont des sous-unités).
   2. niveau d'alerte selon les seuils de la configuration (4 urgence, 3 alerte, 2 veille, 1 normal, 0 sans donnée).
   3. population exposée = population des fokontany dont le niveau >= exposure_min_level, puis cumul vers le haut.
-  4. cibles potentiels = population exposée x part vulnérable (par priorité : fichier fourni, IPC phase 3+, valeur par défaut).
+  4. cibles potentiels = population exposée x vulnérabilité économique (part de la population la moins capable de faire face à l'aléa,
+     p. ex. les ménages pauvres plus que les ménages aisés -- distinct de l'exposition géographique du point 3, qui est la même pour
+     tous dans la zone ; par priorité : fichier fourni, IPC phase 3+, valeur par défaut).
   5. sensibilité : mêmes calculs avec la pluie multipliée par chaque facteur de simulation.
 """
 from __future__ import annotations
@@ -626,7 +628,7 @@ def main() -> None:
             {"id": "cod_ab", "label": "Limites administratives OCHA COD-AB (BNGRC)", "frequency": "ponctuelle"},
             {"id": "cod_ps", "label": "Population OCHA COD-PS", "frequency": "ponctuelle",
              "reference_year": cfg["population"].get("reference_year")},
-            {"id": "vulnerability", "label": "Part vulnérable (fichier inputs/vulnerabilite.csv)",
+            {"id": "vulnerability", "label": "Vulnérabilité économique (fichier inputs/vulnerabilite.csv)",
              "given_for": len(vs_in)},
             {"id": "interventions", "label": "Interventions des partenaires (inputs/interventions.csv)",
              "units_with_beneficiaries": len(ben)},

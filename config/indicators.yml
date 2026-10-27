@@ -382,14 +382,25 @@ indicators:
     frequency: Mensuelle
     status: active
   - id: recharge12_mm
-    label: Excédent hydrique des 12 derniers mois (ruissellement et recharge des nappes)
+    label: Recharge potentielle des 12 derniers mois (eau infiltrée au-delà de la réserve utile du sol, nette du ruissellement SCS-CN)
     unit: mm
     format: int
     aggregate: none
     sectors: [wash, agriculture, drr]
     sdg: ["6.4", "13.1"]
     national: [eau]
-    source: Bilan de Thornthwaite-Mather (excédent au-delà de la réserve utile du sol)
+    source: "Bilan de Thornthwaite-Mather (excédent au-delà de la réserve utile du sol) ; le ruissellement SCS-CN (USDA-NRCS NEH-4) est retiré de la pluie avant le bilan, donc cet excédent ne compte pas l'eau qui a ruisselé (voir runoff12_mm)"
+    frequency: Mensuelle
+    status: active
+  - id: runoff12_mm
+    label: Ruissellement des 12 derniers mois (méthode SCS-CN ; eau qui n'entre pas dans le bilan du sol, à distinguer de la recharge)
+    unit: mm
+    format: int
+    aggregate: none
+    sectors: [wash, drr]
+    sdg: ["6.4", "13.1"]
+    national: [eau]
+    source: "USDA-NRCS NEH-4, courbe-numéro SCS (Q = (P-0,2S)²/(P+0,8S)), condition antécédente selon le stock relatif du sol (Hawkins et al. 1985) ; appliqué au pas mensuel (approximation documentée, pas de pluie journalière disponible à l'échelle du pays)"
     frequency: Mensuelle
     status: active
   - id: recharge12_z

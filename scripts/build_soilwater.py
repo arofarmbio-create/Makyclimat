@@ -337,12 +337,13 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     valid = land & np.isfinite(props["whc"]) & np.isfinite(et0[0]) & (props["whc"] > 0)
     Pc = np.nan_to_num(P[:, valid], nan=0.0).astype("float64")
     pet = np.stack([et0[m][valid] for m in range(12)]).astype("float64")
-    W, A, X = C.run_balance(Pc, pet, props["whc"][valid].astype("float64"), month0=11)
+    W, A, X, Q = C.run_balance(Pc, pet, props["whc"][valid].astype("float64"), month0=11, cn2=props["cn2"][valid].astype("float64"))
     rel = W / props["whc"][valid][None, :]                         # stock relatif (0-1)
     month0 = 11
     sm_z = C.monthly_standardized(rel, month0)
-    rech12 = C.rolling_sum(X, 12)
+    rech12 = C.rolling_sum(X, 12)              # recharge nette de ruissellement (SCS-CN déjà retiré de la pluie dans run_balance)
     rz = C.monthly_standardized(rech12, month0)
+    runoff12 = C.rolling_sum(Q, 12)            # ruissellement SCS-CN cumulé 12 mois, à titre informatif (pas une recharge)
     spi_full = {f"spi{n}": C.spi(Pc, n, month0) for n in (3, 6, 12)}
     spis = {k: v[T - 1] for k, v in spi_full.items()}                       # SPI de l'OMM sur le dernier mois complet
     last = T - 1
@@ -361,7 +362,8 @@ def main(country="mdg", readers=None, max_et0_batches=150):
         return sample_grid(g, grid["lon0"], grid["lat0"], grid["res"], leaves.lon.to_numpy(), leaves.lat.to_numpy())
     lv = {"whc_mm": sample_grid(np.where(valid, props["whc"], np.nan), grid["lon0"], grid["lat0"], grid["res"], leaves.lon.to_numpy(), leaves.lat.to_numpy()),
           "cn2": sample_grid(np.where(valid, props["cn2"], np.nan), grid["lon0"], grid["lat0"], grid["res"], leaves.lon.to_numpy(), leaves.lat.to_numpy()),
-          "sm_rel_pct": leaf_series(100 * rel[last]), "sm_z": leaf_series(sm_z[last]), "recharge12_mm": leaf_series(rech12[last]), "recharge12_z": leaf_series(rz[last])}
+          "sm_rel_pct": leaf_series(100 * rel[last]), "sm_z": leaf_series(sm_z[last]), "recharge12_mm": leaf_series(rech12[last]), "recharge12_z": leaf_series(rz[last]),
+          "runoff12_mm": leaf_series(runoff12[last])}
     for k, v in spis.items():
         lv[k] = leaf_series(v)
     zm = zone_means(units, lv)
