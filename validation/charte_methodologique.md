@@ -99,6 +99,17 @@ systématique entre plusieurs organismes de prévision (un seul modèle saisonni
 - **Approche 3 (ensemble)** : prévision saisonnière ECMWF SEAS5 déjà une moyenne d'ensemble ; pas de
   fusion inter-modèles au-delà (un seul modèle saisonnier, un seul modèle hydrologique).
 
+## 8bis. Détection de changement d'état (demande explicite du porteur du projet)
+
+Fait cette nuit (audit du 27/10/2026, `scripts/state_change.py`) : durée au niveau d'alerte saisonnier
+actuel et tendance récente (s'aggrave/stable/s'améliore), région et district uniquement, à partir de
+l'archive déjà collectée à chaque dékade (`archive_snapshot.py`) — aucune nouvelle source. Nombre
+d'aléas météo simultanés (niveau vigilance ou plus) à tous les niveaux, à partir de l'alerte à 7 jours
+déjà calculée. Limite assumée : l'archive ne couvre pas encore le niveau commune/fokontany, et avec un
+historique encore court, « depuis combien de temps » peut vouloir dire « depuis le début de
+l'archivage », pas un vrai changement — signalé explicitement à l'écran plutôt que présenté comme
+une durée réelle.
+
 ## 9. Horizons de prévision
 
 Trois horizons réels aujourd'hui (corrigé le 27/10/2026 après relecture du code — il y en a plus que le
