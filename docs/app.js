@@ -907,7 +907,8 @@
       var lv = m.ew[i];
       h += '<div class="row ewrow"><span><i class="ewdot" style="background:' + EW_COLORS[lv] + '"></i>' + EW_ICON[hz] + " <b>" + esc(F.hazard_labels[hz]) + "</b>" +
         (lv > 0 ? " : " + esc(ewMessage(hz, m)) : "") + "</span><span>" + esc(lvlNames[lv]) +
-        (S.view.lvl < 4 && m.ewp && m.ewp[i] > 0 ? " · " + MC.fmtInt(m.ewp[i]) + " pers." : "") + "</span></div>";
+        (S.view.lvl < 4 && m.ewp && m.ewp[i] > 0 ? " · " + MC.fmtInt(m.ewp[i]) + " pers. exposées" +
+          (m.ewt && m.ewt[i] > 0 ? " (dont ≈" + MC.fmtInt(m.ewt[i]) + " cible, vulnérabilité économique)" : "") : "") + "</span></div>";
     });
     if (!F.in_rain_season) h += '<div class="note">Hors saison des pluies : l\'alerte « période sèche » est désactivée.</div>';
     if (mx === 0) h += '<div class="note">Aucune alerte prévue pour cette zone dans les 7 prochains jours.</div>';
@@ -1497,9 +1498,12 @@
       if (!ant.length) ah += '<div class="note">Aucune zone de la vue n\'a une alerte de niveau « Alerte » ou plus prévue dans les 7 prochains jours.</div>';
       else ah += "<ul>" + ant.slice(0, 8).map(function (x) {
         var hz = HAZ.filter(function (z, i) { return x.m.ew[i] >= 2; }).map(function (z) { return F.hazard_labels[z].toLowerCase(); });
-        var pop = Math.max.apply(null, (x.m.ewp || []).filter(function (v, i) { return x.m.ew[i] >= 2; }).concat([0]));
+        var popIdx = -1, pop = 0;
+        (x.m.ewp || []).forEach(function (v, i) { if (x.m.ew[i] >= 2 && v > pop) { pop = v; popIdx = i; } });
+        var tgt = popIdx >= 0 && x.m.ewt ? x.m.ewt[popIdx] : 0;
         var share = pop > 0 && x.m.p > 0 ? " (" + (100 * pop / x.m.p < 1 ? "moins de 1" : Math.round(100 * pop / x.m.p)) + " % de la population de la zone)" : "";
-        return "<li><b>" + esc(x.n) + "</b> : " + esc(F.level_names[x.ew]) + " (" + esc(hz.join(", ")) + ")" + (pop > 0 ? " · ≈ " + MC.fmtInt(pop) + " pers." + share : "") + "</li>";
+        var cible = tgt > 0 ? " dont ≈" + MC.fmtInt(tgt) + " cible (vulnérabilité économique)" : "";
+        return "<li><b>" + esc(x.n) + "</b> : " + esc(F.level_names[x.ew]) + " (" + esc(hz.join(", ")) + ")" + (pop > 0 ? " · ≈ " + MC.fmtInt(pop) + " pers." + share + cible : "") + "</li>";
       }).join("") + "</ul>";
     }
     $("rant").innerHTML = ah;

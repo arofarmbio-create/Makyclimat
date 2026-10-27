@@ -551,8 +551,13 @@ def main() -> None:
             a[LI0] = np.nan_to_num(v, nan=fill)
             return a
 
+        vsL0 = units.vs.fillna(default_share).values[LI0]
         lv_u = {h: SC2.rollup_max(units, leafmask, lift2(EWL["lv"][h])).astype(int) for h in EW.HAZARDS}
         ppl_u = {h: SC2.rollup_sum(units, leafmask, lift2(np.where(EWL["lv"][h] >= 2, popL0, 0.0))) for h in EW.HAZARDS}
+        # cible (vulnérabilité économique) des alertes précoces météo à 7 jours -- même principe que "t" pour
+        # l'exposition saisonnière : ne jamais afficher seulement un comptage brut là où un comptage pondéré
+        # par la vulnérabilité économique existe partout ailleurs dans le pipeline (voir audit du 27/10/2026).
+        tgt_u = {h: SC2.rollup_sum(units, leafmask, lift2(np.where(EWL["lv"][h] >= 2, popL0 * vsL0, 0.0))) for h in EW.HAZARDS}
         nums_u = {k: SC2.rollup_max(units, leafmask, lift2(v, fill=0.0)) for k, v in EWL["nums"].items()}
         nd = min(10, fcst["precip"].shape[1] - fcst["t0"])
         denA = SC2.rollup_sum(units, leafmask, lift2(np.ones(len(LI0))) * area2)
@@ -565,7 +570,7 @@ def main() -> None:
                     u = np.where(denA > 0, tot / denA, np.nan)
                 u[LI0] = arr_[:, fcst["t0"] + j]
                 store.append(u)
-        EWU = {"lv": lv_u, "ppl": ppl_u, "nums": nums_u, "p": np.array(daily_p), "t": np.array(daily_t)}
+        EWU = {"lv": lv_u, "ppl": ppl_u, "tgt": tgt_u, "nums": nums_u, "p": np.array(daily_p), "t": np.array(daily_t)}
 
     def pack(i: int) -> dict:
         r = units.iloc[i]
@@ -597,6 +602,7 @@ def main() -> None:
         if EWU is not None:
             d["ew"] = [int(EWU["lv"][h][i]) for h in EW.HAZARDS]
             d["ewp"] = [int(round(EWU["ppl"][h][i])) for h in EW.HAZARDS]
+            d["ewt"] = [int(round(EWU["tgt"][h][i])) for h in EW.HAZARDS]
             nm = EWU["nums"]
             fr = nm["flood_ratio"][i]
             d["ev"] = [round(float(nm["rain_max"][i]), 1), round(float(nm["rain_3d"][i]), 1), round(float(nm["tmax_max"][i]), 1),

@@ -201,6 +201,22 @@ par décision éditoriale isolée.
   `crue_rp100_enfants5`, HeiGIT/HDX, déjà en place mais limité aux crues et au niveau district). Le
   téléchargement (2 fichiers de ~55 Mo) a réussi via le navigateur, mais le rapatriement vers
   l'environnement de calcul a échoué à plusieurs reprises (connexion lente) — reporté, pas abandonné.
+- **Audit du 27/10/2026 : vulnérabilité économique appliquée partout dans les scénarios — une lacune
+  trouvée et corrigée.** Vérification systématique de tous les calculs produisant un nombre de
+  personnes exposées (`e`/`t` principal, simulation de sensibilité `sens_e`/`sens_t`, scénarios de fin
+  de saison `SCN[...]["e"/"t"]`, historique `HYE`/`HYT`) : chacun calcule bien un « exposé » brut (compte
+  de population) ET une « cible » pondérée par la vulnérabilité économique (`vs`), jamais seulement le
+  premier. **Une exception trouvée :** les alertes précoces météo à 7 jours par aléa (`ewp`, pluie/vent/
+  chaleur/sécheresse/crue) ne produisaient qu'un comptage brut de personnes exposées, sans équivalent
+  pondéré — risque réel de confusion (un chiffre affiché seul peut être lu comme si tout le monde dans
+  la zone était également exposé). **Corrigé :** ajout de `ewt` (même principe que `t`, population
+  exposée x `vs`) dans `compute_metrics.py`, affiché à côté de l'exposé brut dans l'interface (fiche de
+  zone "Alerte précoce, 7 prochains jours" et section "Action anticipée"), jamais fondu dans un seul
+  chiffre. Les comptages de structures (`mwater_sante_expose`, `osm_*`, HeiGIT enfants/CSB/écoles par
+  crue) restent volontairement NON pondérés par `vs` (une structure ou un enfant compté n'est pas « plus
+  vulnérable » selon le revenu des ménages autour — voir plus haut) ; ce n'est pas une omission mais une
+  distinction délibérée entre compter des structures/personnes physiques et estimer une capacité à faire
+  face.
 - **Couverture Copernicus EMS limitée** aux zones urbaines/accessibles cartographiées quelques jours après
   l'événement — un biais structurel du jeu de vérité de terrain lui-même, pas seulement du modèle qui s'y
   calibre, à discuter explicitement dans la thèse comme limite de toute validation basée sur l'imagerie de
