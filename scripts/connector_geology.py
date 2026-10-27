@@ -146,8 +146,10 @@ def compute(g, leaves: pd.DataFrame) -> pd.DataFrame:
     out = pd.DataFrame(rows, columns=["pcode", "indicateur", "valeur", "date"])
     out["source"] = SOURCE
     if out.empty:
+        examples = [h for h in hg if isinstance(h, str)][:15]
         print(f"[diag] fokontany avec HGComb assigné (non-null) : {n_hg_notna}/{len(leaves)} ; "
-              f"parmi eux, productivity_code() a échoué pour {n_code_none}")
+              f"parmi eux, productivity_code() a échoué pour {n_code_none} ; "
+              f"exemples de valeurs HGComb brutes rencontrées : {examples}")
     return out
 
 
