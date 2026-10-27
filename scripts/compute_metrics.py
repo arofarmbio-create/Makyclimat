@@ -586,6 +586,12 @@ def main() -> None:
     def pack(i: int) -> dict:
         r = units.iloc[i]
         d = {"p": int(r["pop"]) if pd.notna(r["pop"]) else None}
+        # Enfants -5 ans (estimation, grille WorldPop âge/sexe) : affiché en permanence dans la fiche de zone,
+        # pas seulement nichés dans le détail de l'alerte précoce à 7 jours (ewe5) -- sinon cet indicateur reste
+        # invisible dès qu'aucune alerte météo n'est active, ce qui était le cas pour la quasi-totalité des zones
+        # la plupart du temps. Absent si pop_under5 n'a jamais été calculée pour ce pays (pas d'invention de 0).
+        if "pop_under5" in r.index and pd.notna(r["pop_under5"]):
+            d["p5"] = int(round(float(r["pop_under5"])))
         if pd.notna(r["pct"]):
             d.update({"a": round(float(r["act"]), 1), "n": round(float(r["norm"]), 1),
                       "pc": round(float(r["pct"]), 1), "h": round(float(r["haz"]), 2)})

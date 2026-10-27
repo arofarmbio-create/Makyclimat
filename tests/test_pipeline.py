@@ -289,6 +289,8 @@ def test_forecast_alerts() -> None:
           north and all(d[pc]["ewt"][0] <= d[pc]["ewp"][0] and abs(d[pc]["ewt"][0] - round(d[pc]["ewp"][0] * d[pc]["vs"])) <= 1 for pc in north))
     check("alerte précoce à 7 jours : enfants -5 ans exposés (tous aléas), cohérents avec la part simulée de 15 %",
           north and all(d[pc]["ewe5"][0] <= d[pc]["ewp"][0] and abs(d[pc]["ewe5"][0] - round(d[pc]["ewp"][0] * 0.15)) <= 1 for pc in north))
+    check("enfants -5 ans affichés en permanence (p5), pas seulement nichés dans l'alerte précoce",
+          all("p5" in d[pc] and abs(d[pc]["p5"] - round(d[pc]["p"] * 0.15)) <= 1 for pc in leaves.pcode))
     com = units[units.level == 3].reset_index(drop=True)
     kids0 = leaves[leaves.adm3 == com.pcode[0]].pcode
     kids1 = leaves[leaves.adm3 == com.pcode[1]].pcode

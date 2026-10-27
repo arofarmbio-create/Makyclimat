@@ -601,6 +601,7 @@
     var lvlLabel = S.meta.levels[S.view.lvl].label;
     var h = "<h3>" + esc(lvlLabel) + "</h3><div style='font-size:17px;font-weight:700;margin-bottom:6px'>" + esc(f.properties.n) + "</div>";
     h += row("Population (estimation)", MC.fmtInt(m.p));
+    if (m.p5 !== undefined) h += row("dont enfants de moins de 5 ans (estimation)", MC.fmtInt(m.p5));
     if (m.pc !== undefined) {
       h += row("Pluie de la saison", MC.fmtInt(m.a) + " mm sur " + MC.fmtInt(m.n) + " mm normaux");
       h += row("% de la normale", MC.fmtPct(m.pc) + (isSim() ? " → <b>" + MC.fmtPct(val(m, "pc")) + "</b>" : ""));
