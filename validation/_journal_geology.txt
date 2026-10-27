@@ -1,10 +1,1 @@
-Traceback (most recent call last):
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 148, in <module>
-    main()
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 136, in main
-    g = read_hydrogeology(shp_dir)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 91, in read_hydrogeology
-    raise RuntimeError(f"champ HGComb introuvable (colonnes disponibles : {list(g.columns)})")
-RuntimeError: champ HGComb introuvable (colonnes disponibles : ['MadGLG', 'MadHGComb', 'geometry'])
-Géologie/aquifère indisponible
+Géologie/aquifère (BGS Africa Groundwater Atlas) : 0/17465 fokontany avec une classe de productivité.
