@@ -331,6 +331,15 @@ def test_external() -> None:
     d1 = load("metrics/d/R1D1.json")
     check("sans IPC : valeur par défaut", next(iter(d1["adm4"].values()))["vi"] == 0)
 
+    f1 = next(v for v in d1["adm4"].values() if v["e"] > 0)
+    femmes_1549 = load_config("demo")["femmes_15_49_pct"]   # hérité de mdg.yml par make_synthetic.py
+    attendu = f1["e"] * femmes_1549 * 10 / 100   # femmes_15_49_pct x dhs_femmes_enceintes_pct (R1)
+    check("femmes enceintes estimées pour un fokontany exposé sous R1 (deux hypothèses empilées)",
+          abs(f1["x"].get("femmes_enceintes_estimees", -1) - attendu) < 0.5, f"{f1['x'].get('femmes_enceintes_estimees')} vs {attendu}")
+    d2 = load("metrics/d/R2D1.json")
+    check("pas de femmes enceintes estimées hors R1 (R2 sans dhs_femmes_enceintes_pct)",
+          all("femmes_enceintes_estimees" not in v.get("x", {}) for v in d2["adm4"].values()))
+
     def after():
         g = load("metrics/d/R3D1.json")
         ff = next(v for v in g["adm4"].values())

@@ -14,6 +14,11 @@ Indicateurs (pourcentages, niveau région ; les districts, communes et fokontany
   dhs_accouch_formation  naissances en établissement de santé
   dhs_cpn4               femmes avec 4 consultations prénatales ou plus
   dhs_electricite        ménages avec électricité
+  dhs_femmes_enceintes_pct  % des femmes de 15-49 ans actuellement enceintes (sert aussi, combiné à la part
+                            nationale de femmes de 15-49 ans dans la population -- voir compute_metrics.py et
+                            femmes_15_49_pct dans config/countries/<pays>.yml -- à estimer un nombre de femmes
+                            enceintes dans la population exposée ; approximation à deux hypothèses empilées,
+                            jamais une mesure directe par fokontany)
 Limites : enquête par sondage représentative au niveau région (pas district) ; les valeurs datent de l'année d'enquête (indiquée) ; la région Ambatosoa, créée après
 l'enquête, n'a pas de valeur propre ; les identifiants DHS candidats sont testés dans l'ordre et la première série disponible est utilisée (journal du connecteur).
 Sortie : data/<pays>/external/dhs.csv (pcode, indicateur, valeur, date, source). Usage : python scripts/connector_dhs.py --country mdg
@@ -44,6 +49,7 @@ SPECS = {
     "dhs_accouch_formation": ["RH_DELP_C_DHF"],
     "dhs_cpn4": ["RH_ANCN_W_N4P"],
     "dhs_electricite": ["HC_ELEC_H_ELC"],
+    "dhs_femmes_enceintes_pct": ["FE_FRTY_W_PRG"],
 }
 SOURCE = "DHS Program (ICF), enquête auprès des ménages, représentative au niveau région"
 

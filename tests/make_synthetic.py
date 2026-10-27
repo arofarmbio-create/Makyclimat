@@ -72,7 +72,8 @@ def main() -> None:
         "R1,poverty_headcount,70,2024-01-01,test\nR2,poverty_headcount,80,2024-01-01,test\n"
         "R3D1,ipc_phase3plus_pct,30,2026-01-31,test\nR3D1,ipc_phase3plus_pop,1000,2026-01-31,test\n"
         "R1D2,ipc_phase3plus_pop,500,2026-01-31,test\nR1D2,ipc_phase3plus_pop,700,2026-02-28,test\n"
-        "R1D1,inconnu_xyz,5,2026-01-01,test\n", encoding="utf-8")
+        "R1D1,inconnu_xyz,5,2026-01-01,test\n"
+        "R1,dhs_femmes_enceintes_pct,10,2026-01-01,test\n", encoding="utf-8")
 
     # Grille de pluie simulée (0,05°) alignée sur la bbox de la config
     x0, ymin, x2, y1 = cfg["map"]["bbox"]  # y1 = latitude du haut (nord)

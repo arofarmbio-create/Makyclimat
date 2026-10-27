@@ -278,12 +278,33 @@ def main() -> None:
     # dimension reste affichée séparément, voir "vs" / "Vulnérabilité économique retenue" sur la fiche de zone).
     leaf_mask0 = (units.level == 4).values
     exposed_leaf0 = leaf_mask0 & (units.lvl.values >= min_lvl)
+    pop0 = units["pop"].fillna(0).values
     for i in np.where(exposed_leaf0)[0]:
         pc = units.at[i, "pcode"]
         vals = ext_direct.get(pc, {})
         for src_id, new_id in (("mwater_sante", "mwater_sante_expose"), ("mwater_ecoles", "mwater_ecoles_expose")):
             if src_id in vals:
                 ext_direct.setdefault(pc, {})[new_id] = vals[src_id]
+
+    # Estimation du nombre de femmes enceintes dans la population exposée -- approximation à DEUX hypothèses
+    # empilées, documentées séparément (jamais fondue avec la vulnérabilité économique ni avec l'exposition
+    # brute) : (1) % de femmes de 15-49 ans actuellement enceintes, mesuré par région (EDS/DHS, voir
+    # dhs_femmes_enceintes_pct) ; (2) part nationale de femmes de 15-49 ans dans la population totale
+    # (Nations Unies, World Population Prospects 2024 -- Madagascar : ~24,9 %, non mesurée par fokontany,
+    # voir femmes_15_49_pct dans config/countries/<pays>.yml). Si l'EDS ne couvre pas la région (donnée
+    # manquante), aucune valeur n'est produite pour cette zone -- pas de valeur par défaut inventée.
+    # dhs_femmes_enceintes_pct n'est écrit qu'au niveau région (level 1) par le connecteur DHS -- l'héritage
+    # vers le bas ("inherit: down") ne se produit que plus tard, dans aggregate_external(). On remonte donc
+    # ici explicitement au pcode de la région (colonne adm1) plutôt que de chercher au niveau fokontany.
+    femmes_1549_share = cfg.get("femmes_15_49_pct")
+    if femmes_1549_share:
+        for i in np.where(exposed_leaf0)[0]:
+            pc = units.at[i, "pcode"]
+            reg_pc = units.at[i, "adm1"]
+            pct_enceintes = ext_direct.get(reg_pc, {}).get("dhs_femmes_enceintes_pct")
+            if pct_enceintes is not None and 0 <= pct_enceintes <= 100 and pop0[i] > 0:
+                est = pop0[i] * femmes_1549_share * pct_enceintes / 100
+                ext_direct.setdefault(pc, {})["femmes_enceintes_estimees"] = round(float(est), 1)
 
     ext_all = aggregate_external(units, ext_direct, ext_defs) if ext_direct else {}
 

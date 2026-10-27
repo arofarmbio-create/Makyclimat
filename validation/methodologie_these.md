@@ -181,6 +181,26 @@ par décision éditoriale isolée.
   meilleure que les CSB (proportionnelle au nombre d'écoles réel, bien supérieur à celui des CSB) et bien
   supérieure à `osm_ecoles`. Mêmes réserves que `mwater_sante` : pas le registre officiel du Ministère de
   l'Éducation, peut inclure doublons/établissements fermés. Étiqueté « Approximation ».
+- **Croisement mWater x niveau d'alerte (`mwater_sante_expose`, `mwater_ecoles_expose`, ajouté le
+  27/10/2026) :** comptage des formations sanitaires/écoles mWater situées dans un fokontany actuellement
+  en zone d'alerte. Volontairement un simple comptage de structures, **jamais pondéré par la
+  vulnérabilité économique** — une structure n'est pas « plus vulnérable » selon le revenu des ménages
+  autour d'elle ; cette dimension reste affichée séparément (`vs`, "Vulnérabilité économique retenue").
+- **Femmes enceintes estimées (`femmes_enceintes_estimees`, ajouté le 27/10/2026) :** approximation à
+  **deux hypothèses empilées**, jamais une mesure directe par fokontany : (1) `dhs_femmes_enceintes_pct`
+  — % de femmes de 15-49 ans actuellement enceintes, mesuré par région (EDS/DHS) ; (2) `femmes_15_49_pct`
+  — part nationale de femmes de 15-49 ans dans la population totale (Nations Unies, World Population
+  Prospects 2024, Madagascar : ~24,9 %), appliquée uniformément à tout le pays faute de donnée par
+  fokontany. L'estimation = population exposée x (1) x (2). Étiqueté « Approximation ». Si l'EDS ne
+  couvre pas la région, aucune valeur n'est produite (pas de valeur par défaut inventée). Limite à lever
+  si des données d'âge/sexe par petite zone deviennent disponibles (voir aussi l'enfants-de-moins-de-5-ans
+  ci-dessous, bloqué sur le même type de donnée).
+- **Enfants de moins de 5 ans exposés, tous aléas (WorldPop âge/sexe) : en attente.** Une grille 100 m
+  (WorldPop, Madagascar 2016, bandes d'âge 0 et 1-4 ans) a été identifiée comme source réelle (pas une
+  construction) pour étendre l'indicateur enfants-exposés au-delà des inondations (`crue_rp10_enfants5`/
+  `crue_rp100_enfants5`, HeiGIT/HDX, déjà en place mais limité aux crues et au niveau district). Le
+  téléchargement (2 fichiers de ~55 Mo) a réussi via le navigateur, mais le rapatriement vers
+  l'environnement de calcul a échoué à plusieurs reprises (connexion lente) — reporté, pas abandonné.
 - **Couverture Copernicus EMS limitée** aux zones urbaines/accessibles cartographiées quelques jours après
   l'événement — un biais structurel du jeu de vérité de terrain lui-même, pas seulement du modèle qui s'y
   calibre, à discuter explicitement dans la thèse comme limite de toute validation basée sur l'imagerie de

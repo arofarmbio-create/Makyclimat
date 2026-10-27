@@ -885,6 +885,29 @@ indicators:
     source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
     frequency: Ponctuelle
     status: active
+  - id: dhs_femmes_enceintes_pct
+    label: "Femmes de 15-49 ans actuellement enceintes (valeur de la région, EDS)"
+    unit: "% des femmes de 15-49 ans"
+    format: pct
+    aggregate: none
+    inherit: down
+    sectors: [health, nutrition]
+    sdg: ["3.1"]
+    national: [axe1]
+    source: "DHS Program (ICF), enquête auprès des ménages par sondage, représentative au niveau région ; année d'enquête indiquée dans la date de la source"
+    frequency: Ponctuelle
+    status: active
+  - id: femmes_enceintes_estimees
+    label: "Femmes enceintes estimées dans la population exposée (% régional EDS de femmes enceintes x part nationale de femmes 15-49 ans) — jamais une mesure directe par fokontany"
+    unit: "femmes enceintes (estimation)"
+    format: int
+    aggregate: sum
+    sectors: [health, nutrition, drr]
+    sdg: ["3.1", "13.1"]
+    national: [axe1]
+    source: "Estimation MakyClimat : dhs_femmes_enceintes_pct (EDS, région) x femmes_15_49_pct (ONU, World Population Prospects 2024, national) x population exposée ; deux hypothèses empilées, non calibrée sur une mesure directe"
+    frequency: "Mise à jour avec les données de pluie (dékadaire) et l'EDS (ponctuelle)"
+    status: active
   # ---------------- SERVICES CARTOGRAPHIÉS (OpenStreetMap) : comptes minimaux, pas un recensement ----------------
   - id: osm_ecoles
     label: "Écoles cartographiées dans OpenStreetMap (nombre minimal : zéro = rien de cartographié, pas forcément aucune école)"
