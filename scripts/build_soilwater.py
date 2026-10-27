@@ -367,12 +367,20 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     for k, v in spis.items():
         lv[k] = leaf_series(v)
     zm = zone_means(units, lv)
-    try:                                                                   # historique SPI par région (moyenne des fokontany) pour la validation
+    try:                                                                   # historique SPI + bilan hydrique par région (moyenne des fokontany) pour la validation
         recs = []
         start = max(0, T - 12 * 12)
         for t in range(start, T):
             ym = (labels[t] if isinstance(labels[t], str) else str(labels[t]))
             row = {k: leaf_series(v[t]) for k, v in spi_full.items()}
+            # sm_z (humidité du sol standardisée) et recharge12_z (recharge nette sur 12 mois, standardisée) :
+            # combinent déjà pluie ET évapotranspiration via le bilan de Thornthwaite-Mather (run_balance), donc
+            # plus proches dans l'esprit d'un SPEI que le SPI seul (qui n'utilise que la pluie) -- utile pour
+            # comparer les deux familles d'indices sur le même épisode de référence (audit du 27/10/2026,
+            # voir validation/spei_approche.md). Pas un vrai SPEI : l'évapotranspiration utilisée reste une
+            # climatologie fixe (2016-2020), pas une série qui varie chaque année -- limite documentée à part.
+            row["sm_z"] = leaf_series(sm_z[t])
+            row["recharge12_z"] = leaf_series(rz[t])
             dfm = pd.DataFrame({"adm1": leaves.adm1.values, **row})
             g = dfm.groupby("adm1").mean().reset_index()
             g.insert(0, "mois", ym)
