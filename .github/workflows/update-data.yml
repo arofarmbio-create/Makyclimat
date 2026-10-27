@@ -83,15 +83,7 @@ jobs:
             git diff --cached --quiet || (git commit -m "Prix du riz WFP (donnée candidate, non affichée sur le site)" && git pull --rebase origin main && git push)
           fi
       - name: Cartographie de crise Copernicus EMS en quasi temps réel (zones inondées actives) — ignorée en cas d'indisponibilité
-        run: |
-          (python scripts/connector_ems_live.py --country "$COUNTRY" || echo "Cartographie EMS en direct indisponible") 2>&1 | tee validation/_journal_ems_live.txt
-      - name: Enregistrer le journal EMS en direct (diagnostic temporaire)
-        if: always()
-        run: |
-          git config user.name "makyclimat-bot"
-          git config user.email "makyclimat-bot@users.noreply.github.com"
-          git add -f validation/_journal_ems_live.txt 2>/dev/null || true
-          git diff --cached --quiet || (git commit -m "Journal EMS en direct (diagnostic)" && git pull --rebase origin main && git push)
+        run: python scripts/connector_ems_live.py --country "$COUNTRY" || echo "Cartographie EMS en direct indisponible"
       - name: Calculer les indicateurs
         run: |
           set -o pipefail
