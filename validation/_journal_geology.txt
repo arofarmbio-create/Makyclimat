@@ -1,12 +1,10 @@
 Traceback (most recent call last):
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 125, in <module>
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 148, in <module>
     main()
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 112, in main
-    shp_dir = fetch_shapefile_dir(tmp)
-              ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 53, in fetch_shapefile_dir
-    r.raise_for_status()
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/models.py", line 1167, in raise_for_status
-    raise HTTPError(http_error_msg, response=self)
-requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://africangroundwateratlas.org/downloads/Madagascar.zip
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 136, in main
+    g = read_hydrogeology(shp_dir)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_geology.py", line 91, in read_hydrogeology
+    raise RuntimeError(f"champ HGComb introuvable (colonnes disponibles : {list(g.columns)})")
+RuntimeError: champ HGComb introuvable (colonnes disponibles : ['MadGLG', 'MadHGComb', 'geometry'])
 Géologie/aquifère indisponible

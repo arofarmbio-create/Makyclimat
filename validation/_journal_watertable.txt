@@ -1,10 +1,10 @@
 Traceback (most recent call last):
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_watertable.py", line 93, in <module>
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_watertable.py", line 101, in <module>
     main()
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_watertable.py", line 79, in main
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_watertable.py", line 87, in main
     tiff_bytes = fetch_geotiff(bbox)
                  ^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_watertable.py", line 44, in fetch_geotiff
+  File "/home/runner/work/Makyclimat/Makyclimat/scripts/connector_watertable.py", line 52, in fetch_geotiff
     r.raise_for_status()
   File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/models.py", line 1167, in raise_for_status
     raise HTTPError(http_error_msg, response=self)
