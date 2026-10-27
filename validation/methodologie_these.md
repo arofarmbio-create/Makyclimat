@@ -175,8 +175,12 @@ par décision éditoriale isolée.
   Publique** (environ 3 000-3 300 CSB officiels recensés par ailleurs ; les 3 837 ici peuvent inclure des
   doublons, établissements fermés non retirés, ou catégories plus larges que les seuls CSB publics).
   Étiqueté « Approximation », pas « Validé ». Extraction manuelle (pas d'API publique identifiée) — à
-  refaire périodiquement. Écoles (EPP/CSB scolaires) : même démarche engagée sur mWater Portal, export
-  interrompu par une déconnexion du navigateur, à reprendre.
+  refaire périodiquement.
+- **Écoles (`mwater_ecoles`, ajouté le 27/10/2026) :** même source et même méthode que `mwater_sante` —
+  27 981 écoles avec GPS, 10 260/17 465 fokontany (59 %) avec au moins une école. Couverture nettement
+  meilleure que les CSB (proportionnelle au nombre d'écoles réel, bien supérieur à celui des CSB) et bien
+  supérieure à `osm_ecoles`. Mêmes réserves que `mwater_sante` : pas le registre officiel du Ministère de
+  l'Éducation, peut inclure doublons/établissements fermés. Étiqueté « Approximation ».
 - **Couverture Copernicus EMS limitée** aux zones urbaines/accessibles cartographiées quelques jours après
   l'événement — un biais structurel du jeu de vérité de terrain lui-même, pas seulement du modèle qui s'y
   calibre, à discuter explicitement dans la thèse comme limite de toute validation basée sur l'imagerie de

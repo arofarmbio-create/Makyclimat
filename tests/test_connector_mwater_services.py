@@ -6,7 +6,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from connector_mwater_services import compute, load_sante
+from connector_mwater_services import compute, compute_ecoles, load_sante
 
 
 def make_fake_csv(tmp_path) -> Path:
@@ -43,10 +43,24 @@ def test_compute_uses_point_in_polygon_real_boundaries(tmp_path):
     assert out.iloc[0].pcode.startswith("MG")
 
 
+def test_compute_ecoles_uses_point_in_polygon_real_boundaries(tmp_path):
+    """Même logique que les formations sanitaires, appliquée aux écoles (fichier distinct)."""
+    csv_path = make_fake_csv(tmp_path)
+    from common import read_units
+    units = read_units("mdg")
+    leaves = units[units.level == units.level.max()]
+    out = compute_ecoles(leaves, "mdg", path=csv_path)
+    assert len(out) == 1
+    assert out.iloc[0].indicateur == "mwater_ecoles"
+    assert out.iloc[0].valeur == 1
+    assert out.iloc[0].pcode.startswith("MG")
+
+
 if __name__ == "__main__":
     import tempfile
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
         test_load_sante_drops_rows_without_gps(tmp)
         test_compute_uses_point_in_polygon_real_boundaries(tmp)
+        test_compute_ecoles_uses_point_in_polygon_real_boundaries(tmp)
     print("OK : tests connector_mwater_services")
