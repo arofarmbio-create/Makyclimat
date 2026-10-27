@@ -125,6 +125,14 @@ coefficients appris stockés dans `validation/*.json`, jamais recalculés silenc
   **plusieurs saisons déficitaires cumulées**, pas d'un seul mauvais mois — aucun indicateur instantané ne
   peut structurellement voir cet effet. **N = 1 événement documenté** : bien trop peu pour calibrer un
   seuil, seulement assez pour confirmer que la mention « PROVISOIRE » du code reste justifiée.
+- **SPEI (`validation/spei_approche.md`, audit du 27/10/2026) :** pas de vrai SPEI (demanderait une
+  série d'évapotranspiration qui varie chaque année sur 40 ans, coûteuse à récupérer, et un ajustement
+  log-logistique non encore validé). Les deux proxys déjà calculés par le bilan hydrique (sm_z,
+  recharge12_z, qui combinent pluie et évapotranspiration) font tous les deux **moins bien que le SPI
+  seul** sur le même épisode de référence (sm_z : POD 0,17 ; recharge12_z : POD 0,00, inadapté par
+  conception à une détection saisonnière aiguë). Conclusion honnête : ajouter l'évapotranspiration
+  climatologique n'améliore pas la détection avec les données actuelles — aucun nouvel indicateur
+  « SPEI » n'a donc été ajouté en production sur cette base.
 
 ### 4.4 Indices composites expérimentaux — étiquetés « non validé » par construction
 
