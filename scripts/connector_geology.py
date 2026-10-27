@@ -109,22 +109,45 @@ def sample_points(g, lons, lats) -> list[str | None]:
     pts = gpd.GeoDataFrame(geometry=[Point(lo, la) for lo, la in zip(lons, lats)], crs=4326)
     joined = gpd.sjoin(pts, g, how="left", predicate="within")
     joined = joined.loc[~joined.index.duplicated()]
-    return joined.reindex(range(len(lons))).get("HGComb")
+    result = joined.reindex(range(len(lons))).get("HGComb")
+    n_matched = int(result.notna().sum()) if result is not None else 0
+    if n_matched == 0:
+        # Diagnostic (27/10/2026) : le point-dans-polygone "within" ne trouve aucune correspondance.
+        # On retente avec "intersects" (plus tolérant aux géométries limites/invalides) avant d'abandonner.
+        joined2 = gpd.sjoin(pts, g, how="left", predicate="intersects")
+        joined2 = joined2.loc[~joined2.index.duplicated()]
+        result2 = joined2.reindex(range(len(lons))).get("HGComb")
+        n2 = int(result2.notna().sum()) if result2 is not None else 0
+        print(f"[diag] sjoin within=0 match ; intersects={n2} match sur {len(lons)} points ; "
+              f"g.crs={g.crs} ; g bounds={tuple(round(x, 2) for x in g.total_bounds)} ; "
+              f"exemples HGComb bruts={list(g['HGComb'].dropna().unique()[:10])}")
+        if n2 > 0:
+            return result2
+    return result
 
 
 def compute(g, leaves: pd.DataFrame) -> pd.DataFrame:
     hg = sample_points(g, leaves.lon.to_numpy(), leaves.lat.to_numpy())
     rows = []
     date = dt.date.today().isoformat()
+    n_hg_notna = 0
+    n_code_none = 0
     for pc, h in zip(leaves.pcode, hg):
+        if isinstance(h, str):
+            n_hg_notna += 1
         code = productivity_code(h)
         if code is None:
+            if isinstance(h, str):
+                n_code_none += 1
             continue
         pct, yld = PRODUCTIVITY[code]
         rows.append((pc, "aquifer_productivity_pct", pct, date))
         rows.append((pc, "aquifer_yield_lsec_mid", yld, date))
     out = pd.DataFrame(rows, columns=["pcode", "indicateur", "valeur", "date"])
     out["source"] = SOURCE
+    if out.empty:
+        print(f"[diag] fokontany avec HGComb assigné (non-null) : {n_hg_notna}/{len(leaves)} ; "
+              f"parmi eux, productivity_code() a échoué pour {n_code_none}")
     return out
 
 
