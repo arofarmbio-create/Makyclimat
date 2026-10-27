@@ -85,8 +85,11 @@ def read_hydrogeology(shp_dir: Path):
         raise RuntimeError("aucun fichier .shp trouvé dans l'archive téléchargée")
     g = gpd.read_file(shp)
     g = g.to_crs(4326) if g.crs else g.set_crs(4326)
-    col_glg = next((c for c in g.columns if c.upper() == "GLG"), None)
-    col_hg = next((c for c in g.columns if c.upper() in ("HGCOMB", "HG_COMB")), None)
+    # Les shapefiles pays de l'Atlas préfixent parfois les champs par le nom du pays
+    # (ex. Madagascar -> "MadGLG"/"MadHGComb" au lieu de "GLG"/"HGComb") : on cherche
+    # une correspondance qui se termine par le nom du champ, pas une égalité stricte.
+    col_glg = next((c for c in g.columns if c.upper().endswith("GLG")), None)
+    col_hg = next((c for c in g.columns if c.upper().endswith("HGCOMB") or c.upper().endswith("HG_COMB")), None)
     if col_hg is None:
         raise RuntimeError(f"champ HGComb introuvable (colonnes disponibles : {list(g.columns)})")
     g = g.rename(columns={col_hg: "HGComb", **({col_glg: "GLG"} if col_glg else {})})
