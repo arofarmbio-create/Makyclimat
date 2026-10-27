@@ -96,11 +96,20 @@ def read_hydrogeology(shp_dir: Path):
     return g[["HGComb"] + (["GLG"] if "GLG" in g.columns else []) + ["geometry"]]
 
 
-def productivity_code(hgcomb: str) -> str | None:
+def productivity_value(hgcomb: str) -> tuple[float, float] | None:
+    """Extrait (rang 0-100, débit médian L/s) depuis un champ HGComb du type "B-L/LM" (type
+    d'aquifère "B", productivité "L" à "LM" — le BGS combine parfois deux classes adjacentes pour
+    indiquer une fourchette de productivité plutôt qu'une classe unique "B-L"). On moyenne les
+    classes reconnues de la fourchette ; si aucune n'est reconnue, on ne produit pas de valeur."""
     if not isinstance(hgcomb, str) or "-" not in hgcomb:
         return None
-    tail = hgcomb.split("-")[-1].strip().upper()
-    return tail if tail in PRODUCTIVITY else None
+    tail = hgcomb.split("-", 1)[-1].strip().upper()
+    codes = [c.strip() for c in tail.split("/") if c.strip() in PRODUCTIVITY]
+    if not codes:
+        return None
+    pcts = [PRODUCTIVITY[c][0] for c in codes]
+    ylds = [PRODUCTIVITY[c][1] for c in codes]
+    return sum(pcts) / len(pcts), sum(ylds) / len(ylds)
 
 
 def sample_points(g, lons, lats) -> list[str | None]:
@@ -135,12 +144,12 @@ def compute(g, leaves: pd.DataFrame) -> pd.DataFrame:
     for pc, h in zip(leaves.pcode, hg):
         if isinstance(h, str):
             n_hg_notna += 1
-        code = productivity_code(h)
-        if code is None:
+        val = productivity_value(h)
+        if val is None:
             if isinstance(h, str):
                 n_code_none += 1
             continue
-        pct, yld = PRODUCTIVITY[code]
+        pct, yld = val
         rows.append((pc, "aquifer_productivity_pct", pct, date))
         rows.append((pc, "aquifer_yield_lsec_mid", yld, date))
     out = pd.DataFrame(rows, columns=["pcode", "indicateur", "valeur", "date"])
@@ -148,7 +157,7 @@ def compute(g, leaves: pd.DataFrame) -> pd.DataFrame:
     if out.empty:
         examples = [h for h in hg if isinstance(h, str)][:15]
         print(f"[diag] fokontany avec HGComb assigné (non-null) : {n_hg_notna}/{len(leaves)} ; "
-              f"parmi eux, productivity_code() a échoué pour {n_code_none} ; "
+              f"parmi eux, productivity_value() a échoué pour {n_code_none} ; "
               f"exemples de valeurs HGComb brutes rencontrées : {examples}")
     return out
 
