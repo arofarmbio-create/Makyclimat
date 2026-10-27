@@ -56,7 +56,8 @@
   var S = { meta: null, top: null, index: null, nameOf: {}, path: [], layer: "l", simIdx: null, scn: "",
             view: null, selected: null, geo: null, breaks: [], map: null, cat: null, sector: "all", profile: "ong",
             mode: "single", layerB: "pc", scnB: "", sp: [], br: [], map2: null, geo2: null, hist: null, anc: null, hf: null, hagg: {}, evLayer: null,
-            cx: { items: [{ k: "pc", w: 1, dir: -1 }, { k: "e", w: 1, dir: 1 }, { k: "", w: 1, dir: 1 }], op: "mean" } };
+            cx: { items: [{ k: "pc", w: 1, dir: -1 }, { k: "e", w: 1, dir: 1 }, { k: "", w: 1, dir: 1 }], op: "mean" },
+            accOpen: {} };
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -594,7 +595,11 @@
   function acc(label, body, open) {
     var b = (body || "").trim();
     if (!b) return "";
-    return '<details class="zsec"' + (open ? " open" : "") + '><summary>' + label + "</summary>" + b + "</details>";
+    // L'état ouvert/fermé de chaque section est mémorisé par titre (S.accOpen) plutôt que recalculé à
+    // chaque affichage : on ne force l'état par défaut qu'à la première rencontre de cette section, pour
+    // qu'un repli/dépli manuel survive au changement de zone, de filtre ou de scénario.
+    if (!(label in S.accOpen)) S.accOpen[label] = !!open;
+    return '<details class="zsec" data-acc="' + esc(label) + '"' + (S.accOpen[label] ? " open" : "") + '><summary>' + label + "</summary>" + b + "</details>";
   }
 
   function renderInfo() {
@@ -627,6 +632,9 @@
     if (S.view.lvl === 4) h += '<div class="note warn" style="margin-top:6px">Au niveau fokontany, les limites et la population sont des estimations anciennes : à utiliser comme indication à confirmer sur le terrain.</div>';
     if (S.view.lvl < 4) h += '<div style="margin-top:8px"><button class="btn primary" id="drillbtn">Explorer les sous-zones ▸</button></div>';
     box.innerHTML = h;
+    box.querySelectorAll("details.zsec").forEach(function (d) {
+      d.addEventListener("toggle", function () { S.accOpen[d.dataset.acc] = d.open; });
+    });
     var db = $("drillbtn");
     if (db) db.addEventListener("click", function () { drill(f); });
     if (S.meta.has_history) drawHistory(f);
