@@ -315,6 +315,25 @@ def test_forecast_alerts() -> None:
           all(all(v["ewe5"][k] <= v["ewp"][k] for k in range(5)) for v in r.values()))
     nd = [len(v["fr"]) for v in r.values()]
     check("série quotidienne de 10 jours de pluie et de température", all(n == 10 for n in nd))
+    check("nombre d'aléas simultanés (eh) cohérent avec le niveau de chaque aléa (ew)",
+          all("eh" in v and v["eh"] == sum(1 for x in v["ew"] if x >= 2) for v in r.values()))
+    # Détection de changement d'état (durée au niveau actuel, tendance) : relit l'archive déjà collectée à
+    # chaque dékade (archive/<pays>/*.json), voir scripts/state_change.py. Archive factice créée ici puis
+    # retirée (audit du 27/10/2026).
+    adir = ROOT / "archive" / "demo"
+    adir.mkdir(parents=True, exist_ok=True)
+    fake = {"2026-01-01": 3, "2026-01-11": 3, "2026-01-21": 2, "2026-01-31": 3}
+    try:
+        for date, lvl in fake.items():
+            (adir / f"{date}.json").write_text(json.dumps({"data_through": date, "metrics": {"adm1": {"R1": {"l": lvl}}}}), encoding="utf-8")
+        run_compute()
+        r1 = load("metrics/top.json")["adm1"]
+        check("changement d'état (R1, niveau 3 aujourd'hui, historique 3/3/2/3) : 2 dékades, tendance stable",
+              r1["R1"].get("sx") == {"dekades": 2, "since": "2026-01-31", "trend": 0, "depuis_origine": False}, str(r1["R1"].get("sx")))
+        check("changement d'état : absent pour une région sans aucun historique archivé",
+              "sx" not in r1.get("R3", {}))
+    finally:
+        shutil.rmtree(adir, ignore_errors=True)
     # la prévision change les scénarios (ceinture sèche : zéro pluie pendant 17 jours)
     sc_with = {k: sum(v["sc"][k][2] for v in r.values()) for k in ("sec", "med", "hum")}
     p = grid_dir("demo") / "forecast.npz"

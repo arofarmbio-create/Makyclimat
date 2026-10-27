@@ -592,6 +592,15 @@
 
   function row(a, b) { return '<div class="row"><span>' + a + "</span><span>" + b + "</span></div>"; }
 
+  function stateChangeLabel(sx) {
+    // Durée au niveau d'alerte saisonnier actuel et tendance, à partir de l'archive des instantanés déjà
+    // collectée à chaque dékade (voir scripts/state_change.py) -- pas une nouvelle donnée.
+    var dur = sx.dekades === 1 ? "ce relevé" : sx.dekades + " relevés (dékades) d'affilée";
+    var since = sx.depuis_origine ? " (depuis le début de l'archivage, " + esc(sx.since) + ")" : ", depuis le " + esc(sx.since);
+    var trend = sx.trend > 0 ? " · <b style=\"color:#b33\">s'aggrave</b>" : sx.trend < 0 ? " · <b style=\"color:#2a7\">s'améliore</b>" : " · stable";
+    return dur + since + trend;
+  }
+
   function acc(label, body, open) {
     var b = (body || "").trim();
     if (!b) return "";
@@ -615,6 +624,7 @@
       h += row("% de la normale", MC.fmtPct(m.pc) + (isSim() ? " → <b>" + MC.fmtPct(val(m, "pc")) + "</b>" : ""));
     } else h += row("Pluie de la saison", "pas assez de données (début de saison ou hors couverture)");
     h += row("Niveau d'alerte", esc(levelName(m.l)) + (isSim() ? " → <b>" + esc(levelName(val(m, "l"))) + "</b>" : ""));
+    if (m.sx) h += row("Depuis quand", stateChangeLabel(m.sx));
     h += row("Population exposée", MC.fmtInt(m.e) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "e")) + "</b>" : ""));
     h += row("Cibles potentiels", MC.fmtInt(m.t) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "t")) + "</b>" : ""));
     if (m.vs !== undefined) h += row("Vulnérabilité économique retenue", Math.round(m.vs * 100) + " % " +
@@ -894,6 +904,7 @@
     if (!F || !m.ew) return "";
     var lvlNames = F.level_names, mx = Math.max.apply(null, m.ew);
     var h = '<div class="ew ew7">';
+    if (m.eh >= 2) h += '<div class="note warn">' + m.eh + " aléas actifs en même temps (niveau vigilance ou plus) : la combinaison peut aggraver les conséquences au-delà de ce que chaque aléa indique seul.</div>";
     HAZ.forEach(function (hz, i) {
       var lv = m.ew[i];
       h += '<div class="row ewrow"><span><i class="ewdot" style="background:' + EW_COLORS[lv] + '"></i>' + EW_ICON[hz] + " <b>" + esc(F.hazard_labels[hz]) + "</b>" +

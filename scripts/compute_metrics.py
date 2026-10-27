@@ -23,6 +23,7 @@ import datetime as dt
 import numpy as np
 import pandas as pd
 
+import state_change as SX
 from common import (DATA_DIR, INPUTS_DIR, country_data_dir, country_docs_dir, grid_dir, load_config, load_grid, load_yaml,
                     read_units, sample_grid, write_json)
 
@@ -468,6 +469,7 @@ def main() -> None:
     ms_path, cl_path = grid_dir(args.country) / "monthly_series.npz", grid_dir(args.country) / "clim_monthly.npz"
     season_start = str(season["season_start"])
     through = str(season["data_through"])
+    level_hist = SX.load_level_history(args.country)
     sc_cfg = cfg.get("scenarios", {})
     wet_thr = float(sc_cfg.get("wet_threshold_pct", 130))
     if ms_path.exists() and cl_path.exists():
@@ -655,6 +657,10 @@ def main() -> None:
             d["ex"] = int(round(scn["ex"][i]))
         if EWU is not None:
             d["ew"] = [int(EWU["lv"][h][i]) for h in EW.HAZARDS]
+            # Nombre d'aléas simultanés (niveau >= 2, vigilance ou plus) : simple comptage, aucune nouvelle
+            # donnée -- demande explicite de l'utilisateur ("voir les changements d'état... nombre d'aléas
+            # simultanés", audit du 27/10/2026).
+            d["eh"] = sum(1 for h in EW.HAZARDS if EWU["lv"][h][i] >= 2)
             d["ewp"] = [int(round(EWU["ppl"][h][i])) for h in EW.HAZARDS]
             d["ewt"] = [int(round(EWU["tgt"][h][i])) for h in EW.HAZARDS]
             d["ewe5"] = [int(round(EWU["e5"][h][i])) for h in EW.HAZARDS]
@@ -669,6 +675,16 @@ def main() -> None:
             # Tendance 8-16 jours : niveau par aléa uniquement (pas de population), fiabilité plus faible,
             # jamais mélangée avec "ew" (alerte précoce 0-7 jours).
             d["ew2"] = [int(EWU2["lv"][h][i]) for h in EW.HAZARDS]
+        if r["level"] in (1, 2):
+            # Durée au niveau d'alerte saisonnier actuel et tendance récente, à partir de l'archive déjà
+            # collectée à chaque dékade (archive/<pays>/*.json) -- pas une nouvelle donnée, juste la
+            # relecture de l'historique que le pipeline construit déjà. Demande explicite de l'utilisateur
+            # ("voir les changements d'état de situation basé sur des données réelles... qui se met à jour
+            # systématiquement", audit du 27/10/2026). Seulement région/district : l'archive ne descend pas
+            # au niveau commune/fokontany (fichiers détaillés non versionnés, voir state_change.py).
+            sx = SX.state_for(r["pcode"], through, d["l"], level_hist)
+            if sx:
+                d["sx"] = sx
         al = sector_alerts.get(r["pcode"])
         if al:
             d["al"] = al
