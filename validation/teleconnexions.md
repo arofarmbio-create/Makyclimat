@@ -2,7 +2,7 @@
 
 Généré le 2026-10-28 par `scripts/build_teleconnections.py`. Cahier des charges §5, §8 (approche 1), §9, §13.
 Saisons 1981-1982 à 2025-2026 (45 saisons). Pluie CHIRPS par région.
-Prédicteurs connus avant la saison : ONI de juillet-septembre (NOAA CPC) et DMI de juillet-septembre (NOAA PSL, HadISST).
+Prédicteurs connus avant la saison : ONI de juillet-septembre (NOAA CPC) et DMI de juillet-septembre (ERSST v5, `connector_dmi.py`).
 
 Une région est dite **prévisible** seulement si les trois conditions suivantes sont réunies :
 - score de compétence en validation croisée (MSSS, saison laissée de côté) > 0 ;
@@ -16,72 +16,74 @@ Sinon, la meilleure prévision est la climatologie.
 | Cible | Modèle | Régions prévisibles | MSSS médian (LOO) |
 |---|---|---|---|
 | novembre-janvier | ONI seul | 1 / 24 | -0,00 |
-| novembre-janvier | ONI + DMI | 0 / 24 | -0,04 |
+| novembre-janvier | ONI + DMI | 2 / 24 | -0,02 |
 | janvier-mars | ONI seul | 0 / 24 | -0,01 |
 | janvier-mars | ONI + DMI | 0 / 24 | -0,05 |
 | novembre-avril | ONI seul | 0 / 24 | -0,01 |
-| novembre-avril | ONI + DMI | 0 / 24 | -0,05 |
+| novembre-avril | ONI + DMI | 0 / 24 | -0,04 |
 
 ## Détail par région (novembre-avril)
 
 | Région | Modèle | r (LOO) | MSSS LOO | MSSS chrono | p permutation | Coef. ONI | Coef. DMI | Prévisible |
 |---|---|---|---|---|---|---|---|---|
 | Alaotra Mangoro | ONI | -0,21 | -0,02 | 0,01 | 0,415 | 0,16 | — | non |
-| Alaotra Mangoro | ONI+DMI | -0,36 | -0,07 | 0,01 | 0,743 | 0,18 | -0,09 | non |
+| Alaotra Mangoro | ONI+DMI | -0,25 | -0,06 | 0,01 | 0,577 | 0,07 | 0,23 | non |
 | Ambatosoa | ONI | -0,06 | -0,01 | 0,03 | 0,234 | 0,25 | — | non |
-| Ambatosoa | ONI+DMI | -0,16 | -0,05 | 0,03 | 0,491 | 0,25 | 0,00 | non |
+| Ambatosoa | ONI+DMI | -0,02 | -0,03 | 0,06 | 0,291 | 0,11 | 0,39 | non |
 | Amoron I Mania | ONI | 0,05 | 0,02 | 0,03 | 0,126 | -0,32 | — | non |
-| Amoron I Mania | ONI+DMI | -0,06 | -0,04 | 0,02 | 0,329 | -0,25 | -0,24 | non |
+| Amoron I Mania | ONI+DMI | -0,04 | -0,03 | 0,03 | 0,311 | -0,28 | -0,10 | non |
 | Analamanga | ONI | -0,14 | -0,02 | 0,02 | 0,341 | 0,20 | — | non |
-| Analamanga | ONI+DMI | -0,28 | -0,07 | 0,02 | 0,623 | 0,19 | 0,06 | non |
+| Analamanga | ONI+DMI | -0,19 | -0,07 | -0,02 | 0,521 | 0,11 | 0,25 | non |
 | Analanjirofo | ONI | -0,14 | -0,03 | 0,02 | 0,301 | 0,20 | — | non |
-| Analanjirofo | ONI+DMI | -0,11 | -0,05 | 0,06 | 0,409 | 0,32 | -0,42 | non |
+| Analanjirofo | ONI+DMI | -0,24 | -0,07 | 0,01 | 0,591 | 0,16 | 0,13 | non |
 | Androy | ONI | 0,25 | 0,09 | 0,04 | 0,018 | -0,52 | — | non |
-| Androy | ONI+DMI | 0,24 | 0,07 | 0,02 | 0,034 | -0,39 | -0,49 | non |
+| Androy | ONI+DMI | 0,28 | 0,10 | -0,04 | 0,030 | -0,35 | -0,47 | non |
 | Anosy | ONI | 0,16 | 0,04 | 0,01 | 0,054 | -0,44 | — | non |
-| Anosy | ONI+DMI | 0,11 | 0,01 | -0,21 | 0,136 | -0,36 | -0,32 | non |
+| Anosy | ONI+DMI | 0,13 | 0,02 | -0,18 | 0,114 | -0,35 | -0,27 | non |
 | Atsimo Andrefana | ONI | 0,30 | 0,12 | -0,14 | 0,012 | -0,57 | — | non |
-| Atsimo Andrefana | ONI+DMI | 0,30 | 0,11 | -0,06 | 0,020 | -0,42 | -0,58 | non |
+| Atsimo Andrefana | ONI+DMI | 0,31 | 0,12 | -0,21 | 0,014 | -0,42 | -0,43 | non |
 | Atsimo Atsinanana | ONI | -0,05 | -0,03 | 0,06 | 0,234 | -0,32 | — | non |
-| Atsimo Atsinanana | ONI+DMI | -0,13 | -0,08 | -0,09 | 0,429 | -0,34 | 0,09 | non |
+| Atsimo Atsinanana | ONI+DMI | -0,13 | -0,07 | -0,04 | 0,433 | -0,33 | 0,02 | non |
 | Atsinanana | ONI | -0,84 | -0,03 | -0,04 | 0,980 | -0,00 | — | non |
-| Atsinanana | ONI+DMI | -0,79 | -0,08 | -0,04 | 0,970 | 0,03 | -0,13 | non |
+| Atsinanana | ONI+DMI | -0,37 | -0,06 | -0,02 | 0,725 | -0,09 | 0,24 | non |
 | Betsiboka | ONI | -0,59 | -0,04 | -0,02 | 0,750 | 0,05 | — | non |
-| Betsiboka | ONI+DMI | -0,67 | -0,08 | -0,02 | 0,924 | 0,08 | -0,12 | non |
+| Betsiboka | ONI+DMI | -0,64 | -0,09 | -0,07 | 0,942 | 0,01 | 0,11 | non |
 | Boeny | ONI | -0,11 | -0,02 | 0,00 | 0,313 | -0,23 | — | non |
-| Boeny | ONI+DMI | -0,24 | -0,06 | -0,03 | 0,577 | -0,20 | -0,11 | non |
+| Boeny | ONI+DMI | -0,19 | -0,06 | -0,04 | 0,515 | -0,29 | 0,16 | non |
 | Bongolava | ONI | -0,71 | -0,05 | -0,01 | 0,870 | 0,03 | — | non |
-| Bongolava | ONI+DMI | -0,66 | -0,10 | 0,00 | 0,928 | 0,08 | -0,19 | non |
+| Bongolava | ONI+DMI | -0,79 | -0,11 | -0,07 | 0,986 | 0,05 | -0,05 | non |
 | Diana | ONI | 0,15 | 0,04 | 0,07 | 0,056 | 0,40 | — | non |
-| Diana | ONI+DMI | 0,12 | 0,02 | 0,07 | 0,122 | 0,30 | 0,37 | non |
+| Diana | ONI+DMI | 0,23 | 0,07 | 0,15 | 0,042 | 0,19 | 0,59 | non |
 | Fitovinany | ONI | 0,04 | 0,00 | 0,06 | 0,120 | -0,35 | — | non |
-| Fitovinany | ONI+DMI | -0,00 | -0,03 | 0,06 | 0,240 | -0,45 | 0,34 | non |
+| Fitovinany | ONI+DMI | 0,04 | -0,02 | 0,08 | 0,208 | -0,47 | 0,33 | non |
 | Haute Matsiatra | ONI | 0,13 | 0,04 | 0,02 | 0,048 | -0,41 | — | non |
-| Haute Matsiatra | ONI+DMI | 0,07 | -0,01 | 0,01 | 0,156 | -0,33 | -0,29 | non |
+| Haute Matsiatra | ONI+DMI | 0,06 | -0,01 | 0,01 | 0,176 | -0,38 | -0,09 | non |
 | Ihorombe | ONI | 0,25 | 0,09 | 0,01 | 0,006 | -0,54 | — | non |
-| Ihorombe | ONI+DMI | 0,21 | 0,05 | -0,03 | 0,054 | -0,46 | -0,28 | non |
+| Ihorombe | ONI+DMI | 0,20 | 0,05 | -0,03 | 0,062 | -0,50 | -0,12 | non |
 | Itasy | ONI | -0,41 | -0,03 | -0,03 | 0,613 | 0,10 | — | non |
-| Itasy | ONI+DMI | -0,59 | -0,09 | -0,04 | 0,896 | 0,12 | -0,06 | non |
+| Itasy | ONI+DMI | -0,58 | -0,09 | -0,07 | 0,904 | 0,09 | 0,04 | non |
 | Melaky | ONI | -0,17 | -0,03 | 0,01 | 0,373 | -0,19 | — | non |
-| Melaky | ONI+DMI | -0,14 | -0,06 | 0,01 | 0,441 | -0,06 | -0,45 | non |
+| Melaky | ONI+DMI | -0,29 | -0,07 | -0,04 | 0,653 | -0,17 | -0,06 | non |
 | Menabe | ONI | 0,13 | 0,04 | -0,06 | 0,062 | -0,38 | — | non |
-| Menabe | ONI+DMI | 0,19 | 0,05 | 0,07 | 0,060 | -0,18 | -0,75 | non |
+| Menabe | ONI+DMI | 0,16 | 0,04 | 0,00 | 0,072 | -0,21 | -0,48 | non |
 | Sava | ONI | 0,23 | 0,08 | 0,12 | 0,016 | 0,49 | — | non |
-| Sava | ONI+DMI | 0,21 | 0,06 | 0,12 | 0,066 | 0,40 | 0,35 | non |
+| Sava | ONI+DMI | 0,31 | 0,12 | 0,20 | 0,024 | 0,28 | 0,60 | non |
 | Sofia | ONI | -0,67 | -0,04 | -0,01 | 0,838 | 0,04 | — | non |
-| Sofia | ONI+DMI | -0,80 | -0,08 | -0,02 | 0,976 | 0,05 | -0,03 | non |
+| Sofia | ONI+DMI | -0,52 | -0,08 | 0,00 | 0,834 | -0,03 | 0,19 | non |
 | Vakinankaratra | ONI | -0,43 | -0,03 | 0,00 | 0,611 | -0,09 | — | non |
-| Vakinankaratra | ONI+DMI | -0,56 | -0,08 | -0,00 | 0,872 | -0,05 | -0,16 | non |
+| Vakinankaratra | ONI+DMI | -0,58 | -0,08 | 0,01 | 0,900 | -0,06 | -0,08 | non |
 | Vatovavy | ONI | 0,01 | 0,01 | 0,05 | 0,170 | -0,29 | — | non |
-| Vatovavy | ONI+DMI | -0,08 | -0,04 | 0,04 | 0,337 | -0,37 | 0,28 | non |
+| Vatovavy | ONI+DMI | 0,00 | -0,02 | 0,07 | 0,228 | -0,40 | 0,29 | non |
 
 ## Prévision 2026-2027
 
-ONI de juillet-septembre 2026 : **2,16**. DMI de juillet-septembre 2026 : **indisponible** (la série HadISST de NOAA PSL a plusieurs mois de retard) : seul le modèle ONI est appliqué.
+ONI de juillet-septembre 2026 : **2,16**. DMI de juillet-septembre 2026 : **0,23**.
 
 | Région | Période | Modèle | Anomalie (écart-type) | % de la normale |
 |---|---|---|---|---|
+| Diana | novembre-janvier | ONI+DMI | 0,03 | 101 % |
 | Menabe | novembre-janvier | ONI | -1,02 | 77 % |
+| Sava | novembre-janvier | ONI+DMI | 0,35 | 110 % |
 
 ## Limites
 
