@@ -109,7 +109,8 @@ def main(country="mdg", history=None, today=None, events=None):
     d = pd.to_datetime(dates)
     units = read_units(country)
     names = dict(zip(units.pcode, units.name))
-    regions = sorted({p[:4] for p in th.pcode})
+    adm1 = dict(zip(units.pcode, units.adm1))
+    regions = sorted({adm1[p] for p in th.pcode if adm1.get(p)})
     reg_names = [names.get(r, r) for r in regions] + (["Antananarivo"] if "MG11" in regions else [])
     # 1. détection par événement documenté
     ev = events if events is not None else pd.read_csv(VAL / "evenements.csv", dtype=str)
