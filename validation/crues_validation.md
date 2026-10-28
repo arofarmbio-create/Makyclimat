@@ -2,8 +2,6 @@
 
 Généré le 2026-10-28 par `scripts/validate_floods.py`. Cahier des charges §7 et §13.
 
-> **Résultat incomplet** : le quota gratuit d'Open-Meteo a été atteint. Relancer le workflow « 10 » pour compléter.
-
 **Données**
 - Périmètre : 162 communes (136 mailles GloFAS) avec un seuil de crue (Analamanga, Vakinankaratra, Antananarivo).
 - Débit simulé : GloFAS, réanalyse journalière via Open-Meteo.
@@ -21,22 +19,44 @@ La validation est donc **partielle** (règle §13).
 
 | Événement | Dates | Communes ≥ crue de 2 ans | Communes ≥ crue de 5 ans | Débit max / crue de 2 ans | Détecté (vigilance) | Détecté (alerte) |
 |---|---|---|---|---|---|---|
+| batsirai-2022 | 2022-01-24 → 2022-02-10 | 4 % | 0 % | 1,51 | **non** | non |
+| ana-2022 | 2022-01-21 → 2022-01-25 | 4 % | 0 % | 1,51 | **non** | non |
+| fytia-2026 | 2026-01-29 → 2026-02-03 | 32 % | 5 % | 1,60 | oui | non |
+
+**Taux de détection : 1 / 3 en vigilance, 0 / 3 en alerte.**
 
 ## 2. Épisodes de dépassement sur les cours d'eau principaux (20 mailles de plus fort débit)
 
-Saisons de pluie de novembre 2015 à avril 2015 (0 saisons). Un épisode = au moins 10 % des mailles au-dessus de la crue de 2 ans ; des jours séparés de plus de 5 jours forment des épisodes distincts.
+Saisons de pluie de novembre 2015 à avril 2026 (11 saisons). Un épisode = au moins 10 % des mailles au-dessus de la crue de 2 ans ; des jours séparés de plus de 5 jours forment des épisodes distincts.
 
-- **0 épisodes**, soit environ 0,0 par saison.
-- 0 correspondent à un événement documenté dans le périmètre.
-- 0 correspondent à un événement documenté ailleurs à Madagascar, sans mention du périmètre.
-- **0 sans aucune correspondance.** Ce sont des fausses alertes possibles, à comparer avec la liste BNGRC des inondations non cycloniques.
+- **13 épisodes**, soit environ 1,2 par saison.
+- 1 correspondent à un événement documenté dans le périmètre.
+- 3 correspondent à un événement documenté ailleurs à Madagascar, sans mention du périmètre.
+- **9 sans aucune correspondance.** Ce sont des fausses alertes possibles, à comparer avec la liste BNGRC des inondations non cycloniques.
 
 | Début | Fin | Part max des mailles | Événement (périmètre) | Événement (ailleurs) |
 |---|---|---|---|---|
+| 2017-03-08 | 2017-03-10 | 90 % | — | enawo-2017 |
+| 2018-01-06 | 2018-01-07 | 25 % | — | ava-2018 |
+| 2018-03-17 | 2018-03-19 | 55 % | — | — |
+| 2019-01-27 | 2019-01-27 | 10 % | — | — |
+| 2020-01-03 | 2020-01-03 | 15 % | — | — |
+| 2020-01-21 | 2020-01-24 | 20 % | — | diane-2020 |
+| 2020-02-21 | 2020-02-21 | 65 % | — | — |
+| 2023-01-21 | 2023-01-23 | 95 % | — | — |
+| 2024-01-19 | 2024-01-20 | 30 % | — | — |
+| 2024-02-16 | 2024-02-19 | 75 % | — | — |
+| 2025-02-05 | 2025-02-05 | 15 % | — | — |
+| 2025-02-20 | 2025-02-20 | 20 % | — | — |
+| 2026-02-01 | 2026-02-02 | 55 % | fytia-2026 | gezani-2026 |
 
 ## 3. Communes inondées selon le satellite (Copernicus EMS)
 
-Aucune activation EMS sourcée avec au moins 5 communes du périmètre.
+| Activation | Communes comparées | Inondées | Non inondées | AUC du débit simulé | Inondées en vigilance (≥ crue de 2 ans) | Non inondées en vigilance |
+|---|---|---|---|---|---|---|
+| EMSR264 (Ava) | 58 | 47 | 11 | 0,55 | 26 % | 27 % |
+
+AUC : 0,5 = pas mieux que le hasard, 1 = séparation parfaite. Avec si peu d'activations, le résultat est indicatif.
 
 ## Limites
 
