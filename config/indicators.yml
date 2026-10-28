@@ -345,6 +345,50 @@ indicators:
     source: "Scores normaux sur 1981-aujourd'hui (méthode SPI/SGI : McKee 1993, Bloomfield & Marchant 2013)"
     frequency: Mensuelle
     status: active
+  - id: pluie_recente_mm
+    label: "Pluie récente : cumul depuis le dernier mois CHIRPS définitif (dékades définitives ou provisoires)"
+    unit: "mm"
+    format: float
+    aggregate: none
+    sectors: [agriculture, food_security, wash, drr]
+    sdg: ["13.1"]
+    national: [axe1, eau]
+    source: "CHIRPS v2.0 décadaire (CHC/UCSB) ; dékades provisoires révisables environ 3 semaines plus tard. Estimation satellitaire, pas une observation de station."
+    frequency: "10 jours"
+    status: active
+  - id: pluie_recente_normale_mm
+    label: "Pluie récente : normale 1991-2020 de la même période"
+    unit: "mm"
+    format: float
+    aggregate: none
+    sectors: [agriculture, food_security, wash, drr]
+    sdg: ["13.1"]
+    national: [axe1, eau]
+    source: "CHIRPS v2.0 décadaire définitif, moyenne des mêmes dékades sur 1991-2020."
+    frequency: "10 jours"
+    status: active
+  - id: pluie_recente_pct
+    label: "Pluie récente en % de la normale de la même période"
+    unit: "% de la normale"
+    format: float
+    aggregate: none
+    sectors: [agriculture, food_security, wash, drr]
+    sdg: ["13.1"]
+    national: [axe1, eau]
+    source: "CHIRPS v2.0 décadaire ; vide quand la normale de la période est inférieure à 25 mm par mois (au prorata des dékades) : % instable sur quelques mm."
+    frequency: "10 jours"
+    status: active
+  - id: pluie_recente_rang
+    label: "Pluie récente : rang centile parmi les années 1991-2020 (0 = plus sec que toutes, 100 = plus humide que toutes)"
+    unit: "centile"
+    format: float
+    aggregate: none
+    sectors: [agriculture, food_security, wash, drr]
+    sdg: ["13.1"]
+    national: [axe1, eau]
+    source: "CHIRPS v2.0 décadaire ; rang empirique de la période parmi les mêmes dékades des 30 années de référence."
+    frequency: "10 jours"
+    status: active
   - id: spi1
     label: "Indice de précipitation standardisé SPI-1 mois (sécheresse météorologique)"
     unit: "écart-type"
