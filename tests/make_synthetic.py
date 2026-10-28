@@ -129,9 +129,12 @@ def main() -> None:
     tx[west, 11] = 39.0            # chaleur à l'ouest (alerte)
     south = flats < -24.0
     pr[south, :] = 0.0             # ceinture sèche au sud : plus de 10 jours sans pluie
-    pr[north, 20] = 140.0          # 2 mars (jour 10 de prévision, fenêtre 8-16 jours) : pluie très forte au nord
+    centre_est = (flats > -21.0) & (flats < -18.5) & (flons > 46.5)
+    pr[centre_est, 20] = 140.0     # 2 mars (jour 10 de prévision, fenêtre 8-16 jours) : pluie très forte au centre-est
                                     # -- sert à tester le palier de tendance indicative "ew2" (8-16 jours), distinct
-                                    # de l'alerte à 7 jours "ew" (qui ne doit pas, elle, voir cet événement)
+                                    # de l'alerte à 7 jours "ew" (qui ne doit pas, elle, voir cet événement). Zone
+                                    # séparée du nord, qui est déjà en alerte à 7 jours (23 février) : sinon le test
+                                    # exigerait qu'une même zone soit à la fois en alerte et sans alerte à 0-7 jours.
     save_grid(grid_dir("demo") / "forecast.npz", lon=flons, lat=flats, dates=np.array(days), res=np.array(0.25),
               fetched_at=np.array("2026-02-21T06:00:00+00:00"), today=np.array("2026-02-21"),
               precipitation_sum=pr, temperature_2m_max=tx, temperature_2m_min=tx - 12, wind_gusts_10m_max=gu,

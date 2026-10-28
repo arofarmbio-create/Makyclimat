@@ -16,3 +16,4 @@ node_modules/
 # Prévisions : recalculées toutes les 6 heures, non versionnées
 data/*/grids/forecast.npz
 data/*/grids/flood_forecast.npz
+.venv/

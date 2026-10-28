@@ -287,8 +287,10 @@ def test_forecast_alerts() -> None:
     check("zone calme sans alerte pluie/vent/chaleur", all(sum(d[pc]["ew"][:3]) == 0 for pc in quiet[:50]))
     # Tendance 8-16 jours (ew2) : même méthode que l'alerte à 7 jours (ew), sur la fenêtre suivante déjà
     # présente dans forecast.npz mais jamais lue au-delà du jour 7 jusqu'ici (audit du 27/10/2026).
+    centre_est = [pc for pc, la, lo in zip(leaves.pcode, leaves.lat, leaves.lon)
+                  if -21.0 + 0.13 < la < -18.5 - 0.13 and lo > 46.5 + 0.13]
     check("pluie forte simulée au jour 10 (fenêtre 8-16j) : visible dans ew2 mais pas dans ew (alerte 0-7j)",
-          north and all(d[pc]["ew2"][0] >= 2 and d[pc]["ew"][0] <= 1 for pc in north))
+          centre_est and all(d[pc]["ew2"][0] >= 2 and d[pc]["ew"][0] <= 1 for pc in centre_est), f"{len(centre_est)} fokontany")
     check("tendance 8-16 jours : aucune population/cible calculée dessus (signal de niveau seulement)",
           all(len(d[pc]["ew2"]) == 5 and "ew2p" not in d[pc] and "ew2t" not in d[pc] for pc in north))
     check("tendance 8-16 jours : plage de jours correcte dans meta.json (forecast.trend)",
