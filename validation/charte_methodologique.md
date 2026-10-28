@@ -105,6 +105,21 @@ systématique entre plusieurs organismes de prévision (un seul modèle saisonni
     et pluviale d'Antananarivo (drainage, digues, pompage).
   - **Écart majeur** : il manque un module « inondation pluviale / crue éclair » fondé sur la pluie (§7.A).
     À valider sur les mêmes événements.
+- **Inondation pluviale (28/10/2026, `validation/crues_pluviales_validation.md`)**. Deux indicateurs CHIRPS sur
+  1977 fokontany du périmètre, validés comme le modèle de rivière :
+  - **Pluie sur 3 jours** (seuil local) : 2 événements documentés sur 3. Ana et Batsirai 2022 sont détectés
+    (238 mm en 3 jours) ; Fytia 2026 est manqué. 9 épisodes, dont 4 sans correspondance.
+  - **Ruissellement SCS-CN** (idée du porteur du projet : infiltration urbaine faible mais non nulle ; CN ~92 en
+    ville, humidité antérieure NRCS, seuil commun) : **3 sur 3**, y compris au seuil de 25 % des fokontany.
+    À ce seuil : 9 épisodes, dont 4 sans correspondance. Le modèle de rivière, lui, détecte 1 sur 3 avec
+    12 épisodes dont 3 sans correspondance (seuil 10 %).
+  - **Réserves.** Ana et Batsirai se chevauchent (fin janvier 2022) : il n'y a que **2 événements
+    indépendants**. Les seuils 2006-2020 recouvrent une partie des saisons de test. Copernicus EMS (Ava 2018)
+    ne sépare pas les communes inondées des autres : toutes dépassent le seuil, AUC de 0,36 et 0,17. Les
+    cartes EMS montrent surtout l'eau stagnante des plaines, pas l'inondation urbaine : cette vérité terrain
+    ne convient pas pour juger un indicateur pluvial.
+  - **Conclusion provisoire** : le ruissellement SCS-CN est le meilleur candidat pour l'alerte pluviale à
+    Antananarivo, à confirmer sur plus d'événements (liste BNGRC) et avec la pluie horaire (IMERG).
 - **Modélisation hydraulique (HEC-RAS 2D)** : **non implémentée**. Pas de carte de profondeur/vitesse
   d'inondation — seulement un niveau de crue (0-3) par commune. Écart assumé : construire un modèle
   hydraulique 2D demanderait un MNT fin, un maillage, et un calibrage que le projet n'a pas les moyens
