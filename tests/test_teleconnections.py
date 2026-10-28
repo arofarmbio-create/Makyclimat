@@ -30,12 +30,20 @@ years = np.arange(1982, 2027)
 oni = rng.normal(0, 1, len(years))
 X = oni[:, None]
 y_lien = -0.8 * oni + rng.normal(0, 0.5, len(years))        # lien fort : El Niño -> moins de pluie
-y_bruit = rng.normal(0, 1, len(years))                      # aucun lien
-e1, e2 = T.evaluate(X, y_lien, years), T.evaluate(X, y_bruit, years)
+e1 = T.evaluate(X, y_lien, years)
 check("lien réel : MSSS en validation croisée > 0,3", e1["msss_loo"] > 0.3, f"{e1['msss_loo']:.2f}")
 check("lien réel : MSSS chronologique > 0", e1["msss_chrono"] > 0, f"{e1['msss_chrono']:.2f}")
 check("lien réel : permutation significative", T.perm_pvalue(oni, y_lien) < 0.01)
-check("bruit : MSSS en validation croisée <= 0 (pas mieux que la climatologie)", e2["msss_loo"] <= 0.05, f"{e2['msss_loo']:.2f}")
+# bruit pur : un tirage isolé peut dépasser 0 par hasard ; en moyenne sur 200 tirages, pas mieux que la climatologie,
+# et les trois critères réunis (MSSS LOO > 0, chrono > 0, p < 0,05) ne passent que rarement
+ms_b, faux = [], 0
+for _ in range(200):
+    yb = rng.normal(0, 1, len(years))
+    eb = T.evaluate(X, yb, years)
+    ms_b.append(eb["msss_loo"])
+    faux += eb["msss_loo"] > 0 and eb["msss_chrono"] > 0 and T.perm_pvalue(oni, yb, n=200) < 0.05
+check("bruit : MSSS moyen en validation croisée <= 0", np.mean(ms_b) <= 0, f"{np.mean(ms_b):.3f}")
+check("bruit : faux « prévisible » dans moins de 10 % des tirages", faux / 200 < 0.10, f"{faux}/200")
 check("Benjamini-Hochberg : garde la petite p-valeur, rejette les autres", list(T.bh([0.001, 0.4, 0.8, 0.5])) == [True, False, False, False])
 txt = "1870 2026\n2025 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2\n2026 0.1 0.2 0.3 0.4 0.5 -9999.000 -9999.000 -9999.000 -9999.000 -9999.000 -9999.000 -9999.000\n  -9999\n"
 d = T.parse_psl(txt)
