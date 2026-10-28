@@ -101,11 +101,13 @@ systématique entre plusieurs organismes de prévision (un seul modèle saisonni
   pour les cyclones (`declencheurs_anticipation.md`, AUC 0,83). **Ajouté le 28/10/2026** : modèle saisonnier
   par région ONI/DMI de juillet-septembre → pluie novembre-janvier, janvier-mars, novembre-avril
   (`scripts/build_teleconnections.py`, `validation/teleconnexions.md`). Validation croisée + test
-  chronologique + permutation unilatérale avec réajustement + Benjamini-Hochberg. **Résultat : 1 région
-  sur 24 seulement passe (Menabe, novembre-janvier)**. Signal faible et cohérent (El Niño → plus sec) dans le
-  Sud et le Sud-Ouest (Ihorombe, Androy, Anosy), non retenu après contrôle des tests multiples. Le DMI
-  n'améliore rien. Écart : DMI de l'année en cours indisponible (HadISST en retard) ; source alternative
-  à brancher (BoM, ou DMI calculé depuis OISST).
+  chronologique + permutation unilatérale avec réajustement + Benjamini-Hochberg. DMI calculé depuis
+  ERSST v5 (`connector_dmi.py`, à jour au mois précédent, sans compte). **Résultat : 3 régions sur 24, toutes
+  pour novembre-janvier seulement** : Menabe (ONI, ~77 % de la normale prévu en 2026-2027), Sava et Diana
+  (ONI+DMI, ~110 % et ~101 %). Rien n'est prévisible pour janvier-mars ni pour la saison entière. Signal faible
+  (El Niño → plus sec) dans le Sud et le Sud-Ouest, non retenu après contrôle des tests multiples.
+  **Écart** : le contrôle multiple porte sur chaque combinaison période × modèle séparément, pas sur les 6 à la fois ;
+  ces 3 régions sont à confirmer.
 - **Approche 2 (apprentissage automatique)** : **pas de Random Forest/XGBoost évalué**. Choix assumé :
   les jeux de vérité terrain disponibles (13 cyclones, 1 épisode de sécheresse documenté) sont bien trop
   petits pour entraîner et valider un modèle ML sans surapprentissage — un modèle plus complexe sur un
