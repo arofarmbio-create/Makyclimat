@@ -116,7 +116,7 @@ Le Nord et l'Est restent en **surveillance**, sans pilote, tant que la divergenc
 | 3 | ~~Lien ONI / DMI ↔ pluie par région~~ **fait le 28/10** sous forme de modèle prédictif validé (`teleconnexions.md`) : prévisible dans 1 région sur 24 seulement. Reste : DMI de l'année en cours | `build_teleconnections.py` | DMI récent (BoM ou OISST) |
 | 4 | Compétence de SEAS5 par région (hindcasts) | Script C3S | **Compte CDS gratuit, à créer par toi** |
 | 5 | Calibrer les probabilités saisonnières sur les prévisions passées (le plafond de 50 % reste en place d'ici là, à juste titre) | `connector_seasonal.py` | Compte CDS ou IRI (vérifié le 28/10) |
-| 6 | Seuils GloFAS confrontés aux inondations historiques sur l'Ikopa | Script de validation | Liste d'événements (déjà partiellement dans `validation/evenements.csv`) |
+| 6 | ~~Seuils GloFAS confrontés aux inondations historiques sur l'Ikopa~~ **fait le 28/10** (`crues_validation.md`) : 1 inondation documentée détectée sur 3 (Ana 2022 manquée), AUC de 0,55 sur les communes inondées selon le satellite. Il manque un module « inondation pluviale » fondé sur la pluie, et la liste d'événements doit être complétée (Cheneso, Eliakim, inondations non cycloniques du BNGRC) | `validate_floods.py` | — |
 | 7 | Connexion du NDVI | Nouveau connecteur | Compte Earthdata ou Copernicus Land |
 
 ## 7. Obstacles et incertitudes qui peuvent empêcher une prévision fiable

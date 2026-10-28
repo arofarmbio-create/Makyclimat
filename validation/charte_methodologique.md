@@ -87,6 +87,19 @@ systématique entre plusieurs organismes de prévision (un seul modèle saisonni
   Open-Meteo) comparé aux seuils de retour 2/5/10/20 ans ajustés par la loi de Gumbel sur les débits
   annuels maximaux (`update_floods.py`). Résolution ~5 km, incertaine sur petits bassins — déjà indiqué
   dans le code et sur le site.
+- **Validation du modèle de crue (28/10/2026, `validation/crues_validation.md`)** sur le périmètre pilote
+  (Ikopa, Sisaony ; 162 communes, 136 mailles GloFAS) :
+  - **Détection** : 1 événement documenté sur 3. Fytia 2026 est détecté ; **Ana 2022**, la grande inondation
+    d'Antananarivo, et Batsirai 2022 sont manqués (4 % des communes au-dessus de la crue de 2 ans).
+  - **Satellite** : sur les communes cartographiées par Copernicus EMS (Ava 2018), AUC de 0,55, soit à peine
+    mieux que le hasard.
+  - **Épisodes** : 13 épisodes simulés de 2015 à 2026, dont 9 sans événement documenté. La liste
+    d'événements est incomplète : les dates de Cheneso (2023) et d'Eliakim (2018) en font partie, ce qui
+    rend le taux de fausses alertes **non calculable honnêtement**.
+  - **Lecture** : le modèle de rivière à ~5 km capte les grandes crues fluviales, pas l'inondation urbaine
+    et pluviale d'Antananarivo (drainage, digues, pompage).
+  - **Écart majeur** : il manque un module « inondation pluviale / crue éclair » fondé sur la pluie (§7.A).
+    À valider sur les mêmes événements.
 - **Modélisation hydraulique (HEC-RAS 2D)** : **non implémentée**. Pas de carte de profondeur/vitesse
   d'inondation — seulement un niveau de crue (0-3) par commune. Écart assumé : construire un modèle
   hydraulique 2D demanderait un MNT fin, un maillage, et un calibrage que le projet n'a pas les moyens
