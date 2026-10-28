@@ -1,0 +1,36 @@
+name: 11 - Inondation pluviale (pluie et ruissellement SCS-CN), validation sur le périmètre pilote
+
+# Deux indicateurs fondés sur la pluie CHIRPS journalière (pluie sur 3 jours ; ruissellement SCS-CN avec infiltration
+# urbaine faible mais non nulle), validés sur les mêmes événements que le modèle de rivière. Manuel ; reprise possible
+# (pluie journalière mise en cache). Résultat : validation/crues_pluviales_validation.md
+on:
+  workflow_dispatch:
+    inputs:
+      country:
+        description: "Code du pays"
+        default: "mdg"
+
+permissions:
+  contents: write
+
+jobs:
+  pluvial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+      - name: Indicateurs d'inondation pluviale et validation
+        timeout-minutes: 130
+        run: python -u scripts/validate_pluvial.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Enregistrer dans le dépôt
+        if: always()
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add -f validation/crues_pluviales_validation.md validation/crues_pluviales_episodes.csv data/*/grids/chirps_daily_pilot.npz 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Inondation pluviale : indicateurs et validation (périmètre pilote)" && git pull --rebase origin main && git push)
