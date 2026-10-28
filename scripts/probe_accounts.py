@@ -69,8 +69,15 @@ def copernicus(url: str, dataset: str, request: dict) -> str:
     return f"OK : {dataset} téléchargé ({out.stat().st_size} octets)"
 
 
+def safe_earthdata() -> str:
+    try:
+        return earthdata()
+    except requests.RequestException as e:                          # coupure réseau : n'empêche pas de tester Copernicus
+        return f"ÉCHEC réseau (pas un problème de compte) : {type(e).__name__}"
+
+
 def main() -> None:
-    print("NASA Earthdata (GPM IMERG) :", earthdata(), flush=True)
+    print("NASA Earthdata (GPM IMERG) :", safe_earthdata(), flush=True)
     print("Copernicus CDS (prévision saisonnière) :", copernicus(
         "https://cds.climate.copernicus.eu/api", "seasonal-monthly-single-levels",
         {"originating_centre": "ecmwf", "system": "51", "variable": ["total_precipitation"], "product_type": ["monthly_mean"],
