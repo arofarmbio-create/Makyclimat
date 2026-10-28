@@ -1,0 +1,26 @@
+name: 12 - Vérifier les comptes NASA Earthdata et Copernicus
+
+# Petite requête réelle à chaque service, avec les secrets du dépôt ; n'affiche jamais les secrets. Manuel.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: pip install requests "cdsapi>=0.7.4"
+      - name: Vérifier les accès
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+          CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
+        run: python scripts/probe_accounts.py
