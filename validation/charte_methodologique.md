@@ -49,7 +49,11 @@ systématique entre plusieurs organismes de prévision (un seul modèle saisonni
 
 ## 6. Module sécheresse
 
-- **SPI-3/6/12** : calculés (loi gamma, OMM N° 1090) — voir `scripts/soilwater_core.py`.
+- **SPI-1/3/6/12** : calculés (loi gamma, OMM N° 1090) — voir `scripts/soilwater_core.py`. SPI-1 ajouté le 28/10/2026 ;
+  SPI vide là où la normale du cumul est < 25 mm (saison sèche). Période de référence : 1981-aujourd'hui (pas 1991-2020).
+  État à fin septembre 2026 : `validation/spi_fin_septembre_2026.md` (SPI-12 ≤ −1 dans 6 régions du Sud/Sud-Est ;
+  saison sèche anormalement humide sur les Hautes Terres, recoupée avec ERA5).
+  **Écart restant** : octobre 2026 (CHIRPS provisoire) non lu ; `sm_z` contradictoire avec le SPI en saison sèche, non résolu.
 - **SPEI** : **pas de vrai SPEI** — voir `validation/spei_approche.md` (audit du 27/10/2026) : les deux
   proxys combinant pluie et évapotranspiration déjà calculés (sm_z, recharge12_z) font *moins bien* que
   le SPI seul sur l'épisode de référence ; un vrai SPEI demanderait une série d'évapotranspiration

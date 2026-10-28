@@ -19,7 +19,7 @@ pipeline publiée sur le site, mise à jour du 27/10/2026 22:21 UTC ; **[non fai
 | Prévision saisonnière par région | Les 24 régions sont plafonnées à 50 % de probabilité de pluie sous la normale (borne de l'outil). Anomalie de novembre à mars : de −25 % (Atsimo-Andrefana) à −7 % (Sava). | ECMWF SEAS5 via Open-Meteo, émise le 26/10/2026 | [calcul MakyClimat] |
 | Sécurité alimentaire | IPC phase 3 à Toliara II et Amboasary Atsimo, en extension sur le Grand Sud et le Grand Sud-Est à partir d'octobre. Soudure précoce : stocks épuisés en septembre. Manioc semé tôt dans l'Androy, vulnérable. | FEWS NET, Key Message Update septembre 2026 - janvier 2027 | [vérifié] |
 | Événement récent | Premier système de la saison (Agueda) formé au large d'Antsiranana le 20/10/2026, sans alerte cyclonique | Presse malgache, 21/10/2026 | [secondaire] |
-| Pluie observée depuis le début de l'année hydrologique | **Pas encore calculée** (voir point 7). CHIRPS est disponible en version définitive jusqu'au 30/09/2026 et en version provisoire jusqu'au 20/10/2026, mais le suivi MakyClimat s'arrête au 30/04/2026 (fin de la saison 2025-2026). | Serveur CHC, consulté le 28/10/2026 | [non fait] |
+| Pluie observée depuis le début de l'année hydrologique | **Fait jusqu'à fin septembre** (mise à jour du 28/10) : SPI-12 ≤ −1 dans 6 régions du Sud et du Sud-Est (Anosy −1,63) ; juillet-septembre 2026 anormalement humide sur les Hautes Terres (1er ou 2e rang sur 36 ans d'après ERA5). Voir `spi_fin_septembre_2026.md`. **Octobre** (CHIRPS provisoire jusqu'au 20/10) : pas encore lu. | CHIRPS + ERA5, calcul du 28/10/2026 | [calcul MakyClimat] jusqu'à septembre ; [non fait] pour octobre |
 | Sols et végétation | Bilan hydrique mensuel en place. NDVI non connecté. | `build_soilwater.py` | Partiel |
 
 ### Divergences entre prévisions
@@ -107,8 +107,8 @@ Le Nord et l'Est restent en **surveillance**, sans pilote, tant que la divergenc
 
 | # | Analyse | Où | Prérequis |
 |---|---|---|---|
-| 1 | Réparer les tests en échec (4 derniers pushes en échec sur `tests.yml`) | GitHub Actions | Aucun |
-| 2 | SPI-1 et SPI-3 à fin septembre 2026 + anomalie provisoire du 1er au 20 octobre (CHIRPS) | Nouveau script de suivi hors saison | Aucun |
+| 1 | ~~Réparer les tests en échec~~ **fait le 28/10** (commit 4d7ccc9 : le test se contredisait) | GitHub Actions | — |
+| 2 | ~~SPI-1/3/6/12 à fin septembre 2026~~ **fait le 28/10** (`spi_fin_septembre_2026.md`) ; anomalie provisoire du 1er au 20 octobre : **reste à faire** | `build_soilwater.py` + lecture du CHIRPS provisoire | Aucun |
 | 3 | Corrélation ONI / DMI ↔ pluie de décembre à février par région, 1982-2026 | Script d'analyse | Récupérer le DMI (NOAA PSL) |
 | 4 | Compétence de SEAS5 par région (hindcasts) | Script C3S | **Compte CDS gratuit, à créer par toi** |
 | 5 | Lever le plafond de 50 % ou afficher « ≥ 50 % » | `connector_seasonal.py` | Aucun |

@@ -344,8 +344,10 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     rech12 = C.rolling_sum(X, 12)              # recharge nette de ruissellement (SCS-CN déjà retiré de la pluie dans run_balance)
     rz = C.monthly_standardized(rech12, month0)
     runoff12 = C.rolling_sum(Q, 12)            # ruissellement SCS-CN cumulé 12 mois, à titre informatif (pas une recharge)
-    # SPI-1/3/6/12 (cahier des charges §6.A), masqué là où la normale du cumul est < rainfall.min_normal_mm : en saison sèche le
-    # SPI n'est pas interprétable (audit du 28/10/2026 : sans ce masque, SPI-3 de septembre 2026 à +2,7/+3,1 sur les Hautes Terres).
+    # SPI-1/3/6/12 (cahier des charges §6.A), masqué là où la normale du cumul est < rainfall.min_normal_mm : pour une normale de
+    # quelques mm, le SPI n'est pas interprétable (Guide OMM-N° 1090). Attention : le SPI-3 de +2,7/+3,1 des Hautes Terres en
+    # septembre 2026 n'est PAS un artefact (normale > 25 mm, non masqué) : ERA5 confirme un juillet-septembre 2026 au 1er/2e rang
+    # des plus pluvieux sur 36 ans (validation/spi_fin_septembre_2026.md) -- mais en mm, l'écart reste faible.
     min_mm = float(cfg["rainfall"].get("min_normal_mm", 25))
     spi_full = {f"spi{n}": C.spi(Pc, n, month0, min_mean_mm=min_mm) for n in (1, 3, 6, 12)}
     spis = {k: v[T - 1] for k, v in spi_full.items()}                       # SPI de l'OMM sur le dernier mois complet
