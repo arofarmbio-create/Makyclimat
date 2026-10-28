@@ -62,7 +62,7 @@ def copernicus(url: str, dataset: str, request: dict) -> str:
     except Exception as e:  # noqa: BLE001
         msg = str(e)
         if "licen" in msg.lower() or "terms" in msg.lower():
-            return "ÉCHEC : licence du jeu de données non acceptée (page du jeu de données, « Terms of use » -> Accept)"
+            return "ÉCHEC : licence du jeu de données non acceptée (page du jeu de données, « Terms of use » -> Accept) — " + msg[:300]
         if "401" in msg or "authentication" in msg.lower() or "token" in msg.lower():
             return "ÉCHEC : clé API refusée"
         return f"ÉCHEC : {type(e).__name__} : {msg[:200]}"
