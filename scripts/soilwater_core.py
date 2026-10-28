@@ -231,11 +231,14 @@ def monthly_standardized(series, month0, axis=0):
     return out
 
 
-def spi(P, n, month0):
+def spi(P, n, month0, min_mean_mm=None):
     """Indice de précipitation standardisé SPI-n (McKee et al. 1993 ; Guide de l'utilisateur du SPI, OMM-N° 1090, 2012).
     P (T, N) : pluie mensuelle (mm), le pas 0 étant le mois `month0` (1-12). Le cumul glissant sur n mois est ajusté, séparément pour chaque
     mois du calendrier, par une loi gamma (ajustement de Thom 1958) avec probabilité de zéro q ; SPI = Phi^-1(q + (1-q) G(x)), borné à +-3,09.
-    Retourne (T, N) avec NaN pour les n-1 premiers pas et si moins de 20 cumuls valides."""
+    Retourne (T, N) avec NaN pour les n-1 premiers pas et si moins de 20 cumuls valides.
+    min_mean_mm : si donné, NaN là où la moyenne du cumul sur n mois (pour ce mois du calendrier) est inférieure au seuil. En saison
+    sèche, quelques millimètres d'écart suffisent à donner un SPI extrême sans signification ; le Guide OMM-N° 1090 déconseille de
+    l'interpréter dans les périodes climatologiquement très sèches."""
     from scipy import special, stats
     T = P.shape[0]
     S = rolling_sum(np.asarray(P, float), n)
@@ -260,5 +263,8 @@ def spi(P, n, month0):
         H = q[None, :] + (1 - q[None, :]) * G
         z = np.clip(stats.norm.ppf(np.clip(H, 1e-6, 1 - 1e-6)), -3.09, 3.09)
         z = np.where(ok & (npos >= 15)[None, :], z, np.nan)
+        if min_mean_mm is not None:
+            mean_cum = np.where(ok, x, 0).sum(axis=0) / np.maximum(nok, 1)
+            z = np.where((mean_cum >= min_mean_mm)[None, :], z, np.nan)
         out[idx] = z
     return out

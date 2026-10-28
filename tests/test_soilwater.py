@@ -111,6 +111,14 @@ def test_spi():
     # plus de pluie -> SPI plus élevé (monotonie), à mois du calendrier égal
     idx = np.arange(5, T, 12)
     assert (np.argsort(z3[idx, 0]) == np.argsort(C.rolling_sum(P, 3)[idx, 0])).all()
+    # saison sèche : SPI masqué là où la normale du cumul est sous le seuil, intact ailleurs (audit du 28/10/2026)
+    Pd = P.copy()
+    dry = (np.arange(T) % 12) == 7                    # 8e mois du calendrier : quelques mm seulement
+    Pd[dry, :] = rng.gamma(2.0, 2.0, size=(dry.sum(), 3))
+    z1 = C.spi(Pd, 1, 1, min_mean_mm=25)
+    assert np.isnan(z1[dry]).all(), "SPI-1 d'un mois de saison sèche (normale < 25 mm) doit être vide"
+    assert np.isfinite(z1[~dry][:, :2]).all(), "les mois pluvieux gardent leur SPI"
+    assert np.allclose(z1[~dry], C.spi(Pd, 1, 1)[~dry], equal_nan=True), "le masque ne modifie pas les autres valeurs"
 
 
 if __name__ == "__main__":

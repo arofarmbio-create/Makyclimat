@@ -345,6 +345,18 @@ indicators:
     source: "Scores normaux sur 1981-aujourd'hui (méthode SPI/SGI : McKee 1993, Bloomfield & Marchant 2013)"
     frequency: Mensuelle
     status: active
+  - id: spi1
+    label: "Indice de précipitation standardisé SPI-1 mois (sécheresse météorologique)"
+    unit: "écart-type"
+    format: float
+    style: signed
+    aggregate: none
+    sectors: [agriculture, food_security, livestock, wash, drr]
+    sdg: ["2.4", "13.1"]
+    national: [axe1, eau]
+    source: "SPI (McKee et al. 1993 ; Guide de l'utilisateur du SPI, OMM-N° 1090, 2012) calculé sur la pluie CHIRPS 1981-aujourd'hui, loi gamma par mois du calendrier. Vide quand la pluie normale du mois est inférieure à 25 mm : en saison sèche le SPI n'est pas interprétable. Lecture OMM : -1 à -1,49 modérément sec, -1,5 à -1,99 sévèrement sec, -2 et moins extrêmement sec."
+    frequency: Mensuelle
+    status: active
   - id: spi3
     label: "Indice de précipitation standardisé SPI-3 mois (sécheresse agricole à court terme)"
     unit: "écart-type"

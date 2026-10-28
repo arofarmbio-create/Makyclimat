@@ -1194,6 +1194,7 @@
     ["choc_cyc_nb", "Aléa naturel - cyclone : nombre de systèmes en 12 mois", "approximation"],
     ["choc_crue_retour_ans", "Aléa naturel - crue : période de retour du débit récent (ans)", "approximation"],
     ["choc_crue_ratio_q2", "Aléa naturel - crue : débit en multiple de la crue de 2 ans", "approximation"],
+    ["spi1", "Choc agroécologique - SPI 1 mois (OMM)", "standard"],
     ["spi3", "Choc agroécologique - SPI 3 mois (OMM)", "standard"],
     ["spi6", "Choc agroécologique - SPI 6 mois (OMM)", "standard"],
     ["spi12", "Choc agroécologique - SPI 12 mois (OMM)", "standard"],
@@ -1407,7 +1408,7 @@
     }
     var fr = g("choc_crue_retour_ans");
     if (fr !== undefined && fr !== null) rows += row("Aléa naturel · crue de rivière (débit récent)", fr >= 20 ? "<b>plus de 20 ans</b> de période de retour" : fr >= 2 ? "<b>environ " + Math.round(fr) + " ans</b> de période de retour" : "débit courant (moins d'une crue de 2 ans)");
-    [["spi3", "SPI-3"], ["spi6", "SPI-6"], ["spi12", "SPI-12"]].forEach(function (k) {
+    [["spi1", "SPI-1"], ["spi3", "SPI-3"], ["spi6", "SPI-6"], ["spi12", "SPI-12"]].forEach(function (k) {
       var v = g(k[0]);
       if (v !== undefined && v !== null) rows += row("Choc agroécologique · " + k[1], "<b>" + (v > 0 ? "+" : "") + String(Math.round(v * 100) / 100).replace(".", ",") + "</b> : " + spiWord(v));
     });
