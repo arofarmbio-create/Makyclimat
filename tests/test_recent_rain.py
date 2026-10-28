@@ -65,9 +65,9 @@ out = R.main("demo", today=dt.date(2026, 10, 28), exists=exists, read_final=read
 check("fenêtre : octobre 1re et 2e dékades, provisoires", [(m, d, k) for _, m, d, k in out["dekads"]] == [(10, 1, "provisoire"), (10, 2, "provisoire")], str(out["dekads"]))
 check("période du 1er au 20 octobre", out["period"] == {"from": "2026-10-01", "to": "2026-10-20"}, str(out["period"]))
 n = (~south)[:, None] & (~east)[None, :]
-# cumul 50 mm contre 2 x (10..39) = 20..78 mm, normale 49 : 15 années plus sèches sur 30 -> rang 50
+# cumul 50 mm contre 2 x (10..39) = 20..78 mm, normale 49 : 15 années plus sèches, 1 égale (compte pour moitié) sur 30
 check("nord : % de la normale ~102", np.allclose(out["pct"][n], 100 * 50 / 49, atol=0.5), str(np.nanmean(out["pct"][n])))
-check("nord : rang centile 50", np.allclose(out["rank"][n], 50.0), str(np.nanmean(out["rank"][n])))
+check("nord : rang centile 51,7 (égalité comptée pour moitié)", np.allclose(out["rank"][n], 100 * 15.5 / 30), str(np.nanmean(out["rank"][n])))
 s = south[:, None] & (~east)[None, :]
 check("sud sans pluie : 0 % et rang 0", np.allclose(out["pct"][s], 0) and np.allclose(out["rank"][s], 0))
 check("bande est (normale 2 mm < seuil) : % non calculé, rang conservé",
