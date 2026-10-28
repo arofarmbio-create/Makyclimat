@@ -109,7 +109,7 @@ Le Nord et l'Est restent en **surveillance**, sans pilote, tant que la divergenc
 |---|---|---|---|
 | 1 | ~~Réparer les tests en échec~~ **fait le 28/10** (commit 4d7ccc9 : le test se contredisait) | GitHub Actions | — |
 | 2 | ~~SPI-1/3/6/12 à fin septembre 2026~~ **fait le 28/10** (`spi_fin_septembre_2026.md`) ; anomalie provisoire du 1er au 20 octobre : **reste à faire** | `build_soilwater.py` + lecture du CHIRPS provisoire | Aucun |
-| 3 | Corrélation ONI / DMI ↔ pluie de décembre à février par région, 1982-2026 | Script d'analyse | Récupérer le DMI (NOAA PSL) |
+| 3 | ~~Lien ONI / DMI ↔ pluie par région~~ **fait le 28/10** sous forme de modèle prédictif validé (`teleconnexions.md`) : prévisible dans 1 région sur 24 seulement. Reste : DMI de l'année en cours | `build_teleconnections.py` | DMI récent (BoM ou OISST) |
 | 4 | Compétence de SEAS5 par région (hindcasts) | Script C3S | **Compte CDS gratuit, à créer par toi** |
 | 5 | Lever le plafond de 50 % ou afficher « ≥ 50 % » | `connector_seasonal.py` | Aucun |
 | 6 | Seuils GloFAS confrontés aux inondations historiques sur l'Ikopa | Script de validation | Liste d'événements (déjà partiellement dans `validation/evenements.csv`) |

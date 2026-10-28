@@ -42,6 +42,10 @@ masquées. Sources effectivement utilisées aujourd'hui :
 
 ## 5. Contexte climatique actuel
 
+Pluie récente par dékade (définitive ou provisoire) depuis le dernier mois CHIRPS définitif, comparée à
+1991-2020, ajoutée le 28/10/2026 (`scripts/update_recent_rain.py`, `validation/pluie_recente_regions.csv`).
+Le lien El Niño → pluie locale est désormais **testé** région par région (§8, approche 1) : il n'est démontré
+que pour 1 région sur 24.
 ENSO (ONI) suivi et affiché par saison, mais **jamais utilisé comme cause automatique** d'un niveau
 d'alerte local (règle du projet, reprise du cahier des charges §5) — seulement comme facteur de
 contexte dans les scénarios de fin de saison (`connector_enso.py`, `scenarios.py`). Pas de comparaison
@@ -94,7 +98,14 @@ systématique entre plusieurs organismes de prévision (un seul modèle saisonni
 ## 8. Fusion des données et modèles prédictifs
 
 - **Approche 1 (physique/statistique)** : seuils documentés (pluie, débit, vent) + régression logistique
-  pour les cyclones (`declencheurs_anticipation.md`, AUC 0,83).
+  pour les cyclones (`declencheurs_anticipation.md`, AUC 0,83). **Ajouté le 28/10/2026** : modèle saisonnier
+  par région ONI/DMI de juillet-septembre → pluie novembre-janvier, janvier-mars, novembre-avril
+  (`scripts/build_teleconnections.py`, `validation/teleconnexions.md`). Validation croisée + test
+  chronologique + permutation unilatérale avec réajustement + Benjamini-Hochberg. **Résultat : 1 région
+  sur 24 seulement passe (Menabe, novembre-janvier)**. Signal faible et cohérent (El Niño → plus sec) dans le
+  Sud et le Sud-Ouest (Ihorombe, Androy, Anosy), non retenu après contrôle des tests multiples. Le DMI
+  n'améliore rien. Écart : DMI de l'année en cours indisponible (HadISST en retard) ; source alternative
+  à brancher (BoM, ou DMI calculé depuis OISST).
 - **Approche 2 (apprentissage automatique)** : **pas de Random Forest/XGBoost évalué**. Choix assumé :
   les jeux de vérité terrain disponibles (13 cyclones, 1 épisode de sécheresse documenté) sont bien trop
   petits pour entraîner et valider un modèle ML sans surapprentissage — un modèle plus complexe sur un
