@@ -29,7 +29,11 @@ pipeline publiée sur le site, mise à jour du 27/10/2026 22:21 UTC ; **[non fai
    - Météo Madagascar et la synthèse régionale annoncent au contraire **normal à supérieur** sur le Nord et l'Est.
    - C'est la divergence principale. Elle ne peut pas être tranchée sans la fiabilité historique de SEAS5 sur ces régions, qui n'a pas encore été mesurée.
 2. **Grand Sud.** Les sources convergent (SEAS5, Météo Madagascar, FEWS NET) vers une saison sous la normale. C'est le signal le plus cohérent.
-3. **Plafond de 50 %.** La borne de 15 à 50 % appliquée par MakyClimat écrase le signal : on ne peut pas distinguer une région à 51 % d'une région à 80 %. À revoir.
+3. **Plafond de 50 %.** Toutes les régions affichent 50 % de probabilité « sec ».
+   - Ce plafond est **voulu** (`connector_seasonal.py`) : la moyenne d'ensemble n'est pas calibrée sur la compétence réelle du modèle à Madagascar.
+   - Le classement des régions reste lisible grâce à l'écart en %, de −25 % à −7 %.
+   - *Correction du 28/10 :* une première version de ce diagnostic disait que le plafond « écrase le signal » et qu'il fallait le lever. Le lever sans calibration irait contre le §9.
+   - La calibration demande des prévisions passées (hindcasts) : Copernicus CDS ou IRI Data Library, **toutes deux avec un compte** (accès vérifié le 28/10).
 
 ### Ce qu'El Niño permet de dire, et ce qu'il ne permet pas
 
@@ -111,7 +115,7 @@ Le Nord et l'Est restent en **surveillance**, sans pilote, tant que la divergenc
 | 2 | ~~SPI-1/3/6/12 à fin septembre 2026~~ **fait le 28/10** (`spi_fin_septembre_2026.md`) ; anomalie provisoire du 1er au 20 octobre : **reste à faire** | `build_soilwater.py` + lecture du CHIRPS provisoire | Aucun |
 | 3 | ~~Lien ONI / DMI ↔ pluie par région~~ **fait le 28/10** sous forme de modèle prédictif validé (`teleconnexions.md`) : prévisible dans 1 région sur 24 seulement. Reste : DMI de l'année en cours | `build_teleconnections.py` | DMI récent (BoM ou OISST) |
 | 4 | Compétence de SEAS5 par région (hindcasts) | Script C3S | **Compte CDS gratuit, à créer par toi** |
-| 5 | Lever le plafond de 50 % ou afficher « ≥ 50 % » | `connector_seasonal.py` | Aucun |
+| 5 | Calibrer les probabilités saisonnières sur les prévisions passées (le plafond de 50 % reste en place d'ici là, à juste titre) | `connector_seasonal.py` | Compte CDS ou IRI (vérifié le 28/10) |
 | 6 | Seuils GloFAS confrontés aux inondations historiques sur l'Ikopa | Script de validation | Liste d'événements (déjà partiellement dans `validation/evenements.csv`) |
 | 7 | Connexion du NDVI | Nouveau connecteur | Compte Earthdata ou Copernicus Land |
 

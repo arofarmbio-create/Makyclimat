@@ -4,7 +4,7 @@ Cahier des charges §7 (modèle hydrologique, calibration/validation sur observa
 alertes, événements manqués, validation partielle déclarée). Périmètre : communes ayant un seuil de crue
 (data/<pays>/flood_thresholds.csv ; pour Madagascar, bassin de l'Ikopa et de la Sisaony : Analamanga, Vakinankaratra).
 
-Ce qui est validé : la chaîne « débit simulé GloFAS (réanalyse journalière, Open-Meteo) -> dépassement de la crue de
+Ce qui est validé (1999-aujourd'hui) : la chaîne « débit simulé GloFAS (réanalyse journalière, Open-Meteo) -> dépassement de la crue de
 2 ans (vigilance) ou de 5 ans (alerte) ». Ce n'est PAS la prévision elle-même : les prévisions GloFAS archivées
 (délai d'anticipation réel) demandent un compte Copernicus CDS ; la validation du délai reste à faire.
 Vérité terrain, dans le dépôt :
@@ -30,43 +30,54 @@ import numpy as np
 import pandas as pd
 
 import openmeteo as om
-from common import DATA_DIR, country_data_dir, grid_dir, load_config, load_grid, read_units, save_grid
+from common import DATA_DIR, country_data_dir, grid_dir, load_grid, read_units, save_grid
 
 VAL = DATA_DIR.parent / "validation"
 SHARE = 0.10                # épisode : au moins 10 % des communes au-dessus du seuil
 GAP_DAYS = 5                # deux dépassements séparés de plus de 5 jours = deux épisodes
+VALID_START = "1999-01-01"
 
 
-def fetch_history(th: pd.DataFrame, start: str, end: str, batch: int = 10):
-    """Débit journalier GloFAS par maille de rivière (dédoublonnée) -> (dates, Q (T, n_mailles), index commune -> maille)."""
-    # une requête par maille, avec les coordonnées de la 1re commune de cette maille : même sélection de maille que pour
-    # le calcul des seuils (update_floods.thresholds interroge le centroïde de la commune)
-    t = th.assign(ck=list(zip(th.cell_lat.round(4), th.cell_lon.round(4))))
+def cells_of(th: pd.DataFrame):
+    """Mailles GloFAS dédoublonnées ; chacune est interrogée avec les coordonnées de sa 1re commune (même sélection de maille
+    que pour le calcul des seuils, update_floods.thresholds interrogeant le centroïde de la commune)."""
+    t = th.assign(ck=[f"{a:.4f},{b:.4f}" for a, b in zip(th.cell_lat, th.cell_lon)])
     cells = t.drop_duplicates("ck").reset_index(drop=True)
     key = {k: i for i, k in enumerate(cells.ck)}
-    idx = np.array([key[k] for k in t.ck])
-    series, dates = [None] * len(cells), None
-    for i in range(0, len(cells), batch):
-        sub = cells.iloc[i:i + batch]
-        p = {"latitude": ",".join(f"{x:.4f}" for x in sub.lat), "longitude": ",".join(f"{x:.4f}" for x in sub.lon),
-             "daily": "river_discharge", "start_date": start, "end_date": end}
-        for j, item in enumerate(om.as_list(om.get_json(om.FLOOD_URL, p, retries=4, pause=5.0))):
-            d = item["daily"]
-            dates = dates or d["time"]
-            series[i + j] = np.array([np.nan if v is None else v for v in d["river_discharge"]], dtype="float32")
-        time.sleep(1.0)
-    return np.array(dates), np.stack(series, axis=1), idx
+    return cells, np.array([key[k] for k in t.ck])
 
 
-def load_or_fetch(country, th, start, end):
+def load_or_fetch(country, th, start, end, pause=3.0):
+    """Débit journalier par maille, avec reprise : chaque maille est sauvegardée dès qu'elle est lue, et un refus de quota
+    (HTTP 429) arrête proprement ; le relancement continue là où il s'était arrêté. Retourne None si incomplet."""
     path = grid_dir(country) / "glofas_hist.npz"
+    cells, idx = cells_of(th)
+    done, dates = {}, None
     if path.exists():
         g = load_grid(path)
-        if str(g["start"]) == start and str(g["end"]) == end and len(g["idx"]) == len(th):
-            return g["dates"], g["Q"], g["idx"]
-    dates, Q, idx = fetch_history(th, start, end)
-    save_grid(path, dates=dates, Q=Q, idx=idx, start=np.array(start), end=np.array(end))
-    return dates, Q, idx
+        if str(g["start"]) == start and str(g["end"]) == end:
+            dates = g["dates"]
+            done = {k: g["Q"][:, i] for i, k in enumerate(g["keys"]) if np.isfinite(g["Q"][:, i]).any()}
+    todo = [i for i, k in enumerate(cells.ck) if k not in done]
+    print(f"Débits GloFAS : {len(done)}/{len(cells)} mailles déjà en cache, {len(todo)} à lire")
+    for n, i in enumerate(todo):
+        c = cells.iloc[i]
+        p = {"latitude": f"{c.lat:.4f}", "longitude": f"{c.lon:.4f}", "daily": "river_discharge", "start_date": start, "end_date": end}
+        try:
+            item = om.as_list(om.get_json(om.FLOOD_URL, p, retries=3, pause=10.0))[0]
+        except (RuntimeError, ValueError) as e:
+            print(f"::warning::Lecture des débits interrompue ({len(done)}/{len(cells)} mailles) : {e}. Relancer pour reprendre.")
+            break
+        dates = np.array(item["daily"]["time"]) if dates is None else dates
+        done[c.ck] = np.array([np.nan if v is None else v for v in item["daily"]["river_discharge"]], dtype="float32")
+        if n % 5 == 4 or n == len(todo) - 1:
+            keys = list(done)
+            save_grid(path, dates=dates, Q=np.stack([done[k] for k in keys], axis=1), keys=np.array(keys),
+                      start=np.array(start), end=np.array(end))
+        time.sleep(pause)
+    if len(done) < len(cells):
+        return None
+    return dates, np.stack([done[k] for k in cells.ck], axis=1), idx
 
 
 def auc(pos, neg):
@@ -96,13 +107,18 @@ def episodes(dates, frac, months=(11, 12, 1, 2, 3, 4)):
 
 
 def main(country="mdg", history=None, today=None, events=None):
-    cfg = load_config(country)
     today = today or dt.date.today()
     th = pd.read_csv(country_data_dir(country) / "flood_thresholds.csv", dtype={"pcode": str})
     th = th[np.isfinite(th.q2) & np.isfinite(th.q5)].reset_index(drop=True)
-    start = f"{cfg['flood'].get('history_start', 1984)}-01-01"
-    end = (today - dt.timedelta(days=10)).isoformat()
-    dates, Q, idx = history if history is not None else load_or_fetch(country, th, start, end)
+    # 1999 : bien avant le 1er événement documenté du périmètre (2004), sans demander 42 ans de débits au quota gratuit.
+    # Les seuils, eux, restent ajustés sur 1984-2025 (update_floods --thresholds). Fin figée au 31/12 précédent pour que
+    # le cache reste valable d'un jour à l'autre.
+    start, end = VALID_START, f"{today.year - 1}-12-31" if today.month < 6 else f"{today.year}-04-30"
+    got = history if history is not None else load_or_fetch(country, th, start, end)
+    if got is None:
+        print("Validation non calculée : débits incomplets (quota Open-Meteo). Relancer le workflow pour reprendre.")
+        return None
+    dates, Q, idx = got
     q = Q[:, idx]                                                       # (T, communes)
     r2, r5 = q / th.q2.to_numpy()[None], q / th.q5.to_numpy()[None]
     f2, f5 = np.nanmean(r2 >= 1, axis=1), np.nanmean(r5 >= 1, axis=1)

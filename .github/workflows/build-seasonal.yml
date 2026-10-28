@@ -31,6 +31,7 @@ jobs:
       - name: Modèle statistique El Niño / dipôle de l'océan Indien par région (validé en LOO et chronologique)
         run: |
           python scripts/connector_enso.py || echo "ONI non mis à jour, fichier existant utilisé"
+          python scripts/connector_dmi.py || echo "DMI (ERSST) non mis à jour, fichier existant utilisé"
           python scripts/build_teleconnections.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Modèle de téléconnexions indisponible"
       - name: Enregistrer dans le dépôt
         if: always()

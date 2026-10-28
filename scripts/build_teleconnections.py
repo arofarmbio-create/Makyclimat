@@ -4,7 +4,7 @@ Cahier des charges §8 (approche 1 : modèle statistique), §5 (« ne déduis ja
 globale sans démontrer le lien »), §9 (horizon saisonnier 1-6 mois), §13 (validation sans fuite de données).
 
 Prédicteurs connus AVANT la saison (date d'émission fin octobre) : ONI de juillet-septembre (NOAA CPC) et DMI moyen de
-juillet-septembre (NOAA PSL, HadISST). Cible : pluie CHIRPS par région, en anomalie standardisée, pour novembre-janvier,
+juillet-septembre (calculé depuis ERSST v5, scripts/connector_dmi.py ; à défaut NOAA PSL HadISST, en retard de plusieurs mois). Cible : pluie CHIRPS par région, en anomalie standardisée, pour novembre-janvier,
 janvier-mars et la saison novembre-avril. Modèle : régression linéaire (moindres carrés), une par région et par cible.
 Validation :
   - validation croisée « une saison laissée de côté » (LOO) : corrélation et score de compétence MSSS par rapport à la
@@ -50,6 +50,11 @@ def parse_psl(text: str) -> pd.DataFrame:
 
 
 def read_dmi() -> pd.DataFrame:
+    """DMI calculé depuis ERSST v5 (connector_dmi.py, à jour au mois précédent) ; à défaut, série HadISST de NOAA PSL.
+    Une seule source pour l'apprentissage et la prévision : jamais de mélange des deux séries."""
+    local = DATA_DIR / "enso" / "dmi_ersst.csv"
+    if local.exists():
+        return pd.read_csv(local)
     import requests
     return parse_psl(requests.get(DMI_URL, timeout=120).text)
 
@@ -219,7 +224,7 @@ def write_md(path, df, fc, Xn, season_next, years):
          "",
          f"Généré le {dt.date.today().isoformat()} par `scripts/build_teleconnections.py`. Cahier des charges §5, §8 (approche 1), §9, §13.",
          f"Saisons {int(years[0]) - 1}-{int(years[0])} à {int(years[-1]) - 1}-{int(years[-1])} ({len(years)} saisons). Pluie CHIRPS par région.",
-         "Prédicteurs connus avant la saison : ONI de juillet-septembre (NOAA CPC) et DMI de juillet-septembre (NOAA PSL, HadISST).",
+         "Prédicteurs connus avant la saison : ONI de juillet-septembre (NOAA CPC) et DMI de juillet-septembre (ERSST v5, `connector_dmi.py`).",
          "",
          "Une région est dite **prévisible** seulement si les trois conditions suivantes sont réunies :",
          "- score de compétence en validation croisée (MSSS, saison laissée de côté) > 0 ;",
@@ -242,7 +247,7 @@ def write_md(path, df, fc, Xn, season_next, years):
                  f"{f(r.p_perm, 3)} | {f(r.coef_oni)} | {f(r.coef_dmi)} | {'**oui**' if r.previsible else 'non'} |")
     L += ["", f"## Prévision {season_next - 1}-{season_next}", "",
           f"ONI de juillet-septembre {season_next - 1} : **{f(Xn.oni)}**. DMI de juillet-septembre {season_next - 1} : "
-          + (f"**{f(Xn.dmi)}**." if np.isfinite(Xn.dmi) else "**indisponible** (la série HadISST de NOAA PSL a plusieurs mois de retard) : seul le modèle ONI est appliqué."),
+          + (f"**{f(Xn.dmi)}**." if np.isfinite(Xn.dmi) else "**indisponible** (connector_dmi.py non exécuté ou ERSST pas encore publié) : seul le modèle ONI est appliqué."),
           ""]
     prev = [x for x in fc if x["previsible"]]
     if prev:
