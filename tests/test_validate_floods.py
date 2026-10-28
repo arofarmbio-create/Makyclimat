@@ -50,7 +50,8 @@ def fake(lat, lon, start, end):
 region = read_units("demo").query("level == 1").name.iloc[0]
 events = pd.DataFrame([{"id": "test-2005", "type": "inondation", "date_debut": "2005-02-09", "date_fin": "2005-02-11", "zones_citees": region}])
 tmp = Path(tempfile.mkdtemp()) / "cache.json"
-res = V.main("demo", fetch=fake, today=dt.date(2008, 6, 1), events=events, pause=0, cache_path=tmp, first_season=2004)
+gd = pd.DataFrame([{"id": "gdacs-tc-1", "date_debut": "2007-01-14", "date_fin": "2007-01-16"}])
+res = V.main("demo", fetch=fake, today=dt.date(2008, 6, 1), events=events, pause=0, cache_path=tmp, first_season=2004, gdacs=gd)
 det, epi = res["detection"], res["episodes"]
 check("résultat complet (pas de quota)", res["complete"])
 check("événement documenté détecté en vigilance et en alerte",
@@ -59,6 +60,10 @@ check("part des communes au-dessus de la crue de 5 ans ~ 50 %", abs(det.part_com
 check("4 saisons parcourues (2004-2005 à 2007-2008)", res["seasons"] == 4, str(res["seasons"]))
 check("deux épisodes : l'un rattaché à l'événement, l'autre sans correspondance",
       len(epi) == 2 and sorted(epi.evenement_perimetre.tolist()) == ["", "test-2005"], epi.to_string())
+check("épisode non documenté rattaché au cyclone GDACS", "gdacs-tc-1" in epi.evenement_gdacs.tolist(), str(epi.evenement_gdacs.tolist()))
+sens = res["sensitivity"]
+check("sensibilité : 4 seuils ; le plus bas détecte l'événement ; le plus haut ne crée pas plus d'épisodes",
+      len(sens) == 4 and sens.detectes.iloc[0] == 1 and sens.episodes.iloc[-1] <= sens.episodes.iloc[0], sens.to_string())
 n_calls = calls["n"]
 V.main("demo", fetch=fake, today=dt.date(2008, 6, 1), events=events, pause=0, cache_path=tmp, first_season=2004)
 check("cache : aucune nouvelle requête au 2e passage", calls["n"] == n_calls, f"{n_calls} puis {calls['n']}")

@@ -117,10 +117,10 @@ def auc(pos, neg):
     return float(gt / (len(pos) * len(neg)))
 
 
-def episodes(dates, frac, months=(11, 12, 1, 2, 3, 4)):
-    """Regroupe les jours où frac >= SHARE en épisodes ; retourne [(début, fin, part max), ...]."""
+def episodes(dates, frac, share=SHARE, months=(11, 12, 1, 2, 3, 4)):
+    """Regroupe les jours où frac >= share en épisodes ; retourne [(début, fin, part max), ...]."""
     d = pd.to_datetime(dates)
-    on = (frac >= SHARE) & np.isin(d.month, months)
+    on = (frac >= share) & np.isin(d.month, months)
     out, cur = [], None
     for t in np.where(on)[0]:
         if cur and (d[t] - d[cur[1]]).days <= GAP_DAYS:
@@ -138,7 +138,20 @@ def ev_window(a, b):
     return (pd.Timestamp(a) - pd.Timedelta(days=2)).date().isoformat(), (pd.Timestamp(b) + pd.Timedelta(days=10)).date().isoformat()
 
 
-def main(country="mdg", fetch=om_fetch, today=None, events=None, pause=1.0, cache_path=None, first_season=FIRST_SEASON):
+def matches(s, e, df):
+    """Identifiants des événements de df dont la fenêtre [début - 2 j, fin + 10 j] recoupe l'épisode [s, e]."""
+    if df is None or len(df) == 0:
+        return []
+    ok = (pd.Timestamp(s) <= pd.to_datetime(df.date_fin) + pd.Timedelta(days=10)) & \
+         (pd.Timestamp(e) >= pd.to_datetime(df.date_debut) - pd.Timedelta(days=2))
+    return df.id[ok].tolist()
+
+
+# analyse de sensibilité au seuil de part des communes / mailles (arbitrage détection - fausses alertes, §13)
+SHARES = [("au moins 1", 1e-9), ("5 %", 0.05), ("10 %", 0.10), ("25 %", 0.25)]
+
+
+def main(country="mdg", fetch=om_fetch, today=None, events=None, pause=1.0, cache_path=None, first_season=FIRST_SEASON, gdacs=None):
     today = today or dt.date.today()
     th = pd.read_csv(country_data_dir(country) / "flood_thresholds.csv", dtype={"pcode": str})
     th = th[np.isfinite(th.q2) & np.isfinite(th.q5)].reset_index(drop=True)
@@ -153,6 +166,9 @@ def main(country="mdg", fetch=om_fetch, today=None, events=None, pause=1.0, cach
     reg_names = [names.get(r, r) for r in regions] + (["Antananarivo"] if "MG11" in regions else [])
     all_ev = events if events is not None else pd.read_csv(VAL / "evenements.csv", dtype=str)
     ev = all_ev[all_ev.zones_citees.fillna("").str.contains("|".join(map(re.escape, reg_names)))]
+    if gdacs is None and events is None and (VAL / "evenements_gdacs.csv").exists():
+        gdacs = pd.read_csv(VAL / "evenements_gdacs.csv", dtype=str)       # événements indépendants de GloFAS (connector_gdacs_events.py)
+    other = all_ev[(all_ev.type != "secheresse") & ~all_ev.id.isin(ev.id)]
     # 1. détection par événement documenté (toutes les mailles, fenêtre courte)
     det = []
     for _, e in ev.iterrows():
@@ -171,21 +187,33 @@ def main(country="mdg", fetch=om_fetch, today=None, events=None, pause=1.0, cach
     # 2. épisodes sur les cours d'eau principaux, saisons de pluie FIRST_SEASON -> aujourd'hui
     main_cells = cells.assign(qm=cells.q_mean).sort_values("qm", ascending=False).head(N_MAIN).reset_index(drop=True)
     mq2 = main_cells.q2.to_numpy()
-    rows, seasons_done = [], 0
+    seasons = []
     last = today.year if today.month >= 5 else today.year - 1
     for y in range(first_season, last):
         dates, Q = window(cache, main_cells, f"{y}-11-01", f"{y + 1}-04-30")
         if Q is None:
             break
-        seasons_done += 1
-        for s, t_end, m in episodes(dates, np.nanmean(Q / mq2 >= 1, axis=1)):
-            hit = [x.id for _, x in all_ev.iterrows() if x.type != "secheresse"
-                   and pd.Timestamp(s) <= pd.Timestamp(x.date_fin) + pd.Timedelta(days=10)
-                   and pd.Timestamp(t_end) >= pd.Timestamp(x.date_debut) - pd.Timedelta(days=2)]
-            hit_local = [h for h in hit if h in set(ev.id)]
-            rows.append({"debut": s, "fin": t_end, "part_max_mailles_q2": round(m, 3),
-                         "evenement_perimetre": ";".join(hit_local), "evenement_ailleurs": ";".join(h for h in hit if h not in hit_local)})
-    epi = pd.DataFrame(rows, columns=["debut", "fin", "part_max_mailles_q2", "evenement_perimetre", "evenement_ailleurs"])
+        seasons.append((dates, np.nanmean(Q / mq2 >= 1, axis=1)))
+    seasons_done = len(seasons)
+
+    def episode_table(share):
+        rows = []
+        for dates, frac in seasons:
+            for s, t_end, m in episodes(dates, frac, share):
+                rows.append({"debut": s, "fin": t_end, "part_max_mailles_q2": round(m, 3),
+                             "evenement_perimetre": ";".join(matches(s, t_end, ev)),
+                             "evenement_ailleurs": ";".join(matches(s, t_end, other)),
+                             "evenement_gdacs": ";".join(matches(s, t_end, gdacs))})
+        return pd.DataFrame(rows, columns=["debut", "fin", "part_max_mailles_q2", "evenement_perimetre", "evenement_ailleurs", "evenement_gdacs"])
+    epi = episode_table(SHARE)
+    sens = []
+    for label, sh in SHARES:
+        e = episode_table(sh)
+        none = ((e.evenement_perimetre == "") & (e.evenement_ailleurs == "") & (e.evenement_gdacs == "")).sum() if len(e) else 0
+        sens.append({"seuil": label, "detectes": int((det.part_communes_q2 >= sh).sum()) if len(det) else 0, "evenements": len(det),
+                     "episodes": len(e), "episodes_perimetre": int((e.evenement_perimetre != "").sum()) if len(e) else 0,
+                     "episodes_sans_correspondance": int(none)})
+    sens = pd.DataFrame(sens)
     # 3. activations EMS : communes inondées contre non inondées
     ems_rows = []
     oof = VAL / "ems_communes_oof.csv"
@@ -214,7 +242,8 @@ def main(country="mdg", fetch=om_fetch, today=None, events=None, pause=1.0, cach
     ems = pd.DataFrame(ems_rows)
     complete = cache.stopped is None
     res = {"n_communes": len(th), "n_cells": len(cells), "detection": det, "episodes": epi, "seasons": seasons_done, "first_season": first_season,
-           "ems": ems, "regions": reg_names, "complete": complete, "n_events": len(ev)}
+           "ems": ems, "regions": reg_names, "complete": complete, "n_events": len(ev), "sensitivity": sens,
+           "n_gdacs": 0 if gdacs is None else len(gdacs)}
     if country != "demo":
         epi.to_csv(VAL / "crues_episodes.csv", index=False)
         write_md(VAL / "crues_validation.md", res)
@@ -230,6 +259,7 @@ def write_md(path, res):
     det, epi, ems = res["detection"], res["episodes"], res["ems"]
     n_loc = int((epi.evenement_perimetre != "").sum()) if len(epi) else 0
     n_else = int(((epi.evenement_perimetre == "") & (epi.evenement_ailleurs != "")).sum()) if len(epi) else 0
+    n_gd = int(((epi.evenement_perimetre == "") & (epi.evenement_ailleurs == "") & (epi.evenement_gdacs != "")).sum()) if len(epi) else 0
     L = ["# Validation du modèle de crue sur le périmètre pilote", "",
          f"Généré le {dt.date.today().isoformat()} par `scripts/validate_floods.py`. Cahier des charges §7 et §13.", ""]
     if not res["complete"]:
@@ -261,10 +291,22 @@ def write_md(path, res):
           f"- **{len(epi)} épisodes**, soit environ {f(len(epi) / max(res['seasons'], 1), 1)} par saison.",
           f"- {n_loc} correspondent à un événement documenté dans le périmètre.",
           f"- {n_else} correspondent à un événement documenté ailleurs à Madagascar, sans mention du périmètre.",
-          f"- **{len(epi) - n_loc - n_else} sans aucune correspondance.** Ce sont des fausses alertes possibles, à comparer avec la liste BNGRC des inondations non cycloniques.",
-          "", "| Début | Fin | Part max des mailles | Événement (périmètre) | Événement (ailleurs) |", "|---|---|---|---|---|"]
+          f"- {n_gd} correspondent seulement à un cyclone ou une inondation GDACS ({res['n_gdacs']} événements indépendants de GloFAS, "
+          "`validation/evenements_gdacs.csv`) : explication possible, région non précisée.",
+          f"- **{len(epi) - n_loc - n_else - n_gd} sans aucune correspondance.** Ce sont des fausses alertes possibles, à comparer avec la liste BNGRC des inondations non cycloniques.",
+          "", "| Début | Fin | Part max des mailles | Événement (périmètre) | Événement (ailleurs) | GDACS |", "|---|---|---|---|---|---|"]
     for _, r in epi.iterrows():
-        L.append(f"| {r.debut} | {r.fin} | {round(100 * r.part_max_mailles_q2)} % | {r.evenement_perimetre or '—'} | {r.evenement_ailleurs or '—'} |")
+        L.append(f"| {r.debut} | {r.fin} | {round(100 * r.part_max_mailles_q2)} % | {r.evenement_perimetre or '—'} | {r.evenement_ailleurs or '—'} | {r.evenement_gdacs or '—'} |")
+    sens = res["sensitivity"]
+    if len(sens):
+        L += ["", "## 2 bis. Sensibilité au seuil : arbitrage entre détection et fausses alertes", "",
+              "Le seuil s'applique à la part des communes pour la détection des événements du périmètre, et à la part des mailles principales pour les épisodes.", "",
+              "| Seuil | Événements du périmètre détectés | Épisodes simulés | Dont événement du périmètre | Sans aucune correspondance |",
+              "|---|---|---|---|---|"]
+        for _, s in sens.iterrows():
+            L.append(f"| {s.seuil} | {s.detectes} / {s.evenements} | {s.episodes} | {s.episodes_perimetre} | {s.episodes_sans_correspondance} |")
+        L += ["", "Abaisser le seuil fait détecter plus d'événements, mais crée plus d'épisodes sans correspondance. "
+              "Le choix du seuil opérationnel revient aux services (BNGRC, DGRE) : il n'est pas fixé ici."]
     L += ["", "## 3. Communes inondées selon le satellite (Copernicus EMS)", ""]
     if len(ems):
         L += ["| Activation | Communes comparées | Inondées | Non inondées | AUC du débit simulé | Inondées en vigilance (≥ crue de 2 ans) | Non inondées en vigilance |",

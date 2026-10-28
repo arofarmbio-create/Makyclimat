@@ -1,0 +1,38 @@
+id,type,nom,date_debut,date_fin,alerte,source_gdacs,lon,lat,source_url,remarque
+gdacs-tc-44086,cyclone,Tropical Cyclone HELLEN-14,2014-03-29,2014-04-01,Orange,JRC,,,https://www.gdacs.org/report.aspx?eventid=44086&episodeid=8&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-fl-4224,inondation,Flood in Madagascar,2015-01-05,2015-02-09,Green,DFO,45.921,-19.668,https://www.gdacs.org/report.aspx?eventid=4224&episodeid=2&eventtype=FL,Centre approximatif de l'inondation
+gdacs-tc-1000136,cyclone,Tropical Cyclone CHEDZA-15,2015-01-16,2015-01-18,Green,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000136&episodeid=5&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-fl-4241,inondation,Flood in Madagascar,2015-03-05,2015-04-15,Green,DFO,47.01,-18.156,https://www.gdacs.org/report.aspx?eventid=4241&episodeid=2&eventtype=FL,Centre approximatif de l'inondation
+gdacs-tc-1000341,cyclone,Tropical Cyclone ENAWO-17,2017-03-03,2017-03-10,Red,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000341&episodeid=12&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-fl-1000070,inondation,Flood in Madagascar,2017-03-07,2017-03-13,Orange,JRC,49.181,-16.91,https://www.gdacs.org/report.aspx?eventid=1000070&episodeid=1&eventtype=FL,Centre approximatif de l'inondation
+gdacs-fl-1000155,inondation,Flood in Madagascar,2018-01-02,2018-01-11,Green,JRC,47.233,-20.213,https://www.gdacs.org/report.aspx?eventid=1000155&episodeid=1&eventtype=FL,Centre approximatif de l'inondation
+gdacs-tc-1000429,cyclone,Tropical Cyclone AVA-18,2018-01-02,2018-01-09,Red,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000429&episodeid=27&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000438,cyclone,Tropical Cyclone DUMAZILE-18,2018-03-02,2018-03-07,Orange,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000438&episodeid=22&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-fl-1000176,inondation,Flood in Madagascar,2018-03-15,2018-03-21,Green,JRC,48.62,-18.893,https://www.gdacs.org/report.aspx?eventid=1000176&episodeid=1&eventtype=FL,Centre approximatif de l'inondation
+gdacs-tc-1000441,cyclone,Tropical Cyclone ELIAKIM-18,2018-03-15,2018-03-20,Orange,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000441&episodeid=23&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000543,cyclone,Tropical Cyclone DESMOND-19,2019-01-20,2019-01-21,Green,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000543&episodeid=8&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000639,cyclone,Tropical Cyclone BELNA-19,2019-12-04,2019-12-11,Green,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000639&episodeid=14&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000651,cyclone,Tropical Cyclone FRANCISCO-20,2020-02-04,2020-02-14,Green,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000651&episodeid=7&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000660,cyclone,Tropical Cyclone HEROLD-20,2020-03-13,2020-03-19,Green,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000660&episodeid=14&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000755,cyclone,Tropical Cyclone CHALANE-20,2020-12-24,2020-12-30,Green,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000755&episodeid=12&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000760,cyclone,Tropical Cyclone ELOISE-21,2021-01-17,2021-01-23,Orange,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000760&episodeid=13&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000858,cyclone,Tropical Cyclone ANA-22,2022-01-23,2022-01-24,Orange,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000858&episodeid=3&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000859,cyclone,Tropical Cyclone BATSIRAI-22,2022-01-27,2022-02-08,Red,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000859&episodeid=26&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000865,cyclone,Tropical Cyclone DUMAKO-22,2022-02-13,2022-02-15,Green,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000865&episodeid=6&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000866,cyclone,Tropical Cyclone EMNATI-22,2022-02-16,2022-02-24,Red,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000866&episodeid=18&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000873,cyclone,Tropical Cyclone GOMBE-22,2022-03-07,2022-03-12,Orange,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000873&episodeid=14&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000881,cyclone,Tropical Cyclone JASMINE-22,2022-04-24,2022-04-27,Green,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000881&episodeid=12&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000957,cyclone,Tropical Cyclone CHENESO-23,2023-01-18,2023-01-29,Green,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1000957&episodeid=42&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1000961,cyclone,Tropical Cyclone FREDDY-23,2023-02-06,2023-03-12,Red,JTWC,,,https://www.gdacs.org/report.aspx?eventid=1000961&episodeid=60&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001040,cyclone,Tropical Cyclone ALVARO-24,2023-12-31,2024-01-04,Green,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001040&episodeid=18&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001041,cyclone,Tropical Cyclone BELAL-24,2024-01-12,2024-01-19,Orange,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001041&episodeid=27&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001057,cyclone,Tropical Cyclone GAMANE-24,2024-03-25,2024-03-28,Orange,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001057&episodeid=11&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001131,cyclone,Tropical Cyclone CHIDO-25,2024-12-09,2024-12-16,Red,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001131&episodeid=29&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001135,cyclone,Tropical Cyclone DIKELEDI-25,2025-01-08,2025-01-17,Orange,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001135&episodeid=39&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001139,cyclone,Tropical Cyclone ELVIS-25,2025-01-28,2025-01-31,Green,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001139&episodeid=12&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001138,cyclone,Tropical Cyclone FAIDA-25,2025-01-30,2025-02-03,Green,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001138&episodeid=19&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001152,cyclone,Tropical Cyclone HONDE-25,2025-02-25,2025-03-05,Orange,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001152&episodeid=31&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001154,cyclone,Tropical Cyclone JUDE-25,2025-03-08,2025-03-16,Red,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001154&episodeid=34&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001250,cyclone,Tropical Cyclone EWETSE-26,2026-01-20,2026-01-21,Green,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001250&episodeid=7&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001254,cyclone,Tropical Cyclone FYTIA-26,2026-01-29,2026-02-04,Orange,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001254&episodeid=24&eventtype=TC,"Pays seulement, région non précisée"
+gdacs-tc-1001256,cyclone,Tropical Cyclone GEZANI-26,2026-02-06,2026-02-18,Red,RSMC,,,https://www.gdacs.org/report.aspx?eventid=1001256&episodeid=47&eventtype=TC,"Pays seulement, région non précisée"

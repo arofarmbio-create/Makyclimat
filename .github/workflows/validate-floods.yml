@@ -23,6 +23,8 @@ jobs:
           python-version: "3.11"
       - name: Installer les dépendances
         run: pip install -r requirements.txt
+      - name: Événements indépendants de GloFAS (GDACS : cyclones, inondations DFO/JRC)
+        run: python scripts/connector_gdacs_events.py || echo "GDACS indisponible, liste existante utilisée"
       - name: Validation du modèle de crue
         run: python -u scripts/validate_floods.py --country "${{ github.event.inputs.country || 'mdg' }}"
       - name: Enregistrer dans le dépôt
@@ -30,5 +32,5 @@ jobs:
         run: |
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
-          git add -f validation/crues_validation.md validation/crues_episodes.csv data/*/grids/glofas_windows.json 2>/dev/null || true
+          git add -f validation/crues_validation.md validation/crues_episodes.csv validation/evenements_gdacs.csv data/*/grids/glofas_windows.json 2>/dev/null || true
           git diff --cached --quiet || (git commit -m "Validation du modèle de crue (périmètre pilote)" && git pull --rebase origin main && git push)
