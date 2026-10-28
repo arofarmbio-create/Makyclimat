@@ -75,6 +75,8 @@ jobs:
       - name: Débits de rivière prévus (GloFAS via Open-Meteo) — ignorés en cas d'indisponibilité
         run: |
           python scripts/update_floods.py --country "$COUNTRY" || echo "Débits indisponibles, alertes de crue non mises à jour"
+      - name: "Ruissellement prévu à 7 jours (EXPÉRIMENTAL : inondation pluviale, SCS-CN)"
+        run: python scripts/update_pluvial_forecast.py --country "$COUNTRY" || echo "Ruissellement prévu indisponible"
       - name: Susceptibilité aux inondations (modèle validé, sans réseau)
         run: python scripts/build_susceptibility.py --country "$COUNTRY" || echo "Susceptibilité indisponible"
       - name: Chocs cyclone des 12 derniers mois (format JIAF) — ignorés en cas d'indisponibilité

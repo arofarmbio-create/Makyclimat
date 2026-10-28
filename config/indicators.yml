@@ -1334,3 +1334,37 @@ indicators:
     source: "WFP/HDX, Food Prices for Madagascar (prix du riz par marché, mensuel) ; région, pas fokontany ; affiché seulement si le dernier relevé a moins de 6 mois ; n'est PAS corrigé de l'inflation générale (prix nominal) ; voir validation/vuln_cumul_limites.md"
     frequency: Mensuel, si disponible
     status: active
+  # ---------------- Ruissellement prévu à 7 jours (expérimental, inondation pluviale) ----------------
+  - id: ruiss_prevu_mm
+    label: "EXPÉRIMENTAL - Ruissellement prévu sur 7 jours (maximum sur 3 jours, SCS-CN)"
+    unit: "mm"
+    format: float
+    aggregate: none
+    sectors: [drr, wash, shelter, health]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: "MakyClimat : pluie prévue (Open-Meteo), ruissellement SCS-CN avec le CN du fokontany (infiltration urbaine faible mais non nulle) ajusté selon les 5 jours précédents. Validé sur Antananarivo seulement (2 épisodes indépendants), voir validation/crues_pluviales_validation.md. Pas une alerte officielle."
+    frequency: Toutes les 6 heures
+    status: active
+  - id: ruiss_prevu_niveau
+    label: "EXPÉRIMENTAL - Niveau de ruissellement prévu à 7 jours (0 aucun, 1 vigilance = retour 2 ans, 2 alerte = retour 5 ans)"
+    unit: "niveau 0-2"
+    format: int
+    aggregate: none
+    sectors: [drr, wash, shelter, health]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: "MakyClimat : seuils régionaux de ruissellement de retour 2 et 5 ans (CHIRPS 2006-2020). Proposition de conception (§11 du cahier des charges), à valider avec Météo Madagascar et le BNGRC ; les alertes officielles priment."
+    frequency: Toutes les 6 heures
+    status: active
+  - id: ruiss_prevu_part_pct
+    label: "EXPÉRIMENTAL - Part des fokontany en vigilance de ruissellement ou plus, à 7 jours"
+    unit: "% des fokontany"
+    format: float
+    aggregate: none
+    sectors: [drr, wash, shelter, health]
+    sdg: ["11.5", "13.1"]
+    national: [axe1]
+    source: "MakyClimat : part des fokontany de la zone dont le ruissellement prévu atteint le seuil régional de retour 2 ans. Expérimental, voir validation/crues_pluviales_validation.md."
+    frequency: Toutes les 6 heures
+    status: active
