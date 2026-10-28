@@ -93,9 +93,14 @@ systématique entre plusieurs organismes de prévision (un seul modèle saisonni
     d'Antananarivo, et Batsirai 2022 sont manqués (4 % des communes au-dessus de la crue de 2 ans).
   - **Satellite** : sur les communes cartographiées par Copernicus EMS (Ava 2018), AUC de 0,55, soit à peine
     mieux que le hasard.
-  - **Épisodes** : 13 épisodes simulés de 2015 à 2026, dont 9 sans événement documenté. La liste
-    d'événements est incomplète : les dates de Cheneso (2023) et d'Eliakim (2018) en font partie, ce qui
-    rend le taux de fausses alertes **non calculable honnêtement**.
+  - **Épisodes** : sur 12 épisodes simulés de 2015 à 2026 (seuil 10 %, 174 communes), 4 correspondent à un
+    événement documenté et 5 à un cyclone GDACS. GDACS est une source indépendante
+    (`connector_gdacs_events.py`) : ses inondations de source GloFAS sont écartées. Il reste
+    **3 épisodes sans aucune correspondance**, soit **25 % au plus de fausses alertes**. C'est une borne
+    haute : les inondations non cycloniques du BNGRC manquent.
+  - **Sensibilité au seuil** : avec « au moins 1 commune », les 3 événements sont détectés, dont Ana 2022,
+    mais on obtient 20 épisodes, dont 6 sans correspondance. Avec 25 %, 1 événement sur 3 est détecté, pour
+    7 épisodes dont 1 sans correspondance. Le choix du seuil opérationnel revient au BNGRC et à la DGRE.
   - **Lecture** : le modèle de rivière à ~5 km capte les grandes crues fluviales, pas l'inondation urbaine
     et pluviale d'Antananarivo (drainage, digues, pompage).
   - **Écart majeur** : il manque un module « inondation pluviale / crue éclair » fondé sur la pluie (§7.A).
