@@ -10,7 +10,8 @@ Validation :
   - validation croisée « une saison laissée de côté » (LOO) : corrélation et score de compétence MSSS par rapport à la
     climatologie (MSSS > 0 = meilleur que la moyenne historique) ;
   - test chronologique : ajusté sur les saisons jusqu'en 2005, évalué sur 2006 et après ;
-  - significativité de la corrélation par permutation (2000 tirages) et contrôle des tests multiples (Benjamini-Hochberg).
+  - significativité unilatérale de la corrélation entre prévision croisée et observation, par permutation (500 tirages,
+    modèle réajusté à chaque tirage), et contrôle des tests multiples (Benjamini-Hochberg).
 Une région n'est déclarée « prévisible » que si MSSS LOO > 0, MSSS chronologique > 0 et corrélation significative (FDR 10 %).
 Sinon la prévision affichée est la climatologie : le lien n'est pas démontré.
 Sorties : validation/teleconnexions_regions.csv, validation/teleconnexions.md, docs/data/<pays>/teleconnections.json
@@ -90,9 +91,22 @@ def loo_climatology(y):
 
 
 def perm_pvalue(a, b, n=2000):
+    """Corrélation simple (bilatérale) entre un prédicteur et la cible, par permutation."""
     r = abs(np.corrcoef(a, b)[0, 1])
     c = np.array([abs(np.corrcoef(RNG.permutation(a), b)[0, 1]) for _ in range(n)])
     return float((1 + np.sum(c >= r)) / (n + 1))
+
+
+def perm_pvalue_loo(X, y, n=500):
+    """Compétence de la prévision croisée, unilatérale : seule une corrélation POSITIVE entre prévision LOO et observation
+    compte. À chaque permutation de la cible, le modèle est réajusté en entier (LOO), pour que le test reproduise toute la
+    procédure. Une corrélation LOO négative (fréquente sans aucun signal) n'est jamais une compétence."""
+    r0 = np.corrcoef(loo(X, y), y)[0, 1]
+    c = np.empty(n)
+    for i in range(n):
+        yp = RNG.permutation(y)
+        c[i] = np.corrcoef(loo(X, yp), yp)[0, 1]
+    return float((1 + np.sum(c >= r0)) / (n + 1))
 
 
 def bh(p, q=0.10):
@@ -162,7 +176,7 @@ def main(country="mdg", dmi=None, oni=None):
                 X = Xdf[cols].to_numpy()
                 ev = evaluate(X, y, years)
                 ok = np.isfinite(y) & np.isfinite(X).all(axis=1)
-                ev["p_perm"] = perm_pvalue(X[ok][:, 0] if model == "oni" else loo(X[ok], y[ok]), y[ok])
+                ev["p_perm"] = perm_pvalue_loo(X[ok], y[ok])
                 # coefficients sur toutes les saisons, pour la prévision de la saison à venir
                 _, coef = fit_predict(X[ok], y[ok], X[ok][:1])
                 rows.append({"adm1": pc, "region": names.get(pc, pc), "cible": tk, "modele": model, **ev,
@@ -210,7 +224,7 @@ def write_md(path, df, fc, Xn, season_next, years):
          "Une région est dite **prévisible** seulement si les trois conditions suivantes sont réunies :",
          "- score de compétence en validation croisée (MSSS, saison laissée de côté) > 0 ;",
          f"- score de compétence au test chronologique (ajusté jusqu'en {SPLIT_YEAR}, testé après) > 0 ;",
-         "- corrélation significative par permutation, après contrôle des tests multiples (Benjamini-Hochberg, 10 %).",
+         "- corrélation POSITIVE et significative entre prévision croisée et observation (permutation unilatérale, modèle réajusté à chaque tirage), après contrôle des tests multiples (Benjamini-Hochberg, 10 %).",
          "",
          "Sinon, la meilleure prévision est la climatologie.",
          "",
