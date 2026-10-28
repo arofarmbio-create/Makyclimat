@@ -44,6 +44,13 @@ jobs:
         run: pip install -r requirements-update.txt
       - name: Mettre à jour la pluie (CHIRPS)
         run: python scripts/update_rainfall.py --country "$COUNTRY"
+      - name: Pluie récente par dékade (CHIRPS définitif ou provisoire) — ignorée en cas d'indisponibilité
+        run: |
+          python scripts/update_recent_rain.py --country "$COUNTRY" || echo "Pluie récente indisponible"
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add -f data/$COUNTRY/grids/dekad_ref_*.npz validation/pluie_recente_regions.csv 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Pluie récente : référence décadaire et résumé par région" && git pull --rebase origin main && git push) || echo "Archivage de la pluie récente non poussé"
       - name: Indicateurs ONU/OCHA via HAPI (IPC, pauvreté) — app_identifier généré automatiquement, ignoré en cas d'indisponibilité
         run: |
           python scripts/connector_hapi.py --country "$COUNTRY" || echo "HAPI indisponible, indicateurs externes non mis à jour"
