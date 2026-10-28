@@ -15,7 +15,7 @@ permissions:
 jobs:
   floods:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,11 +24,11 @@ jobs:
       - name: Installer les dépendances
         run: pip install -r requirements.txt
       - name: Validation du modèle de crue
-        run: python scripts/validate_floods.py --country "${{ github.event.inputs.country || 'mdg' }}"
+        run: python -u scripts/validate_floods.py --country "${{ github.event.inputs.country || 'mdg' }}"
       - name: Enregistrer dans le dépôt
         if: always()
         run: |
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
-          git add -f validation/crues_validation.md validation/crues_episodes.csv data/*/grids/glofas_hist.npz 2>/dev/null || true
+          git add -f validation/crues_validation.md validation/crues_episodes.csv data/*/grids/glofas_windows.json 2>/dev/null || true
           git diff --cached --quiet || (git commit -m "Validation du modèle de crue (périmètre pilote)" && git pull --rebase origin main && git push)
