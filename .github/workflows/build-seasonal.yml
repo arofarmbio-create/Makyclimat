@@ -29,6 +29,7 @@ jobs:
           set -o pipefail
           python scripts/connector_seasonal.py --country "${{ github.event.inputs.country || 'mdg' }}" 2>&1 | tee data/_seasonal_log.txt
       - name: Modèle statistique El Niño / dipôle de l'océan Indien par région (validé en LOO et chronologique)
+        if: always()
         run: |
           python scripts/connector_enso.py || echo "ONI non mis à jour, fichier existant utilisé"
           python scripts/connector_dmi.py || echo "DMI (ERSST) non mis à jour, fichier existant utilisé"
