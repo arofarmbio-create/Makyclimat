@@ -52,6 +52,7 @@ jobs:
           python tests/test_ems_live.py
           python tests/test_recent_rain.py
           python tests/test_teleconnections.py
+          python tests/test_validate_floods.py
           python scripts/compute_metrics.py --country demo
       - name: Tests de l'interface
         run: node tests/ui_test.js demo
