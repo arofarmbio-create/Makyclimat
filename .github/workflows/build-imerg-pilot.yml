@@ -1,0 +1,62 @@
+name: 17 - Pluie demi-horaire IMERG du périmètre pilote (crues éclair)
+
+# Télécharge par OPeNDAP la pluie GPM IMERG V07 (pas de 30 min) sur le périmètre pilote, saison par saison (novembre-avril),
+# et la range dans la release « imerg-pilote ». Avec « probe », teste seulement l'accès sur un jour. Manuel.
+on:
+  workflow_dispatch:
+    inputs:
+      seasons:
+        description: "Saisons (année de novembre), séparées par des espaces"
+        default: "2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024"
+      probe:
+        description: "Jour à tester seulement (AAAA-MM-JJ), vide = téléchargement"
+        default: ""
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+  TAG: imerg-pilote
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      seasons: ${{ steps.s.outputs.seasons }}
+    steps:
+      - id: s
+        run: echo "seasons=$(echo '${{ github.event.inputs.probe && 'probe' || github.event.inputs.seasons }}' | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      max-parallel: 3
+      fail-fast: false
+      matrix:
+        season: ${{ fromJson(needs.plan.outputs.seasons) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests
+      - name: Télécharger (ou tester)
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ matrix.season }}" = "probe" ]; then
+            python scripts/build_imerg_pilot.py --country "$COUNTRY" --probe "${{ github.event.inputs.probe }}"
+            exit 0
+          fi
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Pluie IMERG demi-horaire, périmètre pilote" \
+            --notes "GPM IMERG V07 Final (NASA GES DISC), pas de 30 min, novembre-avril. scripts/build_imerg_pilot.py." || true
+          mkdir -p "data/$COUNTRY/imerg"
+          f="data/$COUNTRY/imerg/imerg_${{ matrix.season }}.npz"
+          gh release download "$TAG" --pattern "imerg_${{ matrix.season }}.npz" --dir "data/$COUNTRY/imerg" || true
+          [ -f "$f" ] || python scripts/build_imerg_pilot.py --country "$COUNTRY" --season "${{ matrix.season }}"
+          gh release upload "$TAG" "$f" --clobber
