@@ -63,3 +63,8 @@ selon les scénarios plausibles ?
 ## 7. Journal des modifications
 
 - 29/10/2026 : version initiale.
+- 29/10/2026, avant tout calcul sur données réelles (défauts trouvés par les tests sur données simulées) :
+  - sans signal validé, chaque saison passée a **exactement** le même poids (et non 1/3 par tercile, ce qui
+    déséquilibrait les terciles de tailles inégales) ;
+  - la valeur publiée est la **médiane** pondérée et non la valeur attendue, car une moyenne peut sortir de la
+    fourchette 10e-90e centile quand la plupart des saisons n'exposent personne.

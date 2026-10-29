@@ -325,11 +325,12 @@ def test_forecast_alerts() -> None:
           json.load(open(country_docs_dir("demo") / "metrics" / "top.json", encoding="utf-8"))["adm2"][dist2].get("fp3") == [33, 33, 0])
     regs = sorted(top["adm1"])
     pr = [top["adm1"][r] for r in regs]
-    check("planification 12 mois : fourchette cohérente (P10 <= attendu <= P90) partout",
+    check("planification 12 mois : fourchette cohérente (P10 <= médiane <= P90) partout",
           all(v["pl"][1] <= v["pl"][0] <= v["pl"][2] and v["pl"][5] <= v["pl"][4] <= v["pl"][6] for v in pr if "pl" in v) and all("pl" in v for v in pr))
     uni = [v for r, v in zip(regs, pr) if r != regs[0] and all(x is not None for x in v.get("y", []))]
-    check("planification 12 mois : région sans signal validé = moyenne simple des saisons passées (scénario climatologique)",
-          uni and all(abs(v["pl"][0] - sum(v["ye"]) / len(v["ye"])) <= 1 for v in uni), str([(v["pl"][0], round(sum(v["ye"]) / len(v["ye"]))) for v in uni[:2]]))
+    check("planification 12 mois : région sans signal validé = médiane simple des saisons passées (scénario climatologique)",
+          uni and all(abs(v["pl"][0] - sorted(v["ye"])[(len(v["ye"]) - 1) // 2]) <= 1 for v in uni),
+          str([(v["pl"][0], sorted(v["ye"])[(len(v["ye"]) - 1) // 2]) for v in uni[:2]]))
     check("planification 12 mois : métadonnées (saison, régions validées, contexte El Niño)",
           meta.get("planning", {}).get("issued_for") == "2027-2028" and meta["planning"]["n_regions_valides"] == 1)
     check("crue : ensemble déclaré dans meta.json (51 membres)",

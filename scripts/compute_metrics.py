@@ -633,8 +633,11 @@ def main() -> None:
                 continue
             t1, t2 = np.quantile(hy[ok], [1 / 3, 2 / 3])
             cls = np.where(hy <= t1, 0, np.where(hy > t2, 2, 1))
-            p = (plan["regions"].get(rc, {}).get("nov_avr") or {"p": [1 / 3] * 3})["p"]
-            w = np.array([p[c] / max(int((cls[ok] == c).sum()), 1) for c in cls]) * ok
+            R = plan["regions"].get(rc, {}).get("nov_avr") or {}
+            if R.get("valide"):
+                w = np.array([R["p"][c] / max(int((cls[ok] == c).sum()), 1) for c in cls]) * ok
+            else:                                         # pas de signal validé : chaque saison passée pèse autant
+                w = ok.astype(float)
             W[rc] = w / w.sum()
 
         def wq(v, w, q):
@@ -646,8 +649,9 @@ def main() -> None:
             if w is None:
                 continue
             e, t, wt = scn["HYE"][i], scn["HYT"][i], scn["HYW"][i]
-            PL["pl"][i] = [int(round(float(w @ e))), int(round(wq(e, w, 0.1))), int(round(wq(e, w, 0.9))), int(round(float(w @ t))),
-                           int(round(float(w @ wt))), int(round(wq(wt, w, 0.1))), int(round(wq(wt, w, 0.9)))]
+            # médiane pondérée et fourchette 10e-90e centile (une moyenne pourrait sortir de la fourchette)
+            PL["pl"][i] = [int(round(wq(e, w, 0.5))), int(round(wq(e, w, 0.1))), int(round(wq(e, w, 0.9))), int(round(wq(t, w, 0.5))),
+                           int(round(wq(wt, w, 0.5))), int(round(wq(wt, w, 0.1))), int(round(wq(wt, w, 0.9)))]
 
     # --- Alertes précoces : cumul vers les zones supérieures ---
     EWU = None
@@ -762,7 +766,7 @@ def main() -> None:
         if EWU3 is not None and r["level"] in (1, 2) and EWU3["fp"][0][i] >= 0:
             d["fp3"] = [int(round(float(x))) for x in EWU3["fp"][:, i]]   # crue, jours 17-30 : district et région seulement
         if PL is not None and i in PL["pl"]:
-            d["pl"] = PL["pl"][i]          # planification 12 mois : sécheresse [attendu, P10, P90, cibles], pluies excessives [attendu, P10, P90]
+            d["pl"] = PL["pl"][i]          # planification 12 mois : sécheresse [médiane, P10, P90, cibles], pluies excessives [médiane, P10, P90]
         if r["level"] in (1, 2):
             # Durée au niveau d'alerte saisonnier actuel et tendance récente, à partir de l'archive déjà
             # collectée à chaque dékade (archive/<pays>/*.json) -- pas une nouvelle donnée, juste la

@@ -1438,10 +1438,10 @@
         "toutes les saisons passées ont le même poids</span></div>";
     }
     var pl = m.pl;
-    h += '<div class="row"><span>Personnes en zone de sécheresse (attendu, fourchette 1 saison sur 10 à 9 sur 10)</span><span><b>' + MC.fmtInt(pl[0]) + "</b> (" +
+    h += '<div class="row"><span>Personnes en zone de sécheresse (valeur médiane ; fourchette : 1 saison sur 10 à 9 sur 10)</span><span><b>' + MC.fmtInt(pl[0]) + "</b> (" +
       MC.fmtInt(pl[1]) + " à " + MC.fmtInt(pl[2]) + ")</span></div>";
-    h += '<div class="row"><span>dont cibles (vulnérabilité économique)</span><span>≈ ' + MC.fmtInt(pl[3]) + "</span></div>";
-    h += '<div class="row"><span>Personnes sous pluies excessives (attendu, fourchette)</span><span><b>' + MC.fmtInt(pl[4]) + "</b> (" +
+    h += '<div class="row"><span>cibles, vulnérabilité économique (valeur médiane)</span><span>≈ ' + MC.fmtInt(pl[3]) + "</span></div>";
+    h += '<div class="row"><span>Personnes sous pluies excessives (valeur médiane ; fourchette)</span><span><b>' + MC.fmtInt(pl[4]) + "</b> (" +
       MC.fmtInt(pl[5]) + " à " + MC.fmtInt(pl[6]) + ")</span></div>";
     var T = P.enso_transition;
     if (T) h += '<div class="note">Contexte El Niño : après les ' + T.cases.length + " années semblables à " + P.issue_year + ", l’année suivante a été " +
