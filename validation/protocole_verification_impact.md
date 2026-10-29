@@ -103,6 +103,17 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
 ## 9. Journal des modifications du protocole
 
 - 29/10/2026 : version initiale.
+- 29/10/2026, avant tout calcul de score (précisions imposées par le format des données, pas par des résultats) :
+  - **Cellules de rivière** : le débit moyen n'est pas conservé par la réduction des reprévisions (maximum par fenêtre
+    d'échéance seulement). Le critère « débit moyen > `q_min` » devient « crue de 2 ans du modèle ≥ `q_min` ». C'est
+    la règle déjà appliquée par l'alerte du site (`flood.min_q2_m3s`), avec `q_min = 5 m³/s` comme référence et
+    20 et 50 m³/s comme sensibilité. Le seuil de 1 m³/s est sans objet, car les mailles sous 5 m³/s ne sont pas
+    conservées.
+  - **Seuils du climat du modèle** : pour chaque maille et chaque fenêtre d'échéance, Gumbel (méthode des moments)
+    ajusté sur les maxima saisonniers (novembre-avril) du scénario de contrôle. Seules les saisons complètes sont
+    retenues (novembre 1999 - avril 2023, soit 24 saisons), et il faut au moins 15 saisons disponibles par maille.
+    La saison testée est exclue de l'ajustement.
+  - **Saisons vérifiées** : novembre 1999 - avril 2019 (20 saisons), limite de DesInventar.
 
 ## Références
 

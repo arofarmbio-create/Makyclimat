@@ -1,0 +1,41 @@
+name: 15 - Vérification par l'impact des prévisions d'ensemble GloFAS
+
+# Applique validation/protocole_verification_impact.md : reprévisions GloFAS v4 réduites (release « reprevisions-glofas-v4 »,
+# workflow 14) contre les fiches DesInventar par district. Publie les scores agrégés dans validation/. Manuel.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: pip install numpy pandas pyyaml shapely
+      - name: Reprévisions réduites
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "data/$COUNTRY/reforecast"
+          gh release download reprevisions-glofas-v4 --pattern "glofas_v4_*.npz" --dir "data/$COUNTRY/reforecast"
+          ls "data/$COUNTRY/reforecast" | wc -l
+      - name: Fiches DesInventar (non versionnées)
+        run: python scripts/connector_desinventar.py --country "$COUNTRY"
+      - name: Vérification
+        run: python scripts/validate_reforecast_impact.py --country "$COUNTRY"
+      - name: Publier les scores agrégés
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add validation/verification_impact_*.csv validation/verification_impact_glofas.md
+          git diff --cached --quiet || (git commit -m "Vérification par l'impact des prévisions d'ensemble GloFAS : scores" && git pull --rebase origin main && git push)

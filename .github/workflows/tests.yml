@@ -56,6 +56,7 @@ jobs:
           python tests/test_connector_dmi.py
           python tests/test_validate_pluvial.py
           python tests/test_pluvial_forecast.py
+          python tests/test_verification_impact.py
           python scripts/compute_metrics.py --country demo
       - name: Tests de l'interface
         run: node tests/ui_test.js demo
