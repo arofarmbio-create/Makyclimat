@@ -638,6 +638,7 @@
     h += acc("Tendance indicative, jour " + (F0 && F0.trend ? F0.trend.day_from : 8) + " à " + (F0 && F0.trend ? F0.trend.day_to : 16), trendSection(m), false);
     if (F0 && F0.subseasonal && m.fp3) h += acc("Tendance des crues, jour " + F0.subseasonal.day_from + " à " + F0.subseasonal.day_to, subseasonalSection(m), false);
     h += acc("Risques, alertes et conseils", risksSection(m, false) + alertsSection(m) + planSection(m), true);
+    if (S.plan && m.pl) h += acc("Planification de la saison " + S.plan.issued_for + " (12 mois)", planningSection(f, m), false);
     h += acc("Scénarios de la saison et calendrier cultural", scenarioTable(m) + seasonSection(f) + otherSeasonalSection(f) + calendarSection(f) + householdSeasonAdvice(m), false);
     h += acc("Chocs récents et historique", shockSection(m) + hist, false);
     h += acc("Eau dans le sol et hydrologie", hydroSection(f) + soilSection(f), false);
@@ -1416,10 +1417,38 @@
   function setupSeasonal() {
     getJSON("teleconnections.json").then(function (D) { S.tele = D; }).catch(function () { S.tele = null; });
     getJSON("seasonal_mme.json").then(function (D) { S.mme = D; }).catch(function () { S.mme = null; });
+    getJSON("planning.json").then(function (D) { S.plan = D; }).catch(function () { S.plan = null; });
     return getJSON("seasonal.json").then(function (D) { S.seas = D; }).catch(function () { S.seas = null; });
   }
   /* Comparaison des prévisions saisonnières indépendantes pour la région (cahier des charges §5 : comparer plusieurs
      organismes et modèles, montrer les divergences). Seules les prévisions dont la compétence est démontrée sont chiffrées. */
+  /* Planification à 12 mois (build_planning.py) : scénarios pour la saison suivante, chiffrés seulement là où le signal
+     est validé ; sinon scénarios climatologiques, annoncés comme tels. */
+  function planningSection(f, m) {
+    var P = S.plan;
+    if (!P || !m.pl) return "";
+    var c = f.properties.c, chain = (S.anc && S.anc[c]) ? S.anc[c] : [c], reg = chain[0], R = (P.regions[reg] || {}).nov_avr;
+    var h = '<div class="note warn" style="margin-bottom:6px">Outil de <b>planification</b> (plans de contingence, stocks, budgets), pas une prévision. ' +
+      "Remplacé automatiquement par la prévision saisonnière le " + esc(fmtDate(P.replaced_on)) + ".</div>";
+    if (R && R.valide) {
+      h += '<div class="row"><span>Pluie de novembre à avril (signal validé sur les saisons passées)</span><span><b>' +
+        R.p.map(function (x) { return Math.round(x * 100) + " %"; }).join(" / ") + "</b> (sec / normal / humide)</span></div>";
+    } else {
+      h += '<div class="row"><span>Pluie de novembre à avril</span><span>pas de signal fiable à 12 mois pour cette région : ' +
+        "toutes les saisons passées ont le même poids</span></div>";
+    }
+    var pl = m.pl;
+    h += '<div class="row"><span>Personnes en zone de sécheresse (attendu, fourchette 1 saison sur 10 à 9 sur 10)</span><span><b>' + MC.fmtInt(pl[0]) + "</b> (" +
+      MC.fmtInt(pl[1]) + " à " + MC.fmtInt(pl[2]) + ")</span></div>";
+    h += '<div class="row"><span>dont cibles (vulnérabilité économique)</span><span>≈ ' + MC.fmtInt(pl[3]) + "</span></div>";
+    h += '<div class="row"><span>Personnes sous pluies excessives (attendu, fourchette)</span><span><b>' + MC.fmtInt(pl[4]) + "</b> (" +
+      MC.fmtInt(pl[5]) + " à " + MC.fmtInt(pl[6]) + ")</span></div>";
+    var T = P.enso_transition;
+    if (T) h += '<div class="note">Contexte El Niño : après les ' + T.cases.length + " années semblables à " + P.issue_year + ", l’année suivante a été " +
+      T.next.la_nina + " fois La Niña, " + T.next.neutre + " fois neutre et " + T.next.el_nino + " fois El Niño. Ce contexte n’est traduit en chiffres régionaux que là où il a été validé.</div>";
+    return h + '<div class="note">Population actuelle ; exposition déduite de la pluie seule (les cyclones ne sont pas prévisibles à 12 mois). Méthode et validation : validation/planification_12mois.md.</div>';
+  }
+
   var TARGET_FR = { ndj: "novembre-janvier", jfm: "janvier-mars", nov_avr: "novembre-avril" };
   function otherSeasonalSection(f) {
     var c = f.properties.c, chain = (S.anc && S.anc[c]) ? S.anc[c] : [c], reg = chain[0];

@@ -180,6 +180,12 @@ def main() -> None:
     pk.update({"events": ev, "event_types": _bhist.TYPES, "sources": [{"id": "3w", "label": "Import 3W simulé", "n": len(rows3)}, {"id": "iati", "label": "IATI simulé", "n": len(rows_i)}],
                "warnings": [], "generated_at": "2026-02-21T00:00:00+00:00", "notes": ["Données simulées pour les tests."]})
     _wj(_cdocs("demo") / "response.json", pk)
+    # planification 12 mois simulée : la première région a un signal « validé » (sec 50 %), les autres non
+    r1 = sorted(ud[ud.level == 1].pcode)[0]
+    _wj(_cdocs("demo") / "planning.json", {"generated": "2026-02-21", "issued_for": "2027-2028", "issue_year": 2026,
+        "predictors": {"oni_jas": 2.16, "dmi_jas": 0.2}, "n_seasons": 10, "replaced_on": "2027-10-16",
+        "enso_transition": {"oni_jas": 2.16, "phase": "el_nino", "cases": [1997, 2015], "next": {"la_nina": 1, "neutre": 1, "el_nino": 0}},
+        "regions": {r1: {"nov_avr": {"valide": True, "modele": "oni", "p": [0.5, 0.35, 0.15], "pct_normale": 85, "rpss": 0.05, "msss": 0.1}}}})
     import build_hindcast as _bh
     _argv, sys.argv = sys.argv, ["build_hindcast.py", "--country", "demo"]
     import io, contextlib

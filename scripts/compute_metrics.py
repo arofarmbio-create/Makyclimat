@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import calendar
 import datetime as dt
+import json
 
 import numpy as np
 import pandas as pd
@@ -613,6 +614,40 @@ def main() -> None:
         scn = {"S": SCN, "pa": pa_u, "ex": num, "cov": cov, "cov_obs": cov_obs, "cascade": cascade, "season": f"{y0s}-{y1s}", "n": nph,
                "years": [int(ms["years"][0]), int(ms["years"][-1])], "hist_years": [int(y) for y in ms["years"]], "hist_phases": [str(x) for x in ms["phases"]], "HY": HY, "HYE": HYE, "HYT": HYT, "HYW": HYW, "weighted": fweights is not None, "n_years": int(len(ms["years"]))}
 
+    # --- Planification à 12 mois (build_planning.py, validation/protocole_planification_12mois.md) ---
+    # Personnes exposées attendues la saison suivante : chaque saison passée est pondérée par la probabilité du tercile
+    # de pluie de sa région (novembre-avril) ; poids égaux si la région n'a pas de signal validé à 12 mois.
+    PL = None
+    pl_path = country_docs_dir(args.country) / "planning.json"
+    if scn is not None and pl_path.exists():
+        plan = json.loads(pl_path.read_text(encoding="utf-8"))
+        PL = {"meta": {k: plan.get(k) for k in ("issued_for", "issue_year", "predictors", "enso_transition", "replaced_on", "generated")},
+              "pl": {}}
+        PL["meta"]["n_regions_valides"] = sum(1 for d in plan["regions"].values() if d.get("nov_avr", {}).get("valide"))
+        reg_row = {pc: i for i, pc in enumerate(units.pcode) if units.at[i, "level"] == 1}
+        W = {}
+        for rc, i in reg_row.items():
+            hy = scn["HY"][i]
+            ok = np.isfinite(hy)
+            if ok.sum() < 15:
+                continue
+            t1, t2 = np.quantile(hy[ok], [1 / 3, 2 / 3])
+            cls = np.where(hy <= t1, 0, np.where(hy > t2, 2, 1))
+            p = (plan["regions"].get(rc, {}).get("nov_avr") or {"p": [1 / 3] * 3})["p"]
+            w = np.array([p[c] / max(int((cls[ok] == c).sum()), 1) for c in cls]) * ok
+            W[rc] = w / w.sum()
+
+        def wq(v, w, q):
+            o = np.argsort(v)
+            c = np.cumsum(w[o])
+            return float(v[o][min(np.searchsorted(c, q), len(v) - 1)])
+        for i in units.index[units.level <= 3]:
+            w = W.get(units.at[i, "adm1"] if units.at[i, "level"] > 1 else units.at[i, "pcode"])
+            if w is None:
+                continue
+            e, t, wt = scn["HYE"][i], scn["HYT"][i], scn["HYW"][i]
+            PL["pl"][i] = [int(round(float(w @ e))), int(round(wq(e, w, 0.1))), int(round(wq(e, w, 0.9))), int(round(float(w @ t))),
+                           int(round(float(w @ wt))), int(round(wq(wt, w, 0.1))), int(round(wq(wt, w, 0.9)))]
 
     # --- Alertes précoces : cumul vers les zones supérieures ---
     EWU = None
@@ -726,6 +761,8 @@ def main() -> None:
                 d["fp2"] = [int(round(float(x))) for x in EWU2["fp"][:, i]]
         if EWU3 is not None and r["level"] in (1, 2) and EWU3["fp"][0][i] >= 0:
             d["fp3"] = [int(round(float(x))) for x in EWU3["fp"][:, i]]   # crue, jours 17-30 : district et région seulement
+        if PL is not None and i in PL["pl"]:
+            d["pl"] = PL["pl"][i]          # planification 12 mois : sécheresse [attendu, P10, P90, cibles], pluies excessives [attendu, P10, P90]
         if r["level"] in (1, 2):
             # Durée au niveau d'alerte saisonnier actuel et tendance récente, à partir de l'archive déjà
             # collectée à chaque dékade (archive/<pays>/*.json) -- pas une nouvelle donnée, juste la
@@ -763,6 +800,7 @@ def main() -> None:
     nat = units[units.level == 1]
     meta = {
         "enso": enso_state, "has_history": hist_ok,
+        "planning": None if PL is None else PL["meta"],
         "scenarios": None if scn is None else {
             "season": scn["season"], "observed_share": round(float(np.mean(scn["cov_obs"])), 2), "years": scn["years"], "hist_years": scn["hist_years"], "hist_phases": scn["hist_phases"],
             "cascade": scn["cascade"], "n_years": scn["n_years"], "weighted_by_forecast": scn["weighted"], "n_phase": scn["n"], "wet_threshold_pct": wet_thr,
