@@ -95,6 +95,28 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Garde-fous : une validation programmée ne publie rien sur des données incomplètes. C3S ajoute chaque octobre la
   prévision de l'année sans retélécharger les rétroprévisions.
 
+### Planification à 12 mois (saison 2027-2028)
+- ✅ Module construit, protocole fixé avant calcul (quatre épreuves de fiabilité, dont le RPSS des probabilités).
+  Personnes en sécheresse, cibles et personnes sous pluies excessives publiées par zone, avec médiane et fourchette.
+- ❌ puis 🔧 Deux défauts trouvés par les tests sur données simulées, avant les données réelles :
+  - les poids n'étaient pas égaux sans signal ;
+  - une moyenne pouvait sortir de sa fourchette, d'où le passage à la médiane.
+- 📊 **Résultat sur données réelles : aucune région sur 24 n'a de signal de pluie validé à 12 mois**, pour aucune
+  période ni aucun modèle (MSSS médian −0,03 à −0,08 ; RPSS médian −0,01 à −0,05).
+  L'outil affiche donc des **scénarios climatologiques** chiffrés.
+  **Résultat de thèse :** la limite de prévisibilité réelle de la pluie régionale à Madagascar se situe entre 3 mois
+  (3 régions sur 24 avec le modèle El Niño / océan Indien) et 12 mois (aucune région).
+- ✅ Contexte physique robuste : après les 8 années El Niño comparables à 2026 depuis 1950, l'année suivante n'a jamais
+  été El Niño (4 La Niña, 4 neutres). La **phase** El Niño est prévisible à 12 mois ; son **effet sur la pluie
+  régionale** ne l'est pas à cette échéance.
+
+### Couverture des besoins des décideurs (bilan du 29/10/2026)
+- ✅ De la prévision à la décision (qui, quelles cultures, quand) : largement couvert.
+- ⚠️ Anticipation El Niño / La Niña : couvert, avec une compétence démontrée seulement dans quelques régions.
+- ❌ Priorisation des investissements (coût-bénéfice des mesures d'adaptation) : absente. Un module de
+  coût-efficacité « et si ? » est proposé, avec la réserve scientifique que la forêt réduit les crues petites et
+  moyennes, pas les crues extrêmes (FAO et CIFOR 2005).
+
 ### Organisation
 - 📌 Chaque nouveau chapitre a un protocole écrit **avant** tout calcul de score, avec un journal daté des
   modifications. Les ajustements imposés par les données y sont consignés avant de voir les résultats.
