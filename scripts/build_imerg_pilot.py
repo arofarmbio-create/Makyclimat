@@ -76,9 +76,7 @@ def subset_url(day: dt.date, fname: str, box) -> str:
 def parse_ascii(text: str, box) -> np.ndarray:
     """Réponse ASCII OPeNDAP -> grille [lat, lon] en mm/h ; NaN pour les valeurs manquantes (< 0)."""
     i0, i1, j0, j1 = box
-    body = text.split("---------------------------------------------", 1)[-1]
-    rows = [ln for ln in body.splitlines() if ln.startswith("precipitation") or ln.startswith("[0][")]
-    vals = [list(map(float, ln.split(",")[1:])) for ln in rows if ln.startswith("[0][")]
+    vals = [list(map(float, ln.split(",")[1:])) for ln in text.splitlines() if re.match(r"precipitation\[0\]\[\d+\],", ln)]
     a = np.array(vals, dtype="float32")                                     # lon, lat
     if a.shape != (i1 - i0 + 1, j1 - j0 + 1):
         raise ValueError(f"grille inattendue {a.shape}")
