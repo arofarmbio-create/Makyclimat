@@ -42,5 +42,20 @@ F = C.glo_cdf(np.sort(xs), xi, al, k)
 emp = (np.arange(1, 201) - 0.44) / 200.12
 check("logistique généralisée : asymétrie négative ajustée (écart max à la répartition empirique < 0,08)",
       np.isfinite(xi) and np.max(np.abs(F - emp)) < 0.08, f"k = {k:.2f}, écart {np.max(np.abs(F - emp)):.3f}")
+import pandas as pd  # noqa: E402
+
+import build_drought_series as BD  # noqa: E402
+
+lat, lon = np.array([-18.0, -18.1, -18.2]), np.array([47.0, 47.1, 47.2])
+valid = np.ones((3, 3), bool)
+valid[1, 1] = False                                          # maille centrale manquante (mer, nuage)
+u = pd.DataFrame({"level": [4, 4], "lat": [-18.1, -18.0], "lon": [47.1, 47.0], "area_km2": [1.0, 2.0], "adm2": ["D1", "D1"]})
+ii, jj, w, d = BD.leaf_index(u, lat, lon, valid)
+check("maille la plus proche : maille du centroïde si valide, sinon voisine valide",
+      (ii[1], jj[1]) == (0, 0) and valid[ii[0], jj[0]] and max(abs(ii[0] - 1), abs(jj[0] - 1)) == 1)
+f = np.array([[1.0, 0, 0], [0, 0, 0], [0, 0, 0]])
+f[ii[0], jj[0]] = 4.0
+check("moyenne du district pondérée par la surface", abs(BD.district_means(f, (ii, jj, w, d))["D1"] - (4 * 1 + 1 * 2) / 3) < 1e-9)
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

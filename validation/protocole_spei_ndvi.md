@@ -68,3 +68,6 @@ Limites de l'ET0 :
   log-logistique de Vicente-Serrano et al. (2010) échoue (β ≤ 1) quand l'échantillon est faiblement asymétrique vers
   la gauche. Remplacée par la forme équivalente du paquet SPEI de référence : loi logistique généralisée de Hosking
   (Beguería et al. 2014), qui accepte les deux signes d'asymétrie.
+- 29/10/2026, avant tout calcul sur données réelles : MOD13C2 (0,05°) n'est pas proposé par AppEEARS. Il est remplacé
+  par **MOD13A3 v6.1** (NDVI mensuel à 1 km, même algorithme MODIS). Les pixels fiables (0 ou 1) sont moyennés par
+  blocs de 5 × 5 (environ 0,05°), puis traités comme prévu.
