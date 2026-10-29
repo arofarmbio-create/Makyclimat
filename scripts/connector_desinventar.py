@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import collections
 import csv
+import datetime as dt
 import io
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -28,7 +29,8 @@ URL = "https://www.desinventar.net/DesInventar/download/DI_export_{code}.zip"
 TYPES = {"CYCLON": "cyclone", "INOND": "inondation", "GLISSEMENT": "glissement", "CHERESSE": "secheresse"}
 NUM = {"afectados": "touches", "damnificados": "sinistres", "muertos": "deces", "desaparece": "disparus",
        "vivdest": "maisons_detruites", "vivafec": "maisons_endommagees", "reubicados": "deplaces", "nhectareas": "cultures_ha"}
-COLS = ["serial", "type", "evenement", "date", "annee", "adm1", "adm2", "adm2_actuel", "glide", *NUM.values(), "source"]
+COLS = ["serial", "type", "evenement", "date", "date_saisie", "date_douteuse", "annee", "adm1", "adm2", "adm2_actuel", "glide",
+        *NUM.values(), "source"]
 
 
 def download(code: str) -> bytes:
@@ -58,7 +60,16 @@ def current_districts(code: str, known: set[str], split: dict) -> str:
     return same[0] if len(same) == 1 else ""
 
 
-def parse(raw: bytes, prefix: str, known: set[str], split: dict | None = None) -> list[dict]:
+def doubtful_date(typ: str, date: str, entry: str, season_months) -> int:
+    """1 si la date d'événement est probablement la date de saisie : à 3 jours près de celle-ci, pour un cyclone ou une
+    inondation daté hors de la saison des pluies (ex. 85 fiches cycloniques de 2018 datées de juin-juillet à Madagascar)."""
+    if typ not in ("cyclone", "inondation") or not date or not entry or not season_months:
+        return 0
+    d, e = dt.date.fromisoformat(date), dt.date.fromisoformat(entry)
+    return int(abs((d - e).days) <= 3 and d.month not in season_months)
+
+
+def parse(raw: bytes, prefix: str, known: set[str], split: dict | None = None, season_months=None) -> list[dict]:
     # l'export mélange UTF-8 et Latin-1 : les octets invalides sont remplacés (seuls des noms d'événements sont touchés)
     root = ET.fromstring(raw.decode("utf-8", errors="replace").encode("utf-8"))
     out = []
@@ -70,9 +81,12 @@ def parse(raw: bytes, prefix: str, known: set[str], split: dict | None = None) -
         if not y.isdigit():
             continue
         date = f"{int(y):04d}-{int(m):02d}-{int(d):02d}" if m.isdigit() and d.isdigit() and int(m) and int(d) else ""
+        entry = g.get("fechafec", "")[:10]
+        entry = entry if len(entry) == 10 and entry[4] == "-" else ""
         adm1 = prefix + g["level0"] if g.get("level0") else ""
         adm2 = prefix + g["level1"] if g.get("level1") and g["level1"] != "00" else ""
-        out.append({"serial": g.get("serial", ""), "type": typ, "evenement": g.get("evento", ""), "date": date, "annee": int(y),
+        out.append({"serial": g.get("serial", ""), "type": typ, "evenement": g.get("evento", ""), "date": date, "date_saisie": entry,
+                    "date_douteuse": doubtful_date(typ, date, entry, season_months), "annee": int(y),
                     "adm1": adm1, "adm2": adm2, "adm2_actuel": current_districts(adm2, known, split or {}) if adm2 else "", "glide": g.get("glide", ""),
                     **{v: number(g.get(k)) for k, v in NUM.items()}, "source": g.get("fuentes", "")})
     return sorted(out, key=lambda r: (r["annee"], r["date"], r["serial"]))
@@ -86,7 +100,10 @@ def main() -> None:
     if not cfg:
         raise SystemExit("desinventar absent de la configuration du pays : rien à faire.")
     units = read_units(args.country)
-    recs = parse(download(cfg["country"]), cfg.get("pcode_prefix", ""), set(units.pcode[units.level == 2]), cfg.get("split"))
+    rf = load_config(args.country)["rainfall"]
+    a, b = rf["season_start_month"], rf["season_end_month"]
+    season = [m for m in range(1, 13) if m >= a or m <= b] if a > b else list(range(a, b + 1))
+    recs = parse(download(cfg["country"]), cfg.get("pcode_prefix", ""), set(units.pcode[units.level == 2]), cfg.get("split"), season)
     out = country_data_dir(args.country) / "external" / "desinventar.csv"
     with open(out, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=COLS)
@@ -95,7 +112,8 @@ def main() -> None:
     n = collections.Counter(r["type"] for r in recs)
     d = [r for r in recs if r["adm2"]]
     print(f"DesInventar {cfg['country']} : {len(recs)} fiches {dict(n)} ; {len(d)} au niveau district, dont "
-          f"{sum(bool(r['adm2_actuel']) for r in d)} rapprochées des limites actuelles ; années {recs[0]['annee']}-{recs[-1]['annee']}")
+          f"{sum(bool(r['adm2_actuel']) for r in d)} rapprochées des limites actuelles ; années {recs[0]['annee']}-{recs[-1]['annee']} ; "
+          f"{sum(r['date_douteuse'] for r in recs)} fiches dont la date est probablement la date de saisie (écartées de la vérification)")
 
 
 if __name__ == "__main__":

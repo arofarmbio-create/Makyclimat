@@ -143,7 +143,7 @@ def loso_thresholds(M, seasons, test_season, T):
 
 def impacts(slug, units):
     df = pd.read_csv(country_data_dir(slug) / "external" / "desinventar.csv", dtype=str)
-    df = df[df.type.isin(["cyclone", "inondation"]) & df.date.notna() & df.adm2_actuel.notna()]
+    df = df[df.type.isin(["cyclone", "inondation"]) & df.date.notna() & df.adm2_actuel.notna() & (df.date_douteuse != "1")]
     num = lambda c: pd.to_numeric(df[c], errors="coerce").fillna(0)
     df = df[(num("touches") > 0) | (num("maisons_endommagees") > 0) | (num("maisons_detruites") > 0)]
     rows = [(dt.date.fromisoformat(d), a, t) for d, adm, t in zip(df.date, df.adm2_actuel, df.type) for a in adm.split(";")]

@@ -117,7 +117,17 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
 - 29/10/2026, avant tout calcul de score : EWDS ne propose les reprévisions **v4** qu'à partir de 2003 (requête de
   contraintes de l'API ; 1999-2002 refusés). Seuils : 19 saisons complètes (novembre 2003 - avril 2023), dont 18 en
   excluant la saison testée. Saisons vérifiées : novembre 2003 - avril 2019 (16 saisons). Le nombre de fiches
-  DesInventar utilisables baisse en conséquence ; il sera rapporté avec les résultats.
+  DesInventar utilisables ne change pas : aucune fiche de 1999-2002 n'est à la fois datée, au niveau district et avec
+  un impact. Il sera rapporté avec les résultats.
+- 29/10/2026, avant tout calcul de score : **contrôle de la date des fiches**.
+  - 87 des 88 fiches cycloniques de 2018 (et 1 de mai 2017) ont une date d'événement égale, à quelques jours près, à leur date de saisie
+    (juin-juillet 2018, hors saison cyclonique).
+  - Rien dans ces fiches (ni code GLIDE ni commentaire) ne permet de les attribuer à Ava (janvier 2018) ou à Eliakim
+    (mars 2018). Elles sont **exclues**, sans attribution supposée.
+  - Règle générale, transférable à d'autres pays (`connector_desinventar.doubtful_date`) : cyclone ou inondation daté
+    hors de la saison des pluies, à 3 jours ou moins de sa date de saisie.
+  - La saison 2017-2018 n'a donc plus aucune fiche utilisable. La règle du §5 (seules les saisons avec au moins une
+    fiche sont vérifiées) l'écarte automatiquement : ses impacts réels ne sont pas comptés comme des fausses alertes.
 
 ## Références
 

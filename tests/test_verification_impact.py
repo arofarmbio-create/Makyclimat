@@ -62,5 +62,10 @@ check("DesInventar : district découpé -> plusieurs districts actuels ; jour 0 
 check("DesInventar : -1 = non renseigné ; niveau district « 00 » ignoré ; autre type conservé",
       r[1]["maisons_detruites"] == "" and r[0]["adm2"] == "" and r[0]["type"] == "autre")
 
+check("DesInventar : cyclone daté en juillet, à 1 jour de sa saisie -> date douteuse ; en février -> fiable",
+      DI.doubtful_date("cyclone", "2018-07-02", "2018-07-03", [11, 12, 1, 2, 3, 4]) == 1
+      and DI.doubtful_date("cyclone", "2018-02-02", "2018-02-03", [11, 12, 1, 2, 3, 4]) == 0
+      and DI.doubtful_date("cyclone", "2018-07-02", "2018-09-30", [11, 12, 1, 2, 3, 4]) == 0)
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)
