@@ -34,7 +34,13 @@ check("SPEI croissant avec le bilan (même mois du calendrier)", np.all(np.diff(
 z3 = C.spei(D + 100, np.full(D.shape, 100.0), 3, 1)
 check("SPEI-3 : NaN pour les 2 premiers mois", np.isnan(z3[:2]).all() and np.isfinite(z3[2:]).mean() > 0.95,
       f"NaN au début : {np.isnan(z3[:2]).tolist()} ; part finie ensuite {np.isfinite(z3[2:]).mean():.3f}")
-a, b, g = C.loglogistic_lmoments(rng.normal(0, 1, 5))
-check("log-logistique : échantillon trop court -> NaN", np.isnan(a))
+a, b, g = C.glo_lmoments(rng.normal(0, 1, 5))
+check("logistique généralisée : échantillon trop court -> NaN", np.isnan(a))
+xs = -rng.gamma(2.0, 30.0, 200)                                 # asymétrie négative (bilan borné vers le haut)
+xi, al, k = C.glo_lmoments(xs)
+F = C.glo_cdf(np.sort(xs), xi, al, k)
+emp = (np.arange(1, 201) - 0.44) / 200.12
+check("logistique généralisée : asymétrie négative ajustée (écart max à la répartition empirique < 0,08)",
+      np.isfinite(xi) and np.max(np.abs(F - emp)) < 0.08, f"k = {k:.2f}, écart {np.max(np.abs(F - emp)):.3f}")
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

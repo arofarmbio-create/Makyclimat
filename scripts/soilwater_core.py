@@ -270,29 +270,42 @@ def spi(P, n, month0, min_mean_mm=None):
     return out
 
 
-def loglogistic_lmoments(x):
-    """Paramètres (alpha, beta, gamma) de la loi log-logistique à 3 paramètres par L-moments non biaisés (Beguería et al. 2014,
-    correction de Vicente-Serrano et al. 2010). x : échantillon 1-D sans NaN. NaN si l'ajustement est impossible."""
-    from scipy.special import gamma as G
+def glo_lmoments(x):
+    """Loi logistique généralisée (Hosking 1986), forme à 3 paramètres de la log-logistique utilisée par le paquet SPEI
+    (Beguería et al. 2014) : accepte une asymétrie des deux signes. Paramètres (xi, alpha, k) par L-moments (estimateurs
+    non biaisés des moments pondérés). x : échantillon 1-D sans NaN ; NaN si moins de 10 valeurs ou dispersion nulle."""
     x = np.sort(np.asarray(x, float))
     N = len(x)
     if N < 10:
         return np.nan, np.nan, np.nan
     i = np.arange(1, N + 1)
-    w0 = x.mean()
-    w1 = np.sum(x * (N - i) / (N - 1)) / N
-    w2 = np.sum(x * (N - i) * (N - i - 1) / ((N - 1) * (N - 2))) / N
-    beta = (2 * w1 - w0) / (6 * w1 - w0 - 6 * w2)
-    if not np.isfinite(beta) or beta <= 1:
+    b0 = x.mean()
+    b1 = np.sum((i - 1) / (N - 1) * x) / N
+    b2 = np.sum((i - 1) * (i - 2) / ((N - 1) * (N - 2)) * x) / N
+    l1, l2, l3 = b0, 2 * b1 - b0, 6 * b2 - 6 * b1 + b0
+    if l2 <= 0:
         return np.nan, np.nan, np.nan
-    g = G(1 + 1 / beta) * G(1 - 1 / beta)
-    alpha = (w0 - 2 * w1) * beta / g
-    return alpha, beta, w0 - alpha * g
+    k = -l3 / l2
+    if abs(k) < 1e-6:
+        return l1, l2, 0.0
+    alpha = l2 * np.sin(k * np.pi) / (k * np.pi)
+    return l1 - alpha * (1 / k - np.pi / np.sin(k * np.pi)), alpha, k
+
+
+def glo_cdf(x, xi, alpha, k):
+    if k == 0:
+        y = (x - xi) / alpha
+    else:
+        arg = 1 - k * (x - xi) / alpha
+        with np.errstate(divide="ignore", invalid="ignore"):
+            y = np.where(arg > 0, -np.log(np.maximum(arg, 1e-300)) / k, np.inf if k > 0 else -np.inf)
+    return 1.0 / (1.0 + np.exp(-np.clip(y, -700, 700)))
 
 
 def spei(P, PET, n, month0):
     """Indice standardisé de précipitation-évapotranspiration SPEI-n (Vicente-Serrano et al. 2010). P, PET (T, N) en mm/mois,
-    le pas 0 étant le mois `month0`. Bilan P - PET cumulé sur n mois, loi log-logistique par mois du calendrier (L-moments),
+    le pas 0 étant le mois `month0`. Bilan P - PET cumulé sur n mois, loi log-logistique (forme logistique généralisée de
+    Hosking, comme le paquet SPEI) par mois du calendrier (L-moments),
     SPEI = Phi^-1(F), borné à +-3,09. NaN pour les n-1 premiers pas et si moins de 20 cumuls valides."""
     from scipy import stats
     D = rolling_sum(np.asarray(P, float) - np.asarray(PET, float), n)
@@ -311,11 +324,10 @@ def spei(P, PET, n, month0):
             ok = np.isfinite(x)
             if ok.sum() < 20:
                 continue
-            a, b, g = loglogistic_lmoments(x[ok])
-            if not np.isfinite(a):
+            xi, al, k = glo_lmoments(x[ok])
+            if not np.isfinite(xi):
                 continue
-            with np.errstate(divide="ignore", invalid="ignore"):
-                F = 1.0 / (1.0 + (a / np.maximum(x[ok] - g, 1e-9)) ** b)
+            F = glo_cdf(x[ok], xi, al, k)
             z = np.full(len(x), np.nan)
             z[ok] = np.clip(stats.norm.ppf(np.clip(F, 1e-6, 1 - 1e-6)), -3.09, 3.09)
             out[idx, j] = z

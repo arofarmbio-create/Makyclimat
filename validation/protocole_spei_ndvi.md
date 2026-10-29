@@ -64,3 +64,7 @@ Limites de l'ET0 :
 ## 6. Journal des modifications
 
 - 29/10/2026 : version initiale.
+- 29/10/2026, avant tout calcul sur données réelles : un test automatique a montré que la paramétrisation
+  log-logistique de Vicente-Serrano et al. (2010) échoue (β ≤ 1) quand l'échantillon est faiblement asymétrique vers
+  la gauche. Remplacée par la forme équivalente du paquet SPEI de référence : loi logistique généralisée de Hosking
+  (Beguería et al. 2014), qui accepte les deux signes d'asymétrie.
