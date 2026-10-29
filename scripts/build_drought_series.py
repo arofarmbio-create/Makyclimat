@@ -1,7 +1,7 @@
 """Séries mensuelles par district pour comparer SPI et SPEI au NDVI (validation/protocole_spei_ndvi.md).
 
   --part et0    ERA5-Land, moyennes mensuelles (Climate Data Store, CDS_API_KEY) -> ET0 Penman-Monteith FAO-56, 1981-aujourd'hui
-  --part ndvi   MODIS MOD13C2 v6.1 (AppEEARS, NASA ; EARTHDATA_USER / EARTHDATA_PASSWORD) -> NDVI mensuel, 2000-aujourd'hui,
+  --part ndvi   MODIS MOD13A3 v6.1, 1 km agrégé à ~0,05° (AppEEARS, NASA ; EARTHDATA_USER / EARTHDATA_PASSWORD) -> NDVI mensuel,
                 pixels de fiabilité 0 (bonne) ou 1 (marginale) seulement
   --part pluie  CHIRPS v2.0 mensuel (CHC, sans compte), 1981-aujourd'hui
 Valeur d'un district : moyenne pondérée par la surface de ses fokontany, chacun prenant la maille valide la plus proche
@@ -27,17 +27,26 @@ from common import country_data_dir, load_config, read_units
 ERA5_VARS = ["2m_temperature", "2m_dewpoint_temperature", "10m_u_component_of_wind", "10m_v_component_of_wind",
              "surface_solar_radiation_downwards", "surface_pressure"]
 APPEEARS = "https://appeears.earthdatacloud.nasa.gov/api"
+PRODUCT = "MOD13A3.061"        # NDVI mensuel 1 km (MOD13C2 à 0,05° n'est pas proposé par AppEEARS)
+COARSEN = 5                    # agrégation 5 x 5 pixels de 1 km -> ~0,05° (moyenne des pixels fiables)
 
 
-def leaf_index(units, lat, lon, valid):
-    """Pour chaque fokontany : indices (i, j) de la maille valide la plus proche ; poids = surface ; district."""
+def leaf_index(units, lat, lon, valid, max_ring=6):
+    """Pour chaque fokontany : indices (i, j) de la maille valide la plus proche (grille régulière : maille du centroïde,
+    sinon recherche en anneaux jusqu'à max_ring mailles) ; poids = surface ; district."""
     lv = units[units.level == 4].reset_index(drop=True)
-    vi, vj = np.where(valid)
-    vlat, vlon = lat[vi], lon[vj]
     out_i, out_j = [], []
     for la, lo in zip(lv.lat.to_numpy(), lv.lon.to_numpy()):
-        k = np.argmin((vlat - la) ** 2 + (vlon - lo) ** 2)
-        out_i.append(vi[k]); out_j.append(vj[k])
+        i0, j0 = int(np.abs(lat - la).argmin()), int(np.abs(lon - lo).argmin())
+        best = (i0, j0)
+        for r in range(max_ring + 1):
+            ii, jj = np.meshgrid(np.arange(max(i0 - r, 0), min(i0 + r + 1, len(lat))), np.arange(max(j0 - r, 0), min(j0 + r + 1, len(lon))), indexing="ij")
+            ok = valid[ii, jj]
+            if ok.any():
+                d = (lat[ii[ok]] - la) ** 2 + (lon[jj[ok]] - lo) ** 2
+                best = (int(ii[ok][d.argmin()]), int(jj[ok][d.argmin()]))
+                break
+        out_i.append(best[0]); out_j.append(best[1])
     return np.array(out_i), np.array(out_j), lv.area_km2.fillna(1.0).to_numpy(), lv.adm2.to_numpy()
 
 
@@ -91,15 +100,15 @@ def part_ndvi(cfg, units, years):
     tok = s.post(f"{APPEEARS}/login", auth=(os.environ["EARTHDATA_USER"], os.environ["EARTHDATA_PASSWORD"]), timeout=120).json()["token"]
     h = {"Authorization": f"Bearer {tok}"}
     lon0, lat0, lon1, lat1 = cfg["map"]["bbox"]
-    layers = s.get(f"{APPEEARS}/product/MOD13C2.061", headers=h, timeout=120).json()   # noms exacts des couches
+    layers = s.get(f"{APPEEARS}/product/{PRODUCT}", headers=h, timeout=120).json()   # noms exacts des couches
     names = list(layers) if isinstance(layers, dict) else [x.get("Layer", x) if isinstance(x, dict) else x for x in layers]
-    l_ndvi = next((k for k in names if "ndvi" in str(k).lower()), None)
+    l_ndvi = next((k for k in names if str(k).lower().endswith("monthly_ndvi")), None)
     l_rel = next((k for k in names if "reliab" in str(k).lower()), None)
     if not l_ndvi or not l_rel:
-        raise RuntimeError(f"couches MOD13C2 introuvables ; réponse AppEEARS : {str(layers)[:600]}")
+        raise RuntimeError(f"couches {PRODUCT} introuvables ; réponse AppEEARS : {str(layers)[:600]}")
     task = {"task_type": "area", "task_name": f"makyclimat_ndvi_{dt.date.today():%Y%m%d}",
             "params": {"dates": [{"startDate": f"01-01-{years[0]}", "endDate": f"12-31-{years[1]}"}],
-                       "layers": [{"product": "MOD13C2.061", "layer": l_ndvi}, {"product": "MOD13C2.061", "layer": l_rel}],
+                       "layers": [{"product": PRODUCT, "layer": l_ndvi}, {"product": PRODUCT, "layer": l_rel}],
                        "output": {"format": {"type": "netcdf4"}, "projection": "geographic"},
                        "geo": {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {}, "geometry": {
                            "type": "Polygon", "coordinates": [[[lon0, lat0], [lon1, lat0], [lon1, lat1], [lon0, lat1], [lon0, lat0]]]}}]}}}
@@ -115,27 +124,30 @@ def part_ndvi(cfg, units, years):
             raise RuntimeError("tâche AppEEARS en erreur")
         time.sleep(60)
     files = s.get(f"{APPEEARS}/bundle/{tid}", headers=h, timeout=120).json()["files"]
-    nc = next(f for f in files if f["file_name"].endswith(".nc"))
-    path = Path(tempfile.mkdtemp()) / "ndvi.nc"
-    with s.get(f"{APPEEARS}/bundle/{tid}/{nc['file_id']}", headers=h, stream=True, timeout=600, allow_redirects=True) as g:
-        g.raise_for_status()
-        with open(path, "wb") as fo:
-            for chunk in g.iter_content(1 << 20):
-                fo.write(chunk)
-    ds = xr.open_dataset(path)
-    nd = [v for v in ds.data_vars if "NDVI" in v][0]
-    rel = [v for v in ds.data_vars if "reliability" in v][0]
-    lat, lon = ds.lat.values, ds.lon.values
-    rows, idx = [], None
-    for t in ds.time.values:
-        a = ds[nd].sel(time=t).values.astype("float32")
-        q = ds[rel].sel(time=t).values
-        a = np.where(np.isin(q, [0, 1]) & (a >= -0.2) & (a <= 1.0), a, np.nan)
-        if idx is None:
-            idx = leaf_index(units, lat, lon, np.isfinite(a) | np.isfinite(ds[nd].isel(time=-1).values))
-        ts = pd.Timestamp(str(t)[:10])
-        rows += [(f"{ts.year}-{ts.month:02d}", k, v) for k, v in district_means(a, idx).items()]
-    print(f"NDVI MODIS : {len(ds.time)} mois", flush=True)
+    rows, idx, n_months = [], None, 0
+    for nc in [f for f in files if f["file_name"].endswith(".nc")]:
+        path = Path(tempfile.mkdtemp()) / "ndvi.nc"
+        with s.get(f"{APPEEARS}/bundle/{tid}/{nc['file_id']}", headers=h, stream=True, timeout=1800, allow_redirects=True) as g:
+            g.raise_for_status()
+            with open(path, "wb") as fo:
+                for chunk in g.iter_content(1 << 22):
+                    fo.write(chunk)
+        ds = xr.open_dataset(path)
+        nd = [v for v in ds.data_vars if v.lower().endswith("monthly_ndvi")][0]
+        rel = [v for v in ds.data_vars if "reliab" in v.lower()][0]
+        for t in ds.time.values:
+            a = ds[nd].sel(time=t)
+            q = ds[rel].sel(time=t)
+            a = a.where(q.isin([0, 1]) & (a >= -0.2) & (a <= 1.0))
+            a = a.coarsen(lat=COARSEN, lon=COARSEN, boundary="trim").mean()      # 1 km -> ~0,05° (blocs 5 x 5)
+            arr, lat, lon = a.values.astype("float32"), a.lat.values, a.lon.values
+            if idx is None:
+                idx = leaf_index(units, lat, lon, np.isfinite(arr))
+            ts = pd.Timestamp(str(t)[:10])
+            rows += [(f"{ts.year}-{ts.month:02d}", k, v) for k, v in district_means(arr, idx).items()]
+            n_months += 1
+        path.unlink()
+    print(f"NDVI MODIS : {n_months} mois", flush=True)
     return rows
 
 
