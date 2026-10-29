@@ -98,6 +98,11 @@ def main() -> None:
     args = ap.parse_args()
     rng = np.random.default_rng(20261029)
     seasons, cells, units, lv = load(args.country)
+    have = {s["season"] for s in seasons}
+    gap = sorted(set(range(2014, max(have) + 1)) - have)
+    if gap:                                        # jamais de scores publiés avec des saisons manquantes au milieu
+        print(f"::warning::Saisons IMERG manquantes {gap} : rien n'est publié.")
+        return
     ev, di, gd, other = events(units, lv, args.country)
     truth = pd.concat([ev[["id", "w0", "w1"]], di[["id", "w0", "w1"]]])
     smax = {h: np.stack([np.nanmax(s[h], 0) for s in seasons]) for h in DURATIONS}

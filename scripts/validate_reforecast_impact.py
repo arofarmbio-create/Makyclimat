@@ -237,6 +237,11 @@ def main() -> None:
     args = ap.parse_args()
     rng = np.random.default_rng(20261029)
     files = load_months(country_data_dir(args.country) / "reforecast")
+    expected = {f"glofas_v4_{y}_{m:02d}.npz" for y in range(2003, 2024) for m in SEASON_MONTHS if (y, m) >= (2003, 3)}
+    missing = sorted(expected - {f.name for f in files})
+    if missing:                                    # jamais de scores publiés sur une archive incomplète
+        print(f"::warning::Reprévisions incomplètes ({len(missing)} mois manquants, ex. {missing[:3]}) : rien n'est publié.")
+        return
     units = read_units(args.country)
     keys, dist, seasons, M, windows = cell_table(files, args.country)
     obs = impacts(args.country, units)

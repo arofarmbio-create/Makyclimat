@@ -3,6 +3,8 @@ name: 15 - Vérification par l'impact des prévisions d'ensemble GloFAS
 # Applique validation/protocole_verification_impact.md : reprévisions GloFAS v4 réduites (release « reprevisions-glofas-v4 »,
 # workflow 14) contre les fiches DesInventar par district. Publie les scores agrégés dans validation/. Manuel.
 on:
+  schedule:
+    - cron: "0 6 2 1,4,7,10 *"   # tous les trimestres : fiches DesInventar et reprévisions à jour
   workflow_dispatch:
 
 permissions:

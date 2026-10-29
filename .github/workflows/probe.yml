@@ -1,5 +1,7 @@
 name: Vérifier les sources de données
 on:
+  schedule:
+    - cron: "0 2 * * 1"   # chaque lundi : une source déplacée ou fermée est signalée (leçon de la panne CHIRPS du 28/10/2026)
   workflow_dispatch:
 permissions:
   contents: write

@@ -2,6 +2,8 @@ name: 18 - Intensité IMERG contre cumul (inondations pluviales, périmètre pil
 
 # Applique validation/protocole_intensite_imerg.md aux saisons IMERG de la release « imerg-pilote » (workflow 17). Manuel.
 on:
+  schedule:
+    - cron: "0 6 20 9 *"    # le 20 septembre, après l'ajout de la saison passée
   workflow_dispatch:
 
 permissions:

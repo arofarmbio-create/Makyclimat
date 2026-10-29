@@ -3,6 +3,8 @@ name: 19 - SPI ou SPEI face au NDVI (sécheresse agricole)
 # Séries mensuelles par district (CHIRPS, ET0 ERA5-Land, NDVI MODIS via AppEEARS), rangées dans la release
 # « secheresse-series », puis application de validation/protocole_spei_ndvi.md. Manuel.
 on:
+  schedule:
+    - cron: "0 4 22 * *"    # le 22 de chaque mois : CHIRPS, ERA5-Land et NDVI du mois précédent publiés
   workflow_dispatch:
 
 permissions:

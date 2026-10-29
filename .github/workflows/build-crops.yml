@@ -3,6 +3,8 @@ name: 11 - Cultures et bâti exposés aux crues (WorldCover x HAND)
 # Croise l'occupation du sol (ESA WorldCover, 10 m) et la HAND pour estimer les cultures et le bâti en zone basse près des cours d'eau.
 # À relancer seulement si la hydrologie de terrain ou les limites changent.
 on:
+  schedule:
+    - cron: "0 5 10 1 *"   # le 10 janvier : nouvelle couverture du sol éventuelle
   workflow_dispatch:
     inputs:
       country:

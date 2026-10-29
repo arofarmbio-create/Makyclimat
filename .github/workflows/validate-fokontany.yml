@@ -2,6 +2,8 @@ name: 10 - Validation fokontany (Copernicus EMS)
 
 # Compare nos indicateurs aux dégâts cartographiés par satellite (Copernicus EMS) au niveau fokontany puis commune.
 on:
+  schedule:
+    - cron: "0 7 5 1,4,7,10 *"   # tous les trimestres : nouvelles activations Copernicus EMS
   workflow_dispatch:
     inputs:
       country:

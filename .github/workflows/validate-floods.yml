@@ -3,6 +3,8 @@ name: 10 - Validation du modèle de crue (périmètre pilote)
 # Confronte le débit simulé GloFAS et les seuils de crue aux inondations documentées (validation/evenements.csv) et aux
 # communes inondées cartographiées par Copernicus EMS. Manuel ; résultat dans validation/crues_validation.md.
 on:
+  schedule:
+    - cron: "0 7 4 1,4,7,10 *"   # tous les trimestres
   workflow_dispatch:
     inputs:
       country:

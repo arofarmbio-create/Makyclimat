@@ -4,6 +4,8 @@ name: 11 - Inondation pluviale (pluie et ruissellement SCS-CN), validation sur l
 # urbaine faible mais non nulle), validés sur les mêmes événements que le modèle de rivière. Manuel ; reprise possible
 # (pluie journalière mise en cache). Résultat : validation/crues_pluviales_validation.md
 on:
+  schedule:
+    - cron: "0 7 6 1,4,7,10 *"   # tous les trimestres
   workflow_dispatch:
     inputs:
       country:

@@ -3,6 +3,8 @@ name: 16 - Prévision saisonnière hybride (multi-modèles C3S + ENSO/IOD)
 # Télécharge les rétroprévisions 1993-2016 et la prévision d'octobre des 10 systèmes C3S (Climate Data Store), les range
 # dans la release « c3s-saisonnier-octobre », puis applique validation/protocole_saisonnier_multimodele.md. Manuel.
 on:
+  schedule:
+    - cron: "0 6 16 10 *"   # le 16 octobre : prévisions C3S d'octobre publiées
   workflow_dispatch:
 
 permissions:

@@ -108,6 +108,24 @@ npm install --no-save jsdom && node tests/ui_test.js demo   # interface
 ```
 Les tests tournent aussi automatiquement à chaque modification sur GitHub.
 
+## 8. Mises à jour automatiques (calendrier)
+
+Règle du projet : toute donnée utile au système se met à jour seule, par un workflow GitHub programmé. Les heures sont
+en UTC. Un workflow programmé qui échoue envoie un courriel au propriétaire du dépôt (réglage GitHub par défaut).
+
+| Fréquence | Workflow | Données |
+|---|---|---|
+| Toutes les 6 h | Mise à jour des données et publication | Prévision météo, débits et ensemble GloFAS (une fois par jour), pluie CHIRPS, EMS, chocs récents, indicateurs, site |
+| Chaque jour | 3 - Seuils de crue ; 6 - Eau dans le sol | Reprise jusqu'à complétude (quota) ; humidité du sol, recharge |
+| Chaque semaine | 4 - Historique ; 7 - Cyclones ; 8 - Saisonnier SEAS5 ; vérification des sources ; 14 - Reprévisions GloFAS | Le dimanche, le 14 complète les mois manquants de l'archive, puis ne fait plus rien |
+| Chaque mois | 12 - Comptes NASA et Copernicus (le 1er) ; 13 - Routes (le 8) ; 12 - Chocs (le 9) ; 19 - SPI, SPEI et NDVI (le 22) | Comptes ou licences à renouveler ; OpenStreetMap ; JIAF ; séries de sécheresse |
+| Chaque trimestre | 9, 10, 10 bis, 11 - Validations ; 15 - Vérification par l'impact | Nouveaux événements, activations EMS, fiches DesInventar |
+| Chaque année | 16 - Saisonnier hybride C3S (16 octobre) ; 17 et 18 - IMERG (5 et 20 septembre) ; 5 - Hydrologie, 11 - Cultures (janvier) | Prévision C3S d'octobre ; saison IMERG passée ; terrain, couverture du sol |
+| Manuel, volontairement | 1 - Limites et population ; 2 - Normale de pluie ; essais (13, vérification ponctuelle) | Un changement de limites ou de normale (1991-2020) se décide, il ne s'applique pas tout seul |
+
+Garde-fous : une validation programmée **ne publie rien** si ses données sont incomplètes (reprévisions GloFAS,
+saisons IMERG). Le téléchargeur C3S ajoute la prévision de l'année sans retélécharger les rétroprévisions.
+
 ## Structure
 
 ```

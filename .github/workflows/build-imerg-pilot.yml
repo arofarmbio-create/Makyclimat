@@ -3,6 +3,8 @@ name: 17 - Pluie demi-horaire IMERG du périmètre pilote (crues éclair)
 # Télécharge par OPeNDAP la pluie GPM IMERG V07 (pas de 30 min) sur le périmètre pilote, saison par saison (novembre-avril),
 # et la range dans la release « imerg-pilote ». Avec « probe », teste seulement l'accès sur un jour. Manuel.
 on:
+  schedule:
+    - cron: "0 2 5 9 *"     # le 5 septembre : la saison novembre-avril passée est disponible en version Final
   workflow_dispatch:
     inputs:
       seasons:
@@ -26,7 +28,7 @@ jobs:
       seasons: ${{ steps.s.outputs.seasons }}
     steps:
       - id: s
-        run: echo "seasons=$(echo '${{ github.event.inputs.probe && 'probe' || github.event.inputs.seasons }}' | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+        run: echo "seasons=$(echo '${{ github.event.inputs.probe && 'probe' || github.event.inputs.seasons }}' | sed "s/^$/$(seq -s ' ' 2014 $(( $(date -u +%Y) - 1 )))/" | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
 
   build:
     needs: plan

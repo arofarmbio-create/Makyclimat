@@ -2,6 +2,8 @@ name: 12 - Vérifier les comptes NASA Earthdata et Copernicus
 
 # Petite requête réelle à chaque service, avec les secrets du dépôt ; n'affiche jamais les secrets. Manuel.
 on:
+  schedule:
+    - cron: "0 3 1 * *"     # le 1er de chaque mois : compte expiré ou licence à renouveler
   workflow_dispatch:
 
 permissions:

@@ -3,6 +3,8 @@ name: 5 - Hydrologie (rivières, bassins, terrain)
 # Calcule rivières, bassins versants, HAND et pente depuis le MNT Copernicus GLO-90 (accès libre), puis les indicateurs par fokontany.
 # À lancer une fois (le terrain ne change pas), puis seulement si les limites changent.
 on:
+  schedule:
+    - cron: "0 5 12 1 *"   # le 12 janvier : terrain et réseau (données quasi fixes)
   workflow_dispatch:
     inputs:
       country:

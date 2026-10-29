@@ -2,6 +2,8 @@ name: 12 - Indicateurs de choc (format JIAF)
 
 # Intensité, proximité et pluie locale de chaque cyclone documenté, par fokontany (vent IBTrACS, pluie CHIRPS).
 on:
+  schedule:
+    - cron: "0 5 9 * *"   # le 9 de chaque mois : chocs des 12 derniers mois
   workflow_dispatch:
     inputs:
       country:

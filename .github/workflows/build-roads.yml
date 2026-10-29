@@ -3,6 +3,8 @@ name: 13 - Routes exposées aux crues et enclavement
 # Routes principales OpenStreetMap croisées avec la HAND : tronçons en zone basse et éloignement des routes.
 # À relancer seulement si la hydrologie de terrain ou les limites changent.
 on:
+  schedule:
+    - cron: "0 5 8 * *"   # le 8 de chaque mois : routes OpenStreetMap mises à jour
   workflow_dispatch:
     inputs:
       country:

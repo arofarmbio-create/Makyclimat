@@ -77,7 +77,24 @@ def main() -> None:
         centre, system = cs.split(":")
         out = out_dir / f"{centre}_{system}.npz"
         if out.exists():
-            print(f"{out.name} : déjà présent")
+            z = dict(np.load(out))
+            if year in z["years"]:
+                print(f"{out.name} : déjà à jour ({year})")
+                continue
+            try:                                   # rétroprévisions déjà là : seule la prévision de l'année est ajoutée
+                f = Path(tempfile.mkdtemp()) / "c3s.grib"
+                retrieve(c, centre, system, [year], area, f)
+                fc, _, _ = read(f, [year])
+            except Exception as e:  # noqa: BLE001
+                print(f"::warning::{cs} : prévision {year} indisponible : {type(e).__name__} : {str(e)[:300]}")
+                continue
+            h = z["pluie"][: len(HINDCAST)].astype("float32")
+            nm = max(h.shape[1], fc.shape[1])
+            pad = lambda a: np.concatenate([a, np.full((a.shape[0], nm - a.shape[1], *a.shape[2:]), np.nan, "float32")], axis=1)
+            z.update(pluie=np.concatenate([pad(h), pad(fc)]).astype("float16"), years=np.array(HINDCAST + [year]),
+                     members_forecast=np.array(fc.shape[1]))
+            save_grid(out, **z)
+            print(f"{out.name} : prévision {year} ajoutée ({fc.shape[1]} membres)")
             continue
         t0 = time.time()
         parts = []

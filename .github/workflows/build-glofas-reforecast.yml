@@ -4,6 +4,8 @@ name: 14 - Reprévisions GloFAS v4 réduites (vérification par l'impact)
 # fenêtre d'échéance) et les range dans la release GitHub « reprevisions-glofas-v4 » (hors du dépôt git).
 # Un mois ≈ 9 min d'attente EWDS. Reprend là où il s'est arrêté (les mois déjà publiés sont sautés). Manuel.
 on:
+  schedule:
+    - cron: "0 1 * * 0"     # chaque dimanche : complète les mois manquants (archive figée, sans effet une fois complète)
   workflow_dispatch:
     inputs:
       years:
@@ -27,7 +29,7 @@ jobs:
       years: ${{ steps.y.outputs.years }}
     steps:
       - id: y
-        run: echo "years=$(echo '${{ github.event.inputs.years }}' | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+        run: echo "years=$(echo '${{ github.event.inputs.years || '2003 2004 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023' }}' | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
 
   build:
     needs: plan
@@ -58,7 +60,7 @@ jobs:
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          for m in ${{ github.event.inputs.months }}; do
+          for m in ${{ github.event.inputs.months || '1 2 3 4 11 12' }}; do
             python scripts/build_glofas_reforecast.py --country "$COUNTRY" --year "${{ matrix.year }}" --months "$m" || { echo "::warning::${{ matrix.year }}-$m échoué"; continue; }
             f="data/$COUNTRY/reforecast/glofas_v4_${{ matrix.year }}_$(printf %02d "$m").npz"
             [ -f "$f" ] && gh release upload "$TAG" "$f" --clobber

@@ -258,6 +258,15 @@ par décision éditoriale isolée.
   pratique de Copernicus EMS comme source de vérité de terrain à l'échelle fokontany, à documenter dans la
   discussion méthodologique.
 
+## 6 bis. Journal des réussites et des échecs (depuis le 29/10/2026)
+
+Chaque étape, réussie ou non, est consignée et datée dans `validation/journal_recherche.md`. Les protocoles fixés
+avant calcul sont :
+- `protocole_verification_impact.md` (GloFAS contre DesInventar) ;
+- `protocole_saisonnier_multimodele.md` (C3S et ENSO/IOD) ;
+- `protocole_intensite_imerg.md` (intensité infra-journalière) ;
+- `protocole_spei_ndvi.md` (SPI ou SPEI face au NDVI).
+
 ## 7. Contribution méthodologique revendiquée pour la thèse
 
 1. Un cadre reproductible de validation multi-échelle (région, fokontany, commune) pour un système
