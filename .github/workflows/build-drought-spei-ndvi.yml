@@ -37,6 +37,12 @@ jobs:
         run: |
           gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Séries mensuelles par district (sécheresse)" \
             --notes "Pluie CHIRPS, ET0 Penman-Monteith (ERA5-Land), NDVI MOD13C2 (AppEEARS), par district. scripts/build_drought_series.py." || true
+          # lancement manuel : réutilise la série déjà publiée ce mois-ci ; lancement programmé : toujours recalculée
+          mkdir -p "data/$COUNTRY/drought"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && gh release view "$TAG" --json assets                -q '.assets[] | select(.name=="${{ matrix.part }}_districts.csv") | .updatedAt' | grep -q "^$(date -u +%Y-%m)"; then
+            gh release download "$TAG" --pattern "${{ matrix.part }}_districts.csv" --dir "data/$COUNTRY/drought" --clobber
+            exit 0
+          fi
           python scripts/build_drought_series.py --country "$COUNTRY" --part "${{ matrix.part }}"
           gh release upload "$TAG" "data/$COUNTRY/drought/${{ matrix.part }}_districts.csv" --clobber
 
@@ -60,5 +66,5 @@ jobs:
         run: |
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
-          git add validation/spei_ndvi.md validation/spei_ndvi_districts.csv validation/spei_controle_et0.csv
+          git add validation/spei_ndvi.md validation/spei_ndvi_districts.csv validation/spei_controle_et0.csv data/$COUNTRY/external/drought.csv
           git diff --cached --quiet || (git commit -m "SPI ou SPEI face au NDVI : validation par district" && git pull --rebase origin main && git push)

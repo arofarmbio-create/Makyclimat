@@ -638,7 +638,7 @@
     h += acc("Tendance indicative, jour " + (F0 && F0.trend ? F0.trend.day_from : 8) + " à " + (F0 && F0.trend ? F0.trend.day_to : 16), trendSection(m), false);
     if (F0 && F0.subseasonal && m.fp3) h += acc("Tendance des crues, jour " + F0.subseasonal.day_from + " à " + F0.subseasonal.day_to, subseasonalSection(m), false);
     h += acc("Risques, alertes et conseils", risksSection(m, false) + alertsSection(m) + planSection(m), true);
-    h += acc("Scénarios de la saison et calendrier cultural", scenarioTable(m) + seasonSection(f) + calendarSection(f) + householdSeasonAdvice(m), false);
+    h += acc("Scénarios de la saison et calendrier cultural", scenarioTable(m) + seasonSection(f) + otherSeasonalSection(f) + calendarSection(f) + householdSeasonAdvice(m), false);
     h += acc("Chocs récents et historique", shockSection(m) + hist, false);
     h += acc("Eau dans le sol et hydrologie", hydroSection(f) + soilSection(f), false);
     if (m.b) h += row("Bénéficiaires déclarés", MC.fmtInt(m.b)) + row("Écart restant", MC.fmtInt(val(m, "g")));
@@ -1414,7 +1414,36 @@
   /* ---------- Prévision saisonnière (ECMWF SEAS5 via Open-Meteo) ---------- */
   var MONTHS_FR = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
   function setupSeasonal() {
+    getJSON("teleconnections.json").then(function (D) { S.tele = D; }).catch(function () { S.tele = null; });
+    getJSON("seasonal_mme.json").then(function (D) { S.mme = D; }).catch(function () { S.mme = null; });
     return getJSON("seasonal.json").then(function (D) { S.seas = D; }).catch(function () { S.seas = null; });
+  }
+  /* Comparaison des prévisions saisonnières indépendantes pour la région (cahier des charges §5 : comparer plusieurs
+     organismes et modèles, montrer les divergences). Seules les prévisions dont la compétence est démontrée sont chiffrées. */
+  var TARGET_FR = { ndj: "novembre-janvier", jfm: "janvier-mars", nov_avr: "novembre-avril" };
+  function otherSeasonalSection(f) {
+    var c = f.properties.c, chain = (S.anc && S.anc[c]) ? S.anc[c] : [c], reg = chain[0];
+    if (!S.tele && !S.mme) return "";
+    function word(p) { return p <= 85 ? "plus sec que la normale" : p < 95 ? "un peu plus sec" : p <= 105 ? "proche de la normale" : p < 115 ? "un peu plus humide" : "plus humide que la normale"; }
+    var rows = [];
+    if (S.tele) {
+      var t = S.tele.forecast.filter(function (x) { return x.adm1 === reg && x.previsible; });
+      rows.push(["Modèle El Niño / océan Indien (statistique, " + S.tele.n_seasons + " saisons)", t.length ? t.map(function (x) {
+        return TARGET_FR[x.cible] + " : <b>" + x.pct_normale + " %</b> de la normale (" + word(x.pct_normale) + ")"; }).join("<br>") :
+        "aucun lien démontré pour cette région : la meilleure prévision reste la normale"]);
+    }
+    if (S.mme) {
+      var m2 = S.mme.forecast.filter(function (x) { return x.adm1 === reg; });
+      rows.push(["Hybride : " + S.mme.systems.length + " modèles de prévision (Copernicus C3S) + El Niño / océan Indien", m2.length ? m2.map(function (x) {
+        return TARGET_FR[x.cible] + " : <b>" + Math.round(x.pct_normale) + " %</b> de la normale (" + word(x.pct_normale) + ")"; }).join("<br>") :
+        "compétence non démontrée pour cette région : la meilleure prévision reste la normale"]);
+    }
+    var h = "<h4>Autres prévisions saisonnières (région)</h4>";
+    rows.forEach(function (r) { h += '<div class="row"><span>' + esc(r[0]) + "</span><span>" + r[1] + "</span></div>"; });
+    h += '<div class="note">Prévisions indépendantes de celle d’ECMWF ci-dessus, chacune chiffrée seulement là où sa compétence a été démontrée sur les saisons passées ' +
+      "(validation/teleconnexions.md, validation/saisonnier_multimodele.md). Quand elles divergent, c'est l'incertitude réelle de la saison.";
+    if (S.tele && S.tele.predictors) h += " Indices de juillet-septembre : El Niño (ONI) " + String(S.tele.predictors.oni_jas).replace(".", ",") + ", dipôle de l’océan Indien (DMI) " + String(S.tele.predictors.dmi_jas).replace(".", ",") + ".";
+    return h + "</div>";
   }
   /* Chocs au format JIAF 2 : intensité et proximité des dangers naturels et des chocs agroécologiques */
   function shockSection(m) {

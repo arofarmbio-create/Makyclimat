@@ -88,8 +88,23 @@ def main() -> None:
             H[(grp, k)] = (w, len(v), sign_p(w, len(v)), float(v[f"r_spi_{k}"].median()) if len(v) else np.nan,
                            float(v[f"r_spei_{k}"].median()) if len(v) else np.nan)
     gs = grand_sud(spi[6], spe[6], names, adm1)
+    publish_latest(args.country, spe, N, months)
     write_md(DATA_DIR.parent / "validation" / "spei_ndvi.md", D, H, ctrl, gs, months)
     print(pd.DataFrame(H, index=["gagne", "n", "p", "r_spi_med", "r_spei_med"]).T.to_string())
+
+
+def publish_latest(country, spe, N, months):
+    """Derniers SPEI-3, SPEI-6 et anomalie de NDVI par district, pour la carte (data/<pays>/external/drought.csv)."""
+    rows = []
+    for key, I, n in (("spei3", spe[3], 3), ("spei6", spe[6], 6)):
+        last = I.dropna(how="all").index[-1]
+        rows += [{"pcode": d, "indicateur": key, "valeur": round(float(v), 2), "date": last,
+                  "source": f"MakyClimat : SPEI-{n} (CHIRPS, ET0 Penman-Monteith ERA5-Land, loi logistique généralisée)"} for d, v in I.loc[last].items() if np.isfinite(v)]
+    Nz = pd.DataFrame(C.monthly_standardized(N.to_numpy(), int(N.index[0][5:7])), index=N.index, columns=N.columns)
+    last = Nz.dropna(how="all").index[-1]
+    rows += [{"pcode": d, "indicateur": "ndvi_anom_z", "valeur": round(float(v), 2), "date": last,
+              "source": "MODIS MOD13C2 v6.1 (NASA, AppEEARS), anomalie standardisée par mois du calendrier depuis 2000"} for d, v in Nz.loc[last].items() if np.isfinite(v)]
+    pd.DataFrame(rows).to_csv(country_data_dir(country) / "external" / "drought.csv", index=False)
 
 
 def control_et0(E, units, country):

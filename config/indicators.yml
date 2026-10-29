@@ -85,7 +85,7 @@ indicators:
     sectors: [agriculture, livestock, wash, food_security]
     sdg: ["2.4", "6.4"]
     national: [axe1, eau]
-    source: ERA5-Land / modèle FAO-56 (à construire)
+    source: "ERA5-Land / modèle FAO-56 : construit (voir spei3, spei6)"
     frequency: Quotidienne
     status: planned
   - id: ndvi_anomaly
@@ -94,7 +94,7 @@ indicators:
     sectors: [agriculture, livestock, food_security]
     sdg: ["2.4", "15.3"]
     national: [axe1]
-    source: MODIS/VIIRS, Sentinel-2 (à vérifier)
+    source: "MODIS : construit (voir ndvi_anom_z)"
     frequency: Tous les 10 jours
     status: planned
   - id: crop_production_risk
@@ -514,6 +514,50 @@ indicators:
     national: [eau]
     source: "MacDonald et al. (2012) Environ. Res. Lett. 7:024009 ; Bonsor & MacDonald (2011) BGS OR/11/067 ; grille continentale ~5 km, republiée par l'UNESCO-IHP avec l'autorisation du BGS/NERC — voir validation/groundwater_limites.md"
     frequency: Ponctuelle
+    status: active
+  - id: conductivity_uscm
+    label: "Conductivité électrique de l'eau des forages (indice de salinité ou de minéralisation ; à lire à côté du potentiel en eau, jamais seule pour juger la potabilité)"
+    unit: "µS/cm"
+    format: float
+    aggregate: none
+    sectors: [wash, health]
+    sdg: ["6.1"]
+    national: [eau]
+    source: "MGMERL (Ministère de l'Eau), relevés les plus récents des forages enregistrés, plus proche forage dans un rayon de 15 km (environ 23 % des fokontany ; les autres restent sans donnée) — voir scripts/connector_mgmerl_quality.py et validation/groundwater_limites.md"
+    frequency: Ponctuelle
+    status: active
+  - id: spei3
+    label: "SPEI sur 3 mois (pluie moins évapotranspiration ; < -1 = sécheresse modérée, < -1,5 sévère), dernier mois disponible"
+    unit: "écart-type"
+    format: float
+    aggregate: none
+    sectors: [agriculture, food, wash]
+    sdg: ["2.4"]
+    national: [eau]
+    source: "MakyClimat : SPEI (Vicente-Serrano et al. 2010 ; loi logistique généralisée comme le paquet SPEI) ; pluie CHIRPS, ET0 Penman-Monteith FAO-56 depuis ERA5-Land ; par district — comparaison au SPI dans validation/spei_ndvi.md"
+    frequency: Mensuelle
+    status: active
+  - id: spei6
+    label: "SPEI sur 6 mois (sécheresse de saison), dernier mois disponible"
+    unit: "écart-type"
+    format: float
+    aggregate: none
+    sectors: [agriculture, food, wash]
+    sdg: ["2.4"]
+    national: [eau]
+    source: "MakyClimat : SPEI-6, mêmes données et méthode que spei3"
+    frequency: Mensuelle
+    status: active
+  - id: ndvi_anom_z
+    label: "Anomalie de végétation (NDVI satellite, écart à la normale du même mois ; < -1 = végétation nettement moins verte que d'habitude)"
+    unit: "écart-type"
+    format: float
+    aggregate: none
+    sectors: [agriculture, food]
+    sdg: ["2.4", "15.3"]
+    national: [eau]
+    source: "MODIS MOD13C2 v6.1 (NASA, AppEEARS), pixels fiables seulement, par district ; réagit aussi aux feux, cyclones et à l'irrigation"
+    frequency: Mensuelle
     status: active
   - id: cn2
     label: Courbe-numéro de ruissellement (CN, condition moyenne ; plus élevé = plus de ruissellement)
