@@ -415,6 +415,36 @@ def main() -> None:
             f0 = fdates.index(today.isoformat())
             rl = cfg["flood"]["return_levels"]
             flood_src_ok = True
+    # Ensemble GloFAS (contrôle + 50 membres, update_floods.py) : probabilité de dépasser les crues de 2, 5, 20 ans.
+    # Le niveau d'alerte reste celui du scénario de contrôle (méthode validée, validation/crues_validation.md) ;
+    # la probabilité l'accompagne (cahier des charges §8 approche 3, §11) sans le modifier. Fiabilité des
+    # probabilités non encore mesurée (pas de score de Brier : il faudrait les reprévisions GloFAS).
+    ens_ok, fe_path = False, grid_dir(args.country) / "flood_ensemble.npz"
+    if flood_src_ok and fe_path.exists():
+        ze = load_grid(fe_path)
+        edates = [str(x) for x in ze["dates"]]
+        if today.isoformat() in edates:
+            e0, ens_ok = edates.index(today.isoformat()), True
+            eidx = {pc: k for k, pc in enumerate(ze["pcode"].astype(str))}
+
+    def flood_probs_for(day_lo: int, day_hi: int):
+        """Part des membres (%) dont le débit maximal sur [day_lo, day_hi) dépasse chaque crue de flood.return_levels ; NaN sans ensemble."""
+        out = np.full((len(rl) if flood_src_ok else 3, len(LI0)), np.nan)
+        if not ens_ok:
+            return out
+        lo, hi = e0 + day_lo, min(e0 + day_hi, ze["q"].shape[2])
+        if hi <= lo:
+            return out
+        with np.errstate(invalid="ignore"):
+            qm = np.nanmax(ze["q"][:, :, lo:hi], axis=2)               # membres x communes
+        for k, i in enumerate(LI0):
+            c = units.at[i, "adm3"]
+            if c in eidx and c in th.index:
+                m = qm[:, eidx[c]]
+                m = m[np.isfinite(m)]
+                if len(m):
+                    out[:, k] = [100.0 * np.mean(m >= th.at[c, f"q{T}"]) for T in rl]
+        return out
 
     def flood_levels_for(day_lo: int, day_hi: int):
         """Niveau de crue (0-3) pour la fenêtre [day_lo, day_hi) de jours de prévision, même méthode que l'alerte à 7 jours."""
@@ -448,6 +478,11 @@ def main() -> None:
                       "n_communes": int(len(th)) if flood_src_ok else 0, "n_valid_thresholds": int(th.q2.notna().sum()) if flood_src_ok else 0}
         lv["flood"] = flood_lv
         nums["flood_ratio"], nums["flood_q"] = flood_ratio, flood_q
+        fp = flood_probs_for(0, horizon)
+        for j in range(3):
+            nums[f"flood_p{j}"] = fp[j]
+        flood_info["ensemble"] = {"available": ens_ok, "members": int(ze["q"].shape[0]) if ens_ok else 0,
+                                  "fetched_at": str(ze["fetched_at"]) if ens_ok else None, "return_levels": list(rl) if flood_src_ok else None}
         EWL = {"lv": lv, "nums": nums, "horizon": horizon, "flood": flood_info}
 
         # Tendance 8-16 jours : même calcul de niveaux (pluie/vent/chaleur/sécheresse/crue), sur la fenêtre
@@ -460,7 +495,7 @@ def main() -> None:
             flood_lv2, flood_ratio2, flood_q2 = flood_levels_for(d0, d1)
             lv2["flood"] = flood_lv2
             nums2["flood_ratio"], nums2["flood_q"] = flood_ratio2, flood_q2
-            EWL2 = {"lv": lv2, "nums": nums2, "day_from": d0 + 1, "day_to": d1}
+            EWL2 = {"lv": lv2, "nums": nums2, "day_from": d0 + 1, "day_to": d1, "fp": flood_probs_for(d0, d1)}
 
     # --- Scénarios de fin de saison (ensemble d'analogues, voir scripts/scenarios.py) ---
     import scenarios as SC
@@ -598,7 +633,8 @@ def main() -> None:
         # crue) -- grille WorldPop âge/sexe (voir build_population_grid_under5.py), même logique que ppl_u/tgt_u
         # mais pour la population -5 ans ; jamais pondéré par vs (voir note sur pop5 ci-dessus). Tâche n°45.
         enf5_u = {h: SC2.rollup_sum(units, leafmask, lift2(np.where(EWL["lv"][h] >= 2, pop5L0, 0.0))) for h in EW.HAZARDS}
-        nums_u = {k: SC2.rollup_max(units, leafmask, lift2(v, fill=0.0)) for k, v in EWL["nums"].items()}
+        # probabilités de crue : -1 = pas d'ensemble (à distinguer d'une probabilité nulle)
+        nums_u = {k: SC2.rollup_max(units, leafmask, lift2(v, fill=-1.0 if k.startswith("flood_p") else 0.0)) for k, v in EWL["nums"].items()}
         nd = min(10, fcst["precip"].shape[1] - fcst["t0"])
         denA = SC2.rollup_sum(units, leafmask, lift2(np.ones(len(LI0))) * area2)
         daily_p, daily_t = [], []
@@ -620,7 +656,8 @@ def main() -> None:
     if EWL2 is not None:
         import scenarios as SC2b
         lv_u2 = {h: SC2b.rollup_max(units, leafmask, lift2(EWL2["lv"][h])).astype(int) for h in EW.HAZARDS}
-        EWU2 = {"lv": lv_u2, "day_from": EWL2["day_from"], "day_to": EWL2["day_to"]}
+        fp_u2 = np.array([SC2b.rollup_max(units, leafmask, lift2(v, fill=-1.0)) for v in EWL2["fp"]])
+        EWU2 = {"lv": lv_u2, "day_from": EWL2["day_from"], "day_to": EWL2["day_to"], "fp": fp_u2}
 
     def pack(i: int) -> dict:
         r = units.iloc[i]
@@ -668,13 +705,15 @@ def main() -> None:
             fr = nm["flood_ratio"][i]
             d["ev"] = [round(float(nm["rain_max"][i]), 1), round(float(nm["rain_3d"][i]), 1), round(float(nm["tmax_max"][i]), 1),
                        round(float(nm["gust_max"][i]), 1), int(nm["dry_run"][i]),
-                       round(float(fr), 2) if fr > 0 else None, round(float(nm["flood_q"][i]), 1) if nm["flood_q"][i] > 0 else None]
+                       round(float(fr), 2) if fr > 0 else None, round(float(nm["flood_q"][i]), 1) if nm["flood_q"][i] > 0 else None] +                 [int(round(float(nm[f"flood_p{j}"][i]))) if nm[f"flood_p{j}"][i] >= 0 else None for j in range(3)]
             d["fr"] = [None if not np.isfinite(x) else int(round(float(x))) for x in EWU["p"][:, i]]
             d["ft"] = [None if not np.isfinite(x) else int(round(float(x))) for x in EWU["t"][:, i]]
         if EWU2 is not None:
             # Tendance 8-16 jours : niveau par aléa uniquement (pas de population), fiabilité plus faible,
             # jamais mélangée avec "ew" (alerte précoce 0-7 jours).
             d["ew2"] = [int(EWU2["lv"][h][i]) for h in EW.HAZARDS]
+            if EWU2["fp"][0][i] >= 0:   # probabilités de crue (ensemble GloFAS) sur la même fenêtre
+                d["fp2"] = [int(round(float(x))) for x in EWU2["fp"][:, i]]
         if r["level"] in (1, 2):
             # Durée au niveau d'alerte saisonnier actuel et tendance récente, à partir de l'archive déjà
             # collectée à chaque dékade (archive/<pays>/*.json) -- pas une nouvelle donnée, juste la

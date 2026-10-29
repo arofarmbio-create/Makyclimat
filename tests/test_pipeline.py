@@ -307,6 +307,14 @@ def test_forecast_alerts() -> None:
     check("crue : débit prévu 2,5 × la crue de 2 ans -> niveau 2 (alerte) hérité par les fokontany de la commune",
           all(d[pc]["ew"][4] == 2 for pc in kids0) and d[next(iter(kids0))]["ev"][5] == 2.5)
     check("crue : 1,2 × la crue de 2 ans -> vigilance", all(d[pc]["ew"][4] == 1 for pc in kids1))
+    kids2 = leaves[leaves.adm3 == com.pcode[2]].pcode
+    check("crue : probabilités de l'ensemble GloFAS (30/51 > 2 et 5 ans, 10/51 > 20 ans) héritées par les fokontany",
+          all(d[pc]["ev"][7:10] == [59, 59, 20] for pc in kids0), str(d[next(iter(kids0))]["ev"]))
+    check("crue : commune sans ensemble -> probabilités absentes (pas 0 %)", all(d[pc]["ev"][7:10] == [None] * 3 for pc in kids1))
+    check("crue : ensemble sur la fenêtre 8-16 jours (fp2) séparé de la fenêtre 0-7 jours",
+          all(d[pc]["fp2"] == [100, 0, 0] and d[pc]["ev"][7:10] == [0, 0, 0] for pc in kids2))
+    check("crue : ensemble déclaré dans meta.json (51 membres)",
+          fc["flood"]["ensemble"]["available"] and fc["flood"]["ensemble"]["members"] == 51)
     r = top["adm1"]
     check("région : niveau maximal des fokontany et personnes en alerte",
           all(len(v["ew"]) == 5 and len(v["ewp"]) == 5 and len(v["ewt"]) == 5 and len(v["ewe5"]) == 5 for v in r.values())

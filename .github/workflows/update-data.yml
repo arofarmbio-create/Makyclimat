@@ -72,6 +72,14 @@ jobs:
       - name: Prévision météo (Open-Meteo) — ignorée en cas d'indisponibilité
         run: |
           python scripts/update_forecast.py --country "$COUNTRY" || echo "Prévision indisponible, alertes précoces non mises à jour"
+      - name: Date du jour (UTC)
+        id: jour
+        run: echo "d=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+      - name: Ensemble GloFAS déjà récupéré aujourd'hui (une prévision par jour, quota de l'API)
+        uses: actions/cache@v4
+        with:
+          path: data/${{ env.COUNTRY }}/grids/flood_ensemble.npz
+          key: glofas-ensemble-${{ env.COUNTRY }}-${{ steps.jour.outputs.d }}
       - name: Débits de rivière prévus (GloFAS via Open-Meteo) — ignorés en cas d'indisponibilité
         run: |
           python scripts/update_floods.py --country "$COUNTRY" || echo "Débits indisponibles, alertes de crue non mises à jour"

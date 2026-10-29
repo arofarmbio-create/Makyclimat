@@ -148,6 +148,13 @@ def main() -> None:
     q[1, 13] = 12.0                # la deuxième dépasse la crue de 2 ans (vigilance)
     save_grid(grid_dir("demo") / "flood_forecast.npz", pcode=com.pcode.to_numpy().astype(str), dates=np.array(days), q=q,
               fetched_at=np.array("2026-02-21T06:00:00+00:00"))
+    # ensemble GloFAS simulé (51 membres, 30 jours dès le 21/02) pour les communes 0 et 2 seulement :
+    # commune 0 : 20 membres à 25 m3/s (> crue de 5 ans) et 10 à 45 m3/s (> 20 ans) au jour 3 ; commune 2 : tous à 12 m3/s au jour 10
+    edays = [(_dt.date(2026, 2, 21) + _dt.timedelta(days=i)).isoformat() for i in range(30)]
+    eq = np.full((51, 2, 30), 5.0, dtype="float32")
+    eq[:20, 0, 3], eq[20:30, 0, 3], eq[:, 1, 10] = 25.0, 45.0, 12.0
+    save_grid(grid_dir("demo") / "flood_ensemble.npz", pcode=com.pcode[[0, 2]].to_numpy().astype(str), dates=np.array(edays), q=eq,
+              fetched_at=np.array("2026-02-21T06:00:00+00:00"))
     # historique simulé : événements et réponse (3W) sur 2016-2025
     import build_history as _bhist
     import json as _json

@@ -3,6 +3,8 @@
   python scripts/update_floods.py --country mdg --thresholds   (une fois par an) : débits annuels maximaux 1984-aujourd'hui,
         crues de période de retour 2, 5, 10, 20 ans (loi de Gumbel) -> data/<pays>/flood_thresholds.csv
   python scripts/update_floods.py --country mdg                (toutes les 6 heures) : débit prévu -> grids/flood_forecast.npz
+        et, une fois par jour, l'ensemble GloFAS (contrôle + 50 membres, 30 jours) des communes ayant un seuil valide
+        -> grids/flood_ensemble.npz (probabilité de dépasser les crues de 2, 5, 20 ans ; cahier des charges §8, §11)
 Résolution du modèle : environ 5 km ; incertain sur les petits bassins. À lire comme un signal, à confirmer par les services
 hydrologiques. Le débit retourné est celui de la maille de rivière la plus proche du centroïde de la commune.
 """
@@ -18,7 +20,7 @@ import numpy as np
 import pandas as pd
 
 import openmeteo as om
-from common import country_data_dir, grid_dir, load_config, read_units, save_grid
+from common import country_data_dir, grid_dir, load_config, load_grid, read_units, save_grid
 
 EULER = 0.5772156649
 
@@ -92,6 +94,28 @@ def forecast(communes, fc_cfg, batch=40):
     return dates, np.array(q, dtype="float32")
 
 
+def ensemble(th, cfg, batch=10, days=30):
+    """Ensemble GloFAS (contrôle + 50 membres) sur la maille même des seuils (cell_lat/cell_lon), pour les seules communes
+    dont la crue de 2 ans dépasse flood.min_q2_m3s (les autres n'ont pas d'alerte de crue). Renvoie dates, pcode, q[m, c, j]."""
+    th = th[th.q2 >= cfg["flood"]["min_q2_m3s"]].reset_index(drop=True)
+    lat = th.cell_lat.fillna(th.lat) if "cell_lat" in th else th.lat
+    lon = th.cell_lon.fillna(th.lon) if "cell_lon" in th else th.lon
+    q, dates = [None] * len(th), None
+    for i in range(0, len(th), batch):
+        params = {"latitude": ",".join(f"{x:.4f}" for x in lat[i:i + batch]), "longitude": ",".join(f"{x:.4f}" for x in lon[i:i + batch]),
+                  "daily": "river_discharge", "ensemble": "true", "forecast_days": days}
+        for k, item in enumerate(om.as_list(om.get_json(om.FLOOD_URL, params, retries=4, pause=5.0))):
+            d = item["daily"]
+            dates = dates or d["time"]
+            keys = ["river_discharge"] + sorted(x for x in d if x.startswith("river_discharge_member"))
+            q[i + k] = [[np.nan if v is None else v for v in d[m]] for m in keys]
+        time.sleep(1.0)
+    n = max(len(x) for x in q)
+    if any(len(x) != n for x in q):
+        raise ValueError("nombre de membres différent selon les communes")
+    return dates, th.pcode.to_numpy().astype(str), np.array(q, dtype="float32").transpose(1, 0, 2)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
@@ -118,6 +142,23 @@ def main() -> None:
     save_grid(grid_dir(args.country) / "flood_forecast.npz", pcode=communes.pcode.to_numpy().astype(str), dates=np.array(dates),
               q=q, fetched_at=np.array(dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")))
     print(f"Débits prévus : {len(communes)} communes, {dates[0]} à {dates[-1]}")
+    # GloFAS ne publie qu'une prévision par jour : l'ensemble n'est récupéré qu'une fois par jour (quota de l'API)
+    ens_path = grid_dir(args.country) / "flood_ensemble.npz"
+    today = dt.datetime.now(dt.timezone.utc).date().isoformat()
+    if ens_path.exists() and str(load_grid(ens_path)["fetched_at"])[:10] == today:
+        print("Ensemble GloFAS déjà récupéré aujourd'hui.")
+        return
+    try:
+        edates, epc, eq = ensemble(pd.read_csv(th_path, dtype={"pcode": str}), cfg)
+    except (RuntimeError, ValueError) as e:
+        print(f"::warning::Ensemble GloFAS indisponible : {e}")
+        return
+    if np.isnan(eq).mean() > 0.2:
+        print("::warning::Ensemble GloFAS incomplet : non enregistré.")
+        return
+    save_grid(ens_path, pcode=epc, dates=np.array(edates), q=eq,
+              fetched_at=np.array(dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")))
+    print(f"Ensemble GloFAS : {eq.shape[0]} membres, {eq.shape[1]} communes, {edates[0]} à {edates[-1]}")
 
 
 if __name__ == "__main__":

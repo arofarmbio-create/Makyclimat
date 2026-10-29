@@ -899,6 +899,16 @@
     return "";
   }
 
+  // Probabilités de crue de l'ensemble GloFAS (contrôle + 50 membres) : part des scénarios dépassant chaque crue de référence.
+  function floodProbNote(p) {
+    var E = S.meta.forecast.flood && S.meta.forecast.flood.ensemble;
+    if (!E || !E.available || !p || p[0] === null || p[0] === undefined || p[0] === 0) return "";
+    var rl = E.return_levels || [2, 5, 20];
+    return '<div class="note">Crue de rivière, ' + E.members + " scénarios du modèle GloFAS : " +
+      p.map(function (v, j) { return v + " % dépassent la crue de " + rl[j] + " ans"; }).join(", ") +
+      ". Probabilité donnée par le modèle, dont la fiabilité n'est pas encore mesurée.</div>";
+  }
+
   function forecastSection(m) {
     var F = S.meta.forecast, pb = S.meta.playbook;
     if (!F || !m.ew) return "";
@@ -912,6 +922,7 @@
         (S.view.lvl < 4 && m.ewp && m.ewp[i] > 0 ? " · " + MC.fmtInt(m.ewp[i]) + " pers. exposées" +
           (m.ewt && m.ewt[i] > 0 ? " (dont ≈" + MC.fmtInt(m.ewt[i]) + " cible, vulnérabilité économique)" : "") +
           (m.ewe5 && m.ewe5[i] > 0 ? " · ≈" + MC.fmtInt(m.ewe5[i]) + " enfants -5 ans" : "") : "") + "</span></div>";
+      if (hz === "flood" && m.ev) h += floodProbNote(m.ev.slice(7, 10));
       if (lv > 0 && pb && pb.household_alert && pb.household_alert[hz])
         h += "<ul class='advice'>" + pb.household_alert[hz].map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
     });
@@ -945,6 +956,7 @@
     HAZ.forEach(function (hz, i) {
       var lv = m.ew2[i];
       h += '<div class="row ewrow"><span><i class="ewdot" style="background:' + EW_COLORS[lv] + '"></i>' + EW_ICON[hz] + " <b>" + esc(F.hazard_labels[hz]) + "</b></span><span>" + esc(lvlNames[lv]) + "</span></div>";
+      if (hz === "flood") h += floodProbNote(m.fp2);
     });
     if (mx === 0) h += '<div class="note">Aucune tendance notable pour cette zone entre le jour ' + F.trend.day_from + " et le jour " + F.trend.day_to + ".</div>";
     h += "</div>";
