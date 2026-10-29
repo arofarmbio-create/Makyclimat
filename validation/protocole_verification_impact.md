@@ -19,6 +19,14 @@ Travaux existants les plus proches :
   stations hydrométriques**, qui restent la référence.
 - Zsoter et al. (2020), *Journal of Flood Risk Management* : seuils de crue tirés des reprévisions d'ensemble elles-mêmes.
 - Reprévisions GloFAS et leur compétence mondiale face à la persistance (HESS 27, 1, 2023).
+- Kuipers et al. (2026), *Journal of Flood Risk Management*, e70247 : GloFAS v4.0/v3.0 et Google Flood Hub au Mali,
+  évalués avec des données d'impact **et** des débits observés ; compétence suffisante au-delà de 4 jours dans les
+  régions souvent inondées.
+- Prépublication EGUsphere-2025-3473 : prévision du nombre de personnes exposées aux crues cycloniques en Afrique
+  australe orientale (ECMWF + GloFAS + cartes Fathom + WorldPop) sur des événements récents. C'est une chaîne de
+  prévision d'exposition étudiée événement par événement, pas une vérification statistique pluriannuelle contre une
+  base de pertes.
+- Recherche du 29/10/2026 (moteur web) : **aucune évaluation de GloFAS publiée pour Madagascar n'a été trouvée.**
 
 Ce que ce protocole ajoute (à confirmer par une revue de littérature complète avant rédaction) :
 1. **Aucune station** : l'impact déclaré est la seule vérité terrain, et non un complément aux stations.
@@ -104,5 +112,9 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
   forecasting. *J. Flood Risk Manag.* https://onlinelibrary.wiley.com/doi/full/10.1111/jfr3.12658
 - Daily ensemble river discharge reforecasts and real-time forecasts from the operational Global Flood Awareness
   System. *HESS* 27, 1 (2023). https://hess.copernicus.org/articles/27/1/2023/
+- Kuipers et al. (2026). Assessing the riverine flood forecast skill of GloFAS and Google Flood Hub with impact data
+  and discharge observations to support early actions in Mali. *J. Flood Risk Manag.* https://onlinelibrary.wiley.com/doi/10.1111/jfr3.70247
+- Forecasting people exposed to tropical cyclone flooding in Southeast Africa: lessons learned from recent events.
+  Prépublication EGUsphere-2025-3473. https://egusphere.copernicus.org/preprints/2025/egusphere-2025-3473/
 - Richardson D. S. (2000). Skill and relative economic value of the ECMWF ensemble prediction system. *Q. J. R.
   Meteorol. Soc.* 126, 649-667.
