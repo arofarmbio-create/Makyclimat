@@ -28,8 +28,8 @@ population:
 
 # --- Pluie satellitaire CHIRPS (CHC / UCSB, gratuite) ---
 rainfall:
-  monthly_url: "https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_monthly/tifs/chirps-v2.0.{y}.{m:02d}.tif.gz"
-  dekad_url:   "https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_dekad/tifs/chirps-v2.0.{y}.{m:02d}.{d}.tif.gz"
+  monthly_url: "https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_monthly/tifs/chirps-v2.0.{y}.{m:02d}.tif.gz"
+  dekad_url:   "https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_dekad/tifs/chirps-v2.0.{y}.{m:02d}.{d}.tif.gz"
   baseline_years: [1991, 2020]
   # Saison des pluies (mois de début et de fin). Madagascar : novembre -> avril
   season_start_month: 11

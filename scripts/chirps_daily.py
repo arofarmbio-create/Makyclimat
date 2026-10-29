@@ -8,7 +8,7 @@ import numpy as np
 
 from chirps import fetch_array
 
-URL = "https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_daily/tifs/p05/{y}/chirps-v2.0.{y}.{m:02d}.{d:02d}.tif.gz"
+URL = "https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/{y}/chirps-v2.0.{y}.{m:02d}.{d:02d}.tif.gz"
 
 
 class Sampler:

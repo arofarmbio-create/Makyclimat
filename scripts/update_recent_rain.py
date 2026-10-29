@@ -27,7 +27,7 @@ import pandas as pd
 from chirps import fetch_array, read_crop
 from common import DATA_DIR, country_data_dir, country_docs_dir, grid_dir, load_config, load_grid, read_units, sample_grid, save_grid, write_json
 
-PRELIM_URL = "https://data.chc.ucsb.edu/products/CHIRPS-2.0/prelim/global_dekad/tifs/chirps-v2.0.{y}.{m:02d}.{d}.tif"
+PRELIM_URL = "https://data.chc.ucsb.edu/products/CHIRPS/v2.0/prelim/global_dekad/tifs/chirps-v2.0.{y}.{m:02d}.{d}.tif"
 SOURCE = "CHIRPS v2.0 décadaire (CHC/UCSB), définitif ou provisoire ; référence {b0}-{b1} (MakyClimat)"
 
 
