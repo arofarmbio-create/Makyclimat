@@ -40,4 +40,4 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add validation/verification_impact_*.csv validation/verification_impact_glofas.md
-          git diff --cached --quiet || (git commit -m "Vérification par l'impact des prévisions d'ensemble GloFAS : scores" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Vérification par l'impact des prévisions d'ensemble GloFAS : scores" && git pull --rebase --autostash origin main && git push)

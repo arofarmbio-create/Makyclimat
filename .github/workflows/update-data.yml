@@ -50,7 +50,7 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f data/$COUNTRY/grids/dekad_ref_*.npz validation/pluie_recente_regions.csv 2>/dev/null || true
-          git diff --cached --quiet || (git commit -m "Pluie récente : référence décadaire et résumé par région" && git pull --rebase origin main && git push) || echo "Archivage de la pluie récente non poussé"
+          git diff --cached --quiet || (git commit -m "Pluie récente : référence décadaire et résumé par région" && git pull --rebase --autostash origin main && git push) || echo "Archivage de la pluie récente non poussé"
       - name: Indicateurs ONU/OCHA via HAPI (IPC, pauvreté) — app_identifier généré automatiquement, ignoré en cas d'indisponibilité
         run: |
           python scripts/connector_hapi.py --country "$COUNTRY" || echo "HAPI indisponible, indicateurs externes non mis à jour"
@@ -100,7 +100,7 @@ jobs:
             git config user.name "makyclimat-bot"
             git config user.email "makyclimat-bot@users.noreply.github.com"
             git add -f validation/wfp_prix_riz_candidat.csv
-            git diff --cached --quiet || (git commit -m "Prix du riz WFP (donnée candidate, non affichée sur le site)" && git pull --rebase origin main && git push)
+            git diff --cached --quiet || (git commit -m "Prix du riz WFP (donnée candidate, non affichée sur le site)" && git pull --rebase --autostash origin main && git push)
           fi
       - name: Cartographie de crise Copernicus EMS en quasi temps réel (zones inondées actives) — ignorée en cas d'indisponibilité
         run: python scripts/connector_ems_live.py --country "$COUNTRY" || echo "Cartographie EMS en direct indisponible"
@@ -122,7 +122,7 @@ jobs:
           git add archive
           tail -n 80 data/_compute_log.txt > data/_compute_tail.txt
           git add -f data/_compute_tail.txt
-          git diff --cached --quiet || (git commit -m "Archive des indicateurs (données jusqu'à la dernière dékade)" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Archive des indicateurs (données jusqu'à la dernière dékade)" && git pull --rebase --autostash origin main && git push)
       - uses: actions/configure-pages@v5
         with:
           enablement: true

@@ -35,7 +35,7 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f data validation
-          git diff --cached --quiet || (git commit -m "Climatologie locale des pluies extrêmes (rx3)" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Climatologie locale des pluies extrêmes (rx3)" && git pull --rebase --autostash origin main && git push)
       - name: Validation
         shell: bash
         run: python scripts/validate_events.py --country "${{ github.event.inputs.country || 'mdg' }}" 2>&1 | tee validation/_journal.txt
@@ -48,4 +48,4 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f validation docs/data
-          git diff --cached --quiet || (git commit -m "Validation sur événements réels : résultats" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Validation sur événements réels : résultats" && git pull --rebase --autostash origin main && git push)

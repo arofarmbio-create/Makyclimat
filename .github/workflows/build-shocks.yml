@@ -32,4 +32,4 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f validation
-          git diff --cached --quiet || (git commit -m "Indicateurs de choc JIAF : cyclones passés par fokontany" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Indicateurs de choc JIAF : cyclones passés par fokontany" && git pull --rebase --autostash origin main && git push)

@@ -40,4 +40,4 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add data docs/data
-          git diff --cached --quiet || (git commit -m "Normale mensuelle de pluie" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Normale mensuelle de pluie" && git pull --rebase --autostash origin main && git push)

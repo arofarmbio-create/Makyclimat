@@ -35,4 +35,4 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f validation/crues_validation.md validation/crues_episodes.csv validation/evenements_gdacs.csv data/*/grids/glofas_windows.json 2>/dev/null || true
-          git diff --cached --quiet || (git commit -m "Validation du modèle de crue (périmètre pilote)" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Validation du modèle de crue (périmètre pilote)" && git pull --rebase --autostash origin main && git push)

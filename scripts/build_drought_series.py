@@ -50,6 +50,13 @@ def district_means(field, idx):
     return (g.vw / g.w.replace(0, np.nan)).to_dict()
 
 
+def _era5_retrieve(c, ys, lat1, lon0, lat0, lon1, f):
+    c.retrieve("reanalysis-era5-land-monthly-means", {
+        "product_type": ["monthly_averaged_reanalysis"], "variable": ERA5_VARS, "year": [str(y) for y in ys],
+        "month": [f"{m:02d}" for m in range(1, 13)], "time": ["00:00"], "area": [lat1, lon0, lat0, lon1],
+        "data_format": "netcdf", "download_format": "unarchived"}, str(f))
+
+
 def part_et0(cfg, units, years):
     import cdsapi
     import xarray as xr
@@ -59,10 +66,10 @@ def part_et0(cfg, units, years):
     for y0 in range(years[0], years[1] + 1, 5):
         ys = [y for y in range(y0, min(y0 + 5, years[1] + 1))]
         f = Path(tempfile.mkdtemp()) / "era5land.nc"
-        c.retrieve("reanalysis-era5-land-monthly-means", {
-            "product_type": ["monthly_averaged_reanalysis"], "variable": ERA5_VARS, "year": [str(y) for y in ys],
-            "month": [f"{m:02d}" for m in range(1, 13)], "time": ["00:00"], "area": [lat1, lon0, lat0, lon1],
-            "data_format": "netcdf", "download_format": "unarchived"}, str(f))
+        try:
+            _era5_retrieve(c, ys, lat1, lon0, lat0, lon1, f)
+        except requests.HTTPError as e:                       # message du CDS (licence, requête) au lieu d'un « 400 » muet
+            raise RuntimeError(f"ERA5-Land refusé : {e.response.text[:800] if e.response is not None else e}") from e
         ds = xr.open_dataset(f)
         tname = "valid_time" if "valid_time" in ds.dims else "time"
         lat, lon = ds.latitude.values, ds.longitude.values
@@ -84,9 +91,12 @@ def part_ndvi(cfg, units, years):
     tok = s.post(f"{APPEEARS}/login", auth=(os.environ["EARTHDATA_USER"], os.environ["EARTHDATA_PASSWORD"]), timeout=120).json()["token"]
     h = {"Authorization": f"Bearer {tok}"}
     lon0, lat0, lon1, lat1 = cfg["map"]["bbox"]
-    layers = s.get(f"{APPEEARS}/product/MOD13C2.061", timeout=120).json()          # noms exacts des couches
-    l_ndvi = next(k for k in layers if k.endswith("Monthly_NDVI"))
-    l_rel = next(k for k in layers if k.endswith("pixel_reliability"))
+    layers = s.get(f"{APPEEARS}/product/MOD13C2.061", headers=h, timeout=120).json()   # noms exacts des couches
+    names = list(layers) if isinstance(layers, dict) else [x.get("Layer", x) if isinstance(x, dict) else x for x in layers]
+    l_ndvi = next((k for k in names if "ndvi" in str(k).lower()), None)
+    l_rel = next((k for k in names if "reliab" in str(k).lower()), None)
+    if not l_ndvi or not l_rel:
+        raise RuntimeError(f"couches MOD13C2 introuvables ; réponse AppEEARS : {str(layers)[:600]}")
     task = {"task_type": "area", "task_name": f"makyclimat_ndvi_{dt.date.today():%Y%m%d}",
             "params": {"dates": [{"startDate": f"01-01-{years[0]}", "endDate": f"12-31-{years[1]}"}],
                        "layers": [{"product": "MOD13C2.061", "layer": l_ndvi}, {"product": "MOD13C2.061", "layer": l_rel}],

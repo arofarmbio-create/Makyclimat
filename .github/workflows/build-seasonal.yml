@@ -44,4 +44,4 @@ jobs:
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add docs/data data
           git add validation/teleconnexions_regions.csv validation/teleconnexions.md validation/planification_12mois.md validation/planification_12mois_regions.csv 2>/dev/null || true
-          git diff --cached --quiet || (git commit -m "Prévision saisonnière (ECMWF SEAS5) : écarts et probabilités par district" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Prévision saisonnière (ECMWF SEAS5) : écarts et probabilités par district" && git pull --rebase --autostash origin main && git push)

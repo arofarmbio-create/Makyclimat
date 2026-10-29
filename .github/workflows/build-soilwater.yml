@@ -40,7 +40,7 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f validation/_journal_watertable.txt 2>/dev/null || true
-          git diff --cached --quiet || (git commit -m "Journal de diagnostic temporaire (profondeur de nappe)" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Journal de diagnostic temporaire (profondeur de nappe)" && git pull --rebase --autostash origin main && git push)
       - name: Potentiel pour point d'eau peu profond (expérimental, non validé) — ignoré si hydro.csv absent
         run: python scripts/build_groundwater.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Potentiel eau indisponible"
       - name: Bilan hydrique par sous-bassin versant (expérimental, non validé) — ignoré si hydro_units.csv absent
@@ -51,4 +51,4 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f docs/data data validation/spi_regions.csv 2>/dev/null || git add docs/data data
-          git diff --cached --quiet || (git commit -m "Eau dans le sol : bilan hydrique mensuel, géologie, profondeur de nappe, sous-bassins" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Eau dans le sol : bilan hydrique mensuel, géologie, profondeur de nappe, sous-bassins" && git pull --rebase --autostash origin main && git push)

@@ -36,4 +36,4 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f data/_routes_log.txt || true; git add -f data/mdg/_osm_routes_cache.json || true; git add -f data/mdg/external/routes.csv || true
-          git diff --cached --quiet || (git commit -m "Routes exposées aux crues (OSM x HAND)" && git pull --rebase origin main && git push)
+          git diff --cached --quiet || (git commit -m "Routes exposées aux crues (OSM x HAND)" && git pull --rebase --autostash origin main && git push)
