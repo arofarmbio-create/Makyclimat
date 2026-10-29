@@ -34,11 +34,14 @@ jobs:
           python scripts/connector_enso.py || echo "ONI non mis à jour, fichier existant utilisé"
           python scripts/connector_dmi.py || echo "DMI (ERSST) non mis à jour, fichier existant utilisé"
           python scripts/build_teleconnections.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Modèle de téléconnexions indisponible"
+      - name: Planification à 12 mois (saison suivante ; signal validé ou scénarios climatologiques)
+        if: always()
+        run: python scripts/build_planning.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Planification indisponible"
       - name: Enregistrer dans le dépôt
         if: always()
         run: |
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add docs/data data
-          git add validation/teleconnexions_regions.csv validation/teleconnexions.md 2>/dev/null || true
+          git add validation/teleconnexions_regions.csv validation/teleconnexions.md validation/planification_12mois.md validation/planification_12mois_regions.csv 2>/dev/null || true
           git diff --cached --quiet || (git commit -m "Prévision saisonnière (ECMWF SEAS5) : écarts et probabilités par district" && git pull --rebase origin main && git push)
