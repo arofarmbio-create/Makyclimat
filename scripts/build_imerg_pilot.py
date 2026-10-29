@@ -112,9 +112,14 @@ def main() -> None:
     if args.probe:
         d = dt.date.fromisoformat(args.probe)
         files = day_files(s, d)
-        g = fetch_one(s, d, files[0], box)
-        print(f"{len(files)} fichiers le {d} ; grille {None if g is None else g.shape} ; max {None if g is None else np.nanmax(g):.2f} mm/h ; "
-              f"URL type : {subset_url(d, files[0], box).split('?')[0][-60:]}")
+        print(f"{len(files)} fichiers le {d}, boîte d'indices {box}")
+        stem = f"{BASE}/opendap/{COLL}/{d.year}/{d.timetuple().tm_yday:03d}/{files[0]}"
+        i0, i1, j0, j1 = box
+        for u in (f"{stem}.ascii?precipitation[0:0][{i0}:{i1}][{j0}:{j1}]", f"{stem}.ascii?Grid_precipitation[0:0][{i0}:{i1}][{j0}:{j1}]",
+                  f"{stem}.dap.csv?dap4.ce=/Grid/precipitation[0][{i0}:{i1}][{j0}:{j1}]", f"{stem}.dds", f"{stem}.dmr.xml"):
+            r = s.get(u, timeout=120)
+            print(f"--- {u.split(files[0])[1][:70]} -> HTTP {r.status_code}, {len(r.text)} car.
+{r.text[:400]}")
         return
     days = [dt.date(args.season, 11, 1) + dt.timedelta(days=k) for k in range((dt.date(args.season + 1, 5, 1) - dt.date(args.season, 11, 1)).days)]
     out = country_data_dir(args.country) / "imerg"
