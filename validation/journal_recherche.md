@@ -82,6 +82,19 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   les données réelles a évité un SPEI faux.
 - ✅ NDVI MODIS (MOD13C2) via AppEEARS, et protocole fixé avant calcul (districts secs et humides).
 
+### Produit sous-saisonnier (§9)
+- ✅ Tendance des crues à 2-4 semaines (jours 17-30) tirée de l'ensemble GloFAS déjà récupéré chaque jour, publiée au
+  **district et à la région seulement**, conformément au §9 (pas de prévision déterministe par commune). Testée.
+- ⚠️ Sa fiabilité n'est pas mesurée : nos anciennes prévisions s'arrêtent à 15 jours d'échéance. Les mesurer à 16-30
+  jours demandera de télécharger les échéances 16 à 30 (à faire, même workflow).
+
+### Mises à jour automatiques
+- ✅ 16 workflows programmés (de 6 h à annuel), calendrier dans `README.md` (section 8). La vérification des sources
+  est hebdomadaire : elle aurait signalé le déplacement de CHIRPS. Les comptes NASA et Copernicus sont vérifiés chaque
+  mois.
+- 📌 Garde-fous : une validation programmée ne publie rien sur des données incomplètes. C3S ajoute chaque octobre la
+  prévision de l'année sans retélécharger les rétroprévisions.
+
 ### Organisation
 - 📌 Chaque nouveau chapitre a un protocole écrit **avant** tout calcul de score, avec un journal daté des
   modifications. Les ajustements imposés par les données y sont consignés avant de voir les résultats.
