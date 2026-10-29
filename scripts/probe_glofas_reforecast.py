@@ -14,9 +14,6 @@ from pathlib import Path
 
 import cdsapi
 
-MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
-
-
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--year", type=int, default=2018)
@@ -27,8 +24,8 @@ def main() -> None:
                       timeout=900)
     out = Path(tempfile.mkdtemp()) / "refc.grib"
     req = {"system_version": ["version_4_0"], "hydrological_model": ["lisflood"],
-           "product_type": ["control_reforecast", "ensemble_perturbed_reforecasts"],
-           "variable": "river_discharge_in_the_last_24_hours", "hyear": [str(args.year)], "hmonth": [MONTHS[args.month - 1]],
+           "product_type": ["control_reforecast", "ensemble_perturbed_reforecast"],
+           "variable": "river_discharge_in_the_last_24_hours", "hyear": [str(args.year)], "hmonth": [f"{args.month:02d}"],
            "hday": [f"{d:02d}" for d in range(1, 32)], "leadtime_hour": [str(24 * k) for k in range(1, args.days + 1)],
            "area": [-11.5, 43.0, -26.0, 51.0], "data_format": "grib2", "download_format": "unarchived"}
     t0 = time.time()

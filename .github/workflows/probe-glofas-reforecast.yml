@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       year:
-        description: "Année (1999-2018)"
+        description: "Année (1999-2023)"
         default: "2018"
       month:
         description: "Mois (1-12)"
