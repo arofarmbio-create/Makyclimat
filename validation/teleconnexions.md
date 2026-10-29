@@ -1,6 +1,6 @@
 # Modèle de prévision saisonnière El Niño / dipôle de l'océan Indien, par région
 
-Généré le 2026-10-28 par `scripts/build_teleconnections.py`. Cahier des charges §5, §8 (approche 1), §9, §13.
+Généré le 2026-10-29 par `scripts/build_teleconnections.py`. Cahier des charges §5, §8 (approche 1), §9, §13.
 Saisons 1981-1982 à 2025-2026 (45 saisons). Pluie CHIRPS par région.
 Prédicteurs connus avant la saison : ONI de juillet-septembre (NOAA CPC) et DMI de juillet-septembre (ERSST v5, `connector_dmi.py`).
 
