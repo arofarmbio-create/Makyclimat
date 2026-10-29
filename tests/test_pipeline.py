@@ -313,6 +313,16 @@ def test_forecast_alerts() -> None:
     check("crue : commune sans ensemble -> probabilités absentes (pas 0 %)", all(d[pc]["ev"][7:10] == [None] * 3 for pc in kids1))
     check("crue : ensemble sur la fenêtre 8-16 jours (fp2) séparé de la fenêtre 0-7 jours",
           all(d[pc]["fp2"] == [100, 0, 0] and d[pc]["ev"][7:10] == [0, 0, 0] for pc in kids2))
+    d2 = units.set_index("pcode").adm2
+    dist2 = d2[com.pcode[2]]
+    td = {}
+    for f in (country_docs_dir("demo") / "metrics" / "d").glob("*.json"):
+        td.update(json.load(open(f, encoding="utf-8"))["adm3"])
+    check("sous-saisonnier (jours 17-30) : probabilité au district (17/51 membres > 5 ans), jamais par commune ni fokontany",
+          fc.get("subseasonal") == {"day_from": 17, "day_to": 30, "members": 51}
+          and all("fp3" not in d[pc] for pc in kids2) and all("fp3" not in v for v in td.values()), str(fc.get("subseasonal")))
+    check("sous-saisonnier : valeurs du district de la commune 2 = [33, 33, 0]",
+          json.load(open(country_docs_dir("demo") / "metrics" / "top.json", encoding="utf-8"))["adm2"][dist2].get("fp3") == [33, 33, 0])
     check("crue : ensemble déclaré dans meta.json (51 membres)",
           fc["flood"]["ensemble"]["available"] and fc["flood"]["ensemble"]["members"] == 51)
     r = top["adm1"]

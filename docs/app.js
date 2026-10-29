@@ -636,6 +636,7 @@
     h += acc("Alerte précoce, 7 prochains jours", forecastSection(m), true);
     var F0 = S.meta.forecast;
     h += acc("Tendance indicative, jour " + (F0 && F0.trend ? F0.trend.day_from : 8) + " à " + (F0 && F0.trend ? F0.trend.day_to : 16), trendSection(m), false);
+    if (F0 && F0.subseasonal && m.fp3) h += acc("Tendance des crues, jour " + F0.subseasonal.day_from + " à " + F0.subseasonal.day_to, subseasonalSection(m), false);
     h += acc("Risques, alertes et conseils", risksSection(m, false) + alertsSection(m) + planSection(m), true);
     h += acc("Scénarios de la saison et calendrier cultural", scenarioTable(m) + seasonSection(f) + calendarSection(f) + householdSeasonAdvice(m), false);
     h += acc("Chocs récents et historique", shockSection(m) + hist, false);
@@ -943,6 +944,15 @@
     }
     h += '<div class="note">Prévision du modèle météo, mise à jour ' + esc(fmtDateTime(F.fetched_at)) + ". Maille d'environ 28 km : à lire comme une indication par zone ; les bulletins officiels de Météo Madagascar et du BNGRC priment.</div></div>";
     return h;
+  }
+
+  // Sous-saisonnier (§9) : crue sur les jours 17-30, district et région seulement, jamais par commune.
+  function subseasonalSection(m) {
+    var E = S.meta.forecast.subseasonal, rl = (S.meta.forecast.flood && S.meta.forecast.flood.ensemble && S.meta.forecast.flood.ensemble.return_levels) || [2, 5, 20];
+    return '<div class="note warn" style="margin-bottom:6px">Tendance à 2-4 semaines : seulement au niveau du district ou de la région. Fiabilité non encore mesurée ; ' +
+      "à lire comme un signal de surveillance, jamais comme une prévision pour une commune.</div>" +
+      '<div class="note">Sur les ' + E.members + " scénarios du modèle GloFAS, part de ceux où au moins un cours d'eau de la zone dépasse la crue de " +
+      m.fp3.map(function (v, j) { return rl[j] + " ans : <b>" + v + " %</b>"; }).join(", ") + ".</div>";
   }
 
   function trendSection(m) {

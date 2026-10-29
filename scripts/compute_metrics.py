@@ -400,6 +400,7 @@ def main() -> None:
     s_m0, e_m0 = cfg["rainfall"]["season_start_month"], cfg["rainfall"]["season_end_month"]
     in_rain = (today.month >= s_m0 or today.month <= e_m0) if s_m0 > e_m0 else (s_m0 <= today.month <= e_m0)
     EWL = None   # niveaux d'alerte par fokontany (0-7 jours)
+    EWL3 = None  # tendance sous-saisonnière des crues, jours 17-30 (ensemble GloFAS), district et région seulement (§9)
     EWL2 = None  # tendance indicative 8-16 jours (mêmes données déjà récupérées par update_forecast.py/update_floods.py --
                  # forecast_days=16 -- mais jusqu'ici seuls les 7 premiers jours étaient exploités ; fiabilité
                  # météorologique nettement plus faible au-delà d'une semaine, donc jamais utilisée pour les
@@ -496,6 +497,11 @@ def main() -> None:
             lv2["flood"] = flood_lv2
             nums2["flood_ratio"], nums2["flood_q"] = flood_ratio2, flood_q2
             EWL2 = {"lv": lv2, "nums": nums2, "day_from": d0 + 1, "day_to": d1, "fp": flood_probs_for(d0, d1)}
+        # Sous-saisonnier (cahier des charges §9, 2-4 semaines) : probabilité de crue sur les jours 17-30 de l'ensemble
+        # GloFAS, remontée au district et à la région seulement (« pas de prévision déterministe par commune »).
+        if ens_ok and ze["q"].shape[2] - e0 > 16:
+            EWL3 = {"day_from": 17, "day_to": int(ze["q"].shape[2] - e0), "fp": flood_probs_for(16, ze["q"].shape[2] - e0),
+                    "members": int(ze["q"].shape[0])}
 
     # --- Scénarios de fin de saison (ensemble d'analogues, voir scripts/scenarios.py) ---
     import scenarios as SC
@@ -658,6 +664,10 @@ def main() -> None:
         lv_u2 = {h: SC2b.rollup_max(units, leafmask, lift2(EWL2["lv"][h])).astype(int) for h in EW.HAZARDS}
         fp_u2 = np.array([SC2b.rollup_max(units, leafmask, lift2(v, fill=-1.0)) for v in EWL2["fp"]])
         EWU2 = {"lv": lv_u2, "day_from": EWL2["day_from"], "day_to": EWL2["day_to"], "fp": fp_u2}
+    EWU3 = None
+    if EWL3 is not None:
+        import scenarios as SC3
+        EWU3 = {**EWL3, "fp": np.array([SC3.rollup_max(units, leafmask, lift2(v, fill=-1.0)) for v in EWL3["fp"]])}
 
     def pack(i: int) -> dict:
         r = units.iloc[i]
@@ -714,6 +724,8 @@ def main() -> None:
             d["ew2"] = [int(EWU2["lv"][h][i]) for h in EW.HAZARDS]
             if EWU2["fp"][0][i] >= 0:   # probabilités de crue (ensemble GloFAS) sur la même fenêtre
                 d["fp2"] = [int(round(float(x))) for x in EWU2["fp"][:, i]]
+        if EWU3 is not None and r["level"] in (1, 2) and EWU3["fp"][0][i] >= 0:
+            d["fp3"] = [int(round(float(x))) for x in EWU3["fp"][:, i]]   # crue, jours 17-30 : district et région seulement
         if r["level"] in (1, 2):
             # Durée au niveau d'alerte saisonnier actuel et tendance récente, à partir de l'archive déjà
             # collectée à chaque dékade (archive/<pays>/*.json) -- pas une nouvelle donnée, juste la
@@ -763,7 +775,8 @@ def main() -> None:
             "horizon_days": EWL["horizon"], "hazards": EW.HAZARDS, "hazard_labels": EW.HAZARD_LABEL, "level_names": EW.LEVEL_NAME,
             "thresholds": cfg["alerts"], "flood": EWL["flood"], "in_rain_season": bool(in_rain),
             "n_days_series": int(EWU["p"].shape[0]),
-            "trend": None if EWU2 is None else {"day_from": EWU2["day_from"], "day_to": EWU2["day_to"]}},
+            "trend": None if EWU2 is None else {"day_from": EWU2["day_from"], "day_to": EWU2["day_to"]},
+            "subseasonal": None if EWU3 is None else {"day_from": EWU3["day_from"], "day_to": EWU3["day_to"], "members": EWU3["members"]}},
         "sector_names": [{"id": x["id"], "label": x["label"]} for x in load_yaml("sectors.yml")["sectors"]],
         "country": cfg["name"], "slug": cfg["slug"], "iso3": cfg["iso3"],
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
