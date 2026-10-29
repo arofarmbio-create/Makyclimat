@@ -118,8 +118,8 @@ def main() -> None:
         for u in (f"{stem}.ascii?precipitation[0:0][{i0}:{i1}][{j0}:{j1}]", f"{stem}.ascii?Grid_precipitation[0:0][{i0}:{i1}][{j0}:{j1}]",
                   f"{stem}.dap.csv?dap4.ce=/Grid/precipitation[0][{i0}:{i1}][{j0}:{j1}]", f"{stem}.dds", f"{stem}.dmr.xml"):
             r = s.get(u, timeout=120)
-            print(f"--- {u.split(files[0])[1][:70]} -> HTTP {r.status_code}, {len(r.text)} car.
-{r.text[:400]}")
+            print(f"--- {u.split(files[0])[1][:70]} -> HTTP {r.status_code}, {len(r.text)} car.")
+            print(r.text[:400])
         return
     days = [dt.date(args.season, 11, 1) + dt.timedelta(days=k) for k in range((dt.date(args.season + 1, 5, 1) - dt.date(args.season, 11, 1)).days)]
     out = country_data_dir(args.country) / "imerg"
