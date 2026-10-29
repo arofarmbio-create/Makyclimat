@@ -531,7 +531,7 @@ indicators:
     unit: "écart-type"
     format: float
     aggregate: none
-    sectors: [agriculture, food, wash]
+    sectors: [agriculture, food_security, wash, drr]
     sdg: ["2.4"]
     national: [eau]
     source: "MakyClimat : SPEI (Vicente-Serrano et al. 2010 ; loi logistique généralisée comme le paquet SPEI) ; pluie CHIRPS, ET0 Penman-Monteith FAO-56 depuis ERA5-Land ; par district — comparaison au SPI dans validation/spei_ndvi.md"
@@ -542,7 +542,7 @@ indicators:
     unit: "écart-type"
     format: float
     aggregate: none
-    sectors: [agriculture, food, wash]
+    sectors: [agriculture, food_security, wash, drr]
     sdg: ["2.4"]
     national: [eau]
     source: "MakyClimat : SPEI-6, mêmes données et méthode que spei3"
@@ -553,7 +553,7 @@ indicators:
     unit: "écart-type"
     format: float
     aggregate: none
-    sectors: [agriculture, food]
+    sectors: [agriculture, food_security, livestock, environment]
     sdg: ["2.4", "15.3"]
     national: [eau]
     source: "MODIS MOD13C2 v6.1 (NASA, AppEEARS), pixels fiables seulement, par district ; réagit aussi aux feux, cyclones et à l'irrigation"
