@@ -21,8 +21,8 @@ from common import country_data_dir, locate_points, read_units
 ROOT = Path(__file__).resolve().parent.parent
 EULER = 0.5772156649
 SEASON_MONTHS = (11, 12, 1, 2, 3, 4)
-THR_SEASONS = (1999, 2022)        # saisons complètes nov. Y - avr. Y+1 pour les seuils du climat du modèle
-VERIF_SEASONS = (1999, 2018)      # saisons vérifiées (DesInventar jusqu'en 2019)
+THR_SEASONS = (2003, 2022)        # saisons complètes nov. Y - avr. Y+1 (reprévisions v4 sur EWDS : 2003-2023)
+VERIF_SEASONS = (2003, 2018)      # saisons vérifiées (DesInventar jusqu'en 2019)
 MIN_SEASONS = 15
 RETURN_PERIODS = (2, 5)
 Q_MIN = (5.0, 20.0, 50.0)         # référence puis sensibilité

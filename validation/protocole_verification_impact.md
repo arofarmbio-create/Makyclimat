@@ -43,7 +43,7 @@ Ce que ce protocole ajoute (à confirmer par une revue de littérature complète
 
 | Rôle | Jeu de données | Période | Remarque |
 |---|---|---|---|
-| Prévision | Reprévisions GloFAS v4 (`cems-glofas-reforecast`, Copernicus EWDS) : contrôle + 10 membres, échéances 1 à 15 jours | 1999-2023 (vérification sur 1999-2019, années couvertes par DesInventar) | Débit journalier, maille 0,05° |
+| Prévision | Reprévisions GloFAS v4 (`cems-glofas-reforecast`, Copernicus EWDS) : contrôle + 10 membres, échéances 1 à 15 jours | 2003-2023 (vérification de novembre 2003 à avril 2019, limite de DesInventar) | Débit journalier, maille 0,05° |
 | Seuils | (a) climat du modèle de reprévision, par échéance ; (b) réanalyse GloFAS (seuils actuels du site) | 1999-2018 / 1984-2025 | (a) est la référence, (b) un test de sensibilité |
 | Vérité terrain | DesInventar Madagascar (UNDRR, fiches BNGRC) : fiches « cyclone » et « inondation » par district | 1999-2018 | `scripts/connector_desinventar.py` ; 723 fiches, 113 districts |
 | Vérité secondaire | `validation/evenements.csv`, GDACS (sources indépendantes de GloFAS), Copernicus EMS | variable | Corroboration seulement |
@@ -114,6 +114,10 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
     retenues (novembre 1999 - avril 2023, soit 24 saisons), et il faut au moins 15 saisons disponibles par maille.
     La saison testée est exclue de l'ajustement.
   - **Saisons vérifiées** : novembre 1999 - avril 2019 (20 saisons), limite de DesInventar.
+- 29/10/2026, avant tout calcul de score : EWDS ne propose les reprévisions **v4** qu'à partir de 2003 (requête de
+  contraintes de l'API ; 1999-2002 refusés). Seuils : 19 saisons complètes (novembre 2003 - avril 2023), dont 18 en
+  excluant la saison testée. Saisons vérifiées : novembre 2003 - avril 2019 (16 saisons). Le nombre de fiches
+  DesInventar utilisables baisse en conséquence ; il sera rapporté avec les résultats.
 
 ## Références
 

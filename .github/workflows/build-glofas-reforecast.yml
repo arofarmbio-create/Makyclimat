@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       years:
-        description: "Années séparées par des espaces (1999-2023)"
+        description: "Années séparées par des espaces (2003-2023 pour la v4)"
         default: "2018"
       months:
         description: "Mois (saison des pluies par défaut)"
