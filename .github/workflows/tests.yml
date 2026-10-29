@@ -58,6 +58,7 @@ jobs:
           python tests/test_pluvial_forecast.py
           python tests/test_verification_impact.py
           python tests/test_imerg.py
+          python tests/test_spei.py
           python scripts/compute_metrics.py --country demo
       - name: Tests de l'interface
         run: node tests/ui_test.js demo

@@ -1,0 +1,62 @@
+name: 19 - SPI ou SPEI face au NDVI (sécheresse agricole)
+
+# Séries mensuelles par district (CHIRPS, ET0 ERA5-Land, NDVI MODIS via AppEEARS), rangées dans la release
+# « secheresse-series », puis application de validation/protocole_spei_ndvi.md. Manuel.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+  TAG: secheresse-series
+
+jobs:
+  series:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        part: [pluie, et0, ndvi]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests scipy rasterio "cdsapi>=0.7.4" xarray netCDF4 h5netcdf
+      - name: Série ${{ matrix.part }}
+        env:
+          CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Séries mensuelles par district (sécheresse)" \
+            --notes "Pluie CHIRPS, ET0 Penman-Monteith (ERA5-Land), NDVI MOD13C2 (AppEEARS), par district. scripts/build_drought_series.py." || true
+          python scripts/build_drought_series.py --country "$COUNTRY" --part "${{ matrix.part }}"
+          gh release upload "$TAG" "data/$COUNTRY/drought/${{ matrix.part }}_districts.csv" --clobber
+
+  validate:
+    needs: series
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml scipy
+      - name: Validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "data/$COUNTRY/drought"
+          gh release download "$TAG" --pattern "*_districts.csv" --dir "data/$COUNTRY/drought"
+          python scripts/validate_spei_ndvi.py --country "$COUNTRY"
+      - name: Publier
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add validation/spei_ndvi.md validation/spei_ndvi_districts.csv validation/spei_controle_et0.csv
+          git diff --cached --quiet || (git commit -m "SPI ou SPEI face au NDVI : validation par district" && git pull --rebase origin main && git push)

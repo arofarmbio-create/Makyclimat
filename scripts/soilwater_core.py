@@ -268,3 +268,81 @@ def spi(P, n, month0, min_mean_mm=None):
             z = np.where((mean_cum >= min_mean_mm)[None, :], z, np.nan)
         out[idx] = z
     return out
+
+
+def loglogistic_lmoments(x):
+    """Paramètres (alpha, beta, gamma) de la loi log-logistique à 3 paramètres par L-moments non biaisés (Beguería et al. 2014,
+    correction de Vicente-Serrano et al. 2010). x : échantillon 1-D sans NaN. NaN si l'ajustement est impossible."""
+    from scipy.special import gamma as G
+    x = np.sort(np.asarray(x, float))
+    N = len(x)
+    if N < 10:
+        return np.nan, np.nan, np.nan
+    i = np.arange(1, N + 1)
+    w0 = x.mean()
+    w1 = np.sum(x * (N - i) / (N - 1)) / N
+    w2 = np.sum(x * (N - i) * (N - i - 1) / ((N - 1) * (N - 2))) / N
+    beta = (2 * w1 - w0) / (6 * w1 - w0 - 6 * w2)
+    if not np.isfinite(beta) or beta <= 1:
+        return np.nan, np.nan, np.nan
+    g = G(1 + 1 / beta) * G(1 - 1 / beta)
+    alpha = (w0 - 2 * w1) * beta / g
+    return alpha, beta, w0 - alpha * g
+
+
+def spei(P, PET, n, month0):
+    """Indice standardisé de précipitation-évapotranspiration SPEI-n (Vicente-Serrano et al. 2010). P, PET (T, N) en mm/mois,
+    le pas 0 étant le mois `month0`. Bilan P - PET cumulé sur n mois, loi log-logistique par mois du calendrier (L-moments),
+    SPEI = Phi^-1(F), borné à +-3,09. NaN pour les n-1 premiers pas et si moins de 20 cumuls valides."""
+    from scipy import stats
+    D = rolling_sum(np.asarray(P, float) - np.asarray(PET, float), n)
+    D[: n - 1] = np.nan
+    bad = ~(np.isfinite(P) & np.isfinite(PET))
+    if n > 1:
+        bad = rolling_sum(bad.astype(float), n) > 0
+    D[bad] = np.nan
+    T = D.shape[0]
+    out = np.full(D.shape, np.nan)
+    cal = np.array([(month0 - 1 + t) % 12 for t in range(T)])
+    for m in range(12):
+        idx = np.where(cal == m)[0]
+        for j in range(D.shape[1]):
+            x = D[idx, j]
+            ok = np.isfinite(x)
+            if ok.sum() < 20:
+                continue
+            a, b, g = loglogistic_lmoments(x[ok])
+            if not np.isfinite(a):
+                continue
+            with np.errstate(divide="ignore", invalid="ignore"):
+                F = 1.0 / (1.0 + (a / np.maximum(x[ok] - g, 1e-9)) ** b)
+            z = np.full(len(x), np.nan)
+            z[ok] = np.clip(stats.norm.ppf(np.clip(F, 1e-6, 1 - 1e-6)), -3.09, 3.09)
+            out[idx, j] = z
+    return out
+
+
+def et0_pm_monthly(t2m_k, d2m_k, u10, v10, ssrd_j_day, sp_pa, lat_deg, year, month):
+    """ET0 de référence (mm/mois), Penman-Monteith FAO-56 (Allen et al. 1998) à partir de moyennes mensuelles ERA5-Land.
+    Simplifications documentées : température moyenne (Tmax/Tmin journaliers absents), flux de chaleur du sol nul,
+    Rso = 0,75 Ra (altitude non utilisée), vent à 2 m = 0,748 x vent à 10 m (FAO-56 éq. 47)."""
+    import calendar
+    T = t2m_k - 273.15
+    es = 0.6108 * np.exp(17.27 * T / (T + 237.3))
+    Td = d2m_k - 273.15
+    ea = np.minimum(0.6108 * np.exp(17.27 * Td / (Td + 237.3)), es)
+    delta = 4098 * es / (T + 237.3) ** 2
+    gam = 0.000665 * sp_pa / 1000.0
+    u2 = np.hypot(u10, v10) * 0.748
+    Rs = ssrd_j_day / 1e6
+    J = (np.datetime64(f"{year}-{month:02d}-15") - np.datetime64(f"{year}-01-01")).astype(int) + 1
+    phi = np.deg2rad(lat_deg)
+    dr = 1 + 0.033 * np.cos(2 * np.pi * J / 365)
+    dec = 0.409 * np.sin(2 * np.pi * J / 365 - 1.39)
+    ws = np.arccos(np.clip(-np.tan(phi) * np.tan(dec), -1, 1))
+    Ra = 24 * 60 / np.pi * 0.0820 * dr * (ws * np.sin(phi) * np.sin(dec) + np.cos(phi) * np.cos(dec) * np.sin(ws))
+    Rso = 0.75 * Ra
+    Rnl = 4.903e-9 * (T + 273.16) ** 4 * (0.34 - 0.14 * np.sqrt(ea)) * (1.35 * np.clip(Rs / np.maximum(Rso, 1e-6), 0.3, 1.0) - 0.35)
+    Rn = 0.77 * Rs - Rnl
+    et0 = (0.408 * delta * Rn + gam * 900 / (T + 273) * u2 * (es - ea)) / (delta + gam * (1 + 0.34 * u2))
+    return np.maximum(et0, 0) * calendar.monthrange(year, month)[1]
