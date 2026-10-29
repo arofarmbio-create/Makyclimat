@@ -18,3 +18,4 @@ data/*/grids/forecast.npz
 data/*/grids/flood_forecast.npz
 data/*/grids/flood_ensemble.npz
 .venv/
+data/*/external/desinventar.csv

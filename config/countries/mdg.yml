@@ -79,6 +79,11 @@ alerts:
   gust_kmh: [60, 90, 118]           # rafales de vent
   tmax_c: [35, 38, 41]              # température maximale
   dry_days: [10, 15, 21]            # jours secs consécutifs (< 1 mm), en saison des pluies seulement
+desinventar:                        # base des pertes et dommages (UNDRR), vérité terrain d'impact
+  country: mdg                      # code DesInventar du pays
+  pcode_prefix: "MG"                # code de district DesInventar 11117 -> pcode MG11117
+  split:                            # districts de 2011 découpés depuis
+    MG11101: [MG11118, MG11119, MG11120, MG11121, MG11122, MG11123]   # Antananarivo Renivohitra -> 6 arrondissements
 flood:
   return_levels: [2, 5, 20]         # débit de rivière dépassant la crue de 2, 5 ou 20 ans
   min_q2_m3s: 5                     # petits cours d'eau ignorés (débit de crue de 2 ans < 5 m3/s)
