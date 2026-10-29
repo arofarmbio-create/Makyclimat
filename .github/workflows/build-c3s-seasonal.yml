@@ -1,0 +1,49 @@
+name: 16 - Prévision saisonnière hybride (multi-modèles C3S + ENSO/IOD)
+
+# Télécharge les rétroprévisions 1993-2016 et la prévision d'octobre des 10 systèmes C3S (Climate Data Store), les range
+# dans la release « c3s-saisonnier-octobre », puis applique validation/protocole_saisonnier_multimodele.md. Manuel.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+  TAG: c3s-saisonnier-octobre
+
+jobs:
+  hybride:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: pip install numpy pandas pyyaml requests scipy "cdsapi>=0.7.4" xarray cfgrib eccodes
+      - name: Prévisions déjà téléchargées
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Prévisions saisonnières C3S (émission d'octobre)" \
+            --notes "Rétroprévisions 1993-2016 et prévision d'octobre, pluie mensuelle, 10 systèmes C3S (Copernicus, libre avec attribution). scripts/build_c3s_seasonal.py." || true
+          mkdir -p "data/$COUNTRY/c3s"
+          gh release download "$TAG" --pattern "*.npz" --dir "data/$COUNTRY/c3s" || true
+      - name: Télécharger les systèmes manquants (Climate Data Store)
+        env:
+          CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/build_c3s_seasonal.py --country "$COUNTRY"
+          for f in data/$COUNTRY/c3s/*.npz; do gh release upload "$TAG" "$f" --clobber; done
+      - name: Validation et prévision hybride
+        run: python scripts/validate_c3s_hybrid.py --country "$COUNTRY"
+      - name: Publier
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add validation/saisonnier_multimodele.md validation/saisonnier_multimodele_regions.csv
+          git add -f docs/data/$COUNTRY/seasonal_mme.json
+          git diff --cached --quiet || (git commit -m "Prévision saisonnière hybride multi-modèles C3S : validation et prévision" && git pull --rebase origin main && git push)

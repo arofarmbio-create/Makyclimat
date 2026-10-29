@@ -20,3 +20,4 @@ data/*/grids/flood_ensemble.npz
 .venv/
 data/*/external/desinventar.csv
 data/*/reforecast/
+data/*/c3s/

@@ -125,12 +125,12 @@ def bh(p, q=0.10):
     return keep
 
 
-def evaluate(X: np.ndarray, y: np.ndarray, years: np.ndarray):
+def evaluate(X: np.ndarray, y: np.ndarray, years: np.ndarray, split_year: int = SPLIT_YEAR):
     ok = np.isfinite(y) & np.isfinite(X).all(axis=1)
     X, y, years = X[ok], y[ok], years[ok]
     pred = loo(X, y)
     out = {"n": int(len(y)), "r_loo": float(np.corrcoef(pred, y)[0, 1]), "msss_loo": msss(y, pred, loo_climatology(y))}
-    tr, te = years <= SPLIT_YEAR, years > SPLIT_YEAR
+    tr, te = years <= split_year, years > split_year
     if tr.sum() >= 15 and te.sum() >= 8:
         p, _ = fit_predict(X[tr], y[tr], X[te])
         out["msss_chrono"] = msss(y[te], p, np.full(te.sum(), y[tr].mean()))
