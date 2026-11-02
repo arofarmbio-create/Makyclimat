@@ -141,6 +141,23 @@ def parse_imerg_ascii(text: str) -> np.ndarray:
     return clean(a.T)
 
 
+def probe_imerg(day: dt.date) -> None:
+    """Diagnostic rapide d'IMERG Late (un jour) : liste du mois, unité, réponse OPeNDAP et durée."""
+    s = imerg_session()
+    t0 = time.time()
+    files = imerg_month_files(s, day.year, day.month)
+    print(f"liste {day:%Y-%m} : {len(files)} fichiers en {time.time() - t0:.1f} s ; exemple : {next(iter(files.values()), None)}")
+    f = files.get(day)
+    if not f:
+        return
+    stem = f"{IMERG_BASE}/opendap/{IMERG_COLL}/{day.year}/{day.month:02d}/{f}"
+    for suffix in (".das", ".dds", f".ascii?precipitation[0:0][{I0}:{I0 + 2}][{J0}:{J0 + 2}]"):
+        t0 = time.time()
+        r = s.get(stem + suffix, timeout=120)
+        print(f"--- {suffix[:60]} -> HTTP {r.status_code}, {len(r.text)} car., {time.time() - t0:.1f} s")
+        print(r.text[:700])
+
+
 def part_imerg(days):
     s = imerg_session()
     files = {}
@@ -269,11 +286,15 @@ def main() -> None:
     ap.add_argument("--source", required=True, choices=["chirps", "imerg", "era5", "gsod"])
     ap.add_argument("--year", type=int)
     ap.add_argument("--first-year", type=int, default=2001)
+    ap.add_argument("--probe", help="diagnostic IMERG sur un jour AAAA-MM-JJ")
     args = ap.parse_args()
     load_config(args.country)
     out_dir = country_data_dir(args.country) / "e1"
     out_dir.mkdir(exist_ok=True)
     today = dt.date.today()
+    if args.probe:
+        probe_imerg(dt.date.fromisoformat(args.probe))
+        return
     if args.source == "gsod":
         print(f"écrit : {part_gsod(out_dir, range(args.first_year, today.year + 1))}")
         return

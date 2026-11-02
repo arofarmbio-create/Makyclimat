@@ -15,6 +15,9 @@ on:
       sources:
         description: "Sources à lancer (chirps imerg era5 gsod)"
         default: "chirps imerg era5 gsod"
+      sonde:
+        description: "Diagnostic IMERG sur un jour (AAAA-MM-JJ) au lieu des téléchargements"
+        default: ""
 
 permissions:
   contents: write
@@ -49,9 +52,25 @@ jobs:
             --title "E1 : pluie journalière de trois sources et stations GSOD" \
             --notes "Expérience E1 (validation/protocole_e1_fusion_pluie.md). CHIRPS v2.0 (CHC), IMERG V07 Late (NASA), ERA5-Land (Copernicus), grille commune 0,1° ; GSOD (NOAA). scripts/build_e1_sources.py." || true
 
+  sonde:
+    if: github.event.inputs.sonde != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests
+      - name: Diagnostic IMERG
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+        run: python scripts/build_e1_sources.py --country "$COUNTRY" --source imerg --probe "${{ github.event.inputs.sonde }}"
+
   grilles:
     needs: plan
-    if: needs.plan.outputs.grids != '[]'
+    if: needs.plan.outputs.grids != '[]' && github.event.inputs.sonde == ''
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
@@ -89,7 +108,7 @@ jobs:
 
   era5:
     needs: plan
-    if: contains(needs.plan.outputs.sources, ' era5 ')
+    if: contains(needs.plan.outputs.sources, ' era5 ') && github.event.inputs.sonde == ''
     runs-on: ubuntu-latest
     timeout-minutes: 350
     steps:
@@ -113,7 +132,7 @@ jobs:
 
   gsod:
     needs: plan
-    if: contains(needs.plan.outputs.sources, ' gsod ')
+    if: contains(needs.plan.outputs.sources, ' gsod ') && github.event.inputs.sonde == ''
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
