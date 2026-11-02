@@ -127,7 +127,9 @@ def download(url: str, dest: Path, retries: int = 3, timeout: int = 120) -> bool
             if attempt == retries:
                 raise
             print(f"  nouvelle tentative ({attempt}) pour {url}: {e}")
-            time.sleep(3 * attempt)
+            # 429 « trop de requêtes » (CHIRPS, 02/11/2026) : attendre vraiment, sinon le serveur continue de refuser
+            busy = "429" in str(e)
+            time.sleep(min(60 * attempt, 300) if busy else 3 * attempt)
     return False
 
 

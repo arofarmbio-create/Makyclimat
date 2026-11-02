@@ -104,7 +104,7 @@ def part_chirps(days):
             arr, lon0, lat0, _ = read_crop(tif, [LON0 - 0.05, LAT0 - 0.05, LON1 + 0.05, LAT1 + 0.05])
             return block_mean_005(arr, lon0, lat0)
 
-    with cf.ThreadPoolExecutor(8) as ex:
+    with cf.ThreadPoolExecutor(2) as ex:                     # CHC refuse (429) au-delà de quelques requêtes simultanées
         return list(ex.map(one, days)), "CHIRPS v2.0 journalier, 0,05° -> 0,1° (moyenne 2 x 2)"
 
 

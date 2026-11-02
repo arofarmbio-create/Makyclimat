@@ -68,16 +68,54 @@ jobs:
           EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
         run: python scripts/build_e1_sources.py --country "$COUNTRY" --source imerg --probe "${{ github.event.inputs.sonde }}"
 
-  grilles:
+  chirps:
     needs: plan
-    if: needs.plan.outputs.grids != '[]' && github.event.inputs.sonde == ''
+    if: contains(needs.plan.outputs.sources, ' chirps ') && github.event.inputs.sonde == ''
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
-      max-parallel: 4
+      max-parallel: 1          # CHIRPS : une année à la fois (refus 429 du serveur CHC, 02/11/2026)
       fail-fast: false
       matrix:
-        source: ${{ fromJson(needs.plan.outputs.grids) }}
+        source: [chirps]
+        year: ${{ fromJson(needs.plan.outputs.years) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Déjà publié ?
+        id: done
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          f="${{ matrix.source }}_${{ matrix.year }}.npz"
+          if gh release view "$TAG" --json assets -q '.assets[].name' | grep -qx "$f" \
+             && ! echo " ${{ needs.plan.outputs.refresh }} " | grep -q " ${{ matrix.year }} "; then
+            echo "$f déjà publié"; echo "skip=1" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.done.outputs.skip != '1'
+        run: pip install numpy pandas pyyaml requests scipy rasterio
+      - name: Télécharger et publier
+        if: steps.done.outputs.skip != '1'
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/build_e1_sources.py --country "$COUNTRY" --source "${{ matrix.source }}" --year "${{ matrix.year }}"
+          gh release upload "$TAG" "data/$COUNTRY/e1/${{ matrix.source }}_${{ matrix.year }}.npz" --clobber
+
+  imerg:
+    needs: plan
+    if: contains(needs.plan.outputs.sources, ' imerg ') && github.event.inputs.sonde == ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      max-parallel: 3
+      fail-fast: false
+      matrix:
+        source: [imerg]
         year: ${{ fromJson(needs.plan.outputs.years) }}
     steps:
       - uses: actions/checkout@v4
