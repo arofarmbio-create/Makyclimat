@@ -182,28 +182,44 @@ def part_imerg(days):
         if units not in ("mm/day", "mm"):
             raise RuntimeError(f"unité IMERG inattendue : {units} (attendu mm/day)")
 
-    def one(d):
-        f = files.get(d)
-        if f is None:
-            return None
-        url = (f"{IMERG_BASE}/opendap/{IMERG_COLL}/{d.year}/{d.month:02d}/{f}.ascii?"
-               f"precipitation[0:0][{I0}:{I0 + NX - 1}][{J0}:{J0 + NY - 1}]")
-        for k in range(6):
-            try:
-                r = s.get(url, timeout=120)
-                if r.status_code == 200:
-                    return parse_imerg_ascii(r.text)     # un format inattendu lève ValueError : pas de nouvel essai
-                if r.status_code in (401, 403):
-                    raise RuntimeError(f"accès refusé (HTTP {r.status_code}) : compte Earthdata ou application GES DISC")
-            except requests.RequestException as e:
-                print(f"  {d} essai {k + 1} : {type(e).__name__}", flush=True)
-            else:
-                print(f"  {d} essai {k + 1} : HTTP {r.status_code}", flush=True)
-            time.sleep(10 * (k + 1))
-        return None
+    out, fails_in_a_row = [], 0
+    for d in days:                                       # séquentiel : en parallèle, GES DISC répond 503 puis coupe
+        f = files.get(d)                                 # les connexions (sonde du 02/11/2026)
+        g = None
+        if f is not None:
+            url = (f"{IMERG_BASE}/opendap/{IMERG_COLL}/{d.year}/{d.month:02d}/{f}.ascii?"
+                   f"precipitation[0:0][{I0}:{I0 + NX - 1}][{J0}:{J0 + NY - 1}]")
+            g = fetch_imerg_day(s, url, d)
+            time.sleep(PAUSE_S)
+        fails_in_a_row = 0 if (g is not None or f is None) else fails_in_a_row + 1
+        if fails_in_a_row >= MAX_FAILS_IN_A_ROW:
+            raise RuntimeError(f"IMERG : {MAX_FAILS_IN_A_ROW} jours de suite en échec (jusqu'au {d}) ; arrêt pour ne pas "
+                               "insister auprès du serveur")
+        out.append(g)
+    return out, f"IMERG V07 Late journalier ({IMERG_COLL}), 0,1°, unité {units}"
 
-    with cf.ThreadPoolExecutor(6) as ex:
-        return list(ex.map(one, days)), f"IMERG V07 Late journalier ({IMERG_COLL}), 0,1°, unité {units}"
+
+PAUSE_S = 0.5                       # entre deux requêtes IMERG
+MAX_FAILS_IN_A_ROW = 10
+
+
+def fetch_imerg_day(s, url, d, tries=6, sleep=time.sleep):
+    """Une journée IMERG. 200 : grille ; 401/403 : erreur ; 503 ou coupure : attente croissante (60 s, 120 s, …
+    plafonnée à 300 s) avant un nouvel essai ; None après `tries` essais."""
+    for k in range(tries):
+        try:
+            r = s.get(url, timeout=120)
+            if r.status_code == 200:
+                return parse_imerg_ascii(r.text)         # un format inattendu lève ValueError : pas de nouvel essai
+            if r.status_code in (401, 403):
+                raise RuntimeError(f"accès refusé (HTTP {r.status_code}) : compte Earthdata ou application GES DISC")
+            why = f"HTTP {r.status_code}"
+        except requests.RequestException as e:
+            why = type(e).__name__
+        print(f"  {d} essai {k + 1} : {why}", flush=True)
+        if k + 1 < tries:
+            sleep(min(60 * (k + 1), 300))
+    return None
 
 
 # ---------- ERA5-Land ----------

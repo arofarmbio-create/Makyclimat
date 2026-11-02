@@ -96,6 +96,15 @@ jobs:
           fi
       - if: steps.done.outputs.skip != '1'
         run: pip install numpy pandas pyyaml requests scipy rasterio
+      - name: Attendre un créneau libre pour CHIRPS (mise à jour du site à HH:10 toutes les 6 h, bilan hydrique à 03:40)
+        if: steps.done.outputs.skip != '1'
+        run: |
+          while :; do
+            h=$((10#$(date -u +%H))); m=$((10#$(date -u +%M)))
+            if { [ $((h % 6)) -eq 0 ] && [ $m -ge 5 ] && [ $m -le 50 ]; } || { [ $h -eq 3 ] && [ $m -ge 35 ]; }; then
+              echo "créneau CHIRPS occupé ($(date -u +%H:%M) UTC), nouvelle vérification dans 5 min"; sleep 300
+            else break; fi
+          done
       - name: Télécharger et publier
         if: steps.done.outputs.skip != '1'
         env:
@@ -112,7 +121,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
-      max-parallel: 3
+      max-parallel: 1          # GES DISC : une année et une requête à la fois (503 et coupures en parallèle, 02/11/2026)
       fail-fast: false
       matrix:
         source: [imerg]

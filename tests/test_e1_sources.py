@@ -73,6 +73,34 @@ try:
 except ValueError:
     check("format inattendu : erreur explicite", True)
 
+# IMERG : une requête à la fois, attente croissante sur 503 et coupures (sonde du 02/11/2026)
+import requests  # noqa: E402
+
+
+class R:
+    def __init__(self, code, text=""):
+        self.status_code, self.text = code, text
+
+
+class S:
+    def __init__(self, seq):
+        self.seq = list(seq)
+
+    def get(self, url, timeout=None):
+        x = self.seq.pop(0)
+        if isinstance(x, Exception):
+            raise x
+        return x
+
+
+ok_text = "\n".join(lines)            # réponse journalière valide construite plus haut
+waits = []
+g = E.fetch_imerg_day(S([R(503), requests.ConnectionError(), R(200, ok_text)]), "u", "j", sleep=waits.append)
+check("IMERG : 503 puis coupure puis succès, attentes de 60 s puis 120 s", g is not None and waits == [60, 120])
+waits = []
+g = E.fetch_imerg_day(S([requests.ConnectionError()] * 6), "u", "j", sleep=waits.append)
+check("IMERG : six échecs -> rien, attentes plafonnées à 300 s", g is None and waits == [60, 120, 180, 240, 300])
+
 d = E.year_days(2026, dt.date(2026, 11, 2))
 check("année en cours : jusqu'à hier", d[0] == dt.date(2026, 1, 1) and d[-1] == dt.date(2026, 11, 1))
 check("année passée complète", len(E.year_days(2024, dt.date(2026, 11, 2))) == 366)
