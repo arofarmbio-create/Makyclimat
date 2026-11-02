@@ -302,3 +302,13 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   ménage (`scripts/cds_menage.py`, testé) liste les demandes du compte et annule celles qui sont en file depuis plus
   de 30 minutes, tous jeux confondus ; il tourne avant chaque série ERA5-Land d'E1. 📌 Règle : une seule famille de
   téléchargements Copernicus à la fois.
+
+### Protocole H-N7 : océan, pluies extrêmes et recharge des nappes du Grand Sud
+- ✅ Protocole écrit avant calcul (`validation/protocole_climat_extremes_nappes.md`). Chaîne en trois maillons :
+  l'état de l'océan en juillet-septembre (ONI, DMI, SIOD), puis les mois de pluie au-delà du 95e centile (seuil de
+  Taylor et al. 2013), puis les remontées des nappes. Le maillon A doit passer les quatre épreuves déjà utilisées
+  pour la planification ; tests bilatéraux, car la littérature malgache juge le lien ENSO-fortes pluies « moins
+  clair » dans le sud-ouest.
+- 📌 Honnêteté sur les données : les 7 sites MGMERL ont déjà servi en M3, donc le maillon B y est exploratoire. La
+  confirmation se fera sur des sites indépendants (Water Missions, Lorentz, ACF, GROSoM, ou mesures postérieures à
+  juin 2025).
