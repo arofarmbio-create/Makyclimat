@@ -73,8 +73,10 @@ les stations n'ont pas exactement la même journée. C'est la raison du choix de
 Règles fixées à l'avance, appliquées pareillement à toutes les sources :
 - valeur négative ou absente : manquante ;
 - pluie journalière > 1 000 mm : manquante (au-dessus du record mondial, donc une erreur) ;
-- stations GSOD : seuls les jours au drapeau de pluie **A à H** (période de mesure connue) sont gardés. Le drapeau
-  **I** (« aucune pluie déclarée ») est traité comme manquant, pas comme zéro. Le test du 02/11 montre que ce drapeau
+- stations GSOD : seuls les jours dont le cumul couvre **toute la journée** sont gardés : drapeaux **D** (4 relevés
+  de 6 heures), **F** (2 relevés de 12 heures) et **G** (1 relevé de 24 heures). Les drapeaux A, B, C et E (cumuls
+  partiels de 6 ou 12 heures), H (donnée incomplète) et I (« aucune pluie déclarée ») sont traités comme manquants,
+  jamais comme zéro (modification du 02/11/2026, section 9). Le test du 02/11 montre que ce drapeau
   couvre jusqu'à 60 % des jours d'une station (Ivato, 2015) : le compter comme zéro fausserait la référence ;
 - une pentade de station est gardée si ses 5 jours sont valides ; une station est gardée si elle a au moins
   100 pentades valides dans la période de test ;
@@ -158,3 +160,11 @@ Le nombre d'événements est faible : ces résultats sont descriptifs, sans test
 ## 9. Journal des modifications
 
 - 02/11/2026 : version initiale.
+- 02/11/2026, après le premier téléchargement (stations GSOD et CHIRPS 2015) et **avant tout calcul de score** : la
+  règle « drapeaux A à H » gardait des cumuls partiels. D'après la documentation GSOD, A, B et C sont des sommes de 1 à
+  3 relevés de 6 heures, E un seul relevé de 12 heures, et H une donnée incomplète. Ils sous-estiment la pluie du jour.
+  Seuls D, F et G (journée complète) sont gardés. Sur l'ensemble 2001-2026 : 47 149 jours G, 2 673 D et 530 F ;
+  47 344 jours I.
+- 02/11/2026, même constat : en 2015, CHIRPS à la maille de Toamasina (2 951 mm) et la station de Toamasina (2 945 mm
+  sur 301 jours valides) sont presque égaux. Cela confirme que CHIRPS intègre cette station (section 7). Aucune règle
+  ne change : la limite était prévue, et ce chiffre la documente.
