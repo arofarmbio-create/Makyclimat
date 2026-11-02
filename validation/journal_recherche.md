@@ -447,3 +447,8 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   dans le forage au-dessus de la zone captée. Cela conforte l'une des explications de l'écart avec la carte de Fan
   (H-C1), dont la médiane (20,9 m) est plus proche de la profondeur des forages. À intégrer comme variable du modèle
   hybride (H-C2), sans conclure avant le test.
+- ✅ H-C6 préparé avant calcul. Précisions fixées : les variables malgaches viennent des **mêmes sources** que la base
+  africaine (CRU TS 1981-2010, MOD13, carte BGS des aquifères, sol WRB, Globcover) pour ne pas confondre l'écart
+  entre sources avec l'effet recherché ; version T2 retenue sur H-C5 ; intervalle de 80 % tiré des résidus par pays ;
+  références malgaches (Sud 20-100 mm/an, plateau Mahafaly environ 60 mm/an, fluctuation de nappe aux sites MGMERL).
+  Script et 5 tests prêts ; variables malgaches demandées à l'agent de téléchargement.
