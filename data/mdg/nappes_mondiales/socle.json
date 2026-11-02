@@ -1,0 +1,20 @@
+{
+ "url": "https://files.isric.org/soilgrids/former/2017-03-10/data/BDTICM_M_250m_ll.tif",
+ "citation": "Shangguan W., Hengl T. et al. (2017). Mapping the global depth to bedrock for land surface modeling. JAMES 9, 65-88. SoilGrids250m 2017 (ISRIC), couche BDTICM_M",
+ "licence": "Open Database License (ODbL) : attribution et partage à l'identique",
+ "republication": true,
+ "unite": "cm (profondeur absolue du socle)",
+ "resolution": "250 m (7,5 secondes d'arc)",
+ "partie": "socle",
+ "emprise": [
+  43.0,
+  -26.0,
+  51.0,
+  -11.5
+ ],
+ "telecharge_le": "2026-11-02",
+ "resume": {
+  "mailles": 11712114,
+  "mediane_cm": 4795.0
+ }
+}
