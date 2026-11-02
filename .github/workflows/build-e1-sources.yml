@@ -1,4 +1,4 @@
-name: 20 - E1 : sources de pluie (CHIRPS, IMERG Late, ERA5-Land, stations GSOD)
+name: "20 - E1 : sources de pluie (CHIRPS, IMERG Late, ERA5-Land, stations GSOD)"
 
 # Expérience E1 du protocole doctoral (validation/protocole_e1_fusion_pluie.md). Télécharge, année par année, la pluie
 # journalière des trois sources sur la grille commune de 0,1° et les relevés des stations GSOD, et les range dans la
