@@ -65,6 +65,72 @@ vérifier dans le texte original avant toute citation dans la thèse.
   [lu : AVSF 2016].
 - Un forage profond à Tsihombe (85 m) donne 4 m³/h mais une eau très salée [résumé : UNICEF].
 
+## 3 bis. Observation de terrain du porteur du projet (02/11/2026)
+
+Lors de forages réalisés dans le Sud de Madagascar, le porteur du projet a observé :
+- que les **failles et discontinuités lithologiques** jouent un grand rôle dans l'alimentation des nappes profondes ;
+- des **nappes très anciennes**, dont l'eau est restée en place très longtemps ;
+- une **salinité** liée à ces eaux anciennes.
+
+C'est une observation d'expert, pas une mesure publiée. Elle concorde avec les analogues étrangers (section 3 ter) et
+avec l'écoulement par fractures du socle décrit par AVSF (2016). Pour la thèse, il faudra l'appuyer par des données :
+datation (tritium, carbone 14), isotopes, ou rapports de forage indiquant la venue d'eau sur une faille.
+
+## 3 ter. Analogues géologiques hors de Madagascar
+
+Madagascar était soudé à l'Inde et à l'Afrique de l'Est dans le Gondwana. Ses grandes formations ont des équivalents
+mieux étudiés ailleurs :
+- le socle précambrien (sud de l'Inde, Sri Lanka, Afrique de l'Est et australe) ;
+- les grès de l'Isalo, équivalent du Karoo d'Afrique australe ;
+- le climat semi-aride à recharge épisodique (Afrique de l'Est, Sahel).
+
+Le porteur du projet a demandé le 02/11/2026 d'exploiter ces travaux et leurs méthodes de calcul.
+
+**Socle cristallin altéré et fracturé (sud de l'Inde : Maheshwaram, Hyderabad)** [résumé : Maréchal, Dewandel et
+al.] :
+- modèle en couches : des altérites (saprolite, 15 à 20 m) qui **stockent** l'eau, sur une zone fissurée (jusqu'à
+  environ 50 m) qui la **transmet**, sur un socle sain sans porosité ;
+- la zone la plus perméable est l'interface entre la base des altérites et le haut de la zone fissurée ; c'est elle
+  que captent la plupart des forages ;
+- porosité efficace de 2 à 8 % ; observatoire instrumenté de long terme (Maréchal et al. 2018).
+- **Intérêt** : ce modèle et ses méthodes (essais hydrauliques à plusieurs échelles, fluctuation de nappe) peuvent
+  servir de cadre pour les forages de socle de l'Androy.
+
+**Recharge dépendante des pluies extrêmes (Tanzanie centrale)** [résumé : Taylor et al. 2013, *Nature Climate
+Change* 3, 374-378] :
+- 55 ans de niveaux de nappe à Makutapora : la recharge est **très épisodique**, et plus des deux tiers des années
+  n'en ont aucune ;
+- elle dépend des mois de pluie extrême (au-delà du 95e centile), souvent renforcés par **El Niño et le dipôle de
+  l'océan Indien**.
+- **Intérêt direct pour la thèse** : cela relie le module eaux souterraines au module de téléconnexions ENSO/IOD déjà
+  construit (`teleconnexions.md`). Le seuil du 95e centile est une règle toute faite à tester dans le Sud.
+
+**Âge des eaux et fractures** [résumé] :
+- Ghana, socle : mélange d'eaux jeunes et anciennes par les fractures ; eaux anciennes d'environ 19 000 ans (âge
+  carbone 14 non corrigé).
+- Afrique de l'Est contre Karoo : eaux jeunes (moins de 1 000 ans) dans les systèmes est-africains, **eaux anciennes
+  (plus de 10 000 ans) dans le Karoo**, l'équivalent géologique de l'Isalo.
+- Éthiopie, Ouganda, Malawi : temps de séjour moyen des nappes peu profondes de 20 à 50 ans ; Afrique de l'Ouest :
+  32 à 65 ans, avec une recharge possible jusqu'à 20 mm/an même sous 400 mm de pluie annuelle.
+- Ces chiffres concordent avec l'observation du porteur du projet : des nappes peu profondes jeunes, et des eaux
+  profondes de fractures très anciennes.
+
+**Failles, salinité et fluor (zone sèche du Sri Lanka)** [résumé] :
+- les systèmes de joints et de failles du socle guident l'eau des zones de recharge vers les zones de décharge ; l'eau
+  profonde des zones fracturées est liée aux linéaments ;
+- l'eau de la zone sèche est plus minéralisée (interactions géochimiques, forte évaporation, faible pluie) ;
+- le fluor y atteint 8 mg/L (moins de 0,8 mg/L en zone humide) ; plus de la moitié des puits dépassent 1 mg/L, et
+  les puits profonds sont plus chargés. Sa source est l'altération des minéraux du socle.
+- **Intérêt** : le fluor n'apparaît pas dans nos sources malgaches ; c'est une question de santé à signaler pour les
+  forages profonds du socle de l'Androy.
+
+**Synthèses africaines, avec des calculs déjà faits** [résumé] :
+- MacDonald et al. (2021), carte de la recharge en Afrique tirée d'observations de terrain : relation entre recharge,
+  pluie et type d'aquifère, transposable pour un ordre de grandeur dans le Sud de Madagascar.
+- *The Basement Aquifers of Southern Africa* (Water Research Commission, TT 428) : fractures, zones altérées et
+  intrusions contrôlent l'eau du socle ; débits faibles ; fer, fluor et salinité élevés par endroits.
+- Bassin du lac Tchad : recharge par les fortes pluies, établie par les isotopes (2021).
+
 ## 4. Ce que cela explique dans nos premiers résultats (M3)
 
 - **L'excédent de notre bilan mensuel est quasi nul dans le Sud** (ETR ≈ pluie). C'est exactement l'erreur de
@@ -96,7 +162,12 @@ Sinon, ce serait ajuster l'histoire aux données.
 4. **H-N6** : dans le Sud, un indicateur d'**épisodes intenses** (pluie sur 3 jours au-dessus d'un seuil, cyclones
    IBTrACS passés à proximité) explique mieux les remontées de niveau que le SPI mensuel. Les données journalières de
    l'expérience E1 (CHIRPS, IMERG) sont en cours de téléchargement.
-5. **Validation indépendante** : hypothèses testées sur les sites qui n'ont pas servi à les formuler.
+5. **H-N7 (règle tirée de Taylor et al. 2013)** : les remontées de niveau du Sud suivent les mois où la pluie dépasse
+   son 95e centile, plus fréquents en années El Niño ou IOD positif, mieux que le SPI.
+6. **H-N8 (observation de terrain du porteur du projet)** : les sites proches d'une faille ou d'un linéament
+   (carte géologique, linéaments tirés du relief GLO-90) répondent moins à la pluie locale, ont une mémoire plus
+   longue et une eau plus salée.
+7. **Validation indépendante** : hypothèses testées sur les sites qui n'ont pas servi à les formuler.
 
 ## 6. Données à obtenir
 
@@ -127,3 +198,28 @@ Sinon, ce serait ajuster l'histoire aux données.
 - USAID/Winrock (2021). *Madagascar water resources profile* [résumé].
 - Bloomfield J. P., Marchant B. P. (2013), *HESS* 17, 4769 ; Kumar R. et al. (2016) : relation SPI-SGI, déjà citées
   dans `protocole_nappes_mgmerl.md`.
+
+Analogues hors de Madagascar :
+- Taylor R. G., Todd M. C., Kongola L. et al. (2013). Evidence of the dependence of groundwater resources on extreme
+  rainfall in East Africa. *Nature Climate Change* 3, 374-378. https://www.nature.com/articles/nclimate1731 [résumé]
+- Maréchal J.-C. et al. (2004). Use of hydraulic tests at different scales to characterize fracture network
+  properties in the weathered-fractured layer of a hard rock aquifer. *Water Resources Research*.
+  doi:10.1029/2004WR003137 [résumé]
+- Maréchal J.-C. et al. (2018). An observatory of groundwater in crystalline rock aquifers exposed to a changing
+  environment: Hyderabad, India. *Vadose Zone Journal*. doi:10.2136/vzj2018.04.0076 [résumé]
+- Dewandel B. et al. Determining the vertical evolution of hydrodynamic parameters in weathered and fractured south
+  Indian crystalline-rock aquifers. *Hydrogeology Journal*. doi:10.1007/s10040-014-1226-x [résumé]
+- MacDonald A. M. et al. (2021). Mapping groundwater recharge in Africa from ground observations and implications for
+  water security. *Environmental Research Letters*. doi:10.1088/1748-9326/abd661 [résumé]
+- Residence times of shallow groundwater in West Africa. *Hydrogeology Journal* (2012).
+  doi:10.1007/s10040-012-0925-4 [résumé]
+- Groundwater residence time in basement aquifers of the Ochi-Narkwa basin, Ghana. *Journal of African Earth
+  Sciences* (2017) [résumé]
+- Contrasting groundwater flow systems in comparable African mountains: role of permeability structure (Afrique de
+  l'Est contre Karoo) [résumé, prépublication]
+- Water Research Commission, *The Basement Aquifers of Southern Africa* (TT 428).
+  https://www.wrc.org.za/wp-content/uploads/mdocs/TT%20428%20Groundwater.pdf [résumé]
+- Geochemistry of groundwater in the semi-arid crystalline terrain of Sri Lanka. *Water* 14, 3241 (2022).
+  doi:10.3390/w14203241 [résumé]
+- Groundwater recharge from heavy rainfall in the southwestern Lake Chad Basin: evidence from isotopic observations.
+  *Hydrological Sciences Journal* (2021). doi:10.1080/02626667.2021.1937630 [résumé]

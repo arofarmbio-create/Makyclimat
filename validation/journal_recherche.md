@@ -282,3 +282,13 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   à tester sur des sites indépendants dans un protocole M3 bis écrit avant calcul.
 - ❌ Trois documents n'ont pas pu être téléchargés (pages de protection) : l'article Carrière et al. 2023 en texte
   intégral, la thèse de Rabemanana et la synthèse de Rakotondraibe (2006). Ils ne sont cités que d'après leur résumé.
+- 📌 Observation de terrain du porteur du projet, consignée : lors de forages dans le Sud, les failles et les
+  discontinuités lithologiques alimentaient les nappes profondes, et l'on a rencontré des eaux très anciennes et
+  salées.
+- ✅ Bibliographie élargie aux analogues du Gondwana et de l'Afrique semi-aride, à la demande du porteur du projet.
+  Trois résultats transposables :
+  - le modèle altérites-fissures du socle du sud de l'Inde (Maréchal, Dewandel) ;
+  - la recharge liée aux mois de pluie extrême, renforcés par ENSO et l'IOD (Taylor et al. 2013, Tanzanie), qui relie
+    les modules nappes et téléconnexions ;
+  - des eaux de fractures très anciennes (plus de 10 000 ans dans le Karoo, équivalent de l'Isalo).
+  Deux hypothèses ajoutées au futur protocole M3 bis : H-N7 (95e centile) et H-N8 (failles).
