@@ -1,0 +1,35 @@
+name: "22 - Indice du canal de Mozambique (ERA5 850 hPa, protocole H-N7)"
+
+# Tourbillon relatif et vent à 850 hPa sur le canal de Mozambique (30-50°E, 30-10°S), moyennes mensuelles de décembre,
+# janvier et février depuis 1981 (ERA5, Copernicus). Une seule demande ; à lancer quand aucune autre demande Copernicus
+# du compte n'est en cours (règle des téléchargements du 02/11/2026). Chaque année en mars, février étant publié.
+on:
+  schedule:
+    - cron: "0 6 12 3 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mct:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests "cdsapi>=0.7.4" xarray netCDF4 h5netcdf
+      - name: Indice ERA5 (après ménage de la file Copernicus du compte)
+        env:
+          CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
+        run: |
+          python scripts/cds_menage.py --age-min 30 || true
+          python scripts/build_mct_era5.py
+      - name: Publier
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add data/enso/mct_era5.csv
+          git diff --cached --quiet || (git commit -m "Indice du canal de Mozambique (ERA5 850 hPa)" && git pull --rebase --autostash origin main && git push)
