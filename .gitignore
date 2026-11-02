@@ -23,3 +23,6 @@ data/*/reforecast/
 data/*/c3s/
 data/*/imerg/
 data/*/drought/
+
+# Extractions brutes MGMERL (données publiques, citer MGMERL ; rangées hors git)
+data/*/mgmerl_raw/

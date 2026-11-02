@@ -201,3 +201,26 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 🔧 `emdat_corroboration.md` recopiait les chiffres d'EM-DAT, alors que sa licence (CC BY-NC-ND) l'interdit dans un
   dépôt public. Le tableau ne garde plus que le verdict de la comparaison. **Leçon :** une note qui affirme un usage
   « interne » doit être relue en sachant où elle est publiée.
+
+### MGMERL : sources trouvées pour la sécheresse et les nappes (exploration du 02/11/2026)
+- 📌 Le porteur du projet précise que les données MGMERL sont publiques ; MGMERL demande seulement d'être cité dans
+  la thèse.
+- ✅ Inventaire de « Ressources en eau » : 22 stations météo et 14 prévues (Tatirano, Maharo, RainMadagascar, PAM, PAH,
+  UNICEF, WHH), 8 stations « hydromet » (niveaux de puits, pas de débits ; une avec salinité), des dataloggers de
+  nappe (HT Analytics, Water Missions, Lorentz, relevés manuels ACF), et des rapports techniques de forage
+  (lithologie, essais de pompage).
+- ⚠️ Stations météo Tatirano (Fort Dauphin, Tsihombe, Farafangana) : données de décembre 2025 à octobre 2026 seulement,
+  donc hors de la période de test d'E1. Pluviomètres douteux : Tsihombe à 0 mm en décembre, janvier et mars ;
+  Farafangana à environ 0 mm d'avril à juillet.
+- ✅ **16 séries de nappe HT Analytics téléchargées** (niveau et conductivité, toutes les 4 heures environ). Une dizaine
+  couvrent au moins 2 ans, dont 5 qui commencent en 2019 et couvrent la sécheresse de 2020-2022 : Andaboly,
+  Ankaramena, Ankaranabo, Ihazoambo, Sihanamaro. Conductivité médiane au-dessus du seuil de 3 000 µS/cm à Ankaramena
+  et Sihanamaro. ⚠️ Défauts de capteur visibles (niveaux positifs, saut à −37 m, conductivité à 0) : un contrôle
+  qualité sera nécessaire. Fichiers bruts rangés hors git (`data/mdg/mgmerl_raw/`).
+- ✅ **Bulletins de sécheresse UNICEF du Grand Sud**, mensuels depuis décembre 2018 (unicef.org, publics), et synthèses
+  trimestrielles UNICEF-ACF des nappes (2021-2022). 📌 Réserve méthodologique : l'étendue de la sécheresse publiée
+  dans ces bulletins vient de CHIRPS et du NDVI MODIS, comme nos propres indices. S'en servir de vérité terrain serait
+  circulaire. L'état mensuel des nappes suivies (une vingtaine de sites) est en revanche une observation
+  indépendante.
+- ❌ ERA5-Land 2015 (essai E1) : la file d'attente Copernicus est restée pleine 1 h 45, malgré les 6 nouveaux essais.
+  Cause probable : des demandes orphelines laissées par des tâches annulées. À traiter.
