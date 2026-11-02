@@ -224,3 +224,17 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   indépendante.
 - ❌ ERA5-Land 2015 (essai E1) : la file d'attente Copernicus est restée pleine 1 h 45, malgré les 6 nouveaux essais.
   Cause probable : des demandes orphelines laissées par des tâches annulées. À traiter.
+
+### Protocole M3 : niveaux de nappe mesurés contre indices du système
+- ✅ Protocole écrit avant calcul (`validation/protocole_nappes_mgmerl.md`) : H-N1, r(SPI-12, anomalie de niveau) > 0 ;
+  H-N2, l'indice de recharge fait mieux que le SPI-12. Contrôle qualité fixé à l'avance (bornes, pics, sauts de
+  capteur, mois d'au moins 10 jours, sites d'au moins 24 mois). Positionnement : Bloomfield et Marchant (2013),
+  Kumar et al. (2016), observatoire du sud-ouest (EGU 2025).
+- ❌ puis 🔧 Les tests sur données simulées ont trouvé un défaut avant toute donnée réelle : le regroupement par jour
+  mélangeait deux séries de longueurs différentes. Corrigé ; 16 tests réussis.
+- 📌 Répartition du calcul : les indices aux sites (pluie depuis 1981, SPI-1 à 24, recharge) sont calculés sur GitHub
+  avec les fonctions de production (le téléchargement de la pluie y est rapide) ; les niveaux de nappe sont traités
+  sur ce PC (fichiers MGMERL locaux, calculs légers). Décision du porteur du projet : calcul local quand c'est plus
+  rapide.
+- 🔧 Copernicus : quand la file du compte est pleine, les demandes orphelines (plus de 6 heures en attente) sont
+  désormais annulées automatiquement (testé). ERA5-Land 2015 relancé.

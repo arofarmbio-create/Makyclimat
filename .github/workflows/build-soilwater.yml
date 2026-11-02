@@ -27,6 +27,8 @@ jobs:
         run: pip install -r requirements.txt
       - name: Eau dans le sol
         run: python scripts/build_soilwater.py --country "${{ github.event.inputs.country || 'mdg' }}"
+      - name: Indices aux sites des dataloggers de nappe MGMERL (protocole M3) — ignorés en cas d'indisponibilité
+        run: python scripts/build_nappes_sites.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Indices aux sites indisponibles"
       - name: Géologie et type d'aquifère (BGS Africa Groundwater Atlas) — ignorée en cas d'indisponibilité
         run: python scripts/connector_geology.py --country "${{ github.event.inputs.country || 'mdg' }}" || echo "Géologie/aquifère indisponible"
       - name: Profondeur de nappe (MGMERL, mesures réelles de forages) — ignorée en cas d'indisponibilité

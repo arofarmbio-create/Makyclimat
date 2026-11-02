@@ -168,6 +168,12 @@ statut, document détaillé.
 |---|---|---|---|---|
 | R-35 | La fusion contrôlée de CHIRPS, IMERG Late et ERA5-Land, pondérée par triple collocation, bat-elle la meilleure source seule (stations GSOD, pentades, 2016-2025) ? | `protocole_e1_fusion_pluie.md` | Protocole écrit avant calcul ; téléchargement des 3 sources (2001-2026) et des 25 stations GSOD lancé le 02/11 | ⏳ |
 
+### 2.4 ter Eaux souterraines : niveaux mesurés (MGMERL)
+
+| ID | Question | Protocole | État au 02/11/2026 | Statut |
+|---|---|---|---|---|
+| R-36 | Le SPI et l'indice de recharge du système suivent-ils les niveaux de nappe mesurés par 16 dataloggers MGMERL dans le Grand Sud (2019-2025) ? | `protocole_nappes_mgmerl.md` | Protocole écrit avant calcul ; séries téléchargées (hors git) ; scripts et 16 tests écrits ; indices aux sites en cours de calcul sur GitHub | ⏳ |
+
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 
 | ID | Méthode | Données et validation | Résultat | Statut | Détail |
