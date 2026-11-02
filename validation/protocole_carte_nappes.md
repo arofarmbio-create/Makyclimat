@@ -174,3 +174,24 @@ de la littérature et des rapports de forage, et affichées comme des règles, p
   - la carte du fluor est en pourcentage (0 à 100), pas en probabilité de 0 à 1 ;
   - dans la carte de Fan, le niveau de la nappe est négatif sous la surface. La profondeur utilisée est sa valeur
     absolue.
+- 02/11/2026, **avant le calcul de H-C1**. Le porteur du projet juge trop grand l'écart entre la médiane de Fan
+  (15,5 m sur toute l'île) et celle des relevés MGMERL, et demande un test point par point. Précisions fixées avant
+  calcul :
+  - **Relevés** : `inputs/mgmerl/mgmerl_niveau_statique.csv` (1 000 points, dont 988 forages ; extraction du
+    27/10/2026). Un point est gardé si la profondeur est comprise entre 0 et 200 m et si ses coordonnées sont à
+    Madagascar ; un doublon d'identifiant ne garde que le relevé le plus récent.
+  - **Fan** : valeur de la maille de 1 km du point, profondeur = − valeur du fichier ; une valeur positive (eau
+    au-dessus du sol, zone humide) compte comme 0 m.
+  - **H-C1, test principal inchangé** : test de Wilcoxon bilatéral sur les écarts (Fan − mesure), seuil de 5 %.
+  - **Contrôle de robustesse ajouté** : les forages sont regroupés autour des projets, ce qui rend le test point par
+    point trop optimiste. On calcule donc aussi l'écart médian par bloc de 1° (environ 100 km), puis un test du signe
+    entre blocs. H-C1 n'est déclarée solide que si les deux tests sont significatifs dans le même sens.
+  - **Analyses descriptives, pour comprendre l'écart** (pas de test) :
+    - position dans le relief, d'après la hauteur au-dessus du cours d'eau (HAND) au point : moins de 5 m (fond de
+      vallée), 5 à 15 m, plus de 15 m. Attendu : un écart plus grand hors des fonds de vallée, car la maille de 1 km
+      de Fan mélange vallée et versant ;
+    - productivité de l'aquifère (carte BGS) du fokontany du point ;
+    - corrélation de Spearman entre Fan et la mesure : Fan classe-t-il au moins les sites dans le bon ordre ?
+  - **Publication** : seulement des statistiques par classe et par bloc. Les valeurs de Fan point par point ne sont
+    pas republiées (licence).
+

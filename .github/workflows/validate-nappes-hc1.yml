@@ -1,0 +1,40 @@
+name: "22 - Carte des nappes : test H-C1 (Fan et al. contre forages MGMERL)"
+
+# Protocole validation/protocole_carte_nappes.md (H-C1 et modification du 02/11/2026). La carte de Fan et al. n'est
+# jamais republiée : elle est relue depuis le cache des Actions rempli par le workflow 21. Seules des statistiques par
+# classe et par bloc sont publiées.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+
+jobs:
+  hc1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests scipy rasterio shapely
+      - name: Carte de Fan et al. (cache du workflow 21, licence sans republication)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/mdg/nappes_mondiales/fan.tif
+          key: nappes-restreint-fan-absent
+          restore-keys: nappes-restreint-fan-
+      - name: Test H-C1
+        run: |
+          test -f data/$COUNTRY/nappes_mondiales/fan.tif || { echo "::error::fan.tif absent du cache : relancer le workflow 21 (partie fan)"; exit 1; }
+          python scripts/validate_nappes_hc1.py --country "$COUNTRY"
+      - name: Publier les statistiques
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add validation/nappes_hc1.md validation/nappes_hc1_classes.csv
+          git diff --cached --quiet || (git commit -m "Carte des nappes : résultat du test H-C1 (Fan et al. contre forages MGMERL)" && git pull --rebase --autostash origin main && git push)
