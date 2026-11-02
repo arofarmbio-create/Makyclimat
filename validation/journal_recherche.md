@@ -346,3 +346,12 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   relevés MGMERL (4,5 m, `groundwater_limites.md`) : c'est exactement ce que H-C1 testera, sans conclusion
   aujourd'hui (pas de comparaison point à point faite).
 
+
+### R-02 est-il nouveau ? (`validation/biblio_r02_nouveaute.md`)
+- ⚠️ Verdict honnête : **contribution réelle, mais pas une première absolue.** La dépendance d'échelle des dégâts
+  cycloniques est déjà publiée (Tang et al. 2023, Chine : l'aléa compte davantage aux grandes échelles). Ce qui
+  semble nouveau : le plan conditionnel (à l'intérieur des zones touchées, l'aléa ne sépare plus et le terrain prend
+  le relais), au niveau du village, avec une vérité Copernicus EMS et un événement laissé de côté, à Madagascar.
+- ❌ Faiblesse identifiée : l'aléa est trop grossier (vent IBTrACS, pluie CHIRPS journalière à 0,05°), ce qui peut
+  expliquer à lui seul une AUC de 0,5. 📌 Test R-02 bis proposé : pluie maximale sur 1, 3 et 6 heures d'IMERG et
+  rafales d'ERA5, avec un protocole écrit avant calcul.
