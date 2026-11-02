@@ -303,3 +303,29 @@ descriptives de la base)** :
 - **H-C6 confirmée** si au moins 60 % de ces références tombent dans l'intervalle (règle fixée plus haut). Avec
   2 références de la littérature et jusqu'à 7 sites, le résultat reste indicatif ; il est publié comme tel.
 
+**Précisions de mise en œuvre de H-C2 (02/11/2026, fixées avant le calcul ; seul H-C1 a été calculé sur ces
+forages)** :
+- **Mesures** : niveau statique des forages MGMERL relevé le 02/11/2026 (tableau affiché, 1 000 forages), contrôlé
+  comme en H-C1 (0 à 200 m, à Madagascar, doublons -> relevé le plus récent).
+- **Variables au point** :
+  - profondeur de Fan (maille de 1 km) ;
+  - HAND, pente et accumulation d'écoulement (logarithme), et distance au cours d'eau le plus proche (cellules dont
+    l'accumulation dépasse 1 000 cellules), tirées du relief GLO-90 du système ;
+  - lithologie GLiM (classe de la maille de 0,5°) ;
+  - logarithme de la perméabilité et porosité GLHYMPS (polygone du point) ;
+  - épaisseur des altérites, c'est-à-dire la profondeur du socle de SoilGrids ;
+  - pluie annuelle normale (CHIRPS, normale du système) ;
+  - altitude moyenne et rugosité de la maille de 0,1° (relief E1) ;
+  - productivité de l'aquifère (carte BGS, fokontany du point).
+- **Failles** : aucune carte numérique des failles de Madagascar n'est disponible dans nos sources ; la variable est
+  absente de cette version. C'est une limite, compte tenu de l'observation de terrain du porteur du projet.
+- **Modèle hybride** : correction = mesure − Fan, apprise par une forêt aléatoire de quantiles (bibliothèque
+  quantile-forest, 500 arbres, au moins 5 forages par feuille, paramètres fixés ici sans réglage). Prédiction = Fan +
+  médiane de la correction, ramenée à 0 m si elle est négative ; intervalle de 80 % = Fan + 10e et 90e centiles.
+- **Krigeage** : krigeage ordinaire des seules profondeurs mesurées (bibliothèque PyKrige), variogramme exponentiel
+  ajusté automatiquement sur les forages d'apprentissage.
+- **Validation par blocs de 1°** : chaque bloc d'au moins 5 forages est prédit par des modèles qui n'ont vu aucun de
+  ses forages. Erreur du bloc = médiane des erreurs absolues (m).
+- **H-C2 confirmée** si le modèle hybride bat à la fois la carte de Fan et le krigeage dans plus de la moitié des
+  blocs (deux tests du signe unilatéraux, chacun à 5 %). La couverture de l'intervalle de 80 % est publiée.
+
