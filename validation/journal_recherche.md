@@ -122,3 +122,20 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   modifications. Les ajustements imposés par les données y sont consignés avant de voir les résultats.
 - 📌 Toute source de données utile au système doit se mettre à jour automatiquement (exigence du porteur du projet,
   29/10/2026). Voir la section « Mises à jour automatiques » de `README.md`.
+
+## 02/11/2026
+
+### Cadre : protocole doctoral
+- 📌 Le protocole doctoral du 31/10/2026 (`protocole_doctoral_modelisation_climatique_Madagascar.txt`) devient le cadre
+  prioritaire. `prompt_maitre.md` reste en vigueur et a été aligné sur lui : section 0 (priorité), modules M0-M7,
+  échelles N1-N4, données hydrogéologiques et projections CMIP6, modèles hybrides et ablations (E3), trois types de
+  simulation et règle d'absence de fuite temporelle (E4), sensibilité (E7), hypothèses H1-H6, reproductibilité,
+  risques, et documentation obligatoire des méthodes et résultats, échecs compris (section 21). La numérotation des
+  sections 1 à 17 est conservée, car le code et les notes y renvoient.
+
+### Mises à jour automatiques
+- ❌ puis 🔧 Depuis le 01/11, la mise à jour principale échouait au contrôle qualité (« données de pluie trop anciennes,
+  186 jours »). Cause : au début de la saison (1er novembre), CHIRPS n'a encore rien publié pour la nouvelle saison ;
+  le pipeline affiche alors la saison précédente (jusqu'au 30/04), comme prévu, mais le contrôle mesurait l'âge depuis
+  le 30/04. L'âge est désormais compté depuis le début de la saison en cours ; le seuil de 75 jours est inchangé.
+  **Leçon :** un garde-fou doit être testé sur les transitions de calendrier, pas seulement en pleine saison.

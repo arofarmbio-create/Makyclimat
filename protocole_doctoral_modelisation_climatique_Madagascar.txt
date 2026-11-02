@@ -1,0 +1,997 @@
+PROJET DE THESE DOCTORALE MODELISATION CLIMATIQUE, HYDROLOGIQUE,
+HYDROGEOLOGIQUE ET ANALYSE DES IMPACTS TERRITORIAUX ET HUMANITAIRES A
+MADAGASCAR
+
+Document de travail – version consolidée Date : 31 octobre 2026
+
+====================================================================== 1.
+OBJET DU DOCUMENT ET CONTEXTE DU PROJET
+======================================================================
+
+Ce document rassemble le cadre scientifique et méthodologique proposé
+pour transformer une plateforme de modélisation climatique et de
+simulation des risques à Madagascar en un véritable projet de recherche
+doctorale.
+
+Le projet ne consiste pas simplement à agréger des données ou à afficher
+des cartes. La plateforme décrite est déjà dotée d’un pipeline
+automatisé de collecte et de traitement de données, harmonise des
+informations multisources, exécute plusieurs modèles et produit des
+simulations. Le travail doctoral devra établir dans quelles conditions
+ces résultats sont scientifiquement fiables, reproductibles, utiles et
+correctement interprétables.
+
+Le système vise notamment à étudier : - les évolutions climatiques et
+les changements climatiques à Madagascar ; - les précipitations,
+températures et événements extrêmes ; - les risques d’inondation ; - les
+sécheresses ; - les éboulements et glissements de terrain ; - les
+impacts potentiels sur les populations, les routes et les
+infrastructures ; - les ressources en eau de surface et souterraines ; -
+les fluctuations des niveaux piézométriques ; - la salinité des eaux
+souterraines ; - les bassins versants, le bilan hydrique, l’évaporation
+et l’évapotranspiration ; - la couverture du sol, l’infiltration et la
+recharge des nappes ; - certains indicateurs de sévérité et de besoins
+humanitaires inspirés des méthodes des Nations Unies et du JIAF.
+
+Le projet devra clairement distinguer : 1. la plateforme informatique ;
+2. les données utilisées ; 3. les modèles scientifiques ; 4. les
+simulations produites ; 5. leur validation indépendante ; 6. leur
+interprétation et leurs limites opérationnelles.
+
+Une plateforme fonctionnelle ne constitue pas, à elle seule, une preuve
+de validité scientifique. La thèse devra démontrer les performances, les
+limites et les incertitudes des méthodes employées.
+
+L’outil ne doit pas être présenté comme un substitut aux observations de
+terrain, aux alertes officielles de la Direction générale de la
+météorologie (DGM), aux évaluations de la BNGRC ou aux analyses
+humanitaires officielles.
+
+======================================================================
+2. PROFIL ACADEMIQUE ET PISTE D’INSCRIPTION DOCTORALE
+======================================================================
+
+Le porteur du projet dispose de deux diplômes de niveau Master 2 à
+orientation professionnelle : - Master 2 en hydraulique / génie civil
+; - Master 2 en travaux publics et aménagement du territoire.
+
+L’université envisagée est l’Université d’Antananarivo. Le sujet est
+interdisciplinaire et pourrait relever, selon les possibilités
+institutionnelles et l’encadrement disponible, des sciences de
+l’ingénieur, de l’hydraulique, des géosciences, de l’environnement ou de
+disciplines liées au climat.
+
+POINT A CONFIRMER IMPERATIVEMENT : L’admissibilité directe en doctorat
+avec ces diplômes professionnels, ainsi que l’éventuelle nécessité d’un
+DEA ou d’une formation complémentaire, doivent être confirmées par écrit
+auprès de l’école doctorale concernée et de l’établissement. Il ne faut
+pas présumer qu’un DEA est obligatoirement requis, ni affirmer que
+l’admission directe est garantie.
+
+Démarches recommandées : - identifier l’école doctorale la plus adaptée
+au sujet ; - demander les conditions officielles d’admission avec les
+deux diplômes exacts ; - transmettre les relevés de notes, mémoires et
+attestations ; - demander si une équivalence, une formation
+complémentaire ou une mise à niveau est nécessaire ; - identifier un
+directeur ou une directrice de thèse ayant une compétence scientifique
+adaptée ; - vérifier la disponibilité d’un laboratoire et de ressources
+de recherche ; - faire valider le périmètre interdisciplinaire du sujet.
+
+Le protocole présenté ici constitue une base de discussion scientifique.
+Il devra être ajusté et validé par un directeur de thèse et une équipe
+d’accueil.
+
+======================================================================
+3. PROBLEMATIQUE SCIENTIFIQUE
+======================================================================
+
+Madagascar est exposé à des aléas climatiques et hydro-météorologiques
+variés : cyclones, fortes précipitations, inondations, sécheresses,
+érosion, glissements de terrain et perturbations des ressources en eau.
+Les impacts dépendent non seulement de l’aléa, mais aussi de
+l’exposition des populations et des infrastructures, de leur
+vulnérabilité et de leur capacité de réponse.
+
+Les données nécessaires à une analyse intégrée sont souvent dispersées
+entre plusieurs institutions, produits satellitaires, bases
+internationales et relevés de terrain. Elles peuvent présenter des
+résolutions spatiales et temporelles différentes, des lacunes, des biais
+et des niveaux de qualité variables.
+
+La question centrale peut être formulée ainsi :
+
+COMMENT CONCEVOIR, INTEGRER ET VALIDER UN SYSTEME DE MODELISATION
+MULTISOURCE ET MULTI-ECHELLE PERMETTANT D’ANALYSER LES RISQUES
+CLIMATIQUES ET HYDROLOGIQUES A MADAGASCAR, D’ESTIMER LEURS IMPACTS
+TERRITORIAUX ET DE PRODUIRE DES INDICATEURS PROSPECTIFS UTILES A LA
+PLANIFICATION ET A L’ANTICIPATION HUMANITAIRE, TOUT EN QUANTIFIANT LES
+INCERTITUDES ?
+
+Questions scientifiques secondaires : 1. Dans quelle mesure
+l’harmonisation de données satellitaires, météorologiques,
+hydrologiques, hydrogéologiques et territoriales améliore-t-elle la
+qualité des analyses ? 2. Quels modèles physiques, statistiques,
+d’apprentissage automatique ou hybrides sont les plus adaptés selon les
+aléas et les données disponibles ? 3. Les modèles permettent-ils de
+reconstituer correctement des événements historiques documentés ? 4.
+Dans quelle mesure les résultats peuvent-ils anticiper des événements
+sans utiliser des informations qui n’étaient pas disponibles au moment
+de la prévision ? 5. Comment relier les aléas aux populations et
+infrastructures exposées sans confondre exposition, vulnérabilité et
+dommages réellement observés ? 6. Comment produire des indicateurs de
+besoins et de sévérité potentielle qui restent distincts des évaluations
+humanitaires officielles ? 7. Comment mesurer et communiquer les
+incertitudes des simulations et projections ?
+
+======================================================================
+4. OBJECTIFS DE RECHERCHE
+======================================================================
+
+OBJECTIF GENERAL
+
+Développer et évaluer un cadre intégré de modélisation multisource et
+multi-échelle des risques climatiques, hydrologiques et de leurs impacts
+territoriaux et humanitaires potentiels à Madagascar, en accordant une
+place centrale à la validation historique, à la reproductibilité et à la
+quantification des incertitudes.
+
+OBJECTIFS SPECIFIQUES
+
+1.  Inventorier, documenter et harmoniser les données climatiques,
+    météorologiques, hydrologiques, hydrogéologiques, géospatiales,
+    démographiques et humanitaires.
+2.  Evaluer la qualité, la couverture, les biais et les limites des
+    principales sources de données.
+3.  Développer ou adapter des modèles pour les précipitations, les
+    sécheresses, les inondations, les ressources en eau et les
+    glissements de terrain, selon les données disponibles.
+4.  Intégrer les niveaux piézométriques, les fluctuations des nappes et
+    les indicateurs de salinité lorsque des observations fiables sont
+    disponibles.
+5.  Comparer les performances des modèles physiques, statistiques,
+    d’intelligence artificielle et hybrides.
+6.  Valider les simulations sur des événements historiques indépendants.
+7.  Estimer l’exposition potentielle des populations, des routes et des
+    infrastructures.
+8.  Construire des indicateurs de repérage des besoins humanitaires
+    potentiels, sans les présenter comme des évaluations officielles.
+9.  Produire des scénarios prospectifs climatiques et territoriaux en
+    tenant compte des incertitudes.
+10. Mettre en place une chaîne reproductible, traçable et documentée.
+
+======================================================================
+5. HYPOTHESES DE RECHERCHE
+======================================================================
+
+Les hypothèses suivantes sont à tester, et non à considérer comme déjà
+démontrées.
+
+H1. L’harmonisation et le contrôle qualité de données multisources
+améliorent la cohérence spatiale et temporelle des analyses par rapport
+à l’utilisation isolée de certaines sources.
+
+H2. Les modèles hybrides combinant connaissances physiques et méthodes
+statistiques ou d’intelligence artificielle peuvent améliorer certaines
+performances, à condition que leur gain soit démontré sur des données
+indépendantes et qu’ils respectent les contraintes physiques
+essentielles.
+
+H3. Les performances des modèles varient selon les aléas, les régions,
+les saisons, la qualité des observations et l’échelle spatiale.
+
+H4. La validation temporelle, spatiale et événementielle indépendante
+fournit une estimation plus réaliste de la capacité de généralisation
+que des découpages aléatoires naïfs.
+
+H5. L’intégration des données d’exposition territoriale permet de mieux
+caractériser les conséquences potentielles des aléas, mais ne suffit pas
+à prédire les dommages réels sans informations fiables sur la
+vulnérabilité et les pertes observées.
+
+H6. La quantification des incertitudes est indispensable pour éviter une
+interprétation excessive des cartes et des indicateurs de risque.
+
+======================================================================
+6. ARCHITECTURE SCIENTIFIQUE EN HUIT MODULES
+======================================================================
+
+Le système peut être structuré en huit modules complémentaires. Chaque
+module doit avoir ses propres données d’entrée, paramètres, sorties,
+tests et indicateurs de validation. La validation d’un module ne valide
+pas automatiquement les autres.
+
+MODULE M0 – INGESTION, GOUVERNANCE ET QUALITE DES DONNEES Fonctions : -
+collecte automatique et manuelle ; - catalogage des sources ; - contrôle
+des formats, unités et dates ; - détection des doublons et valeurs
+aberrantes ; - contrôle de cohérence spatiale et temporelle ; - gestion
+des données manquantes ; - traçabilité des transformations ; -
+versionnement des jeux de données.
+
+Sorties : - jeux de données bruts conservés ; - jeux de données corrigés
+ou harmonisés ; - indicateurs de qualité ; - métadonnées et historique
+des traitements.
+
+MODULE M1 – CLIMATOLOGIE ET METEOROLOGIE Variables : - précipitations
+; - température minimale, moyenne et maximale ; - humidité ; - vent ; -
+pression ; - rayonnement ; - événements extrêmes ; - indices de
+sécheresse et de précipitations.
+
+Sorties : - séries temporelles ; - anomalies ; - tendances ; - indices
+climatiques ; - prévisions météorologiques à court terme lorsque les
+données et modèles le permettent ; - projections climatiques à long
+terme.
+
+MODULE M2 – HYDROLOGIE DE SURFACE Composantes : - bassins versants et
+sous-bassins ; - réseau hydrographique ; - ruissellement ; - débits ; -
+niveaux d’eau ; - infiltration ; - évapotranspiration ; - stockage ; -
+bilan hydrique.
+
+Sorties : - estimations de ruissellement ; - évolution des débits et
+niveaux ; - indicateurs de sécheresse hydrologique ; - simulations de
+crues ; - bilans hydriques par bassin.
+
+MODULE M3 – HYDROGEOLOGIE Composantes : - niveaux statiques et
+piézométriques ; - fluctuations saisonnières des nappes ; - recharge ; -
+prélèvements, si connus ; - conductivité électrique et salinité ; -
+caractéristiques des aquifères ; - relation entre précipitations,
+infiltration et niveaux souterrains.
+
+Sorties : - évolution des niveaux piézométriques ; - zones de recharge
+potentielle ; - tendances de disponibilité de la ressource ; -
+indicateurs de salinité lorsque les mesures sont disponibles ; -
+scénarios de tension sur la ressource.
+
+MODULE M4 – GEORISQUES Aléas possibles : - inondations ; - sécheresses
+; - glissements de terrain et éboulements ; - érosion ; - éventuellement
+autres aléas selon les données et le périmètre retenu.
+
+Sorties : - cartes d’aléas ; - probabilités ou classes de susceptibilité
+; - intensité ou sévérité estimée ; - emprises spatiales potentielles
+; - intervalles d’incertitude.
+
+MODULE M5 – IMPACTS TERRITORIAUX Données : - population ; - routes ; -
+ponts ; - bâtiments et infrastructures ; - équipements essentiels ; -
+occupation du sol ; - informations sur la vulnérabilité lorsqu’elles
+existent.
+
+Sorties : - population potentiellement exposée ; - routes et
+infrastructures situées dans les zones d’aléa ; - communes
+potentiellement affectées ; - indicateurs territoriaux de criticité.
+
+Attention : une personne située dans une zone d’aléa est potentiellement
+exposée ; cela ne signifie pas qu’elle a effectivement subi un dommage.
+
+MODULE M6 – ANALYSE HUMANITAIRE Composantes : - indicateurs WASH ; -
+santé ; - éducation ; - sécurité alimentaire ; - habitat ; - protection
+; - déplacements et besoins lorsque des données fiables sont
+disponibles.
+
+Sorties : - indicateurs de pression ou de besoins potentiels ; - zones à
+prioriser pour une évaluation ; - signaux d’alerte analytique ; -
+tableaux de bord de suivi.
+
+Limite : les indicateurs produits ne constituent pas une classification
+JIAF officielle. Ils ne remplacent pas les enquêtes, évaluations
+sectorielles, consultations et analyses intersectorielles conduites
+selon les procédures reconnues.
+
+MODULE M7 – VALIDATION, FUSION ET PROSPECTIVE Fonctions : - validation
+indépendante des modules ; - comparaison des modèles ; - fusion des
+sorties ; - analyse de sensibilité ; - quantification des incertitudes
+; - scénarios prospectifs ; - production de cartes et rapports
+documentés.
+
+======================================================================
+7. ECHELLES SPATIALES ET TEMPORELLES
+======================================================================
+
+Il est recommandé de distinguer quatre niveaux spatiaux.
+
+N1 – GRILLE GEOGRAPHIQUE Utilisation : - données satellitaires ; -
+données climatiques maillées ; - analyse spatiale des aléas.
+
+N2 – BASSIN VERSANT ET SOUS-BASSIN Utilisation : - ruissellement ; -
+débits ; - recharge ; - bilan hydrique ; - dynamique des eaux de
+surface.
+
+N3 – COMMUNE ET DISTRICT Utilisation : - exposition de la population ; -
+routes et infrastructures ; - indicateurs territoriaux ; - agrégation
+des résultats.
+
+N4 – REGION ET MADAGASCAR Utilisation : - synthèse nationale ; -
+comparaison régionale ; - planification ; - prospective.
+
+REGLE IMPORTANTE : Les unités administratives et les bassins versants ne
+sont pas interchangeables. Une commune peut être traversée par plusieurs
+bassins, et un bassin peut couvrir plusieurs communes. Les analyses
+doivent conserver les deux référentiels et documenter les méthodes de
+croisement.
+
+RESOLUTION : - conserver la résolution native des sources ; - documenter
+toute opération de reprojection ou de rééchantillonnage ; - ne pas
+prétendre qu’un rééchantillonnage crée une précision réelle plus fine
+; - indiquer la résolution effective de chaque résultat ; - éviter de
+présenter une carte nationale à une résolution artificiellement précise.
+
+ECHELLES TEMPORELLES : - horaire ou infra-journalier lorsque les
+observations le permettent ; - journalier ; - décadaire ou mensuel ; -
+saisonnier ; - annuel ; - périodes climatiques de plusieurs décennies.
+
+Les échelles temporelles doivent correspondre aux processus étudiés et à
+la fréquence réelle des données.
+
+======================================================================
+8. DONNEES ET SOURCES A MOBILISER
+======================================================================
+
+D01 – DONNEES METEOROLOGIQUES Variables : - précipitations ; -
+températures ; - humidité ; - vent ; - pression ; - rayonnement.
+
+Sources potentielles : - Direction générale de la météorologie (DGM) ; -
+stations météorologiques nationales ; - produits satellitaires et
+réanalyses.
+
+D02 – DONNEES CLIMATIQUES Sources potentielles : - CHIRPS pour les
+précipitations ; - ERA5 pour les variables météorologiques de réanalyse
+; - CMIP6 pour les projections climatiques ; - autres produits
+documentés selon disponibilité.
+
+Ces produits ne doivent pas être considérés comme équivalents à des
+observations locales. Ils doivent être comparés aux stations disponibles
+et accompagnés de leurs limites.
+
+D03 – DONNEES HYDROLOGIQUES Données : - niveaux d’eau ; - débits ; -
+stations hydrométriques ; - limites des bassins ; - réseau
+hydrographique ; - historiques de crues et d’étiages.
+
+Sources potentielles : - services hydrologiques nationaux ; -
+institutions publiques ; - études et rapports techniques ; -
+observations de terrain.
+
+D04 – DONNEES HYDROGEOLOGIQUES Données : - niveaux statiques ; - niveaux
+piézométriques ; - profondeurs des puits ; - conductivité électrique ; -
+salinité ; - lithologie et caractéristiques des aquifères ; -
+prélèvements lorsque disponibles.
+
+Les relevés piézométriques doivent être datés, géolocalisés, associés à
+un référentiel altimétrique si possible et accompagnés d’informations
+sur les conditions de mesure.
+
+D05 – DONNEES GEOSPATIALES Sources potentielles : - Copernicus DEM pour
+le relief ; - modèles numériques de terrain ; - données pédologiques ; -
+occupation et couverture du sol ; - images satellites ; - limites
+administratives ; - réseaux hydrographiques.
+
+D06 – DONNEES D’EXPOSITION Sources potentielles : - WorldPop pour les
+estimations de population ; - OpenStreetMap pour les routes et certains
+équipements ; - données administratives et sectorielles ; - inventaires
+d’infrastructures ; - données de bâtiments si disponibles.
+
+D07 – DONNEES HUMANITAIRES ET HISTORIQUES Sources potentielles : - BNGRC
+; - rapports d’évaluation ; - données de dommages ; - déplacements ; -
+besoins sectoriels ; - enquêtes et évaluations post-catastrophe ; -
+données des partenaires humanitaires, selon les autorisations.
+
+La BNGRC est une source prioritaire à approcher pour constituer un
+catalogue historique d’événements et de dommages. La disponibilité, la
+granularité et la qualité des données restent à vérifier.
+
+PRINCIPES DE GESTION : - documenter la source et sa date de
+téléchargement ; - conserver les données originales ; - documenter les
+licences et restrictions ; - enregistrer les transformations ; -
+distinguer observation, estimation et simulation ; - ne pas mélanger des
+indicateurs de nature différente sans méthode explicite ; - protéger les
+données personnelles ou sensibles ; - demander les autorisations
+nécessaires pour les données institutionnelles.
+
+======================================================================
+9. ORGANISATION ET STOCKAGE DES DONNEES
+======================================================================
+
+Architecture technique indicative : - PostgreSQL/PostGIS pour les
+données géographiques, les référentiels et les tables relationnelles ; -
+NetCDF ou Zarr pour les séries climatiques multidimensionnelles ; -
+GeoTIFF ou Cloud Optimized GeoTIFF (COG) pour les rasters ; - Parquet
+pour les tables volumineuses ; - stockage objet ou système de fichiers
+organisé pour les fichiers bruts ; - système de métadonnées et de
+versionnement.
+
+Champs recommandés pour une observation : - source_id ; - variable ; -
+timestamp ; - geometry_id ; - value ; - unit ; - quality_flag ; -
+version ; - méthode de traitement ; - date d’ingestion ; - référence de
+provenance.
+
+Conserver séparément : 1. les données brutes ; 2. les données nettoyées
+; 3. les données harmonisées ; 4. les sorties des modèles ; 5. les
+résultats de validation ; 6. les produits cartographiques publiés.
+
+Ne jamais écraser les données brutes par des données corrigées.
+
+======================================================================
+10. PROTOCOLE EXPERIMENTAL
+======================================================================
+
+EXPERIENCE E1 – FUSION ET QUALITE DES DONNEES
+
+Objectif : Mesurer l’apport de l’harmonisation et du contrôle qualité.
+
+Comparer au minimum : A. source utilisée seule ; B. sources combinées
+sans correction ou harmonisation approfondie ; C. sources harmonisées
+avec contrôles qualité et documentation.
+
+Mesures possibles : - MAE ; - RMSE ; - biais moyen ; - corrélation ; -
+taux de données manquantes ; - couverture spatiale et temporelle ; -
+cohérence saisonnière ; - détection des anomalies ; - différences entre
+sources.
+
+Il faut éviter de considérer une station comme une vérité absolue. Les
+stations peuvent aussi comporter des erreurs, des lacunes ou des
+problèmes de représentativité spatiale.
+
+EXPERIENCE E2 – MODELES PHYSIQUES ET HYDROLOGIQUES
+
+A. Bilan hydrique Un bilan simplifié peut être formulé comme suit :
+
+P + I = ET + Q + ΔS
+
+où : P = précipitations ; I = autres entrées explicitement définies, par
+exemple transferts ou apports ; ET = évapotranspiration ; Q = écoulement
+sortant ; ΔS = variation du stockage.
+
+La formulation exacte dépendra du périmètre du système étudié. Les
+termes doivent être définis sans double comptage.
+
+B. Evapotranspiration - distinguer évapotranspiration de référence et
+évapotranspiration réelle ; - examiner la méthode FAO-56 Penman-Monteith
+pour l’évapotranspiration de référence ; - intégrer les données
+météorologiques et la couverture du sol lorsque disponibles ; -
+documenter les hypothèses et paramètres.
+
+C. Bassins versants - délimitation des bassins ; - extraction du réseau
+de drainage ; - pente et caractéristiques topographiques ; -
+infiltration ; - ruissellement ; - stockage ; - débits et niveaux.
+
+D. Hydrogéologie - séries piézométriques ; - fluctuations saisonnières
+; - relation entre précipitations, infiltration et recharge ; -
+influence des prélèvements si connus ; - conductivité électrique et
+salinité ; - comparaison entre observations et simulations.
+
+Modèles ou outils possibles, à sélectionner selon les données : - HBV ou
+GR4J pour certaines approches hydrologiques ; - HEC-HMS pour la
+simulation pluie-débit ; - MODFLOW pour les eaux souterraines lorsque
+les données hydrogéologiques sont suffisamment détaillées ; - FAO-56
+Penman-Monteith pour l’ET de référence.
+
+Ne pas chercher à implémenter tous les modèles dès le départ. Il faut
+sélectionner ceux qui répondent à une question scientifique précise et
+pour lesquels les données sont suffisantes.
+
+EXPERIENCE E3 – COMPARAISON DES MODELES PHYSIQUES, STATISTIQUES, IA ET
+HYBRIDES
+
+Comparer, lorsque pertinent : 1. modèle physique seul ; 2. modèle
+statistique seul ; 3. modèle d’intelligence artificielle seul ; 4.
+modèle physique corrigé par l’IA ; 5. combinaison ou fusion pondérée de
+plusieurs modèles.
+
+Exemple de modèle hybride : Y_hybride = Y_physique + f_IA(X, résidus)
+
+L’IA apprend ici une partie des résidus ou erreurs du modèle physique,
+plutôt que de remplacer entièrement la représentation des processus.
+
+Conditions : - calibrer sur un jeu d’apprentissage ; - sélectionner les
+paramètres sur un jeu de validation ; - évaluer sur un jeu de test
+indépendant ; - contrôler les violations de contraintes physiques ; -
+mesurer le gain réel par rapport aux modèles de référence ; - documenter
+la complexité supplémentaire.
+
+Analyses d’ablation : - sans données satellitaires ; - sans données
+hydrogéologiques ; - sans données de vulnérabilité ; - sans certaines
+variables météorologiques ; - sans composante IA ; - sans correction des
+biais.
+
+Ces tests permettent d’identifier les composantes qui apportent
+réellement une amélioration.
+
+EXPERIENCE E4 – VALIDATION HISTORIQUE AVEC LES EVENEMENTS BNGRC
+
+Objectif : Vérifier si les modèles reproduisent des événements connus
+et, séparément, s’ils auraient pu les anticiper avec les informations
+disponibles à l’époque.
+
+Construire un catalogue : - cyclones ; - inondations ; - sécheresses ; -
+glissements de terrain et éboulements ; - événements composés ; - dates
+de début et de fin ; - zones affectées ; - intensité ; - dommages ; -
+sources et niveau de confiance.
+
+Sélectionner les événements selon la qualité des observations
+disponibles, et pas uniquement selon leur médiatisation.
+
+Trois types de simulation doivent être distingués :
+
+A. RECONSTITUTION HISTORIQUE Utiliser les informations historiques
+disponibles après l’événement pour examiner la cohérence des processus
+et la capacité de reproduction.
+
+B. SIMULATION D’ANTICIPATION N’utiliser que les informations réellement
+disponibles avant l’événement. Les données collectées après l’événement
+ne doivent pas être introduites dans le modèle.
+
+C. SIMULATION EN COURS D’EVENEMENT Utiliser uniquement les informations
+qui auraient été disponibles au moment de chaque mise à jour.
+
+REGLE CRITIQUE – ABSENCE DE FUITE TEMPORELLE : Il est interdit
+d’utiliser dans une simulation pré-événement des observations, rapports
+ou cartes qui n’ont été produits qu’après l’événement. Cela donnerait
+artificiellement l’impression que le système pouvait anticiper ce qu’il
+ne pouvait pas connaître.
+
+Indicateurs de validation possibles : - zones inondées : IoU, précision,
+rappel ; - communes concernées : F1, sensibilité, spécificité ; -
+population estimée : MAE, RMSE, biais ; - routes affectées : précision,
+rappel, F1 ; - classes de sévérité : matrice de confusion, accord
+pondéré ; - probabilités de dommages : score de Brier et calibration ; -
+délai d’anticipation ; - taux de fausses alertes ; - événements manqués.
+
+Distinguer impérativement : - population exposée ; - population affectée
+selon les observations ; - population déplacée ; - population ayant des
+besoins identifiés.
+
+EXPERIENCE E5 – INDICATEURS HUMANITAIRES ET JIAF
+
+Le système peut construire des indicateurs prédictifs ou de repérage
+concernant : - WASH ; - santé ; - éducation ; - sécurité alimentaire ; -
+habitat ; - protection ; - déplacements et accès aux services, selon les
+données disponibles.
+
+L’objectif est de repérer les zones où une évaluation complémentaire
+pourrait être prioritaire.
+
+Le JIAF 2 ne se réduit pas à un score de sévérité. Il comprend notamment
+: - l’analyse des facteurs contribuant à la crise et du périmètre ; -
+l’analyse des besoins sectoriels ; - l’analyse des besoins
+intersectoriels.
+
+Les indicateurs produits par la plateforme doivent être qualifiés comme
+estimations, signaux ou indicateurs de risque. Ils ne doivent jamais
+être présentés comme une analyse JIAF officielle sans processus
+d’évaluation conforme, données appropriées et validation par les acteurs
+compétents.
+
+Les enquêtes de terrain et évaluations officielles restent nécessaires.
+
+EXPERIENCE E6 – SCENARIOS PROSPECTIFS
+
+Distinguer trois familles temporelles :
+
+1.  Prévisions météorologiques à court terme : environ 0 à 10 jours,
+    selon les produits et modèles disponibles.
+2.  Prévisions saisonnières : environ 1 à 6 mois, avec une incertitude
+    souvent importante.
+3.  Projections climatiques : horizons tels que 2030, 2050, 2070 ou
+    2100, selon les périodes de référence et les scénarios étudiés.
+
+Les horizons sont des choix d’organisation et non une garantie de
+précision.
+
+Scénarios CMIP6 possibles : - SSP1-2.6 ; - SSP2-4.5 ; - SSP5-8.5.
+
+Variables à examiner : - températures ; - précipitations ; - extrêmes
+; - sécheresses ; - bilan hydrique ; - évapotranspiration ; - ressources
+en eau ; - niveaux souterrains lorsque les modèles et données le
+permettent ; - population et infrastructures potentiellement exposées.
+
+Une projection climatique n’est pas une prévision météorologique. La
+correction des biais et la descente d’échelle ne rendent pas
+automatiquement une projection locale fiable. Les choix de modèles, les
+scénarios, les méthodes et les incertitudes doivent être documentés.
+
+EXPERIENCE E7 – SENSIBILITE ET INCERTITUDES
+
+Tester la sensibilité à des variations de paramètres et d’entrées, par
+exemple : - précipitations ±10 % ; - infiltration ; - paramètres de
+ruissellement ; - densité de population ; - occupation du sol ; -
+paramètres de vulnérabilité ; - choix du modèle climatique ; -
+paramètres hydrogéologiques.
+
+Distinguer les sources d’incertitude : - erreurs et lacunes des
+observations ; - différences entre sources de données ; - incertitude
+des paramètres ; - incertitude structurelle des modèles ; - scénarios
+climatiques ; - incertitude sur l’exposition ; - incertitude sur les
+relations aléa-dommages.
+
+Produire, autant que possible : - probabilités ; - intervalles ; -
+classes de confiance ; - cartes d’incertitude ; - analyses de
+sensibilité.
+
+Ne pas présenter des valeurs ponctuelles comme certaines lorsque les
+données ne le permettent pas. La confiance dans une conclusion et
+l’incertitude numérique d’une estimation sont deux notions différentes.
+
+======================================================================
+11. STRATEGIE DE VALIDATION ET PREVENTION DES FUITES DE DONNEES
+======================================================================
+
+La validation doit être indépendante et adaptée au problème étudié.
+
+Trois dimensions sont recommandées :
+
+1.  VALIDATION TEMPORELLE Réserver des périodes qui ne sont pas
+    utilisées pendant la calibration ou le développement.
+
+2.  VALIDATION SPATIALE Réserver des zones géographiques indépendantes.
+    Utiliser si possible une validation croisée par blocs spatiaux afin
+    de limiter l’influence de points voisins très similaires.
+
+3.  VALIDATION EVENEMENTIELLE Réserver certains événements
+    catastrophiques entiers, qui ne sont jamais utilisés pour développer
+    ou ajuster le modèle.
+
+Un découpage aléatoire simple peut donner des performances
+artificiellement optimistes lorsque les données sont spatialement ou
+temporellement autocorrélées.
+
+Pour les modèles hydrologiques, le choix du découpage temporel et des
+périodes de calibration peut influencer les conclusions. Plusieurs
+stratégies doivent être comparées et justifiées.
+
+Références méthodologiques déjà identifiées : - Shen et al. (2022),
+Water Resources Research, sur l’évolution des pratiques de découpage des
+échantillons pour l’évaluation des modèles hydrologiques ; - OMM,
+Guidelines on Verification of Hydrological Forecasts, WMO-No. 1364,
+2025.
+
+Les critères de vérification hydrologique peuvent inclure : - précision
+; - biais ; - fiabilité ; - résolution ; - netteté ; - capacité à
+représenter les événements extrêmes.
+
+======================================================================
+12. INDICATEURS DE PERFORMANCE
+======================================================================
+
+Les métriques doivent être choisies selon la nature de chaque variable
+et de chaque résultat.
+
+Pour les variables continues : - MAE ; - RMSE ; - biais moyen ; -
+corrélation ; - NSE ou KGE lorsque ces indicateurs sont adaptés au
+problème hydrologique.
+
+Pour les classifications : - précision ; - rappel ; - F1-score ; -
+sensibilité ; - spécificité ; - matrice de confusion ; - AUC lorsque son
+usage est pertinent et que les données le permettent.
+
+Pour les emprises spatiales : - Intersection over Union (IoU) ; -
+précision spatiale ; - rappel spatial ; - comparaison de surfaces et de
+limites.
+
+Pour les probabilités : - score de Brier ; - courbes de calibration ; -
+fiabilité probabiliste ; - taux de fausses alertes.
+
+Pour les systèmes d’anticipation : - délai d’anticipation ; - proportion
+d’événements détectés ; - événements manqués ; - fausses alertes ; -
+stabilité des résultats selon les régions et saisons.
+
+Une seule métrique ne suffit pas pour conclure qu’un modèle est bon. Les
+résultats doivent être analysés selon plusieurs dimensions et comparés à
+des modèles de référence simples.
+
+======================================================================
+13. TECHNOLOGIES ET OUTILS INFORMATIQUES POSSIBLES
+======================================================================
+
+La sélection doit tenir compte de la plateforme déjà développée. Il ne
+faut pas remplacer une technologie fonctionnelle sans justification.
+
+Traitement numérique : - NumPy ; - SciPy ; - pandas.
+
+Données climatiques et multidimensionnelles : - xarray ; - NetCDF ; -
+Zarr.
+
+Données géospatiales : - Rasterio ; - rioxarray ; - GeoPandas ; -
+Shapely ; - PyProj ; - PostgreSQL/PostGIS.
+
+Modélisation et statistiques : - Statsmodels ; - scikit-learn ; -
+XGBoost ; - PyTorch si des modèles d’apprentissage profond sont
+réellement justifiés.
+
+Hydrologie et évaluation : - outils et bibliothèques de modélisation
+hydrologique appropriés ; - HydroEval, selon compatibilité et besoin ; -
+HEC-HMS, HBV, GR4J ou MODFLOW selon le module et les données.
+
+Visualisation : - Matplotlib ; - Plotly ; - Folium ou outils
+cartographiques équivalents.
+
+API et services : - FastAPI, si compatible avec l’architecture actuelle.
+
+Reproductibilité : - MLflow pour le suivi des expériences et modèles ; -
+DVC pour le versionnement des données et pipelines, si utile.
+
+Ces outils constituent une liste indicative, pas une obligation
+d’installation complète.
+
+======================================================================
+14. STRUCTURE DE DOSSIERS INDICATIVE
+======================================================================
+
+climate_madagascar/ data/ raw/ processed/ reference/ validation/
+ingestion/ satellite/ meteorological/ hydrological/ groundwater/
+humanitarian/ preprocessing/ quality_control/ harmonization/ geospatial/
+models/ climate/ hydrology/ groundwater/ landslide/ flood/ drought/
+machine_learning/ hybrid/ impacts/ population/ infrastructure/ water/
+humanitarian/ experiments/ E1_data_fusion/ E2_physical_models/
+E3_hybrid_models/ E4_historical_validation/ E5_humanitarian/
+E6_projections/ E7_uncertainty/ evaluation/ metrics/ spatial_validation/
+temporal_validation/ uncertainty/ api/ documentation/ reports/
+
+Cette structure peut être adaptée à l’architecture déjà existante. Il
+faut privilégier la clarté, la traçabilité et la reproductibilité plutôt
+qu’une restructuration purement esthétique.
+
+======================================================================
+15. REPRODUCTIBILITE, DOCUMENTATION ET GOUVERNANCE
+======================================================================
+
+Pour chaque simulation, conserver : - identifiant de l’expérience ; -
+version du code ; - version des données ; - sources ; - date d’exécution
+; - paramètres ; - modèle utilisé ; - résolution spatiale et temporelle
+; - période couverte ; - hypothèses ; - résultats ; - métriques de
+validation ; - incertitudes ; - limites connues.
+
+Chaque carte ou résultat publié devrait préciser : - date de production
+; - date des données les plus récentes ; - type de résultat :
+observation, analyse, prévision ou projection ; - modèle et version ; -
+résolution ; - période ; - unité ; - niveau de confiance ou incertitude
+; - avertissement d’interprétation.
+
+La plateforme doit distinguer visuellement les observations historiques,
+les prévisions, les projections et les simulations de scénarios.
+
+======================================================================
+16. PUBLICATIONS SCIENTIFIQUES ENVISAGEABLES
+======================================================================
+
+Quatre axes de publication sont possibles, sous réserve de résultats
+originaux et suffisamment solides.
+
+ARTICLE 1 Fusion multisource et harmonisation des données
+hydroclimatiques à Madagascar. Question : dans quelle mesure la fusion
+et le contrôle qualité améliorent-ils la cohérence et la couverture des
+données ?
+
+ARTICLE 2 Comparaison de modèles physiques, statistiques et hybrides
+pour la modélisation des risques hydrologiques à Madagascar. Question :
+quels modèles sont les plus robustes selon les régions, les événements
+et les données disponibles ?
+
+ARTICLE 3 Validation historique des simulations d’impacts
+hydroclimatiques. Question : le système reproduit-il des événements
+indépendants et quelle capacité d’anticipation peut-il démontrer sans
+fuite temporelle ?
+
+ARTICLE 4 Modélisation intégrée des impacts territoriaux et des
+indicateurs de besoins humanitaires potentiels. Question : comment
+relier aléas, exposition et vulnérabilité tout en conservant les limites
+d’interprétation des indicateurs ?
+
+Ces axes sont des pistes. La publication dépendra de la nouveauté
+scientifique, de la qualité des données, de la rigueur des méthodes et
+des résultats.
+
+======================================================================
+17. CALENDRIER INDICATIF SUR 36 MOIS
+======================================================================
+
+MOIS 1 A 4 - revue bibliographique ; - formulation définitive de la
+problématique ; - choix des hypothèses ; - cadrage du périmètre ; -
+validation par le directeur de thèse ; - inventaire initial des données.
+
+MOIS 3 A 9 - collecte et documentation ; - contacts institutionnels ; -
+acquisition des données historiques ; - contrôle qualité ; -
+structuration de la base de données.
+
+MOIS 7 A 17 - développement et adaptation des modèles ; - choix des
+modèles prioritaires ; - calibration initiale ; - premières analyses
+comparatives.
+
+MOIS 14 A 24 - validation temporelle ; - validation spatiale ; -
+validation événementielle ; - analyse des performances ; - analyses
+d’ablation.
+
+MOIS 21 A 29 - scénarios prospectifs ; - intégration des impacts
+territoriaux ; - analyse des incertitudes ; - consolidation des
+résultats.
+
+MOIS 25 A 33 - rédaction des articles ; - documentation de la plateforme
+; - rédaction des chapitres de thèse ; - préparation des résultats et
+figures.
+
+MOIS 34 A 36 - finalisation du manuscrit ; - corrections ; - préparation
+de la soutenance ; - dépôt et soutenance selon le calendrier de l’école
+doctorale.
+
+Ce calendrier est indicatif. Il dépend notamment de l’accès aux données,
+des exigences de l’école doctorale, de la disponibilité de l’encadrement
+et du volume réel de développement restant.
+
+======================================================================
+18. RISQUES SCIENTIFIQUES ET MESURES DE MITIGATION
+======================================================================
+
+RISQUE 1 – DONNEES HISTORIQUES INCOMPLETES Conséquence : validation
+limitée ou biaisée. Mesures : - documenter les lacunes ; - établir un
+niveau de confiance par événement ; - utiliser plusieurs sources
+indépendantes ; - ne pas généraliser au-delà des zones et périodes
+validées.
+
+RISQUE 2 – RESOLUTION SPATIALE ARTIFICIELLE Conséquence : fausse
+impression de précision. Mesures : - conserver les résolutions natives
+; - documenter le rééchantillonnage ; - publier la résolution effective
+; - éviter les détails spatiaux non soutenus par les données.
+
+RISQUE 3 – FUITE DE DONNEES Conséquence : performances artificiellement
+élevées. Mesures : - séparation temporelle ; - séparation spatiale ; -
+séparation par événement ; - journalisation des variables disponibles au
+moment de la simulation.
+
+RISQUE 4 – TROP GRAND NOMBRE DE MODELES Conséquence : dispersion des
+efforts et validation superficielle. Mesures : - prioriser un nombre
+limité de modèles ; - sélectionner selon la question scientifique ; -
+ajouter un modèle uniquement s’il apporte une comparaison utile.
+
+RISQUE 5 – INTERPRETATION HUMANITAIRE ERRONEE Conséquence : confusion
+entre estimation, exposition et besoins constatés. Mesures : - séparer
+les indicateurs ; - afficher les limites ; - ne pas présenter les
+sorties comme JIAF officiel ; - maintenir la nécessité des évaluations
+de terrain.
+
+RISQUE 6 – PLATEFORME CONFONDUE AVEC UN SYSTEME OFFICIEL D’ALERTE
+Conséquence : décisions fondées sur des résultats non validés ou mal
+interprétés. Mesures : - avertissements clairs ; - date et provenance
+des données ; - incertitudes visibles ; - coordination avec les
+institutions compétentes ; - ne pas se substituer à la DGM ou à la
+BNGRC.
+
+RISQUE 7 – DONNEES HYDROGEOLOGIQUES INSUFFISANTES Conséquence :
+impossibilité de calibrer ou valider des modèles souterrains complexes.
+Mesures : - commencer par un diagnostic de disponibilité ; - identifier
+les stations et puits ; - vérifier la qualité des mesures ; - limiter
+les ambitions du module si nécessaire ; - ne pas simuler une précision
+non justifiée.
+
+======================================================================
+19. PRIORITES IMMEDIATES POUR LA SUITE DU TRAVAIL
+======================================================================
+
+Avant de figer le protocole doctoral, cinq informations techniques sont
+nécessaires.
+
+QUESTION 1 – RESOLUTION SPATIALE ACTUELLE Quelle est la résolution
+dominante de la plateforme ? - 1 km ; - 5 km ; - 10 km ou plus ; -
+variable selon les sources et modules ; - autre.
+
+QUESTION 2 – PROFONDEUR HISTORIQUE DES DONNEES Quelle est la profondeur
+temporelle réellement disponible ? - moins de 5 ans ; - 5 à 10 ans ; -
+10 à 20 ans ; - plus de 20 ans ; - plusieurs années, avec une couverture
+variable selon les sources.
+
+QUESTION 3 – OBSERVATIONS HYDROGEOLOGIQUES Quel est le niveau actuel des
+données directes ? - aucune observation directe ; - quelques stations ou
+relevés piézométriques ; - réseau de suivi régulier ; - niveaux et
+données de salinité/conductivité ; - autre situation.
+
+QUESTION 4 – HEBERGEMENT DE LA PLATEFORME Où fonctionne actuellement le
+système ? - serveur personnel ou propre ; - cloud ; - architecture
+hybride ; - environnement local ; - autre.
+
+QUESTION 5 – DOCUMENTATION TECHNIQUE DISPONIBLE Quels éléments existent
+déjà ? - captures d’écran et documentation des modèles ; - résultats de
+simulation ; - code source Python ; - documentation technique des
+modèles ; - plusieurs de ces éléments ; - modèles encore à documenter.
+
+Ces réponses permettront de transformer le protocole général en
+protocole doctoral adapté à l’état réel du système.
+
+======================================================================
+20. REFERENCES ET DOCUMENTS METHODOLOGIQUES A CONSULTER
+======================================================================
+
+Les références suivantes ont été identifiées comme utiles pour
+approfondir le protocole. Les versions exactes, dates et éditions
+doivent être vérifiées au moment de la rédaction bibliographique.
+
+1.  OCHA / IASC – Joint Intersectoral Analysis Framework (JIAF) 2.0
+    Technical Manual, juillet 2024. Utilité : comprendre la structure de
+    l’analyse intersectorielle, les facteurs contribuant à la crise, les
+    besoins sectoriels et les besoins intersectoriels.
+
+2.  OCHA – JIAF manuals / Knowledge Base. Utilité : accéder aux manuels,
+    documents de référence et mises à jour.
+
+3.  World Meteorological Organization (WMO/OMM) – Guidelines on
+    Verification of Hydrological Forecasts, WMO-No. 1364, 2025. Utilité
+    : méthodes de vérification des prévisions hydrologiques, précision,
+    biais, fiabilité, résolution et netteté.
+
+4.  Shen et al. (2022), Water Resources Research – travaux sur
+    l’évolution des approches de découpage des échantillons pour la
+    calibration et la validation des modèles hydrologiques. Utilité :
+    comprendre les risques des stratégies de validation simplistes et
+    l’influence des découpages sur les conclusions.
+
+5.  IPCC – Sixth Assessment Report, Working Group I, Chapter 10. Utilité
+    : comprendre les projections climatiques, les méthodes d’ajustement
+    des biais et leurs limites.
+
+6.  Documentation CMIP6 et scénarios SSP. Utilité : sélectionner et
+    interpréter les scénarios climatiques.
+
+7.  Documentation CHIRPS. Utilité : comprendre les données de
+    précipitations, leur résolution, leur période et leurs limites.
+
+8.  Documentation ERA5. Utilité : comprendre les données de réanalyse
+    météorologique.
+
+9.  Documentation Copernicus DEM. Utilité : données de relief et dérivés
+    topographiques.
+
+10. Documentation WorldPop. Utilité : données et estimations de
+    population.
+
+11. Documentation OpenStreetMap. Utilité : données géographiques de
+    routes et d’équipements, en tenant compte de la couverture et de
+    l’actualité variables.
+
+Il faudra compléter cette liste par une revue bibliographique
+systématique sur les risques hydroclimatiques à Madagascar, l’hydrologie
+tropicale, l’hydrogéologie insulaire, les glissements de terrain, la
+validation des modèles et les méthodes d’analyse des impacts.
+
+======================================================================
+21. POSITIONNEMENT SCIENTIFIQUE ET REGLES DE PRUDENCE
+======================================================================
+
+Le projet présente un potentiel interdisciplinaire important, mais son
+ambition est large. Le risque principal est de vouloir traiter
+simultanément trop d’aléas, trop de variables et trop de modèles sans
+pouvoir les valider en profondeur.
+
+Il est recommandé de choisir un noyau scientifique prioritaire. Par
+exemple : - fusion et qualité des données hydroclimatiques ; -
+modélisation hydrologique et inondations ; - intégration des impacts
+territoriaux ; puis d’étendre à l’hydrogéologie, aux glissements de
+terrain et aux indicateurs humanitaires selon la disponibilité des
+données et les capacités d’encadrement.
+
+Une thèse ne doit pas seulement démontrer qu’une plateforme fonctionne.
+Elle doit répondre à une question scientifique originale, formuler des
+hypothèses testables, comparer des méthodes, produire des résultats
+reproductibles et discuter honnêtement les limites.
+
+Il faut également distinguer : - une carte descriptive ; - une
+estimation d’aléa ; - une prévision probabiliste ; - une projection
+climatique ; - une estimation d’exposition ; - une estimation de
+dommages ; - une évaluation de besoins humanitaires.
+
+Ces produits ne sont pas interchangeables et ne possèdent pas le même
+niveau de preuve.
+
+======================================================================
+22. CONCLUSION
+======================================================================
+
+La plateforme existante constitue un point de départ technique
+intéressant pour une recherche doctorale, puisque le pipeline de données
+est déjà opérationnel et que plusieurs modèles produisent des
+simulations. La valeur scientifique de la thèse dépendra toutefois de la
+capacité à documenter les données, à justifier les choix de modèles, à
+construire des validations indépendantes, à mesurer les incertitudes et
+à démontrer une contribution originale.
+
+La prochaine étape n’est pas nécessairement d’ajouter de nouveaux
+modèles. Elle consiste d’abord à dresser un état des lieux précis de ce
+qui existe : résolution, profondeur historique, observations directes,
+architecture d’hébergement, code et documentation. A partir de cet état
+des lieux, le protocole pourra être resserré, priorisé et présenté à une
+école doctorale et à un directeur de thèse.
+
+FIN DU DOCUMENT
