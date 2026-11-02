@@ -2,7 +2,7 @@
 
 *Tenu par l'agent de téléchargement depuis le 02/11/2026, décision du porteur du projet : un seul agent pour tous les
 téléchargements et liaisons API, petit à petit, sans demandes forcées ni simultanées auprès d'un même fournisseur.
-Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 16 h 40 UTC.*
+Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 17 h 40 UTC.*
 
 ## Règles de rythme appliquées
 
@@ -17,9 +17,9 @@ Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 16 h 40 UTC.*
 
 | Source | Fournisseur | Attendu | Obtenu | Manque | Dernière erreur et cause | Statut |
 |---|---|---|---|---|---|---|
-| E1 CHIRPS journalier | CHC | 2001-2026 (26 ans) | 2001-2025 | 2026 (relancé seul : run 41482902999) | 403 sur les jours de fin octobre 2026 pas encore publiés, qui faisait échouer l'année ; corrigé (403 = jour manquant) | ⏳ 25/26 |
-| E1 IMERG Late journalier | NASA GES DISC | 2001-2026 | 2001-2011 | 2012-2026 | aucune depuis le passage en séquentiel ; environ 20 min par année | ⏳ une année à la fois (run 41444684197), fin prévue vers 21-22 h UTC |
-| E1 ERA5-Land journalier | Copernicus CDS | 2001-2026 | 2015 | 2001-2014, 2016-2026 | une seule tâche de 25 ans aurait dépassé la limite de 6 h ; découpé en une tâche par année | ⏳ une année à la fois, environ 1 h chacune (run 41482839480), fin prévue le 03/11 vers 18 h UTC |
+| E1 CHIRPS journalier | CHC | 2001-2026 (26 ans) | 2001-2025 | 2026 | 2026 : le serveur ne répondait plus (délai de connexion dépassé, 17 h UTC) ; passager, pas d'insistance | ⏳ 25/26 ; 2026 au passage mensuel du 25/11 ou relance manuelle plus tard |
+| E1 IMERG Late journalier | NASA GES DISC | 2001-2026 | 2001-2014 | 2015-2026 | aucune depuis le passage en séquentiel | ⏳ une année à la fois (run 41444684197) |
+| E1 ERA5-Land journalier | Copernicus CDS | 2001-2026 | 2001-2016 | 2017-2026 | aucune depuis le ménage de la file ; quelques minutes par année désormais | ⏳ une année à la fois (run 41482839480) |
 | E1 stations GSOD | NOAA NCEI | 2001-2026, stations de Madagascar | 24 stations | — | — | ✅ |
 | E1 relief (altitude, rugosité, exposition) | Amazon S3 (GLO-90) | grille 0,1° | 5 432 mailles terrestres | — | — | ✅ `data/mdg/e1/relief_01deg.npz`, calculé sur ce PC le 02/11 |
 | SPEI : pluie par district | CHC | 1981-2025 | oui | — | — | ✅ |
@@ -29,6 +29,7 @@ Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 16 h 40 UTC.*
 | Reprévisions GloFAS v4 | Copernicus EWDS | 21 saisons x 6 mois = 126 mois | 18 mois | 108 mois | file d'attente pleine (années lancées 2 par 2, 01/11) ; puis en concurrence avec ERA5-Land | ⏸ mis en pause le 02/11 (run 41411661636 annulé) : après l'indice MCT |
 | R-02 bis : IMERG V07 Final demi-horaire, 7 activations EMS | NASA GES DISC | 7 événements (77 jours au total, environ 3 700 requêtes) | — | tout | — (script, fenêtres et workflow 23 prêts, testés) | ⏸ en attente : après IMERG E1 et IMERG pilote, un événement à la fois |
 | R-02 bis : rafales ERA5 (instantaneous_10m_wind_gust) | Copernicus CDS | 7 fenêtres, emprise de Madagascar | — | tout | — (même script, partie « rafales ») | ⏸ en attente : file Copernicus, après l'indice MCT |
+| H-C6 : covariables de la recharge BGS | UEA/CRU, BGS, ISRIC, ESA | 654 mailles de 0,28° | climat CRU TS 4.10 1981-2010 (pluie, jours de pluie, ETP, aridité), Aquifer_group, GLG, Soil_group, Landcover | NDVI (MOD13C2, NASA) | SoilGrids lu avec un mauvais facteur de réduction (même classe partout) ; corrigé et relu | ✅ `data/mdg/nappes_mondiales/covariables_hc6.csv` (workflow 24) ; NDVI après IMERG E1 |
 | Prévisions C3S (10 systèmes) | Copernicus CDS | 10 systèmes | 0 | 10 | demande bloquée 5 h sans livraison, qui gênait ERA5-Land | ⏸ en pause depuis le 02/11 : en dernier |
 | IMERG demi-horaire, périmètre pilote | NASA GES DISC | 11 saisons (2014-2024) | 2014, 2017, 2018, 2022, 2023, 2024 | 2015, 2016, 2019, 2020, 2021 | concurrence avec IMERG E1 sur le même compte | ⏸ mis en pause le 02/11 (run 41406653970 annulé) : après IMERG E1 |
 | ONI, DMI, SIOD, MOZ (ERSST) | NOAA | mensuel depuis 1950 | ONI, DMI, SIOD et MOZ (921 mois, jusqu'à 2026-09) | — | prévision saisonnière Open-Meteo du même workflow : délai dépassé (TimeoutError), sans lien avec ERSST | ✅ SIOD et MOZ produits et commités le 02/11 (workflow 8, run 41444771537) ; la prévision Open-Meteo se refera lundi |
@@ -54,4 +55,9 @@ Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 16 h 40 UTC.*
 |---|---|---|
 | Copernicus | ERA5-Land E1 (run 41482839480) | 1. `gh workflow run build-drought-spei-ndvi.yml` (ET0 mensuelle) ; 2. `gh workflow run build-mct-era5.yml` ; 3. `gh workflow run build-r02bis-sources.yml -f part=rafales` ; 4. `gh workflow run build-glofas-reforecast.yml -f years="2003 2004 … 2023"` ; 5. `gh workflow run build-c3s-seasonal.yml` |
 | NASA GES DISC | IMERG E1 (run 41444684197) | 1. `gh workflow run build-imerg-pilot.yml -f seasons="2015 2016 2019 2020 2021"` (code pilote rendu séquentiel le 02/11 : 1 fil, attente de 30 à 180 s) ; 2. `gh workflow run build-r02bis-sources.yml -f part=imerg` |
+- 02/11, 17 h 40 UTC : covariables H-C6 produites. Licences : CRU TS v4.10 (ODbL, citation Harris et al. 2020 ; les
+  bases dérivées restent sous ODbL), SoilGrids (CC BY 4.0), carte hydrogéologique BGS de Madagascar (CC BY-SA), ESA
+  WorldCover (CC BY 4.0) ; Globcover 2009 inaccessible (serveur ESA), donc WorldCover, indiqué dans la colonne
+  Landcover_source. La recharge BGS (MacDonald et al. 2021) vient du fichier déposé par le porteur du projet ; sa
+  licence est à confirmer par le coordinateur.
 

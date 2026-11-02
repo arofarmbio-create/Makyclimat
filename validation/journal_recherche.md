@@ -467,3 +467,11 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   laissées de côté, qui teste vraiment l'extrapolation loin des forages ; (2) ajouter une carte des failles et la
   profondeur des forages, quand elles seront disponibles ; (3) l'export complet des 25 272 forages restant
   inaccessible, élargir avec d'autres sources.
+- ✅ Covariables H-C6 de la recharge BGS (654 mailles de 0,28°) : climat CRU TS 4.10 1981-2010 (pluie de 424 à
+  3 075 mm/an, aridité de 0,31 à 2,74), groupe d'aquifère (socle 418, sédimentaire 176, non consolidé 57), géologie
+  GLG, sol WRB et occupation du sol (WorldCover, car Globcover 2009 est inaccessible). Le NDVI MOD13C2 viendra après
+  IMERG E1.
+- ❌ puis 🔧 La première lecture de SoilGrids donnait la même classe de sol (Ferralsols) aux 654 mailles : la carte
+  est en degrés, et le facteur de réduction calculé en mètres la ramenait à un seul pixel. Corrigé et testé : 8
+  classes, dont Ferralsols 294, Luvisols 122, Cambisols 94 et Arenosols 52. **Leçon :** une colonne constante sur
+  tout un pays signale une erreur de traitement.
