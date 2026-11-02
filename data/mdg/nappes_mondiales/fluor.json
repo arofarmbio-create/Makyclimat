@@ -1,0 +1,20 @@
+{
+ "url": "https://opendata.eawag.ch/dataset/2012f6f6-afb5-4c30-b032-89f28d0acd93/resource/840629ab-1899-4754-a2aa-827fe479a5ef/download/maps.zip",
+ "citation": "Podgorski J., Berg M. (2022). Global analysis and prediction of fluoride in groundwater. Nature Communications 13, 4232. Données : doi:10.25678/0006GQ",
+ "licence": "open data Eawag, licence non précisée (ne pas republier sans accord des auteurs)",
+ "republication": false,
+ "unite": "probabilité (0-1) que le fluor dépasse 1,5 mg/L",
+ "resolution": "250 m",
+ "partie": "fluor",
+ "emprise": [
+  43.0,
+  -26.0,
+  51.0,
+  -11.5
+ ],
+ "telecharge_le": "2026-11-02",
+ "resume": {
+  "mailles": 11664782,
+  "probabilite_mediane": 21.0
+ }
+}
