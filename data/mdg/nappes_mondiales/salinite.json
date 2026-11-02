@@ -1,0 +1,20 @@
+{
+ "url": "https://hs.pangaea.de/bio/Salinity_database/Thorslund-vanVliet_2020/Groundwaters_summary.csv",
+ "citation": "Thorslund J., van Vliet M. T. H. (2020). A global dataset of surface water and groundwater salinity measurements from 1980-2019. Scientific Data 7, 231. Données : doi:10.1594/PANGAEA.913939",
+ "licence": "CC BY 4.0",
+ "republication": true,
+ "unite": "µS/cm (conductivité électrique)",
+ "resolution": "points",
+ "partie": "salinite",
+ "emprise": [
+  43.0,
+  -26.0,
+  51.0,
+  -11.5
+ ],
+ "telecharge_le": "2026-11-02",
+ "resume": {
+  "points": 0,
+  "pays": []
+ }
+}
