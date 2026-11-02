@@ -355,3 +355,9 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - ❌ Faiblesse identifiée : l'aléa est trop grossier (vent IBTrACS, pluie CHIRPS journalière à 0,05°), ce qui peut
   expliquer à lui seul une AUC de 0,5. 📌 Test R-02 bis proposé : pluie maximale sur 1, 3 et 6 heures d'IMERG et
   rafales d'ERA5, avec un protocole écrit avant calcul.
+- ✅ Protocole R-02 bis écrit avant calcul (`validation/protocole_r02bis_echelle_alea.md`). On compare quatre modèles
+  (aléa grossier, aléa fin, terrain, terrain et aléa fin), avec un événement laissé de côté et un bootstrap par
+  événement. H-R1 (principale) : le terrain bat l'aléa fin au fokontany. Les trois issues possibles et leur lecture
+  sont fixées à l'avance. 📌 Le porteur du projet demande des conclusions fermes : la nouveauté sera établie par une
+  recherche bibliographique systématique et traçable (bases, requêtes, nombre de travaux examinés, motifs de rejet),
+  pas par une impression.
