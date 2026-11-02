@@ -59,4 +59,5 @@ jobs:
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
           git add -f docs/data data validation/spi_regions.csv 2>/dev/null || git add docs/data data
+          git reset -q -- data/*/grids/rain_offseason.npz 2>/dev/null || true   # cache de pluie : jamais dans git (actions/cache)
           git diff --cached --quiet || (git commit -m "Eau dans le sol : bilan hydrique mensuel, géologie, profondeur de nappe, sous-bassins" && git pull --rebase --autostash origin main && git push)
