@@ -25,7 +25,7 @@ jobs:
           python-version: "3.11"
       - name: Installer les dépendances
         run: pip install -r requirements.txt
-      - name: Cache de la pluie mensuelle hors saison (évite de retélécharger 270 mois chaque jour : refus CHIRPS 429 le 02/11/2026)
+      - name: Cache de la pluie mensuelle hors saison (évite de retélécharger 270 mois chaque jour, refus CHIRPS 429 le 02/11/2026)
         uses: actions/cache@v4
         with:
           path: data/mdg/grids/rain_offseason.npz
