@@ -66,7 +66,8 @@ Tout ce qui est retiré est compté et publié par site.
   2 à 6 ans.
 - **SGI simplifié (secondaire) :** scores normaux du niveau mensuel brut, cycle saisonnier compris.
 - **SPI-n**, n = 1 à 24 mois : loi gamma par mois du calendrier sur 1981-2025 (fonction existante `soilwater_core.spi`).
-- **`recharge12_z`** : recharge nette cumulée sur 12 mois, en scores normaux, recalculée comme en production.
+- **`recharge12_z`** : excédent hydrique cumulé sur 12 mois, en scores normaux, recalculé comme en production
+  (corrigé le 02/11/2026, section 9).
 - **Trois façons de compter l'évaporation** (ajout du 02/11/2026, section 9) :
   - aucune : SPI-n (pluie seule) ;
   - **référence** : SPEI-n (n = 3, 6, 12, 24) sur P − ET0, loi logistique généralisée (`soilwater_core.spei`) ;
@@ -131,3 +132,11 @@ données (n*) est présenté comme descriptif, jamais comme une performance.
   encore traités) : à la demande du porteur du projet, ajout de la distinction entre évapotranspiration de référence
   (ET0) et réelle (ETR) exigée par le protocole doctoral (E2-B). Nouvelles colonnes (et0_mm, etr_mm, recharge_mm,
   spei3/6/12/24, bilan12_z), nouvelle question 4 et hypothèses H-N3a et H-N3b. H-N1 et H-N2 sont inchangées.
+- 02/11/2026, **avant tout calcul de corrélation** : en contrôlant les indices aux sites, la recharge s'est révélée
+  nulle à tous les sites et pour tous les mois depuis 1981. Cause : depuis le 27/10, le bilan de production retirait
+  un ruissellement SCS-CN calculé sur le cumul du mois. Or cette formule est faite pour une averse isolée : pour 600 mm
+  dans le mois, elle compte 490 à 570 mm de ruissellement. En production, l'excédent valait 0 dans 99,6 % des
+  fokontany, et `recharge12_z` était constant. **H-N2 aurait testé un indice dégénéré.** Corrigé en production et
+  ici : le bilan ne retire plus de SCS-CN mensuel, et `recharge12_z` devient l'excédent hydrique standardisé (recharge
+  potentielle et ruissellement confondus). H-N2 garde le même énoncé, avec cet indice corrigé. Le défaut est publié au
+  journal de recherche comme un échec.

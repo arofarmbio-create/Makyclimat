@@ -8,7 +8,8 @@ validate_nappes_mgmerl.py sur le poste local).
 Trois façons de compter l'évaporation (protocole doctoral E2-B) :
   aucune (SPI, pluie seule) ; évapotranspiration de RÉFÉRENCE ET0 (FAO-56 Penman-Monteith, ERA5-Land, climatologie
   2016-2020 : SPEI-n sur P - ET0) ; évapotranspiration RÉELLE ETR (bilan de Thornthwaite-Mather, limitée par l'eau du
-  sol : bilan12_z sur P - ETR, et recharge12_z sur l'excédent infiltré).
+  sol : bilan12_z sur P - ETR, et recharge12_z sur l'excédent du bilan). Comme en production depuis le 02/11/2026,
+le bilan ne retire plus de ruissellement SCS-CN au pas mensuel (cn2 accepté mais inutilisé).
 Sortie : data/<pays>/nappes_sites_indices.csv (site, mois, pluie_mm, et0_mm, etr_mm, recharge_mm, spi1..spi24,
 spei3/6/12/24, bilan12_z, recharge12_z).
 Usage : python scripts/build_nappes_sites.py --country mdg
@@ -46,12 +47,12 @@ def site_cells(lats, lons, grid, valid):
 SPEI_N = (3, 6, 12, 24)
 
 
-def site_indices(P, pet, whc, cn2, month0=11):
+def site_indices(P, pet, whc, cn2=None, month0=11):
     """P (T, N) pluie mensuelle ; pet (12, N) ET0 climatologique ; whc, cn2 (N,).
     Retourne les séries (T, N) : et0_mm, etr_mm, recharge_mm, spi1..spiNMAX, spei<n>, bilan12_z, recharge12_z."""
     T = P.shape[0]
     et0 = np.stack([pet[(month0 - 1 + t) % 12] for t in range(T)])             # ET0 du mois du calendrier
-    _, A, X, _ = C.run_balance(P, pet, whc, month0=month0, cn2=cn2)             # A : ETR, X : recharge
+    _, A, X, _ = C.run_balance(P, pet, whc, month0=month0)                      # A : ETR, X : excédent (sans SCS-CN mensuel)
     out = {"et0_mm": et0, "etr_mm": A, "recharge_mm": X}
     out.update({f"spi{n}": C.spi(P, n, month0) for n in range(1, NMAX + 1)})
     out.update({f"spei{n}": C.spei(P, et0, n, month0) for n in SPEI_N})

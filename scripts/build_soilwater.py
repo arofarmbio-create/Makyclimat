@@ -263,6 +263,13 @@ def rain_series(grid, cfg, country, fetch):
         for k, m in enumerate(smonths):
             yy = y - 1 if m >= 11 else y
             have[(yy, m)] = np.asarray(ms["arr"][yi, k], dtype="float32")
+    cache_path = grid_dir(country) / "rain_offseason.npz"          # mois hors saison déjà téléchargés (cache, hors git)
+    if cache_path.exists():
+        cz = np.load(cache_path)
+        for k in cz.files:
+            y_, m_ = int(k[1:5]), int(k[6:8])
+            if (y_, m_) not in have and cz[k].shape == (grid["h"], grid["w"]):
+                have[(y_, m_)] = cz[k].astype("float32")
     first = (years[0] - 1, 11)
     today = dt.date.today()
     last = (today.year, today.month - 1) if today.month > 1 else (today.year - 1, 12)
@@ -278,10 +285,15 @@ def rain_series(grid, cfg, country, fetch):
         except Exception as e:  # noqa: BLE001
             print("  échec pluie", x, str(e)[:100])
             return x, None
-    with ThreadPoolExecutor(max_workers=6) as ex:
+    got = {}
+    with ThreadPoolExecutor(max_workers=3) as ex:                    # 3 à la fois : CHC répond 429 au-delà (02/11/2026)
         for x, a in ex.map(one, need):
             if a is not None:
-                have[x] = a
+                have[x] = got[x] = a
+    if got:
+        old = dict(np.load(cache_path)) if cache_path.exists() else {}
+        old.update({f"m{y_:04d}_{m_:02d}": have[(y_, m_)].astype("float16") for (y_, m_) in have if m_ not in smonths})
+        np.savez_compressed(cache_path, **old)
     # on s'arrête au premier mois manquant (série continue)
     series, labels = [], []
     for x in order:
@@ -290,7 +302,15 @@ def rain_series(grid, cfg, country, fetch):
             break
         series.append(a)
         labels.append(f"{x[0]}-{x[1]:02d}")
-    STATUS["rain"] = {"first": labels[0], "last": labels[-1], "months": len(labels), "fetched": len([x for x in need if x in have])}
+    STATUS["rain"] = {"first": labels[0] if labels else None, "last": labels[-1] if labels else None, "months": len(labels),
+                      "fetched": len(got)}
+    # garde-fou (02/11/2026) : une série coupée par des refus du serveur ne doit jamais être publiée (le 02/11, elle
+    # s'arrêtait en 2008 et le bilan publié avait perdu 8 indicateurs sur 11). Retard toléré : 3 mois (CHIRPS final).
+    lag = (last[0] - int(labels[-1][:4])) * 12 + last[1] - int(labels[-1][5:]) if labels else 999
+    if lag > 3:
+        STATUS["rain"]["erreur"] = f"série tronquée ({labels[-1] if labels else 'vide'}, {lag} mois de retard) : rien n'est publié"
+        print("Pluie mensuelle :", STATUS["rain"]["erreur"])
+        return None
     return np.stack(series), labels
 
 
@@ -337,13 +357,19 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     valid = land & np.isfinite(props["whc"]) & np.isfinite(et0[0]) & (props["whc"] > 0)
     Pc = np.nan_to_num(P[:, valid], nan=0.0).astype("float64")
     pet = np.stack([et0[m][valid] for m in range(12)]).astype("float64")
-    W, A, X, Q = C.run_balance(Pc, pet, props["whc"][valid].astype("float64"), month0=11, cn2=props["cn2"][valid].astype("float64"))
+    # Bilan SANS retrait SCS-CN mensuel. Corrigé le 02/11/2026 : depuis le 27/10, le SCS-CN (formule d'averse isolée) était
+    # appliqué au cumul du mois et transformait presque toute la pluie en ruissellement (600 mm dans le mois -> 490 à 570 mm) ;
+    # l'excédent valait 0 dans 99,6 % des fokontany et l'indice de nappe était constant (validation/protocole_nappes_mgmerl.md).
+    # X est donc l'excédent hydrique (recharge potentielle et ruissellement confondus) ; Q, SCS-CN, reste indicatif.
+    whc_v = props["whc"][valid].astype("float64")
+    W, A, X, _ = C.run_balance(Pc, pet, whc_v, month0=11)
+    _, _, _, Q = C.run_balance(Pc, pet, whc_v, month0=11, cn2=props["cn2"][valid].astype("float64"))
     rel = W / props["whc"][valid][None, :]                         # stock relatif (0-1)
     month0 = 11
     sm_z = C.monthly_standardized(rel, month0)
-    rech12 = C.rolling_sum(X, 12)              # recharge nette de ruissellement (SCS-CN déjà retiré de la pluie dans run_balance)
+    rech12 = C.rolling_sum(X, 12)              # excédent hydrique sur 12 mois (recharge potentielle et ruissellement confondus)
     rz = C.monthly_standardized(rech12, month0)
-    runoff12 = C.rolling_sum(Q, 12)            # ruissellement SCS-CN cumulé 12 mois, à titre informatif (pas une recharge)
+    runoff12 = C.rolling_sum(Q, 12)            # ruissellement SCS-CN cumulé 12 mois, à titre indicatif (surestimé au pas mensuel)
     # SPI-1/3/6/12 (cahier des charges §6.A), masqué là où la normale du cumul est < rainfall.min_normal_mm : pour une normale de
     # quelques mm, le SPI n'est pas interprétable (Guide OMM-N° 1090). Attention : le SPI-3 de +2,7/+3,1 des Hautes Terres en
     # septembre 2026 n'est PAS un artefact (normale > 25 mm, non masqué) : ERA5 confirme un juillet-septembre 2026 au 1er/2e rang

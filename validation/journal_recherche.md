@@ -238,3 +238,17 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   rapide.
 - 🔧 Copernicus : quand la file du compte est pleine, les demandes orphelines (plus de 6 heures en attente) sont
   désormais annulées automatiquement (testé). ERA5-Land 2015 relancé.
+- ❌ puis 🔧 **Défaut de production trouvé en préparant le protocole M3** : depuis le 27/10, le bilan hydrique retirait
+  un ruissellement SCS-CN calculé sur le cumul du mois. Cette formule d'averse isolée, appliquée à 600 mm de pluie
+  mensuelle, compte 490 à 570 mm de ruissellement. Conséquences :
+  - l'excédent (« recharge ») valait 0 dans 99,6 % des fokontany ;
+  - l'« indice relatif de nappe » publié était constant ;
+  - le potentiel pour point d'eau (où la recharge pèse 25 %) était faussé.
+  🔧 Le bilan ne retire plus de SCS-CN mensuel ; l'excédent hydrique est publié sous ce nom (recharge potentielle et
+  ruissellement confondus), et le ruissellement SCS-CN reste indicatif. **Leçon :** un indicateur constant sur tout
+  un pays doit déclencher une alerte automatique ; un contrôle de variance minimale est à ajouter au contrôle qualité.
+- ❌ puis 🔧 **Publication dégradée** : en relançant deux fois le workflow 6 en 15 minutes, CHIRPS a refusé des
+  téléchargements (erreur 429). La série de pluie s'est arrêtée en 2008, et le bilan publié a perdu 8 indicateurs sur
+  11. 🔧 La version complète précédente a été restaurée par un nouveau commit. Ajouts : un garde-fou (une série en
+  retard de plus de 3 mois n'est jamais publiée), un cache des mois déjà téléchargés et 3 téléchargements simultanés
+  au lieu de 6.

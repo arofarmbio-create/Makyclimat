@@ -150,6 +150,7 @@ statut, document détaillé.
 | R-16 | Proxys de type SPEI tirés du bilan hydrique (sm_z, recharge12_z) | Même épisode | POD 0,17 et 0,00 : moins bons que le SPI | ❌ | `spei_approche.md` |
 | R-17 | SPI-1/3/6/12 à fin septembre 2026 | CHIRPS | État avant la saison 2026-2027, par région | ✅ | `spi_fin_septembre_2026.md` |
 | R-18 | Bilan hydrique mensuel FAO-56, recharge, humidité du sol, par fokontany et sous-bassin | CHIRPS, ERA5-Land, SoilGrids, GLO-90 | En production ; pas de mesure de sol ni de débit pour valider | ⚠️ standard, non validé localement | `groundwater_limites.md` |
+| R-37 | Défaut trouvé le 02/11 : ruissellement SCS-CN appliqué au cumul mensuel dans le bilan (depuis le 27/10) | Contrôle des indices aux 16 sites MGMERL | Excédent nul dans 99,6 % des fokontany ; indice de nappe constant, et potentiel pour point d'eau faussé (recharge pesant 25 %). Corrigé le 02/11 : plus de SCS-CN mensuel | ❌ 🔧 | `journal_recherche.md`, `protocole_nappes_mgmerl.md` §9 |
 | R-19 | Potentiel pour point d'eau peu profond (somme pondérée de 4 critères) | Pas de forage réel pour calibrer | Classement relatif, poids non appris | ⚠️ non validé | idem |
 | R-20 | Vulnérabilité cumulative (chocs cyclone et sécheresse, demi-vie 18 mois) | Pas d'enquête de résilience pour valider | Construction raisonnée | ⚠️ non validé | `vuln_cumul_limites.md` |
 
