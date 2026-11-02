@@ -1,35 +1,35 @@
 lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_PET_mm,Aridity,Aquifer_group,GLG,Soil_group
-43.3568,-11.675,150.29,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),2314.0,122.8,1350.8,1.713,,,FR
+43.3568,-11.675,150.29,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),2314.0,122.8,1350.8,1.713,,,CM
 49.2368,-11.955,90.26,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1258.7,136.9,,,Basement,Tertiary-Quaternary Volcanic,FR
 43.6368,-12.235,138.92,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),2028.7,112.9,1424.6,1.424,,,FR
-44.4768,-12.235,125.4,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1708.5,119.1,1374.9,1.243,,,FR
+44.4768,-12.235,125.4,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1708.5,119.1,1374.9,1.243,,,CM
 48.9568,-12.515,100.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1473.5,130.6,1501.0,0.982,Basement,Tertiary-Quaternary Volcanic,FR
 49.2368,-12.515,95.52,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1475.0,139.6,1466.8,1.006,Basement,Tertiary-Quaternary Volcanic,FR
-49.5168,-12.515,102.63,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1491.5,146.7,1513.9,0.985,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+49.5168,-12.515,102.63,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1491.5,146.7,1513.9,0.985,Sedimentary,Cretaceous-Tertiary sedimentary,LX
 48.9568,-12.795,115.78,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1473.5,130.6,1501.0,0.982,Basement,Tertiary-Quaternary Volcanic,FR
 49.2368,-12.795,116.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1475.0,139.6,1466.8,1.006,Basement,Tertiary-Quaternary Volcanic,FR
 49.5168,-12.795,116.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1491.5,146.7,1513.9,0.985,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-48.9568,-13.075,134.66,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1843.6,149.8,1375.2,1.341,Unconsolidated,Quaternary unconsolidated sediments,FR
+48.9568,-13.075,134.66,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1843.6,149.8,1375.2,1.341,Unconsolidated,Quaternary unconsolidated sediments,GL
 49.2368,-13.075,133.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1776.7,155.4,1388.8,1.279,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-49.5168,-13.075,132.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1803.3,167.5,1389.0,1.298,Basement,Precambrian Basement undifferentiated,FR
-49.7968,-13.075,134.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1803.3,167.5,1389.0,1.298,Basement,Precambrian Basement undifferentiated,FR
+49.5168,-13.075,132.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1803.3,167.5,1389.0,1.298,Basement,Precambrian Basement undifferentiated,LX
+49.7968,-13.075,134.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1803.3,167.5,1389.0,1.298,Basement,Precambrian Basement undifferentiated,LX
 48.9568,-13.355,156.22,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1843.6,149.8,1375.2,1.341,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-49.2368,-13.355,153.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1776.7,155.4,1388.8,1.279,Basement,Precambrian Basement undifferentiated,FR
-49.5168,-13.355,153.11,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1803.3,167.5,1389.0,1.298,Basement,Precambrian Basement undifferentiated,FR
+49.2368,-13.355,153.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1776.7,155.4,1388.8,1.279,Basement,Precambrian Basement undifferentiated,LX
+49.5168,-13.355,153.11,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1803.3,167.5,1389.0,1.298,Basement,Precambrian Basement undifferentiated,LX
 49.7968,-13.355,158.75,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1803.3,167.5,1389.0,1.298,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-13.635,146.72,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1899.5,151.1,1346.9,1.41,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 48.3968,-13.635,160.4,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1899.5,151.1,1346.9,1.41,Unconsolidated,Quaternary unconsolidated sediments,FR
 48.6768,-13.635,167.1,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1968.9,165.7,1267.5,1.553,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 48.9568,-13.635,168.68,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1968.9,165.7,1267.5,1.553,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-13.635,169.23,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2013.0,182.3,1215.5,1.656,Basement,Precambrian Basement undifferentiated,FR
+49.2368,-13.635,169.23,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2013.0,182.3,1215.5,1.656,Basement,Precambrian Basement undifferentiated,LX
 49.5168,-13.635,170.83,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2084.7,188.2,1278.1,1.631,Basement,Precambrian Basement undifferentiated,FR
 49.7968,-13.635,169.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2084.7,188.2,1278.1,1.631,Basement,Precambrian Basement undifferentiated,FR
 50.0768,-13.635,168.19,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),2129.9,191.6,1309.2,1.627,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-13.915,155.69,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1899.5,151.1,1346.9,1.41,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 48.3968,-13.915,167.73,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1899.5,151.1,1346.9,1.41,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 48.6768,-13.915,172.48,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1968.9,165.7,1267.5,1.553,Basement,Precambrian Basement undifferentiated,FR
-48.9568,-13.915,174.68,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1968.9,165.7,1267.5,1.553,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-13.915,174.48,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2013.0,182.3,1215.5,1.656,Basement,Precambrian Basement undifferentiated,FR
+48.9568,-13.915,174.68,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1968.9,165.7,1267.5,1.553,Basement,Precambrian Basement undifferentiated,CM
+49.2368,-13.915,174.48,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2013.0,182.3,1215.5,1.656,Basement,Precambrian Basement undifferentiated,CM
 49.5168,-13.915,172.02,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2084.7,188.2,1278.1,1.631,Basement,Precambrian Basement undifferentiated,FR
 49.7968,-13.915,170.06,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2084.7,188.2,1278.1,1.631,Basement,Precambrian Basement undifferentiated,FR
 50.0768,-13.915,168.62,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2129.9,191.6,1309.2,1.627,Basement,Precambrian Basement undifferentiated,FR
@@ -37,84 +37,84 @@ lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_
 48.1168,-14.195,156.05,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1854.0,157.4,1356.9,1.366,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 48.3968,-14.195,166.93,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1854.0,157.4,1356.9,1.366,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 48.6768,-14.195,175.21,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2027.7,183.1,1166.3,1.739,Basement,Precambrian Basement undifferentiated,FR
-48.9568,-14.195,175.66,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2027.7,183.1,1166.3,1.739,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-14.195,173.65,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2138.0,196.7,1124.0,1.902,Basement,Precambrian Basement undifferentiated,FR
+48.9568,-14.195,175.66,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2027.7,183.1,1166.3,1.739,Basement,Precambrian Basement undifferentiated,CM
+49.2368,-14.195,173.65,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2138.0,196.7,1124.0,1.902,Basement,Precambrian Basement undifferentiated,CM
 49.5168,-14.195,172.07,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2266.9,202.8,1209.3,1.875,Basement,Precambrian Basement undifferentiated,FR
 49.7968,-14.195,170.45,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2266.9,202.8,1209.3,1.875,Basement,Precambrian Basement undifferentiated,FR
 50.0768,-14.195,169.05,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2344.4,208.0,1243.5,1.885,Basement,Precambrian Basement undifferentiated,FR
 47.8368,-14.475,142.91,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1664.7,141.7,1483.5,1.122,Basement,Cretaceous Volcanic,FR
-48.1168,-14.475,154.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1854.0,157.4,1356.9,1.366,Sedimentary,Carboniferous-Jurassic sedimentary,FR
+48.1168,-14.475,154.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1854.0,157.4,1356.9,1.366,Sedimentary,Carboniferous-Jurassic sedimentary,AR
 48.3968,-14.475,166.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1854.0,157.4,1356.9,1.366,Basement,Precambrian Basement undifferentiated,FR
 48.6768,-14.475,174.94,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2027.7,183.1,1166.3,1.739,Basement,Precambrian Basement undifferentiated,FR
 48.9568,-14.475,174.32,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2027.7,183.1,1166.3,1.739,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-14.475,173.12,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2138.0,196.7,1124.0,1.902,Basement,Precambrian Basement undifferentiated,FR
+49.2368,-14.475,173.12,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2138.0,196.7,1124.0,1.902,Basement,Precambrian Basement undifferentiated,CM
 49.5168,-14.475,172.03,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2266.9,202.8,1209.3,1.875,Basement,Precambrian Basement undifferentiated,FR
 49.7968,-14.475,170.72,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2266.9,202.8,1209.3,1.875,Basement,Precambrian Basement undifferentiated,FR
 50.0768,-14.475,169.38,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2344.4,208.0,1243.5,1.885,Basement,Cretaceous-Tertiary sedimentary,FR
 47.8368,-14.755,139.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1621.8,140.7,1535.9,1.056,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-48.1168,-14.755,153.46,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1854.1,160.1,1393.4,1.331,Sedimentary,Carboniferous-Jurassic sedimentary,FR
+48.1168,-14.755,153.46,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1854.1,160.1,1393.4,1.331,Sedimentary,Carboniferous-Jurassic sedimentary,LV
 48.3968,-14.755,169.3,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1854.1,160.1,1393.4,1.331,Basement,Precambrian Basement undifferentiated,FR
 48.6768,-14.755,173.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2086.4,186.5,1173.4,1.778,Basement,Precambrian Basement undifferentiated,FR
-48.9568,-14.755,173.4,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2086.4,186.5,1173.4,1.778,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-14.755,172.76,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2214.9,200.2,1140.9,1.941,Basement,Precambrian Basement undifferentiated,FR
-49.5168,-14.755,172.02,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2326.1,210.4,1165.4,1.996,Basement,Precambrian Basement undifferentiated,FR
-49.7968,-14.755,171.02,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2326.1,210.4,1165.4,1.996,Basement,Precambrian Basement undifferentiated,FR
+48.9568,-14.755,173.4,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2086.4,186.5,1173.4,1.778,Basement,Precambrian Basement undifferentiated,CM
+49.2368,-14.755,172.76,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2214.9,200.2,1140.9,1.941,Basement,Precambrian Basement undifferentiated,CM
+49.5168,-14.755,172.02,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2326.1,210.4,1165.4,1.996,Basement,Precambrian Basement undifferentiated,CM
+49.7968,-14.755,171.02,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2326.1,210.4,1165.4,1.996,Basement,Precambrian Basement undifferentiated,CM
 50.0768,-14.755,169.77,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2361.2,218.2,1183.6,1.995,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-15.035,135.87,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1597.5,123.3,1539.2,1.038,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+47.2768,-15.035,135.87,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1597.5,123.3,1539.2,1.038,Sedimentary,Cretaceous-Tertiary sedimentary,AR
 47.5568,-15.035,139.08,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1728.4,140.0,1491.5,1.159,Basement,Cretaceous Volcanic,FR
 47.8368,-15.035,146.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1728.4,140.0,1491.5,1.159,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 48.1168,-15.035,159.28,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1932.7,160.8,1379.7,1.401,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-15.035,171.66,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1932.7,160.8,1379.7,1.401,Basement,Precambrian Basement undifferentiated,FR
-48.6768,-15.035,172.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2135.4,185.0,1212.7,1.761,Basement,Precambrian Basement undifferentiated,FR
+48.3968,-15.035,171.66,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1932.7,160.8,1379.7,1.401,Basement,Precambrian Basement undifferentiated,LX
+48.6768,-15.035,172.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2135.4,185.0,1212.7,1.761,Basement,Precambrian Basement undifferentiated,LX
 48.9568,-15.035,173.04,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2135.4,185.0,1212.7,1.761,Basement,Precambrian Basement undifferentiated,FR
 49.2368,-15.035,172.68,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2263.7,201.2,1151.2,1.966,Basement,Precambrian Basement undifferentiated,FR
-49.5168,-15.035,172.13,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2347.2,211.1,1166.5,2.012,Basement,Precambrian Basement undifferentiated,FR
-49.7968,-15.035,171.32,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2347.2,211.1,1166.5,2.012,Basement,Precambrian Basement undifferentiated,FR
+49.5168,-15.035,172.13,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2347.2,211.1,1166.5,2.012,Basement,Precambrian Basement undifferentiated,CM
+49.7968,-15.035,171.32,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2347.2,211.1,1166.5,2.012,Basement,Precambrian Basement undifferentiated,CM
 50.0768,-15.035,170.16,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2356.8,220.9,1148.1,2.053,Basement,Precambrian Basement undifferentiated,FR
 50.3568,-15.035,169.04,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),2356.8,220.9,1148.1,2.053,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-15.315,133.31,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1502.0,106.7,1588.6,0.945,Unconsolidated,Quaternary unconsolidated sediments,FR
-46.9968,-15.315,133.98,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1502.0,106.7,1588.6,0.945,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+46.9968,-15.315,133.98,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1502.0,106.7,1588.6,0.945,Sedimentary,Cretaceous-Tertiary sedimentary,AR
 47.2768,-15.315,135.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1597.5,123.3,1539.2,1.038,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 47.5568,-15.315,142.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1728.4,140.0,1491.5,1.159,Basement,Cretaceous Volcanic,FR
 47.8368,-15.315,153.63,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1728.4,140.0,1491.5,1.159,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-48.1168,-15.315,165.04,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1932.7,160.8,1379.7,1.401,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-15.315,171.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1932.7,160.8,1379.7,1.401,Basement,Precambrian Basement undifferentiated,FR
-48.6768,-15.315,172.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2135.4,185.0,1212.7,1.761,Basement,Precambrian Basement undifferentiated,FR
+48.1168,-15.315,165.04,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1932.7,160.8,1379.7,1.401,Basement,Precambrian Basement undifferentiated,LX
+48.3968,-15.315,171.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1932.7,160.8,1379.7,1.401,Basement,Precambrian Basement undifferentiated,LX
+48.6768,-15.315,172.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2135.4,185.0,1212.7,1.761,Basement,Precambrian Basement undifferentiated,LX
 48.9568,-15.315,172.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2135.4,185.0,1212.7,1.761,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-15.315,172.75,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2263.7,201.2,1151.2,1.966,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-49.5168,-15.315,172.31,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2347.2,211.1,1166.5,2.012,Basement,Precambrian Basement undifferentiated,FR
-49.7968,-15.315,171.6,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2347.2,211.1,1166.5,2.012,Basement,Precambrian Basement undifferentiated,FR
-50.0768,-15.315,170.53,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2356.8,220.9,1148.1,2.053,Basement,Precambrian Basement undifferentiated,FR
+49.2368,-15.315,172.75,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2263.7,201.2,1151.2,1.966,Sedimentary,Cretaceous-Tertiary sedimentary,CM
+49.5168,-15.315,172.31,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2347.2,211.1,1166.5,2.012,Basement,Precambrian Basement undifferentiated,CM
+49.7968,-15.315,171.6,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2347.2,211.1,1166.5,2.012,Basement,Precambrian Basement undifferentiated,CM
+50.0768,-15.315,170.53,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2356.8,220.9,1148.1,2.053,Basement,Precambrian Basement undifferentiated,CM
 50.3568,-15.315,169.47,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2356.8,220.9,1148.1,2.053,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-15.595,123.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1472.5,92.0,1576.3,0.934,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+46.4368,-15.595,123.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1472.5,92.0,1576.3,0.934,Sedimentary,Cretaceous-Tertiary sedimentary,AR
 46.7168,-15.595,129.29,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1566.2,103.1,1549.0,1.011,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-46.9968,-15.595,134.78,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1566.2,103.1,1549.0,1.011,Unconsolidated,Quaternary unconsolidated sediments,FR
+46.9968,-15.595,134.78,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1566.2,103.1,1549.0,1.011,Unconsolidated,Quaternary unconsolidated sediments,GL
 47.2768,-15.595,140.9,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1686.5,120.0,1497.6,1.126,Unconsolidated,Quaternary unconsolidated sediments,FR
 47.5568,-15.595,149.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1841.6,139.5,1441.3,1.278,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-47.8368,-15.595,161.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1841.6,139.5,1441.3,1.278,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-48.1168,-15.595,169.13,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2034.3,162.2,1337.6,1.521,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-15.595,171.78,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2034.3,162.2,1337.6,1.521,Basement,Precambrian Basement undifferentiated,FR
-48.6768,-15.595,172.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2210.5,185.5,1211.8,1.824,Basement,Precambrian Basement undifferentiated,FR
+47.8368,-15.595,161.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1841.6,139.5,1441.3,1.278,Sedimentary,Carboniferous-Jurassic sedimentary,LX
+48.1168,-15.595,169.13,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2034.3,162.2,1337.6,1.521,Basement,Precambrian Basement undifferentiated,LX
+48.3968,-15.595,171.78,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2034.3,162.2,1337.6,1.521,Basement,Precambrian Basement undifferentiated,LX
+48.6768,-15.595,172.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2210.5,185.5,1211.8,1.824,Basement,Precambrian Basement undifferentiated,LX
 48.9568,-15.595,173.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2210.5,185.5,1211.8,1.824,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-15.595,172.95,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2335.3,203.7,1137.2,2.054,Basement,Precambrian Basement undifferentiated,FR
-49.5168,-15.595,172.61,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2409.9,212.1,1185.4,2.033,Basement,Precambrian Basement undifferentiated,FR
-50.0768,-15.595,170.99,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2419.0,220.3,1159.2,2.087,Basement,Precambrian Basement undifferentiated,FR
+49.2368,-15.595,172.95,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2335.3,203.7,1137.2,2.054,Basement,Precambrian Basement undifferentiated,CM
+49.5168,-15.595,172.61,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2409.9,212.1,1185.4,2.033,Basement,Precambrian Basement undifferentiated,CM
+50.0768,-15.595,170.99,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2419.0,220.3,1159.2,2.087,Basement,Precambrian Basement undifferentiated,CM
 50.3568,-15.595,170.0,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2419.0,220.3,1159.2,2.087,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-15.875,119.66,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1390.6,86.0,1563.9,0.889,Unconsolidated,Quaternary unconsolidated sediments,FR
-46.1568,-15.875,118.46,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1472.5,92.0,1576.3,0.934,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-46.4368,-15.875,122.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1472.5,92.0,1576.3,0.934,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+45.8768,-15.875,119.66,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1390.6,86.0,1563.9,0.889,Unconsolidated,Quaternary unconsolidated sediments,GL
+46.1568,-15.875,118.46,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1472.5,92.0,1576.3,0.934,Sedimentary,Cretaceous-Tertiary sedimentary,AR
+46.4368,-15.875,122.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1472.5,92.0,1576.3,0.934,Sedimentary,Cretaceous-Tertiary sedimentary,GL
 46.7168,-15.875,128.65,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1566.2,103.1,1549.0,1.011,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 46.9968,-15.875,136.68,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1566.2,103.1,1549.0,1.011,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 47.2768,-15.875,145.59,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1686.5,120.0,1497.6,1.126,Basement,Cretaceous Volcanic,FR
-47.5568,-15.875,154.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1841.6,139.5,1441.3,1.278,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-47.8368,-15.875,166.51,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1841.6,139.5,1441.3,1.278,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-15.875,170.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2034.3,162.2,1337.6,1.521,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-15.875,171.92,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2034.3,162.2,1337.6,1.521,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-15.875,154.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1841.6,139.5,1441.3,1.278,Sedimentary,Carboniferous-Jurassic sedimentary,LX
+47.8368,-15.875,166.51,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1841.6,139.5,1441.3,1.278,Basement,Precambrian Basement undifferentiated,LX
+48.1168,-15.875,170.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2034.3,162.2,1337.6,1.521,Basement,Precambrian Basement undifferentiated,LX
+48.3968,-15.875,171.92,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2034.3,162.2,1337.6,1.521,Basement,Precambrian Basement undifferentiated,LX
 48.6768,-15.875,172.96,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2210.5,185.5,1211.8,1.824,Basement,Precambrian Basement undifferentiated,FR
 48.9568,-15.875,173.24,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2210.5,185.5,1211.8,1.824,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-15.875,173.18,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2335.3,203.7,1137.2,2.054,Basement,Precambrian Basement undifferentiated,FR
-49.5168,-15.875,172.9,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2409.9,212.1,1185.4,2.033,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-16.155,101.94,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1247.8,77.8,1474.3,0.846,Unconsolidated,Quaternary unconsolidated sediments,FR
+49.2368,-15.875,173.18,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2335.3,203.7,1137.2,2.054,Basement,Precambrian Basement undifferentiated,CM
+49.5168,-15.875,172.9,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2409.9,212.1,1185.4,2.033,Basement,Precambrian Basement undifferentiated,CM
+44.4768,-16.155,101.94,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1247.8,77.8,1474.3,0.846,Unconsolidated,Quaternary unconsolidated sediments,AR
 45.0368,-16.155,101.37,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1341.1,82.2,1493.3,0.898,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 45.3168,-16.155,105.01,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1341.1,82.2,1493.3,0.898,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 45.5968,-16.155,110.13,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1420.0,85.3,1502.9,0.945,Sedimentary,Cretaceous-Tertiary sedimentary,FR
@@ -124,11 +124,11 @@ lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_
 46.7168,-16.155,131.98,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1634.3,101.3,1493.6,1.094,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 46.9968,-16.155,141.08,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1634.3,101.3,1493.6,1.094,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 47.2768,-16.155,151.06,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1774.5,119.0,1440.0,1.232,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-47.5568,-16.155,160.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1942.7,141.8,1353.0,1.436,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-47.8368,-16.155,170.3,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1942.7,141.8,1353.0,1.436,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-16.155,171.49,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2133.8,170.7,1189.6,1.794,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-16.155,160.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1942.7,141.8,1353.0,1.436,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+47.8368,-16.155,170.3,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1942.7,141.8,1353.0,1.436,Basement,Precambrian Basement undifferentiated,LX
+48.1168,-16.155,171.49,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2133.8,170.7,1189.6,1.794,Basement,Precambrian Basement undifferentiated,LX
 48.3968,-16.155,172.4,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2133.8,170.7,1189.6,1.794,Basement,Precambrian Basement undifferentiated,FR
-48.6768,-16.155,173.24,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2299.0,189.9,1141.2,2.015,Basement,Precambrian Basement undifferentiated,FR
+48.6768,-16.155,173.24,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2299.0,189.9,1141.2,2.015,Basement,Precambrian Basement undifferentiated,LX
 48.9568,-16.155,173.52,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2299.0,189.9,1141.2,2.015,Basement,Precambrian Basement undifferentiated,FR
 49.2368,-16.155,173.51,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2443.2,205.1,1135.6,2.151,Basement,Precambrian Basement undifferentiated,FR
 49.5168,-16.155,173.29,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2530.7,213.6,1167.9,2.167,Basement,Precambrian Basement undifferentiated,FR
@@ -143,17 +143,17 @@ lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_
 46.4368,-16.435,127.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1517.0,90.9,1511.0,1.004,Basement,Cretaceous Volcanic,FR
 46.7168,-16.435,134.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1634.3,101.3,1493.6,1.094,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 46.9968,-16.435,144.45,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1634.3,101.3,1493.6,1.094,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-47.2768,-16.435,155.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1774.5,119.0,1440.0,1.232,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-47.5568,-16.435,164.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1942.7,141.8,1353.0,1.436,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-16.435,172.82,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1942.7,141.8,1353.0,1.436,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-16.435,172.98,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2133.8,170.7,1189.6,1.794,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-16.435,173.16,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2133.8,170.7,1189.6,1.794,Basement,Precambrian Basement undifferentiated,FR
+47.2768,-16.435,155.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1774.5,119.0,1440.0,1.232,Sedimentary,Carboniferous-Jurassic sedimentary,LX
+47.5568,-16.435,164.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1942.7,141.8,1353.0,1.436,Basement,Precambrian Basement undifferentiated,LX
+47.8368,-16.435,172.82,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1942.7,141.8,1353.0,1.436,Basement,Precambrian Basement undifferentiated,LX
+48.1168,-16.435,172.98,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2133.8,170.7,1189.6,1.794,Basement,Precambrian Basement undifferentiated,LX
+48.3968,-16.435,173.16,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2133.8,170.7,1189.6,1.794,Basement,Precambrian Basement undifferentiated,LX
 48.6768,-16.435,173.67,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2299.0,189.9,1141.2,2.015,Basement,Precambrian Basement undifferentiated,FR
 48.9568,-16.435,173.9,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2299.0,189.9,1141.2,2.015,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-16.435,173.9,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2443.2,205.1,1135.6,2.151,Basement,Precambrian Basement undifferentiated,FR
+49.2368,-16.435,173.9,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2443.2,205.1,1135.6,2.151,Basement,Precambrian Basement undifferentiated,CM
 49.5168,-16.435,173.74,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2530.7,213.6,1167.9,2.167,Basement,Precambrian Basement undifferentiated,FR
 49.7968,-16.435,173.28,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2530.7,213.6,1167.9,2.167,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-16.715,94.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1231.6,76.8,1438.3,0.856,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.4768,-16.715,94.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1231.6,76.8,1438.3,0.856,Unconsolidated,Quaternary unconsolidated sediments,GL
 44.7568,-16.715,93.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1278.1,79.2,1444.7,0.885,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.0368,-16.715,97.92,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1356.1,84.1,1418.0,0.956,Basement,Cretaceous Volcanic,FR
 45.3168,-16.715,102.03,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1356.1,84.1,1418.0,0.956,Basement,Carboniferous-Jurassic sedimentary,FR
@@ -161,18 +161,18 @@ lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_
 45.8768,-16.715,114.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1443.2,87.7,1425.2,1.013,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 46.1568,-16.715,120.02,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1545.7,91.6,1439.1,1.074,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 46.4368,-16.715,128.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1545.7,91.6,1439.1,1.074,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-46.7168,-16.715,136.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1677.8,99.7,1433.5,1.17,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-46.9968,-16.715,146.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1677.8,99.7,1433.5,1.17,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-47.2768,-16.715,157.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1833.2,120.9,1351.8,1.356,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-16.715,167.03,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2000.1,148.4,1224.4,1.634,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-16.715,174.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2000.1,148.4,1224.4,1.634,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-48.1168,-16.715,174.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2200.0,171.0,1170.8,1.879,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-16.715,173.88,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2200.0,171.0,1170.8,1.879,Basement,Precambrian Basement undifferentiated,FR
+46.7168,-16.715,136.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1677.8,99.7,1433.5,1.17,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+46.9968,-16.715,146.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1677.8,99.7,1433.5,1.17,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+47.2768,-16.715,157.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1833.2,120.9,1351.8,1.356,Basement,Precambrian Basement undifferentiated,LV
+47.5568,-16.715,167.03,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2000.1,148.4,1224.4,1.634,Basement,Precambrian Basement undifferentiated,LX
+47.8368,-16.715,174.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2000.1,148.4,1224.4,1.634,Sedimentary,Cretaceous-Tertiary sedimentary,CM
+48.1168,-16.715,174.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2200.0,171.0,1170.8,1.879,Basement,Precambrian Basement undifferentiated,LX
+48.3968,-16.715,173.88,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2200.0,171.0,1170.8,1.879,Basement,Precambrian Basement undifferentiated,CM
 48.6768,-16.715,174.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2374.2,192.3,1111.1,2.137,Basement,Precambrian Basement undifferentiated,FR
-48.9568,-16.715,174.21,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2374.2,192.3,1111.1,2.137,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-49.2368,-16.715,174.27,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2570.4,207.1,1126.4,2.282,Basement,Precambrian Basement undifferentiated,FR
+48.9568,-16.715,174.21,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2374.2,192.3,1111.1,2.137,Sedimentary,Cretaceous-Tertiary sedimentary,CM
+49.2368,-16.715,174.27,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2570.4,207.1,1126.4,2.282,Basement,Precambrian Basement undifferentiated,CM
 49.5168,-16.715,174.14,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2673.6,215.7,1163.8,2.297,Basement,Precambrian Basement undifferentiated,FR
-44.1968,-16.995,90.26,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1231.6,76.8,1438.3,0.856,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.1968,-16.995,90.26,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1231.6,76.8,1438.3,0.856,Unconsolidated,Quaternary unconsolidated sediments,GL
 44.4768,-16.995,91.15,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1231.6,76.8,1438.3,0.856,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 44.7568,-16.995,92.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1278.1,79.2,1444.7,0.885,Sedimentary,Cretaceous Volcanic,FR
 45.0368,-16.995,96.93,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1356.1,84.1,1418.0,0.956,Basement,Cretaceous Volcanic,FR
@@ -180,19 +180,19 @@ lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_
 45.5968,-16.995,106.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1443.2,87.7,1425.2,1.013,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.8768,-16.995,113.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1443.2,87.7,1425.2,1.013,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 46.1568,-16.995,119.7,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1545.7,91.6,1439.1,1.074,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-46.4368,-16.995,128.52,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1545.7,91.6,1439.1,1.074,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-46.7168,-16.995,136.72,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1677.8,99.7,1433.5,1.17,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-46.9968,-16.995,146.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1677.8,99.7,1433.5,1.17,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-16.995,156.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1833.2,120.9,1351.8,1.356,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-16.995,167.25,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2000.1,148.4,1224.4,1.634,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-16.995,175.97,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2000.1,148.4,1224.4,1.634,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-16.995,174.63,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2200.0,171.0,1170.8,1.879,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-16.995,174.12,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2200.0,171.0,1170.8,1.879,Basement,Precambrian Basement undifferentiated,FR
+46.4368,-16.995,128.52,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1545.7,91.6,1439.1,1.074,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+46.7168,-16.995,136.72,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1677.8,99.7,1433.5,1.17,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+46.9968,-16.995,146.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1677.8,99.7,1433.5,1.17,Basement,Precambrian Basement undifferentiated,LV
+47.2768,-16.995,156.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1833.2,120.9,1351.8,1.356,Basement,Precambrian Basement undifferentiated,LX
+47.5568,-16.995,167.25,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2000.1,148.4,1224.4,1.634,Basement,Precambrian Basement undifferentiated,LX
+47.8368,-16.995,175.97,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2000.1,148.4,1224.4,1.634,Basement,Precambrian Basement undifferentiated,LX
+48.1168,-16.995,174.63,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2200.0,171.0,1170.8,1.879,Basement,Precambrian Basement undifferentiated,LX
+48.3968,-16.995,174.12,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2200.0,171.0,1170.8,1.879,Basement,Precambrian Basement undifferentiated,CM
 48.6768,-16.995,174.11,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2374.2,192.3,1111.1,2.137,Basement,Precambrian Basement undifferentiated,FR
-48.9568,-16.995,174.4,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2374.2,192.3,1111.1,2.137,Basement,Precambrian Basement undifferentiated,FR
-49.2368,-16.995,174.64,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2570.4,207.1,1126.4,2.282,Basement,Precambrian Basement undifferentiated,FR
+48.9568,-16.995,174.4,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2374.2,192.3,1111.1,2.137,Basement,Precambrian Basement undifferentiated,CM
+49.2368,-16.995,174.64,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2570.4,207.1,1126.4,2.282,Basement,Precambrian Basement undifferentiated,CM
 49.5168,-16.995,174.63,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2673.6,215.7,1163.8,2.297,Basement,Precambrian Basement undifferentiated,FR
-44.1968,-17.275,84.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1211.1,76.5,1408.9,0.86,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.1968,-17.275,84.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1211.1,76.5,1408.9,0.86,Unconsolidated,Quaternary unconsolidated sediments,AR
 44.4768,-17.275,88.03,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1211.1,76.5,1408.9,0.86,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 44.7568,-17.275,91.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,81.0,1382.2,0.922,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.0368,-17.275,95.98,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1350.2,85.9,1358.1,0.994,Basement,Cretaceous Volcanic,FR
@@ -201,427 +201,427 @@ lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_
 45.8768,-17.275,112.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1435.7,91.9,1336.0,1.075,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 46.1568,-17.275,119.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1542.0,94.6,1362.5,1.132,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 46.4368,-17.275,127.88,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1542.0,94.6,1362.5,1.132,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-46.7168,-17.275,136.38,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1682.1,104.7,1343.2,1.252,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-17.275,145.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1682.1,104.7,1343.2,1.252,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-17.275,155.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1824.0,128.2,1233.4,1.479,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-17.275,166.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2023.6,147.8,1200.9,1.685,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-17.275,175.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2023.6,147.8,1200.9,1.685,Basement,Precambrian Basement undifferentiated,FR
+46.7168,-17.275,136.38,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1682.1,104.7,1343.2,1.252,Basement,Precambrian Basement undifferentiated,LV
+46.9968,-17.275,145.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1682.1,104.7,1343.2,1.252,Basement,Precambrian Basement undifferentiated,LV
+47.2768,-17.275,155.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1824.0,128.2,1233.4,1.479,Basement,Precambrian Basement undifferentiated,CM
+47.5568,-17.275,166.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2023.6,147.8,1200.9,1.685,Basement,Precambrian Basement undifferentiated,LX
+47.8368,-17.275,175.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2023.6,147.8,1200.9,1.685,Basement,Precambrian Basement undifferentiated,CM
 48.1168,-17.275,173.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2239.8,171.1,1146.3,1.954,Basement,Precambrian Basement undifferentiated,FR
 48.3968,-17.275,173.64,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2239.8,171.1,1146.3,1.954,Basement,Precambrian Basement undifferentiated,FR
 48.6768,-17.275,173.88,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2482.3,192.8,1117.5,2.221,Basement,Precambrian Basement undifferentiated,FR
 48.9568,-17.275,174.26,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2482.3,192.8,1117.5,2.221,Basement,Precambrian Basement undifferentiated,FR
 49.2368,-17.275,174.81,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2762.2,210.2,1146.5,2.409,Basement,Precambrian Basement undifferentiated,FR
-44.1968,-17.555,82.9,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1195.3,77.7,1379.3,0.867,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.1968,-17.555,82.9,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1195.3,77.7,1379.3,0.867,Unconsolidated,Quaternary unconsolidated sediments,AR
 44.4768,-17.555,86.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1195.3,77.7,1379.3,0.867,Basement,Cretaceous Volcanic,FR
 44.7568,-17.555,89.78,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1254.2,81.4,1351.6,0.928,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.0368,-17.555,94.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1322.0,85.6,1329.8,0.994,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-17.555,98.83,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1322.0,85.6,1329.8,0.994,Sedimentary,Carboniferous-Jurassic sedimentary,FR
+45.3168,-17.555,98.83,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1322.0,85.6,1329.8,0.994,Sedimentary,Carboniferous-Jurassic sedimentary,LX
 45.5968,-17.555,103.94,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1396.9,92.6,1290.6,1.082,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.8768,-17.555,110.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1396.9,92.6,1290.6,1.082,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-17.555,116.12,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1490.6,100.7,1268.0,1.176,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-17.555,123.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1490.6,100.7,1268.0,1.176,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-17.555,130.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1605.9,113.2,1223.7,1.312,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-17.555,139.75,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1605.9,113.2,1223.7,1.312,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-17.555,150.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1759.0,129.0,1183.8,1.486,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-17.555,160.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1943.1,149.5,1131.6,1.717,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-17.555,170.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1943.1,149.5,1131.6,1.717,Basement,Precambrian Basement undifferentiated,FR
+46.1568,-17.555,116.12,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1490.6,100.7,1268.0,1.176,Basement,Precambrian Basement undifferentiated,CM
+46.4368,-17.555,123.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1490.6,100.7,1268.0,1.176,Basement,Precambrian Basement undifferentiated,LV
+46.7168,-17.555,130.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1605.9,113.2,1223.7,1.312,Basement,Precambrian Basement undifferentiated,CM
+46.9968,-17.555,139.75,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1605.9,113.2,1223.7,1.312,Basement,Precambrian Basement undifferentiated,CM
+47.2768,-17.555,150.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1759.0,129.0,1183.8,1.486,Basement,Precambrian Basement undifferentiated,CM
+47.5568,-17.555,160.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1943.1,149.5,1131.6,1.717,Basement,Precambrian Basement undifferentiated,LX
+47.8368,-17.555,170.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1943.1,149.5,1131.6,1.717,Basement,Precambrian Basement undifferentiated,CM
 48.1168,-17.555,170.92,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2253.5,171.3,1127.8,1.998,Basement,Precambrian Basement undifferentiated,FR
 48.3968,-17.555,171.75,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),2253.5,171.3,1127.8,1.998,Unconsolidated,Quaternary unconsolidated sediments,FR
-48.6768,-17.555,172.67,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.9,195.0,1083.4,2.31,Basement,Precambrian Basement undifferentiated,FR
+48.6768,-17.555,172.67,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.9,195.0,1083.4,2.31,Basement,Precambrian Basement undifferentiated,CM
 48.9568,-17.555,173.51,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.9,195.0,1083.4,2.31,Basement,Precambrian Basement undifferentiated,FR
 49.2368,-17.555,174.52,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2937.2,217.3,1117.3,2.629,Basement,Precambrian Basement undifferentiated,FR
-44.1968,-17.835,80.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1195.3,77.7,1379.3,0.867,Basement,Cretaceous Volcanic,FR
+44.1968,-17.835,80.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1195.3,77.7,1379.3,0.867,Basement,Cretaceous Volcanic,AR
 44.4768,-17.835,84.75,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1195.3,77.7,1379.3,0.867,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-17.835,88.23,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1254.2,81.4,1351.6,0.928,Sedimentary,Carboniferous-Jurassic sedimentary,FR
+44.7568,-17.835,88.23,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1254.2,81.4,1351.6,0.928,Sedimentary,Carboniferous-Jurassic sedimentary,LX
 45.0368,-17.835,92.9,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1322.0,85.6,1329.8,0.994,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.3168,-17.835,96.9,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1322.0,85.6,1329.8,0.994,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.5968,-17.835,101.54,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1396.9,92.6,1290.6,1.082,Basement,Precambrian Basement undifferentiated,FR
 45.8768,-17.835,107.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1396.9,92.6,1290.6,1.082,Basement,Precambrian Basement undifferentiated,FR
 46.1568,-17.835,112.29,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1490.6,100.7,1268.0,1.176,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-17.835,118.53,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1490.6,100.7,1268.0,1.176,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-17.835,123.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1605.9,113.2,1223.7,1.312,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-17.835,132.62,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1605.9,113.2,1223.7,1.312,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-17.835,142.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1759.0,129.0,1183.8,1.486,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-17.835,153.56,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1943.1,149.5,1131.6,1.717,Basement,Precambrian Basement undifferentiated,FR
+46.4368,-17.835,118.53,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1490.6,100.7,1268.0,1.176,Basement,Precambrian Basement undifferentiated,LX
+46.7168,-17.835,123.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1605.9,113.2,1223.7,1.312,Basement,Precambrian Basement undifferentiated,CM
+46.9968,-17.835,132.62,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1605.9,113.2,1223.7,1.312,Basement,Precambrian Basement undifferentiated,CM
+47.2768,-17.835,142.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1759.0,129.0,1183.8,1.486,Basement,Precambrian Basement undifferentiated,CM
+47.5568,-17.835,153.56,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1943.1,149.5,1131.6,1.717,Basement,Precambrian Basement undifferentiated,LX
 47.8368,-17.835,163.59,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1943.1,149.5,1131.6,1.717,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-17.835,165.83,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2253.5,171.3,1127.8,1.998,Basement,Precambrian Basement undifferentiated,FR
 48.3968,-17.835,167.98,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2253.5,171.3,1127.8,1.998,Unconsolidated,Quaternary unconsolidated sediments,FR
-48.6768,-17.835,170.0,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.9,195.0,1083.4,2.31,Basement,Precambrian Basement undifferentiated,FR
-48.9568,-17.835,171.55,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.9,195.0,1083.4,2.31,Basement,Precambrian Basement undifferentiated,FR
+48.6768,-17.835,170.0,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.9,195.0,1083.4,2.31,Basement,Precambrian Basement undifferentiated,CM
+48.9568,-17.835,171.55,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.9,195.0,1083.4,2.31,Basement,Precambrian Basement undifferentiated,CM
 49.2368,-17.835,173.14,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2937.2,217.3,1117.3,2.629,Basement,Precambrian Basement undifferentiated,FR
-44.1968,-18.115,79.41,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,76.4,1363.3,0.851,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.1968,-18.115,79.41,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,76.4,1363.3,0.851,Unconsolidated,Quaternary unconsolidated sediments,AR
 44.4768,-18.115,83.24,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,76.4,1363.3,0.851,Basement,Cretaceous Volcanic,FR
 44.7568,-18.115,86.65,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1217.6,81.8,1320.5,0.922,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-18.115,90.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1278.8,87.3,1283.8,0.996,Sedimentary,Carboniferous-Jurassic sedimentary,FR
+45.0368,-18.115,90.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1278.8,87.3,1283.8,0.996,Sedimentary,Carboniferous-Jurassic sedimentary,LX
 45.3168,-18.115,94.59,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1278.8,87.3,1283.8,0.996,Basement,Precambrian Basement undifferentiated,FR
 45.5968,-18.115,98.79,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1340.4,98.0,1213.3,1.105,Basement,Precambrian Basement undifferentiated,FR
 45.8768,-18.115,103.54,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1340.4,98.0,1213.3,1.105,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-18.115,107.93,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1408.2,105.4,1188.5,1.185,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-18.115,112.96,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1408.2,105.4,1188.5,1.185,Basement,Precambrian Basement undifferentiated,FR
+46.1568,-18.115,107.93,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1408.2,105.4,1188.5,1.185,Basement,Precambrian Basement undifferentiated,CM
+46.4368,-18.115,112.96,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1408.2,105.4,1188.5,1.185,Basement,Precambrian Basement undifferentiated,CM
 46.7168,-18.115,117.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1481.0,117.3,1140.9,1.298,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-18.115,124.41,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1481.0,117.3,1140.9,1.298,Basement,Precambrian Basement undifferentiated,FR
+46.9968,-18.115,124.41,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1481.0,117.3,1140.9,1.298,Basement,Precambrian Basement undifferentiated,CM
 47.2768,-18.115,133.62,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1599.1,130.2,1108.5,1.443,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-18.115,145.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1820.2,147.6,1096.3,1.66,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-18.115,145.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1820.2,147.6,1096.3,1.66,Basement,Precambrian Basement undifferentiated,CM
 47.8368,-18.115,157.79,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1820.2,147.6,1096.3,1.66,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-18.115,160.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2156.6,171.3,1085.3,1.987,Basement,Precambrian Basement undifferentiated,FR
 48.3968,-18.115,163.59,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2156.6,171.3,1085.3,1.987,Basement,Precambrian Basement undifferentiated,FR
-48.6768,-18.115,166.64,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2541.7,196.6,1073.5,2.368,Basement,Precambrian Basement undifferentiated,FR
-48.9568,-18.115,168.92,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2541.7,196.6,1073.5,2.368,Basement,Precambrian Basement undifferentiated,FR
+48.6768,-18.115,166.64,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2541.7,196.6,1073.5,2.368,Basement,Precambrian Basement undifferentiated,CM
+48.9568,-18.115,168.92,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2541.7,196.6,1073.5,2.368,Basement,Precambrian Basement undifferentiated,CM
 49.2368,-18.115,171.1,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),3075.5,220.0,1121.6,2.742,Basement,Precambrian Basement undifferentiated,FR
-44.1968,-18.395,77.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,76.4,1363.3,0.851,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.1968,-18.395,77.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,76.4,1363.3,0.851,Unconsolidated,Quaternary unconsolidated sediments,AR
 44.4768,-18.395,80.94,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,76.4,1363.3,0.851,Basement,Cretaceous Volcanic,FR
 44.7568,-18.395,84.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1217.6,81.8,1320.5,0.922,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-18.395,88.51,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1278.8,87.3,1283.8,0.996,Sedimentary,Carboniferous-Jurassic sedimentary,FR
+45.0368,-18.395,88.51,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1278.8,87.3,1283.8,0.996,Sedimentary,Carboniferous-Jurassic sedimentary,LX
 45.3168,-18.395,92.03,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1278.8,87.3,1283.8,0.996,Basement,Precambrian Basement undifferentiated,FR
 45.5968,-18.395,95.73,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1340.4,98.0,1213.3,1.105,Basement,Precambrian Basement undifferentiated,FR
 45.8768,-18.395,99.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1340.4,98.0,1213.3,1.105,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-18.395,103.66,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1408.2,105.4,1188.5,1.185,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-18.395,107.62,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1408.2,105.4,1188.5,1.185,Basement,Precambrian Basement undifferentiated,FR
+46.1568,-18.395,103.66,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1408.2,105.4,1188.5,1.185,Basement,Precambrian Basement undifferentiated,CM
+46.4368,-18.395,107.62,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1408.2,105.4,1188.5,1.185,Basement,Precambrian Basement undifferentiated,CM
 46.7168,-18.395,110.72,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1481.0,117.3,1140.9,1.298,Basement,Precambrian Basement undifferentiated,FR
 46.9968,-18.395,116.02,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1481.0,117.3,1140.9,1.298,Basement,Precambrian Basement undifferentiated,FR
 47.2768,-18.395,123.46,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1599.1,130.2,1108.5,1.443,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-18.395,136.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1820.2,147.6,1096.3,1.66,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-18.395,136.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1820.2,147.6,1096.3,1.66,Basement,Precambrian Basement undifferentiated,CM
 47.8368,-18.395,149.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1820.2,147.6,1096.3,1.66,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-18.395,153.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2156.6,171.3,1085.3,1.987,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-18.395,157.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2156.6,171.3,1085.3,1.987,Basement,Precambrian Basement undifferentiated,FR
-48.6768,-18.395,162.14,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2541.7,196.6,1073.5,2.368,Basement,Precambrian Basement undifferentiated,FR
-48.9568,-18.395,165.54,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2541.7,196.6,1073.5,2.368,Basement,Precambrian Basement undifferentiated,FR
+48.3968,-18.395,157.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2156.6,171.3,1085.3,1.987,Basement,Precambrian Basement undifferentiated,CM
+48.6768,-18.395,162.14,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2541.7,196.6,1073.5,2.368,Basement,Precambrian Basement undifferentiated,CM
+48.9568,-18.395,165.54,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2541.7,196.6,1073.5,2.368,Basement,Precambrian Basement undifferentiated,CM
 49.2368,-18.395,169.11,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),3075.5,220.0,1121.6,2.742,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-18.675,78.63,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1091.6,71.8,1374.8,0.794,Basement,Cretaceous Volcanic,FR
+44.4768,-18.675,78.63,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1091.6,71.8,1374.8,0.794,Basement,Cretaceous Volcanic,AR
 44.7568,-18.675,81.9,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1150.3,78.4,1323.6,0.869,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.0368,-18.675,86.4,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1216.2,84.4,1295.2,0.939,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-18.675,90.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1216.2,84.4,1295.2,0.939,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-18.675,93.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,97.7,1199.3,1.063,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-18.675,97.19,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,97.7,1199.3,1.063,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-18.675,100.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1337.2,106.0,1170.4,1.143,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-18.675,104.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1337.2,106.0,1170.4,1.143,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-18.675,106.52,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1380.6,117.3,1113.7,1.24,Basement,Precambrian Basement undifferentiated,FR
+45.3168,-18.675,90.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1216.2,84.4,1295.2,0.939,Sedimentary,Carboniferous-Jurassic sedimentary,CM
+45.5968,-18.675,93.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,97.7,1199.3,1.063,Basement,Precambrian Basement undifferentiated,CM
+45.8768,-18.675,97.19,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,97.7,1199.3,1.063,Basement,Precambrian Basement undifferentiated,LX
+46.1568,-18.675,100.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1337.2,106.0,1170.4,1.143,Basement,Precambrian Basement undifferentiated,LX
+46.4368,-18.675,104.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1337.2,106.0,1170.4,1.143,Basement,Precambrian Basement undifferentiated,LX
+46.7168,-18.675,106.52,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1380.6,117.3,1113.7,1.24,Basement,Precambrian Basement undifferentiated,LX
 46.9968,-18.675,110.11,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1380.6,117.3,1113.7,1.24,Basement,Precambrian Basement undifferentiated,FR
 47.2768,-18.675,115.68,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1438.1,127.0,1082.8,1.328,Basement,Precambrian Basement undifferentiated,FR
 47.5568,-18.675,127.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1649.7,146.7,1054.5,1.564,Basement,Precambrian Basement undifferentiated,FR
 47.8368,-18.675,141.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1649.7,146.7,1054.5,1.564,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-18.675,147.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2106.0,171.9,1074.3,1.96,Unconsolidated,Quaternary unconsolidated sediments,FR
-48.3968,-18.675,153.51,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2106.0,171.9,1074.3,1.96,Basement,Precambrian Basement undifferentiated,FR
-48.6768,-18.675,158.77,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2601.7,198.3,1101.2,2.363,Basement,Precambrian Basement undifferentiated,FR
+48.1168,-18.675,147.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2106.0,171.9,1074.3,1.96,Unconsolidated,Quaternary unconsolidated sediments,CM
+48.3968,-18.675,153.51,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2106.0,171.9,1074.3,1.96,Basement,Precambrian Basement undifferentiated,CM
+48.6768,-18.675,158.77,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2601.7,198.3,1101.2,2.363,Basement,Precambrian Basement undifferentiated,CM
 48.9568,-18.675,163.0,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2601.7,198.3,1101.2,2.363,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-18.955,74.15,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1091.6,71.8,1374.8,0.794,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+44.4768,-18.955,74.15,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1091.6,71.8,1374.8,0.794,Sedimentary,Cretaceous-Tertiary sedimentary,AR
 44.7568,-18.955,78.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1150.3,78.4,1323.6,0.869,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.0368,-18.955,83.03,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1216.2,84.4,1295.2,0.939,Sedimentary,Carboniferous-Jurassic sedimentary,FR
 45.3168,-18.955,86.74,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1216.2,84.4,1295.2,0.939,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-18.955,89.97,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,97.7,1199.3,1.063,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-18.955,94.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,97.7,1199.3,1.063,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-18.955,98.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1337.2,106.0,1170.4,1.143,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-18.955,101.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1337.2,106.0,1170.4,1.143,Basement,Precambrian Basement undifferentiated,FR
+45.5968,-18.955,89.97,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,97.7,1199.3,1.063,Basement,Precambrian Basement undifferentiated,CM
+45.8768,-18.955,94.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1274.9,97.7,1199.3,1.063,Basement,Precambrian Basement undifferentiated,CM
+46.1568,-18.955,98.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1337.2,106.0,1170.4,1.143,Basement,Precambrian Basement undifferentiated,LX
+46.4368,-18.955,101.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1337.2,106.0,1170.4,1.143,Basement,Precambrian Basement undifferentiated,CM
 46.7168,-18.955,103.13,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1380.6,117.3,1113.7,1.24,Basement,Precambrian Basement undifferentiated,FR
 46.9968,-18.955,106.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1380.6,117.3,1113.7,1.24,Basement,Precambrian Basement undifferentiated,FR
 47.2768,-18.955,112.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1438.1,127.0,1082.8,1.328,Basement,Precambrian Basement undifferentiated,FR
 47.5568,-18.955,124.43,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1649.7,146.7,1054.5,1.564,Basement,Precambrian Basement undifferentiated,FR
 47.8368,-18.955,136.87,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1649.7,146.7,1054.5,1.564,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-18.955,142.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2106.0,171.9,1074.3,1.96,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-18.955,149.07,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2106.0,171.9,1074.3,1.96,Basement,Precambrian Basement undifferentiated,FR
+48.1168,-18.955,142.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2106.0,171.9,1074.3,1.96,Basement,Precambrian Basement undifferentiated,FL
+48.3968,-18.955,149.07,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2106.0,171.9,1074.3,1.96,Basement,Precambrian Basement undifferentiated,CM
 48.6768,-18.955,154.83,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2601.7,198.3,1101.2,2.363,Basement,Precambrian Basement undifferentiated,FR
 48.9568,-18.955,159.47,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2601.7,198.3,1101.2,2.363,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-19.235,69.02,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1014.5,67.6,1353.4,0.75,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.7568,-19.235,74.8,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1065.9,73.0,1347.0,0.791,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+44.4768,-19.235,69.02,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1014.5,67.6,1353.4,0.75,Unconsolidated,Quaternary unconsolidated sediments,AR
+44.7568,-19.235,74.8,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1065.9,73.0,1347.0,0.791,Sedimentary,Cretaceous-Tertiary sedimentary,LX
 45.0368,-19.235,79.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1144.9,82.4,1302.3,0.879,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-19.235,83.12,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1144.9,82.4,1302.3,0.879,Sedimentary,Carboniferous-Jurassic sedimentary,FR
+45.3168,-19.235,83.12,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1144.9,82.4,1302.3,0.879,Sedimentary,Carboniferous-Jurassic sedimentary,AR
 45.5968,-19.235,86.39,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1213.9,97.3,1196.9,1.014,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-19.235,90.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1213.9,97.3,1196.9,1.014,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-19.235,95.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1290.8,106.5,1169.8,1.103,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-19.235,98.8,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1290.8,106.5,1169.8,1.103,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-19.235,100.44,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1329.6,122.7,1077.6,1.234,Basement,Precambrian Basement undifferentiated,FR
+45.8768,-19.235,90.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1213.9,97.3,1196.9,1.014,Basement,Precambrian Basement undifferentiated,CM
+46.1568,-19.235,95.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1290.8,106.5,1169.8,1.103,Basement,Precambrian Basement undifferentiated,LV
+46.4368,-19.235,98.8,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1290.8,106.5,1169.8,1.103,Basement,Precambrian Basement undifferentiated,LX
+46.7168,-19.235,100.44,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1329.6,122.7,1077.6,1.234,Basement,Precambrian Basement undifferentiated,AC
 46.9968,-19.235,105.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1329.6,122.7,1077.6,1.234,Basement,Precambrian Basement undifferentiated,FR
 47.2768,-19.235,112.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1418.5,138.9,1020.0,1.391,Basement,Tertiary-Quaternary Volcanic,FR
 47.5568,-19.235,124.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1619.9,153.3,1021.2,1.586,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-19.235,137.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1619.9,153.3,1021.2,1.586,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-19.235,141.86,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2092.0,175.6,1065.7,1.963,Basement,Precambrian Basement undifferentiated,FR
-48.3968,-19.235,147.31,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2092.0,175.6,1065.7,1.963,Basement,Precambrian Basement undifferentiated,FR
+47.8368,-19.235,137.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1619.9,153.3,1021.2,1.586,Basement,Precambrian Basement undifferentiated,CM
+48.1168,-19.235,141.86,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2092.0,175.6,1065.7,1.963,Basement,Precambrian Basement undifferentiated,CM
+48.3968,-19.235,147.31,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2092.0,175.6,1065.7,1.963,Basement,Precambrian Basement undifferentiated,CM
 48.6768,-19.235,152.83,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2558.8,199.6,1110.2,2.305,Basement,Precambrian Basement undifferentiated,FR
 48.9568,-19.235,157.48,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2558.8,199.6,1110.2,2.305,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-19.515,64.54,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),926.5,63.4,1366.7,0.678,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+44.4768,-19.515,64.54,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),926.5,63.4,1366.7,0.678,Sedimentary,Cretaceous-Tertiary sedimentary,GL
 44.7568,-19.515,70.12,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),972.7,68.7,1369.9,0.71,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-45.0368,-19.515,75.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1067.3,79.5,1317.2,0.81,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-19.515,79.62,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1067.3,79.5,1317.2,0.81,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-19.515,83.73,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,94.0,1229.3,0.944,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-19.515,88.11,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,94.0,1229.3,0.944,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-19.515,92.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.1,110.8,1133.8,1.088,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-19.515,95.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.1,110.8,1133.8,1.088,Basement,Precambrian Basement undifferentiated,FR
+45.0368,-19.515,75.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1067.3,79.5,1317.2,0.81,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.3168,-19.515,79.62,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1067.3,79.5,1317.2,0.81,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.5968,-19.515,83.73,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,94.0,1229.3,0.944,Basement,Precambrian Basement undifferentiated,CM
+45.8768,-19.515,88.11,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,94.0,1229.3,0.944,Basement,Precambrian Basement undifferentiated,CM
+46.1568,-19.515,92.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.1,110.8,1133.8,1.088,Basement,Precambrian Basement undifferentiated,CM
+46.4368,-19.515,95.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.1,110.8,1133.8,1.088,Basement,Precambrian Basement undifferentiated,LX
 46.7168,-19.515,98.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1316.1,130.4,1037.1,1.269,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-19.515,104.59,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1316.1,130.4,1037.1,1.269,Basement,Precambrian Basement undifferentiated,FR
+46.9968,-19.515,104.59,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1316.1,130.4,1037.1,1.269,Basement,Precambrian Basement undifferentiated,AC
 47.2768,-19.515,113.32,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1445.2,146.6,995.6,1.452,Basement,Tertiary-Quaternary Volcanic,FR
 47.5568,-19.515,126.17,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1679.8,160.7,1007.2,1.668,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-19.515,138.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1679.8,160.7,1007.2,1.668,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-19.515,142.49,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2169.8,181.1,1077.1,2.014,Basement,Precambrian Basement undifferentiated,FR
+47.8368,-19.515,138.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1679.8,160.7,1007.2,1.668,Basement,Precambrian Basement undifferentiated,CM
+48.1168,-19.515,142.49,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2169.8,181.1,1077.1,2.014,Basement,Precambrian Basement undifferentiated,FL
 48.3968,-19.515,147.26,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2169.8,181.1,1077.1,2.014,Basement,Precambrian Basement undifferentiated,FR
 48.6768,-19.515,152.29,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.6,200.8,1104.0,2.267,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-19.795,59.7,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),926.5,63.4,1366.7,0.678,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.4768,-19.795,59.7,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),926.5,63.4,1366.7,0.678,Unconsolidated,Quaternary unconsolidated sediments,GL
 44.7568,-19.795,65.2,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),972.7,68.7,1369.9,0.71,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 45.0368,-19.795,70.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1067.3,79.5,1317.2,0.81,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-45.3168,-19.795,75.56,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1067.3,79.5,1317.2,0.81,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-19.795,80.55,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,94.0,1229.3,0.944,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-19.795,84.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,94.0,1229.3,0.944,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-19.795,88.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.1,110.8,1133.8,1.088,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-19.795,92.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.1,110.8,1133.8,1.088,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-19.795,96.06,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1316.1,130.4,1037.1,1.269,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-19.795,104.05,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1316.1,130.4,1037.1,1.269,Basement,Precambrian Basement undifferentiated,FR
+45.3168,-19.795,75.56,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1067.3,79.5,1317.2,0.81,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.5968,-19.795,80.55,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,94.0,1229.3,0.944,Basement,Precambrian Basement undifferentiated,CM
+45.8768,-19.795,84.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.6,94.0,1229.3,0.944,Basement,Precambrian Basement undifferentiated,CM
+46.1568,-19.795,88.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.1,110.8,1133.8,1.088,Basement,Precambrian Basement undifferentiated,CM
+46.4368,-19.795,92.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.1,110.8,1133.8,1.088,Basement,Precambrian Basement undifferentiated,CM
+46.7168,-19.795,96.06,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1316.1,130.4,1037.1,1.269,Basement,Precambrian Basement undifferentiated,AC
+46.9968,-19.795,104.05,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1316.1,130.4,1037.1,1.269,Basement,Precambrian Basement undifferentiated,AC
 47.2768,-19.795,114.42,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1445.2,146.6,995.6,1.452,Basement,Precambrian Basement undifferentiated,FR
 47.5568,-19.795,128.73,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1679.8,160.7,1007.2,1.668,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-19.795,141.99,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1679.8,160.7,1007.2,1.668,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-19.795,144.28,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2169.8,181.1,1077.1,2.014,Basement,Precambrian Basement undifferentiated,FR
+47.8368,-19.795,141.99,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1679.8,160.7,1007.2,1.668,Basement,Precambrian Basement undifferentiated,CM
+48.1168,-19.795,144.28,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2169.8,181.1,1077.1,2.014,Basement,Precambrian Basement undifferentiated,FL
 48.3968,-19.795,147.75,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2169.8,181.1,1077.1,2.014,Basement,Precambrian Basement undifferentiated,FR
 48.6768,-19.795,151.85,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2502.6,200.8,1104.0,2.267,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-20.075,56.43,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),801.2,57.2,1418.5,0.565,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.4768,-20.075,56.43,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),801.2,57.2,1418.5,0.565,Unconsolidated,Quaternary unconsolidated sediments,AR
 44.7568,-20.075,61.08,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),876.6,66.3,1362.1,0.644,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-45.0368,-20.075,66.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),980.5,79.5,1297.9,0.755,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-45.3168,-20.075,71.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),980.5,79.5,1297.9,0.755,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-20.075,77.67,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1095.0,94.6,1224.0,0.895,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.8768,-20.075,82.54,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1095.0,94.6,1224.0,0.895,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-20.075,85.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1182.1,114.1,1107.7,1.067,Basement,Precambrian Basement undifferentiated,FR
+45.0368,-20.075,66.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),980.5,79.5,1297.9,0.755,Sedimentary,Cretaceous-Tertiary sedimentary,LX
+45.3168,-20.075,71.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),980.5,79.5,1297.9,0.755,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-20.075,77.67,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1095.0,94.6,1224.0,0.895,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.8768,-20.075,82.54,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1095.0,94.6,1224.0,0.895,Basement,Precambrian Basement undifferentiated,LV
+46.1568,-20.075,85.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1182.1,114.1,1107.7,1.067,Basement,Precambrian Basement undifferentiated,CM
 46.4368,-20.075,90.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1182.1,114.1,1107.7,1.067,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-20.075,95.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1289.8,132.5,1031.0,1.251,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-20.075,104.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1289.8,132.5,1031.0,1.251,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-20.075,115.82,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1450.9,149.3,991.6,1.463,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-20.075,131.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1753.2,165.4,1014.3,1.728,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-20.075,145.34,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1753.2,165.4,1014.3,1.728,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-20.075,146.38,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2232.6,184.3,1079.3,2.069,Basement,Precambrian Basement undifferentiated,FR
+46.7168,-20.075,95.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1289.8,132.5,1031.0,1.251,Basement,Precambrian Basement undifferentiated,AC
+46.9968,-20.075,104.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1289.8,132.5,1031.0,1.251,Basement,Precambrian Basement undifferentiated,AC
+47.2768,-20.075,115.82,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1450.9,149.3,991.6,1.463,Basement,Precambrian Basement undifferentiated,AC
+47.5568,-20.075,131.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1753.2,165.4,1014.3,1.728,Basement,Precambrian Basement undifferentiated,CM
+47.8368,-20.075,145.34,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1753.2,165.4,1014.3,1.728,Basement,Precambrian Basement undifferentiated,CM
+48.1168,-20.075,146.38,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2232.6,184.3,1079.3,2.069,Basement,Precambrian Basement undifferentiated,FL
 48.3968,-20.075,148.49,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2232.6,184.3,1079.3,2.069,Basement,Precambrian Basement undifferentiated,FR
 48.6768,-20.075,151.39,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2488.6,198.4,1117.0,2.228,Basement,Cretaceous Volcanic,FR
-44.4768,-20.355,52.8,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),801.2,57.2,1418.5,0.565,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.7568,-20.355,56.71,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),876.6,66.3,1362.1,0.644,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.4768,-20.355,52.8,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),801.2,57.2,1418.5,0.565,Unconsolidated,Quaternary unconsolidated sediments,FL
+44.7568,-20.355,56.71,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),876.6,66.3,1362.1,0.644,Unconsolidated,Quaternary unconsolidated sediments,AR
 45.0368,-20.355,62.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),980.5,79.5,1297.9,0.755,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-20.355,67.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),980.5,79.5,1297.9,0.755,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-20.355,73.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1095.0,94.6,1224.0,0.895,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.8768,-20.355,79.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1095.0,94.6,1224.0,0.895,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-20.355,82.36,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1182.1,114.1,1107.7,1.067,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-20.355,87.78,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1182.1,114.1,1107.7,1.067,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-20.355,93.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1289.8,132.5,1031.0,1.251,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-20.355,103.16,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1289.8,132.5,1031.0,1.251,Basement,Precambrian Basement undifferentiated,FR
+45.3168,-20.355,67.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),980.5,79.5,1297.9,0.755,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.5968,-20.355,73.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1095.0,94.6,1224.0,0.895,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.8768,-20.355,79.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1095.0,94.6,1224.0,0.895,Basement,Precambrian Basement undifferentiated,LV
+46.1568,-20.355,82.36,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1182.1,114.1,1107.7,1.067,Basement,Precambrian Basement undifferentiated,CM
+46.4368,-20.355,87.78,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1182.1,114.1,1107.7,1.067,Basement,Precambrian Basement undifferentiated,LV
+46.7168,-20.355,93.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1289.8,132.5,1031.0,1.251,Basement,Precambrian Basement undifferentiated,AC
+46.9968,-20.355,103.16,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1289.8,132.5,1031.0,1.251,Basement,Precambrian Basement undifferentiated,AC
 47.2768,-20.355,116.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1450.9,149.3,991.6,1.463,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-20.355,133.7,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1753.2,165.4,1014.3,1.728,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-20.355,149.74,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1753.2,165.4,1014.3,1.728,Basement,Precambrian Basement undifferentiated,FR
-48.1168,-20.355,149.64,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2232.6,184.3,1079.3,2.069,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-20.355,133.7,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1753.2,165.4,1014.3,1.728,Basement,Precambrian Basement undifferentiated,CM
+47.8368,-20.355,149.74,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1753.2,165.4,1014.3,1.728,Basement,Precambrian Basement undifferentiated,CM
+48.1168,-20.355,149.64,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2232.6,184.3,1079.3,2.069,Basement,Precambrian Basement undifferentiated,FL
 48.3968,-20.355,149.63,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2232.6,184.3,1079.3,2.069,Basement,Cretaceous Volcanic,FR
-44.1968,-20.635,46.46,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),728.1,54.1,1390.5,0.524,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.4768,-20.635,49.46,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),728.1,54.1,1390.5,0.524,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.7568,-20.635,53.06,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),808.8,65.9,1337.0,0.605,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-45.0368,-20.635,58.16,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),906.2,80.7,1269.5,0.714,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-20.635,62.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),906.2,80.7,1269.5,0.714,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-20.635,69.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1020.1,97.3,1198.3,0.851,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.8768,-20.635,74.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1020.1,97.3,1198.3,0.851,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-20.635,78.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1120.2,116.9,1093.8,1.024,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-20.635,83.94,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1120.2,116.9,1093.8,1.024,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-20.635,89.41,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.4,136.5,1009.8,1.222,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-20.635,100.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.4,136.5,1009.8,1.222,Basement,Precambrian Basement undifferentiated,FR
+44.1968,-20.635,46.46,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),728.1,54.1,1390.5,0.524,Unconsolidated,Quaternary unconsolidated sediments,GL
+44.4768,-20.635,49.46,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),728.1,54.1,1390.5,0.524,Unconsolidated,Quaternary unconsolidated sediments,FL
+44.7568,-20.635,53.06,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),808.8,65.9,1337.0,0.605,Sedimentary,Cretaceous-Tertiary sedimentary,AR
+45.0368,-20.635,58.16,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),906.2,80.7,1269.5,0.714,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.3168,-20.635,62.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),906.2,80.7,1269.5,0.714,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.5968,-20.635,69.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1020.1,97.3,1198.3,0.851,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.8768,-20.635,74.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1020.1,97.3,1198.3,0.851,Basement,Precambrian Basement undifferentiated,CM
+46.1568,-20.635,78.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1120.2,116.9,1093.8,1.024,Basement,Precambrian Basement undifferentiated,LV
+46.4368,-20.635,83.94,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1120.2,116.9,1093.8,1.024,Basement,Precambrian Basement undifferentiated,AC
+46.7168,-20.635,89.41,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.4,136.5,1009.8,1.222,Basement,Precambrian Basement undifferentiated,AC
+46.9968,-20.635,100.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.4,136.5,1009.8,1.222,Basement,Precambrian Basement undifferentiated,AC
 47.2768,-20.635,114.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1419.2,152.4,986.5,1.439,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-20.635,135.39,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1875.8,167.4,1049.3,1.788,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-20.635,154.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1875.8,167.4,1049.3,1.788,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-20.635,135.39,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1875.8,167.4,1049.3,1.788,Basement,Precambrian Basement undifferentiated,CM
+47.8368,-20.635,154.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1875.8,167.4,1049.3,1.788,Basement,Precambrian Basement undifferentiated,FL
 48.1168,-20.635,152.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2352.1,185.6,1094.8,2.148,Basement,Precambrian Basement undifferentiated,FR
 48.3968,-20.635,150.38,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2352.1,185.6,1094.8,2.148,Basement,Cretaceous Volcanic,FR
-43.9168,-20.915,44.06,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),666.4,46.8,1381.9,0.482,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.1968,-20.915,43.91,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),728.1,54.1,1390.5,0.524,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.4768,-20.915,47.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),728.1,54.1,1390.5,0.524,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.7568,-20.915,50.46,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),808.8,65.9,1337.0,0.605,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-20.915,55.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),906.2,80.7,1269.5,0.714,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-20.915,60.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),906.2,80.7,1269.5,0.714,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-20.915,66.23,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1020.1,97.3,1198.3,0.851,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.8768,-20.915,71.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1020.1,97.3,1198.3,0.851,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-20.915,75.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1120.2,116.9,1093.8,1.024,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-20.915,81.17,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1120.2,116.9,1093.8,1.024,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-20.915,86.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.4,136.5,1009.8,1.222,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-20.915,96.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.4,136.5,1009.8,1.222,Basement,Precambrian Basement undifferentiated,FR
+43.9168,-20.915,44.06,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),666.4,46.8,1381.9,0.482,Unconsolidated,Quaternary unconsolidated sediments,FL
+44.1968,-20.915,43.91,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),728.1,54.1,1390.5,0.524,Unconsolidated,Quaternary unconsolidated sediments,AR
+44.4768,-20.915,47.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),728.1,54.1,1390.5,0.524,Sedimentary,Cretaceous-Tertiary sedimentary,LX
+44.7568,-20.915,50.46,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),808.8,65.9,1337.0,0.605,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.0368,-20.915,55.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),906.2,80.7,1269.5,0.714,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-20.915,60.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),906.2,80.7,1269.5,0.714,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-20.915,66.23,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1020.1,97.3,1198.3,0.851,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.8768,-20.915,71.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1020.1,97.3,1198.3,0.851,Basement,Precambrian Basement undifferentiated,LV
+46.1568,-20.915,75.86,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1120.2,116.9,1093.8,1.024,Basement,Precambrian Basement undifferentiated,LV
+46.4368,-20.915,81.17,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1120.2,116.9,1093.8,1.024,Basement,Precambrian Basement undifferentiated,LV
+46.7168,-20.915,86.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.4,136.5,1009.8,1.222,Basement,Precambrian Basement undifferentiated,AC
+46.9968,-20.915,96.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1234.4,136.5,1009.8,1.222,Basement,Precambrian Basement undifferentiated,AC
 47.2768,-20.915,112.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1419.2,152.4,986.5,1.439,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-20.915,137.09,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1875.8,167.4,1049.3,1.788,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-20.915,137.09,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1875.8,167.4,1049.3,1.788,Basement,Precambrian Basement undifferentiated,FL
 47.8368,-20.915,159.88,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1875.8,167.4,1049.3,1.788,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-20.915,154.89,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2352.1,185.6,1094.8,2.148,Basement,Precambrian Basement undifferentiated,FR
 48.3968,-20.915,149.42,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),2352.1,185.6,1094.8,2.148,Basement,Cretaceous Volcanic,FR
-43.9168,-21.195,38.29,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),608.9,43.2,1399.3,0.435,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.1968,-21.195,40.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),681.0,54.5,1357.4,0.502,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.4768,-21.195,44.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),681.0,54.5,1357.4,0.502,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.7568,-21.195,47.72,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),766.5,68.1,1304.1,0.588,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-21.195,52.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),864.8,83.3,1241.9,0.696,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-21.195,57.49,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),864.8,83.3,1241.9,0.696,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-21.195,63.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),967.3,99.2,1183.7,0.817,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.8768,-21.195,68.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),967.3,99.2,1183.7,0.817,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-21.195,73.57,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1068.8,117.8,1108.8,0.964,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-21.195,78.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1068.8,117.8,1108.8,0.964,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-21.195,81.75,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.1,137.0,1024.3,1.133,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-21.195,92.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.1,137.0,1024.3,1.133,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-21.195,108.73,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1347.9,154.3,988.1,1.364,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-21.195,139.34,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1913.3,171.7,1067.0,1.793,Basement,Precambrian Basement undifferentiated,FR
+43.9168,-21.195,38.29,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),608.9,43.2,1399.3,0.435,Unconsolidated,Quaternary unconsolidated sediments,AR
+44.1968,-21.195,40.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),681.0,54.5,1357.4,0.502,Unconsolidated,Quaternary unconsolidated sediments,AR
+44.4768,-21.195,44.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),681.0,54.5,1357.4,0.502,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.7568,-21.195,47.72,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),766.5,68.1,1304.1,0.588,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-21.195,52.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),864.8,83.3,1241.9,0.696,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-21.195,57.49,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),864.8,83.3,1241.9,0.696,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-21.195,63.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),967.3,99.2,1183.7,0.817,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.8768,-21.195,68.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),967.3,99.2,1183.7,0.817,Basement,Precambrian Basement undifferentiated,LV
+46.1568,-21.195,73.57,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1068.8,117.8,1108.8,0.964,Basement,Precambrian Basement undifferentiated,LV
+46.4368,-21.195,78.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1068.8,117.8,1108.8,0.964,Basement,Precambrian Basement undifferentiated,LV
+46.7168,-21.195,81.75,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.1,137.0,1024.3,1.133,Basement,Precambrian Basement undifferentiated,AC
+46.9968,-21.195,92.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.1,137.0,1024.3,1.133,Basement,Precambrian Basement undifferentiated,AC
+47.2768,-21.195,108.73,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1347.9,154.3,988.1,1.364,Basement,Precambrian Basement undifferentiated,FL
+47.5568,-21.195,139.34,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1913.3,171.7,1067.0,1.793,Basement,Precambrian Basement undifferentiated,FL
 47.8368,-21.195,164.63,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1913.3,171.7,1067.0,1.793,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-21.195,153.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2389.9,187.9,1102.9,2.167,Basement,Precambrian Basement undifferentiated,FR
-43.6368,-21.475,36.93,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),608.9,43.2,1399.3,0.435,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.9168,-21.475,35.51,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),608.9,43.2,1399.3,0.435,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.1968,-21.475,38.7,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),681.0,54.5,1357.4,0.502,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.4768,-21.475,42.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),681.0,54.5,1357.4,0.502,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.7568,-21.475,46.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),766.5,68.1,1304.1,0.588,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-21.475,51.57,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),864.8,83.3,1241.9,0.696,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-21.475,56.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),864.8,83.3,1241.9,0.696,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-21.475,61.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),967.3,99.2,1183.7,0.817,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-21.475,67.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),967.3,99.2,1183.7,0.817,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-21.475,72.7,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1068.8,117.8,1108.8,0.964,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-21.475,77.53,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1068.8,117.8,1108.8,0.964,Basement,Precambrian Basement undifferentiated,FR
-46.7168,-21.475,81.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.1,137.0,1024.3,1.133,Basement,Precambrian Basement undifferentiated,FR
+43.6368,-21.475,36.93,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),608.9,43.2,1399.3,0.435,Unconsolidated,Quaternary unconsolidated sediments,AR
+43.9168,-21.475,35.51,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),608.9,43.2,1399.3,0.435,Unconsolidated,Quaternary unconsolidated sediments,LV
+44.1968,-21.475,38.7,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),681.0,54.5,1357.4,0.502,Sedimentary,Cretaceous-Tertiary sedimentary,AR
+44.4768,-21.475,42.6,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),681.0,54.5,1357.4,0.502,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.7568,-21.475,46.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),766.5,68.1,1304.1,0.588,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-21.475,51.57,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),864.8,83.3,1241.9,0.696,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-21.475,56.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),864.8,83.3,1241.9,0.696,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+45.5968,-21.475,61.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),967.3,99.2,1183.7,0.817,Basement,Precambrian Basement undifferentiated,LV
+45.8768,-21.475,67.61,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),967.3,99.2,1183.7,0.817,Basement,Precambrian Basement undifferentiated,LV
+46.1568,-21.475,72.7,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1068.8,117.8,1108.8,0.964,Basement,Precambrian Basement undifferentiated,LV
+46.4368,-21.475,77.53,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1068.8,117.8,1108.8,0.964,Basement,Precambrian Basement undifferentiated,LV
+46.7168,-21.475,81.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.1,137.0,1024.3,1.133,Basement,Precambrian Basement undifferentiated,AC
 46.9968,-21.475,91.85,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1160.1,137.0,1024.3,1.133,Basement,Precambrian Basement undifferentiated,FR
 47.2768,-21.475,109.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1347.9,154.3,988.1,1.364,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-21.475,140.3,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1913.3,171.7,1067.0,1.793,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-21.475,140.3,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1913.3,171.7,1067.0,1.793,Basement,Precambrian Basement undifferentiated,FL
 47.8368,-21.475,164.05,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1913.3,171.7,1067.0,1.793,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-21.475,150.24,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2389.9,187.9,1102.9,2.167,Basement,Cretaceous Volcanic,FR
-43.3568,-21.755,46.4,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),503.9,34.1,1385.1,0.364,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.6368,-21.755,34.59,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),551.7,40.4,1384.9,0.398,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.9168,-21.755,32.94,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),551.7,40.4,1384.9,0.398,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.1968,-21.755,36.36,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),634.4,53.7,1343.8,0.472,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.4768,-21.755,40.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),634.4,53.7,1343.8,0.472,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-21.755,44.76,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),725.9,66.9,1310.0,0.554,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-21.755,50.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),837.9,81.7,1270.5,0.66,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-21.755,55.32,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),837.9,81.7,1270.5,0.66,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-21.755,60.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),954.4,103.6,1164.4,0.82,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-21.755,66.45,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),954.4,103.6,1164.4,0.82,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-21.755,72.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1065.7,121.5,1115.3,0.956,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-21.755,77.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1065.7,121.5,1115.3,0.956,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+43.3568,-21.755,46.4,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),503.9,34.1,1385.1,0.364,Unconsolidated,Quaternary unconsolidated sediments,AR
+43.6368,-21.755,34.59,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),551.7,40.4,1384.9,0.398,Unconsolidated,Quaternary unconsolidated sediments,AR
+43.9168,-21.755,32.94,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),551.7,40.4,1384.9,0.398,Unconsolidated,Quaternary unconsolidated sediments,AR
+44.1968,-21.755,36.36,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),634.4,53.7,1343.8,0.472,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.4768,-21.755,40.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),634.4,53.7,1343.8,0.472,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.7568,-21.755,44.76,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),725.9,66.9,1310.0,0.554,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-21.755,50.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),837.9,81.7,1270.5,0.66,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-21.755,55.32,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),837.9,81.7,1270.5,0.66,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-21.755,60.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),954.4,103.6,1164.4,0.82,Basement,Precambrian Basement undifferentiated,LV
+45.8768,-21.755,66.45,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),954.4,103.6,1164.4,0.82,Basement,Precambrian Basement undifferentiated,LV
+46.1568,-21.755,72.09,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1065.7,121.5,1115.3,0.956,Basement,Precambrian Basement undifferentiated,LV
+46.4368,-21.755,77.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1065.7,121.5,1115.3,0.956,Sedimentary,Cretaceous-Tertiary sedimentary,LV
 46.7168,-21.755,81.11,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1157.7,142.1,1033.9,1.12,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-21.755,92.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1157.7,142.1,1033.9,1.12,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-21.755,109.76,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1374.8,160.6,1004.7,1.368,Basement,Precambrian Basement undifferentiated,FR
+46.9968,-21.755,92.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1157.7,142.1,1033.9,1.12,Basement,Precambrian Basement undifferentiated,CM
+47.2768,-21.755,109.76,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1374.8,160.6,1004.7,1.368,Basement,Precambrian Basement undifferentiated,CM
 47.5568,-21.755,141.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1909.1,177.3,1099.4,1.736,Basement,Precambrian Basement undifferentiated,FR
 47.8368,-21.755,164.34,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1909.1,177.3,1099.4,1.736,Basement,Precambrian Basement undifferentiated,FR
 48.1168,-21.755,145.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),2209.8,189.2,1124.5,1.965,Basement,Cretaceous Volcanic,FR
-43.3568,-22.035,32.41,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),458.4,35.0,1385.9,0.331,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.6368,-22.035,30.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.0,43.9,1352.8,0.384,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.9168,-22.035,31.04,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.0,43.9,1352.8,0.384,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.1968,-22.035,34.77,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),625.0,59.1,1293.4,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.4768,-22.035,39.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),625.0,59.1,1293.4,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-22.035,43.58,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),729.1,72.6,1255.0,0.581,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-22.035,49.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.1,87.3,1228.4,0.688,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-22.035,54.39,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.1,87.3,1228.4,0.688,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-22.035,60.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),978.9,110.3,1135.9,0.862,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-22.035,66.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),978.9,110.3,1135.9,0.862,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-22.035,73.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.3,126.6,1116.7,0.992,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-22.035,79.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.3,126.6,1116.7,0.992,Basement,Precambrian Basement undifferentiated,FR
+43.3568,-22.035,32.41,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),458.4,35.0,1385.9,0.331,Unconsolidated,Quaternary unconsolidated sediments,AR
+43.6368,-22.035,30.07,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.0,43.9,1352.8,0.384,Unconsolidated,Quaternary unconsolidated sediments,LV
+43.9168,-22.035,31.04,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.0,43.9,1352.8,0.384,Unconsolidated,Quaternary unconsolidated sediments,LV
+44.1968,-22.035,34.77,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),625.0,59.1,1293.4,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.4768,-22.035,39.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),625.0,59.1,1293.4,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.7568,-22.035,43.58,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),729.1,72.6,1255.0,0.581,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-22.035,49.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.1,87.3,1228.4,0.688,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-22.035,54.39,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.1,87.3,1228.4,0.688,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-22.035,60.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),978.9,110.3,1135.9,0.862,Basement,Precambrian Basement undifferentiated,LV
+45.8768,-22.035,66.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),978.9,110.3,1135.9,0.862,Basement,Precambrian Basement undifferentiated,LV
+46.1568,-22.035,73.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.3,126.6,1116.7,0.992,Basement,Precambrian Basement undifferentiated,LV
+46.4368,-22.035,79.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.3,126.6,1116.7,0.992,Basement,Precambrian Basement undifferentiated,LV
 46.7168,-22.035,85.25,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1248.1,148.4,1045.6,1.194,Basement,Precambrian Basement undifferentiated,FR
 46.9968,-22.035,99.24,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1248.1,148.4,1045.6,1.194,Basement,Precambrian Basement undifferentiated,FR
-47.2768,-22.035,119.09,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1511.7,164.9,1082.3,1.397,Basement,Precambrian Basement undifferentiated,FR
+47.2768,-22.035,119.09,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1511.7,164.9,1082.3,1.397,Basement,Precambrian Basement undifferentiated,CM
 47.5568,-22.035,144.57,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1855.5,182.1,1135.9,1.634,Basement,Precambrian Basement undifferentiated,FR
 47.8368,-22.035,161.13,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1855.5,182.1,1135.9,1.634,Basement,Precambrian Basement undifferentiated,FR
-43.3568,-22.315,27.09,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),458.4,35.0,1385.9,0.331,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.6368,-22.315,27.65,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.0,43.9,1352.8,0.384,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.9168,-22.315,29.67,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.0,43.9,1352.8,0.384,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.1968,-22.315,33.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),625.0,59.1,1293.4,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.4768,-22.315,38.45,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),625.0,59.1,1293.4,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-22.315,42.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),729.1,72.6,1255.0,0.581,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-22.315,48.74,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.1,87.3,1228.4,0.688,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-22.315,53.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.1,87.3,1228.4,0.688,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-22.315,60.23,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),978.9,110.3,1135.9,0.862,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-22.315,67.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),978.9,110.3,1135.9,0.862,Basement,Precambrian Basement undifferentiated,FR
-46.1568,-22.315,74.36,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.3,126.6,1116.7,0.992,Basement,Precambrian Basement undifferentiated,FR
-46.4368,-22.315,82.22,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.3,126.6,1116.7,0.992,Sedimentary,Cretaceous-Tertiary sedimentary,FR
+43.3568,-22.315,27.09,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),458.4,35.0,1385.9,0.331,Unconsolidated,Quaternary unconsolidated sediments,AR
+43.6368,-22.315,27.65,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.0,43.9,1352.8,0.384,Unconsolidated,Quaternary unconsolidated sediments,LV
+43.9168,-22.315,29.67,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.0,43.9,1352.8,0.384,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.1968,-22.315,33.69,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),625.0,59.1,1293.4,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.4768,-22.315,38.45,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),625.0,59.1,1293.4,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.7568,-22.315,42.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),729.1,72.6,1255.0,0.581,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-22.315,48.74,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.1,87.3,1228.4,0.688,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-22.315,53.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.1,87.3,1228.4,0.688,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-22.315,60.23,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),978.9,110.3,1135.9,0.862,Basement,Precambrian Basement undifferentiated,LV
+45.8768,-22.315,67.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),978.9,110.3,1135.9,0.862,Basement,Precambrian Basement undifferentiated,LV
+46.1568,-22.315,74.36,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.3,126.6,1116.7,0.992,Basement,Precambrian Basement undifferentiated,LV
+46.4368,-22.315,82.22,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.3,126.6,1116.7,0.992,Sedimentary,Cretaceous-Tertiary sedimentary,LV
 46.7168,-22.315,88.71,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1248.1,148.4,1045.6,1.194,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-22.315,104.9,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1248.1,148.4,1045.6,1.194,Basement,Precambrian Basement undifferentiated,FR
+46.9968,-22.315,104.9,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1248.1,148.4,1045.6,1.194,Basement,Precambrian Basement undifferentiated,CM
 47.2768,-22.315,126.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1511.7,164.9,1082.3,1.397,Basement,Precambrian Basement undifferentiated,FR
 47.5568,-22.315,146.55,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1855.5,182.1,1135.9,1.634,Basement,Precambrian Basement undifferentiated,FR
-47.8368,-22.315,157.95,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1855.5,182.1,1135.9,1.634,Basement,Cretaceous Volcanic,FR
-43.3568,-22.595,41.53,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),423.9,37.7,1382.6,0.307,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.6368,-22.595,29.51,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),501.0,48.1,1322.2,0.379,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.9168,-22.595,28.51,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),501.0,48.1,1322.2,0.379,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.1968,-22.595,33.38,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),632.1,63.8,1266.3,0.499,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.4768,-22.595,38.4,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),632.1,63.8,1266.3,0.499,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-22.595,42.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),750.1,76.9,1246.9,0.602,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-22.595,49.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.1,94.0,1195.3,0.745,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-22.595,54.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.1,94.0,1195.3,0.745,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-22.595,61.76,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1027.4,112.4,1151.2,0.892,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-22.595,69.43,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1027.4,112.4,1151.2,0.892,Basement,Precambrian Basement undifferentiated,FR
+47.8368,-22.315,157.95,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1855.5,182.1,1135.9,1.634,Basement,Cretaceous Volcanic,AC
+43.3568,-22.595,41.53,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),423.9,37.7,1382.6,0.307,Unconsolidated,Quaternary unconsolidated sediments,AR
+43.6368,-22.595,29.51,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),501.0,48.1,1322.2,0.379,Unconsolidated,Quaternary unconsolidated sediments,LV
+43.9168,-22.595,28.51,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),501.0,48.1,1322.2,0.379,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.1968,-22.595,33.38,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),632.1,63.8,1266.3,0.499,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.4768,-22.595,38.4,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),632.1,63.8,1266.3,0.499,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.7568,-22.595,42.99,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),750.1,76.9,1246.9,0.602,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-22.595,49.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.1,94.0,1195.3,0.745,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-22.595,54.95,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.1,94.0,1195.3,0.745,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-22.595,61.76,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1027.4,112.4,1151.2,0.892,Basement,Precambrian Basement undifferentiated,LV
+45.8768,-22.595,69.43,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1027.4,112.4,1151.2,0.892,Basement,Precambrian Basement undifferentiated,LV
 46.1568,-22.595,76.58,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1177.5,132.4,1109.4,1.061,Basement,Precambrian Basement undifferentiated,FR
 46.4368,-22.595,85.7,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1177.5,132.4,1109.4,1.061,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-22.595,94.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1334.4,148.6,1109.6,1.203,Sedimentary,Cretaceous-Tertiary sedimentary,FR
 46.9968,-22.595,109.52,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1334.4,148.6,1109.6,1.203,Basement,Precambrian Basement undifferentiated,FR
 47.2768,-22.595,128.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1551.5,166.9,1132.7,1.37,Basement,Precambrian Basement undifferentiated,FR
-47.5568,-22.595,145.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1770.0,183.8,1154.0,1.534,Basement,Precambrian Basement undifferentiated,FR
+47.5568,-22.595,145.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1770.0,183.8,1154.0,1.534,Basement,Precambrian Basement undifferentiated,AC
 47.8368,-22.595,152.87,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1770.0,183.8,1154.0,1.534,Basement,Quaternary unconsolidated sediments,FR
-43.6368,-22.875,29.89,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),501.0,48.1,1322.2,0.379,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.9168,-22.875,27.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),501.0,48.1,1322.2,0.379,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.1968,-22.875,32.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),632.1,63.8,1266.3,0.499,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.4768,-22.875,38.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),632.1,63.8,1266.3,0.499,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-22.875,43.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),750.1,76.9,1246.9,0.602,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-22.875,50.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.1,94.0,1195.3,0.745,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-22.875,56.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.1,94.0,1195.3,0.745,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-22.875,63.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1027.4,112.4,1151.2,0.892,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-22.875,71.36,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1027.4,112.4,1151.2,0.892,Basement,Precambrian Basement undifferentiated,FR
+43.6368,-22.875,29.89,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),501.0,48.1,1322.2,0.379,Unconsolidated,Quaternary unconsolidated sediments,LV
+43.9168,-22.875,27.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),501.0,48.1,1322.2,0.379,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.1968,-22.875,32.87,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),632.1,63.8,1266.3,0.499,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.4768,-22.875,38.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),632.1,63.8,1266.3,0.499,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.7568,-22.875,43.33,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),750.1,76.9,1246.9,0.602,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-22.875,50.0,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.1,94.0,1195.3,0.745,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-22.875,56.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.1,94.0,1195.3,0.745,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-22.875,63.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1027.4,112.4,1151.2,0.892,Basement,Precambrian Basement undifferentiated,LV
+45.8768,-22.875,71.36,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1027.4,112.4,1151.2,0.892,Basement,Precambrian Basement undifferentiated,LV
 46.1568,-22.875,78.64,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1177.5,132.4,1109.4,1.061,Basement,Precambrian Basement undifferentiated,FR
 46.4368,-22.875,88.39,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1177.5,132.4,1109.4,1.061,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-22.875,97.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1334.4,148.6,1109.6,1.203,Basement,Precambrian Basement undifferentiated,FR
 46.9968,-22.875,112.26,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1334.4,148.6,1109.6,1.203,Basement,Precambrian Basement undifferentiated,FR
 47.2768,-22.875,129.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1551.5,166.9,1132.7,1.37,Basement,Precambrian Basement undifferentiated,FR
 47.5568,-22.875,143.73,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1770.0,183.8,1154.0,1.534,Basement,Precambrian Basement undifferentiated,FR
-43.6368,-23.155,28.11,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),452.5,46.1,1357.9,0.333,Unconsolidated,Quaternary unconsolidated sediments,FR
-43.9168,-23.155,25.51,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),452.5,46.1,1357.9,0.333,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.1968,-23.155,31.83,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),606.0,60.9,1314.5,0.461,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.4768,-23.155,38.22,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),606.0,60.9,1314.5,0.461,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-23.155,44.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),759.9,76.7,1284.0,0.592,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-23.155,51.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),917.2,93.8,1242.1,0.738,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-23.155,58.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),917.2,93.8,1242.1,0.738,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.5968,-23.155,65.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1079.7,113.3,1188.9,0.908,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-23.155,74.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1079.7,113.3,1188.9,0.908,Basement,Precambrian Basement undifferentiated,FR
+43.6368,-23.155,28.11,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),452.5,46.1,1357.9,0.333,Unconsolidated,Quaternary unconsolidated sediments,LV
+43.9168,-23.155,25.51,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),452.5,46.1,1357.9,0.333,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.1968,-23.155,31.83,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),606.0,60.9,1314.5,0.461,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.4768,-23.155,38.22,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),606.0,60.9,1314.5,0.461,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.7568,-23.155,44.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),759.9,76.7,1284.0,0.592,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-23.155,51.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),917.2,93.8,1242.1,0.738,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-23.155,58.05,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),917.2,93.8,1242.1,0.738,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.5968,-23.155,65.81,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1079.7,113.3,1188.9,0.908,Basement,Precambrian Basement undifferentiated,LV
+45.8768,-23.155,74.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1079.7,113.3,1188.9,0.908,Basement,Precambrian Basement undifferentiated,LV
 46.1568,-23.155,81.45,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1246.3,137.5,1099.1,1.134,Basement,Precambrian Basement undifferentiated,FR
 46.4368,-23.155,91.1,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1246.3,137.5,1099.1,1.134,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-23.155,99.93,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1388.3,149.8,1127.5,1.231,Basement,Precambrian Basement undifferentiated,FR
 46.9968,-23.155,113.49,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1388.3,149.8,1127.5,1.231,Basement,Precambrian Basement undifferentiated,FR
 47.2768,-23.155,128.92,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1566.5,164.1,1155.4,1.356,Basement,Precambrian Basement undifferentiated,FR
 47.5568,-23.155,141.53,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1713.8,176.2,1179.7,1.453,Basement,Precambrian Basement undifferentiated,FR
-43.9168,-23.435,26.75,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),452.5,46.1,1357.9,0.333,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.1968,-23.435,32.98,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),606.0,60.9,1314.5,0.461,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.4768,-23.435,39.6,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),606.0,60.9,1314.5,0.461,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-23.435,45.76,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),759.9,76.7,1284.0,0.592,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-23.435,53.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),917.2,93.8,1242.1,0.738,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.3168,-23.435,60.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),917.2,93.8,1242.1,0.738,Basement,Precambrian Basement undifferentiated,FR
-45.5968,-23.435,68.56,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1079.7,113.3,1188.9,0.908,Basement,Precambrian Basement undifferentiated,FR
-45.8768,-23.435,77.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1079.7,113.3,1188.9,0.908,Basement,Precambrian Basement undifferentiated,FR
+43.9168,-23.435,26.75,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),452.5,46.1,1357.9,0.333,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.1968,-23.435,32.98,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),606.0,60.9,1314.5,0.461,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.4768,-23.435,39.6,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),606.0,60.9,1314.5,0.461,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.7568,-23.435,45.76,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),759.9,76.7,1284.0,0.592,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-23.435,53.44,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),917.2,93.8,1242.1,0.738,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.3168,-23.435,60.35,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),917.2,93.8,1242.1,0.738,Basement,Precambrian Basement undifferentiated,LV
+45.5968,-23.435,68.56,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1079.7,113.3,1188.9,0.908,Basement,Precambrian Basement undifferentiated,LV
+45.8768,-23.435,77.14,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1079.7,113.3,1188.9,0.908,Basement,Precambrian Basement undifferentiated,LV
 46.1568,-23.435,84.48,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1246.3,137.5,1099.1,1.134,Basement,Precambrian Basement undifferentiated,FR
 46.4368,-23.435,93.84,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1246.3,137.5,1099.1,1.134,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-23.435,102.31,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1388.3,149.8,1127.5,1.231,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-23.435,114.8,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1388.3,149.8,1127.5,1.231,Basement,Precambrian Basement undifferentiated,FR
+46.9968,-23.435,114.8,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1388.3,149.8,1127.5,1.231,Basement,Precambrian Basement undifferentiated,CM
 47.2768,-23.435,127.58,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1566.5,164.1,1155.4,1.356,Basement,Precambrian Basement undifferentiated,FR
 47.5568,-23.435,133.52,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1713.8,176.2,1179.7,1.453,Basement,Precambrian Basement undifferentiated,FR
-43.9168,-23.715,29.23,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.5,53.2,1372.2,0.379,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.1968,-23.715,34.99,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),646.7,64.5,1339.2,0.483,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.4768,-23.715,41.51,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),646.7,64.5,1339.2,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-23.715,47.62,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),803.1,79.4,1307.0,0.614,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-45.0368,-23.715,55.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),975.2,97.5,1261.5,0.773,Basement,Precambrian Basement undifferentiated,FR
-45.3168,-23.715,62.53,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),975.2,97.5,1261.5,0.773,Basement,Precambrian Basement undifferentiated,FR
-45.5968,-23.715,71.02,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1150.3,117.9,1192.8,0.964,Basement,Precambrian Basement undifferentiated,FR
+43.9168,-23.715,29.23,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.5,53.2,1372.2,0.379,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.1968,-23.715,34.99,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),646.7,64.5,1339.2,0.483,Unconsolidated,Quaternary unconsolidated sediments,LV
+44.4768,-23.715,41.51,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),646.7,64.5,1339.2,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,AR
+44.7568,-23.715,47.62,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),803.1,79.4,1307.0,0.614,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+45.0368,-23.715,55.42,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),975.2,97.5,1261.5,0.773,Basement,Precambrian Basement undifferentiated,LV
+45.3168,-23.715,62.53,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),975.2,97.5,1261.5,0.773,Basement,Precambrian Basement undifferentiated,LV
+45.5968,-23.715,71.02,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1150.3,117.9,1192.8,0.964,Basement,Precambrian Basement undifferentiated,LV
 45.8768,-23.715,79.77,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1150.3,117.9,1192.8,0.964,Basement,Precambrian Basement undifferentiated,FR
 46.1568,-23.715,87.08,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1305.8,137.4,1134.0,1.151,Basement,Precambrian Basement undifferentiated,FR
 46.4368,-23.715,96.18,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1305.8,137.4,1134.0,1.151,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-23.715,104.2,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1447.5,152.6,1107.4,1.307,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-23.715,115.95,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1447.5,152.6,1107.4,1.307,Basement,Precambrian Basement undifferentiated,FR
+46.9968,-23.715,115.95,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1447.5,152.6,1107.4,1.307,Basement,Precambrian Basement undifferentiated,CM
 47.2768,-23.715,126.58,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1586.6,160.2,1170.9,1.355,Basement,Precambrian Basement undifferentiated,FR
 47.5568,-23.715,125.18,water,ESA WorldCover 2021 (Globcover 2009 inaccessible),1679.3,166.7,1216.1,1.381,Basement,Precambrian Basement undifferentiated,FR
-43.9168,-23.995,33.76,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.5,53.2,1372.2,0.379,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.1968,-23.995,39.09,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),646.7,64.5,1339.2,0.483,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.4768,-23.995,45.34,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),646.7,64.5,1339.2,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,FR
-44.7568,-23.995,51.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),803.1,79.4,1307.0,0.614,Basement,Precambrian Basement undifferentiated,FR
-45.0368,-23.995,58.98,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),975.2,97.5,1261.5,0.773,Basement,Precambrian Basement undifferentiated,FR
-45.3168,-23.995,65.94,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),975.2,97.5,1261.5,0.773,Basement,Precambrian Basement undifferentiated,FR
-45.5968,-23.995,74.29,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1150.3,117.9,1192.8,0.964,Basement,Precambrian Basement undifferentiated,FR
+43.9168,-23.995,33.76,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),520.5,53.2,1372.2,0.379,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.1968,-23.995,39.09,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),646.7,64.5,1339.2,0.483,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.4768,-23.995,45.34,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),646.7,64.5,1339.2,0.483,Sedimentary,Carboniferous-Jurassic sedimentary,LV
+44.7568,-23.995,51.27,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),803.1,79.4,1307.0,0.614,Basement,Precambrian Basement undifferentiated,LV
+45.0368,-23.995,58.98,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),975.2,97.5,1261.5,0.773,Basement,Precambrian Basement undifferentiated,LV
+45.3168,-23.995,65.94,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),975.2,97.5,1261.5,0.773,Basement,Precambrian Basement undifferentiated,LV
+45.5968,-23.995,74.29,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1150.3,117.9,1192.8,0.964,Basement,Precambrian Basement undifferentiated,LV
 45.8768,-23.995,83.01,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1150.3,117.9,1192.8,0.964,Basement,Precambrian Basement undifferentiated,FR
 46.1568,-23.995,90.47,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1305.8,137.4,1134.0,1.151,Basement,Cretaceous Volcanic,FR
 46.4368,-23.995,99.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1305.8,137.4,1134.0,1.151,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-23.995,107.36,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1447.5,152.6,1107.4,1.307,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-23.995,118.19,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1447.5,152.6,1107.4,1.307,Basement,Precambrian Basement undifferentiated,FR
+46.9968,-23.995,118.19,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1447.5,152.6,1107.4,1.307,Basement,Precambrian Basement undifferentiated,CM
 47.2768,-23.995,127.23,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1586.6,160.2,1170.9,1.355,Basement,Precambrian Basement undifferentiated,FR
-43.9168,-24.275,39.1,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),640.5,63.8,1360.5,0.471,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.1968,-24.275,43.18,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),751.8,74.6,1315.8,0.571,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.4768,-24.275,49.11,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),751.8,74.6,1315.8,0.571,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.7568,-24.275,54.89,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.2,87.1,1303.8,0.683,Basement,Precambrian Basement undifferentiated,FR
-45.0368,-24.275,62.3,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1046.1,101.2,1272.4,0.822,Basement,Precambrian Basement undifferentiated,FR
-45.3168,-24.275,69.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1046.1,101.2,1272.4,0.822,Basement,Precambrian Basement undifferentiated,FR
+43.9168,-24.275,39.1,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),640.5,63.8,1360.5,0.471,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.1968,-24.275,43.18,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),751.8,74.6,1315.8,0.571,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.4768,-24.275,49.11,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),751.8,74.6,1315.8,0.571,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.7568,-24.275,54.89,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),890.2,87.1,1303.8,0.683,Basement,Precambrian Basement undifferentiated,LV
+45.0368,-24.275,62.3,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1046.1,101.2,1272.4,0.822,Basement,Precambrian Basement undifferentiated,LV
+45.3168,-24.275,69.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1046.1,101.2,1272.4,0.822,Basement,Precambrian Basement undifferentiated,LV
 45.5968,-24.275,77.12,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1203.9,117.3,1234.1,0.976,Basement,Precambrian Basement undifferentiated,FR
 45.8768,-24.275,85.79,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1203.9,117.3,1234.1,0.976,Basement,Precambrian Basement undifferentiated,FR
 46.1568,-24.275,93.37,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1344.0,128.1,1255.4,1.071,Basement,Cretaceous Volcanic,FR
 46.4368,-24.275,102.4,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1344.0,128.1,1255.4,1.071,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-24.275,110.13,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1503.3,149.3,1152.3,1.305,Basement,Precambrian Basement undifferentiated,FR
-46.9968,-24.275,120.29,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1503.3,149.3,1152.3,1.305,Basement,Precambrian Basement undifferentiated,FR
+46.9968,-24.275,120.29,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1503.3,149.3,1152.3,1.305,Basement,Precambrian Basement undifferentiated,CM
 47.2768,-24.275,128.89,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1613.7,155.7,1193.4,1.352,Basement,Precambrian Basement undifferentiated,FR
-44.1968,-24.555,50.05,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.2,81.4,1331.5,0.635,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.4768,-24.555,53.69,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.2,81.4,1331.5,0.635,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.1968,-24.555,50.05,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.2,81.4,1331.5,0.635,Sedimentary,Cretaceous-Tertiary sedimentary,LV
+44.4768,-24.555,53.69,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.2,81.4,1331.5,0.635,Unconsolidated,Quaternary unconsolidated sediments,LV
 44.7568,-24.555,59.14,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),969.7,91.7,1312.3,0.739,Basement,Precambrian Basement undifferentiated,FR
 45.0368,-24.555,66.22,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.7,103.6,1295.7,0.856,Basement,Precambrian Basement undifferentiated,FR
 45.3168,-24.555,72.59,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.7,103.6,1295.7,0.856,Basement,Precambrian Basement undifferentiated,FR
@@ -631,9 +631,9 @@ lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_
 46.4368,-24.555,105.5,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1399.4,126.4,1290.1,1.085,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-24.555,113.12,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1556.5,144.6,1203.2,1.294,Basement,Precambrian Basement undifferentiated,FR
 46.9968,-24.555,122.64,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1556.5,144.6,1203.2,1.294,Basement,Precambrian Basement undifferentiated,FR
-44.1968,-24.835,61.57,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.2,81.4,1331.5,0.635,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.1968,-24.835,61.57,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.2,81.4,1331.5,0.635,Unconsolidated,Quaternary unconsolidated sediments,AR
 44.4768,-24.835,61.09,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),845.2,81.4,1331.5,0.635,Sedimentary,Cretaceous-Tertiary sedimentary,FR
-44.7568,-24.835,63.93,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),969.7,91.7,1312.3,0.739,Basement,Precambrian Basement undifferentiated,FR
+44.7568,-24.835,63.93,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),969.7,91.7,1312.3,0.739,Basement,Precambrian Basement undifferentiated,CM
 45.0368,-24.835,70.33,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.7,103.6,1295.7,0.856,Basement,Precambrian Basement undifferentiated,FR
 45.3168,-24.835,76.3,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1108.7,103.6,1295.7,0.856,Unconsolidated,Quaternary unconsolidated sediments,FR
 45.5968,-24.835,83.86,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1252.3,115.7,1288.0,0.972,Basement,Precambrian Basement undifferentiated,FR
@@ -642,14 +642,14 @@ lon,lat,recharge_bgs_mmpa,Landcover,Landcover_source,LTA_P_mmpa,LTA_WD_days,LTA_
 46.4368,-24.835,108.04,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1399.4,126.4,1290.1,1.085,Basement,Precambrian Basement undifferentiated,FR
 46.7168,-24.835,115.01,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1556.5,144.6,1203.2,1.294,Basement,Precambrian Basement undifferentiated,FR
 46.9968,-24.835,122.75,forest,ESA WorldCover 2021 (Globcover 2009 inaccessible),1556.5,144.6,1203.2,1.294,Basement,Precambrian Basement undifferentiated,FR
-44.4768,-25.115,72.8,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),921.1,86.3,1335.7,0.69,Unconsolidated,Quaternary unconsolidated sediments,FR
-44.7568,-25.115,68.62,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1050.8,96.9,1314.8,0.799,Unconsolidated,Quaternary unconsolidated sediments,FR
-45.0368,-25.115,73.93,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1170.7,106.8,1305.2,0.897,Unconsolidated,Quaternary unconsolidated sediments,FR
-45.3168,-25.115,79.56,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1170.7,106.8,1305.2,0.897,Unconsolidated,Quaternary unconsolidated sediments,FR
+44.4768,-25.115,72.8,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),921.1,86.3,1335.7,0.69,Unconsolidated,Quaternary unconsolidated sediments,AR
+44.7568,-25.115,68.62,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1050.8,96.9,1314.8,0.799,Unconsolidated,Quaternary unconsolidated sediments,AR
+45.0368,-25.115,73.93,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1170.7,106.8,1305.2,0.897,Unconsolidated,Quaternary unconsolidated sediments,AR
+45.3168,-25.115,79.56,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1170.7,106.8,1305.2,0.897,Unconsolidated,Quaternary unconsolidated sediments,AR
 45.5968,-25.115,86.79,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1292.6,116.1,1301.0,0.994,Unconsolidated,Quaternary unconsolidated sediments,FR
 45.8768,-25.115,94.72,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1292.6,116.1,1301.0,0.994,Unconsolidated,Quaternary unconsolidated sediments,FR
 46.1568,-25.115,101.87,cropland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1427.3,126.0,1292.0,1.105,Unconsolidated,Quaternary unconsolidated sediments,FR
 46.7168,-25.115,114.65,grassland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1578.2,136.9,1288.3,1.225,Basement,Precambrian Basement undifferentiated,FR
-45.0368,-25.395,82.31,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1170.7,106.8,1305.2,0.897,Unconsolidated,Quaternary unconsolidated sediments,FR
-45.3168,-25.395,87.84,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1170.7,106.8,1305.2,0.897,Unconsolidated,Quaternary unconsolidated sediments,FR
+45.0368,-25.395,82.31,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1170.7,106.8,1305.2,0.897,Unconsolidated,Quaternary unconsolidated sediments,AR
+45.3168,-25.395,87.84,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1170.7,106.8,1305.2,0.897,Unconsolidated,Quaternary unconsolidated sediments,AR
 45.5968,-25.395,93.53,shrubland,ESA WorldCover 2021 (Globcover 2009 inaccessible),1292.6,116.1,1301.0,0.994,Unconsolidated,Quaternary unconsolidated sediments,FR
