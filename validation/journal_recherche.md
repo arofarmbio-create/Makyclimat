@@ -405,3 +405,10 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   analogues par distance de Gower sur le climat, les sols, le relief, la végétation et l'aquifère (pas la géologie
   seule, selon sa réserve), une bibliothèque de paramètres, trois versions de transfert (T0, T1, T2), une validation
   en laissant un pays de côté (H-C5) et une calibration sur les références malgaches (H-C6).
+- ✅ Reprise après la pause (02/11, 16 h 30 UTC). CHIRPS est complet de 2001 à 2025 ; IMERG Late de 2001 à 2011,
+  en séquentiel (environ 20 min par année, plus aucun refus) ; ERA5-Land 2015 obtenu : le ménage de la file
+  Copernicus a levé le blocage. Premiers contrôles : écarts connus entre sources (IMERG Late sous-estime la côte est,
+  ERA5-Land surestime les Hautes Terres), utiles pour E1.
+- ❌ puis 🔧 CHIRPS 2026 échouait, car le serveur répond « 403 » et non « 404 » pour un jour pas encore publié ;
+  corrigé. ERA5-Land découpé en une tâche par année (environ 1 h chacune, une seule à la fois), car 25 années d'affilée
+  dépasseraient la limite de 6 heures. Le script IMERG du périmètre pilote est rendu séquentiel lui aussi.

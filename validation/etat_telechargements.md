@@ -2,7 +2,7 @@
 
 *Tenu par l'agent de téléchargement depuis le 02/11/2026, décision du porteur du projet : un seul agent pour tous les
 téléchargements et liaisons API, petit à petit, sans demandes forcées ni simultanées auprès d'un même fournisseur.
-Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 12 h 40 UTC.*
+Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 16 h 40 UTC.*
 
 ## Règles de rythme appliquées
 
@@ -17,9 +17,9 @@ Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 12 h 40 UTC.*
 
 | Source | Fournisseur | Attendu | Obtenu | Manque | Dernière erreur et cause | Statut |
 |---|---|---|---|---|---|---|
-| E1 CHIRPS journalier | CHC | 2001-2026 (26 ans) | 2001-2012, 2015 | 2013-2014, 2016-2026 | 429 (32 requêtes simultanées, 02/11 matin) ; corrigé | ⏳ en cours, une année à la fois (run 41444684197) |
-| E1 IMERG Late journalier | NASA GES DISC | 2001-2026 | — | tout | 503 puis coupures : 3 tâches de 6 fils en parallèle saturaient le compte (sonde du 02/11, run 41441586107) ; corrigé, séquentiel | ⏳ 2001 en cours (run 41444684197) |
-| E1 ERA5-Land journalier | Copernicus CDS | 2001-2026 | — | tout | « Maximum number queued requests » alors que la file ERA5-Land du compte était vide ; une demande C3S bloquée occupait la file du compte | ⏳ 2015 en cours, après ménage (run 41443140863) ; les autres années ensuite |
+| E1 CHIRPS journalier | CHC | 2001-2026 (26 ans) | 2001-2025 | 2026 (relancé seul : run 41482902999) | 403 sur les jours de fin octobre 2026 pas encore publiés, qui faisait échouer l'année ; corrigé (403 = jour manquant) | ⏳ 25/26 |
+| E1 IMERG Late journalier | NASA GES DISC | 2001-2026 | 2001-2011 | 2012-2026 | aucune depuis le passage en séquentiel ; environ 20 min par année | ⏳ une année à la fois (run 41444684197), fin prévue vers 21-22 h UTC |
+| E1 ERA5-Land journalier | Copernicus CDS | 2001-2026 | 2015 | 2001-2014, 2016-2026 | une seule tâche de 25 ans aurait dépassé la limite de 6 h ; découpé en une tâche par année | ⏳ une année à la fois, environ 1 h chacune (run 41482839480), fin prévue le 03/11 vers 18 h UTC |
 | E1 stations GSOD | NOAA NCEI | 2001-2026, stations de Madagascar | 24 stations | — | — | ✅ |
 | E1 relief (altitude, rugosité, exposition) | Amazon S3 (GLO-90) | grille 0,1° | 5 432 mailles terrestres | — | — | ✅ `data/mdg/e1/relief_01deg.npz`, calculé sur ce PC le 02/11 |
 | SPEI : pluie par district | CHC | 1981-2025 | oui | — | — | ✅ |
@@ -43,3 +43,15 @@ Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 12 h 40 UTC.*
   l'indice MCT prêts ; GloFAS et IMERG pilote mis en pause pour respecter la règle « un fournisseur à la fois ».
 - 02/11, 12 h 50 UTC : R-02 bis préparé (fenêtres des 7 cyclones dans `validation/r02bis_fenetres.csv`, script
   `build_r02bis_sources.py`, workflow 23 manuel, tests). Placé dans les files NASA et Copernicus, non lancé.
+- 02/11, 16 h 30 UTC : reprise après la pause. Contrôle des premières données : CHIRPS 2001 (Toamasina 2 964 mm,
+  Toliara 437 mm), IMERG Late 2001 (Toamasina 1 452 mm), ERA5-Land 2015 (Ivato 1 829 mm). Ce sont des écarts connus
+  (IMERG Late sous-estime la côte est, ERA5-Land surestime les Hautes Terres) : utiles pour E1, pas des erreurs de
+  téléchargement. ERA5-Land découpé en une tâche par année ; CHIRPS 2026 relancé.
+
+## Suite de la file (à lancer dans cet ordre, quand l'étape précédente est finie)
+
+| File | Après | Lancement |
+|---|---|---|
+| Copernicus | ERA5-Land E1 (run 41482839480) | 1. `gh workflow run build-drought-spei-ndvi.yml` (ET0 mensuelle) ; 2. `gh workflow run build-mct-era5.yml` ; 3. `gh workflow run build-r02bis-sources.yml -f part=rafales` ; 4. `gh workflow run build-glofas-reforecast.yml -f years="2003 2004 … 2023"` ; 5. `gh workflow run build-c3s-seasonal.yml` |
+| NASA GES DISC | IMERG E1 (run 41444684197) | 1. `gh workflow run build-imerg-pilot.yml -f seasons="2015 2016 2019 2020 2021"` (code pilote rendu séquentiel le 02/11 : 1 fil, attente de 30 à 180 s) ; 2. `gh workflow run build-r02bis-sources.yml -f part=imerg` |
+

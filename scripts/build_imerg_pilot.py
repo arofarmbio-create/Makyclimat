@@ -94,7 +94,7 @@ def fetch_one(s, day, fname, box):
                 raise RuntimeError(f"accès refusé (HTTP {r.status_code}) : compte Earthdata ou application GES DISC")
         except (requests.RequestException, ValueError):
             pass
-        time.sleep(3 * (k + 1))
+        time.sleep(min(30 * (k + 1), 180))              # vraie attente : le serveur refuse quand on insiste
     return None
 
 
@@ -103,7 +103,7 @@ def main() -> None:
     ap.add_argument("--country", default="mdg")
     ap.add_argument("--season", type=int, help="année de novembre")
     ap.add_argument("--probe", help="jour à tester (AAAA-MM-JJ)")
-    ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--workers", type=int, default=1)    # GES DISC : 503 et coupures en parallèle (02/11/2026)
     args = ap.parse_args()
     box = pilot_box(args.country)
     s = session()

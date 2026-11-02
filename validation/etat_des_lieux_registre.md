@@ -168,7 +168,7 @@ statut, document détaillé.
 
 | ID | Question | Protocole | État au 02/11/2026 | Statut |
 |---|---|---|---|---|
-| R-35 | La fusion contrôlée de CHIRPS, IMERG Late et ERA5-Land, pondérée par triple collocation, bat-elle la meilleure source seule (stations GSOD, pentades, 2016-2025) ? | `protocole_e1_fusion_pluie.md` | Protocole écrit avant calcul ; téléchargement des 3 sources (2001-2026) et des 25 stations GSOD lancé le 02/11 | ⏳ |
+| R-35 | La fusion contrôlée de CHIRPS, IMERG Late et ERA5-Land, pondérée par triple collocation, bat-elle la meilleure source seule (stations GSOD, pentades, 2016-2025) ? | `protocole_e1_fusion_pluie.md` | Protocole écrit avant calcul. Données au 02/11, 16 h 40 UTC : CHIRPS 2001-2025, IMERG Late 2001-2011, ERA5-Land 2015, GSOD (24 stations), relief 0,1° ; le reste en cours, une demande à la fois (`etat_telechargements.md`) | ⏳ |
 
 ### 2.4 ter Eaux souterraines : niveaux mesurés (MGMERL)
 
