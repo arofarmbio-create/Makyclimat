@@ -376,3 +376,21 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   vent (+5,9 m/km en médiane), l'ouest des Hautes Terres sous le vent.
 - ✅ Script et workflow de l'indice du canal de Mozambique (ERA5 850 hPa, H-N7) prêts, en attente de leur tour dans la
   file Copernicus.
+
+### Carte des nappes : test H-C1 (`validation/nappes_hc1.md`)
+- 📊 999 forages MGMERL comparés à la carte mondiale de Fan et al. (2017) aux mêmes points. Profondeur médiane mesurée
+  5,8 m ; Fan 20,9 m ; écart médian +12,9 m ; erreur absolue médiane 14,3 m.
+- ⚠️ **H-C1 non confirmée selon la règle fixée à l'avance.** Le test de Wilcoxon point par point est très
+  significatif, mais le contrôle par blocs de 1° ne l'est pas : Fan est plus profond dans 16 blocs sur 36 seulement
+  (p = 0,62). Le biais vient surtout de quelques zones où les forages sont nombreux. **Leçon :** sans le contrôle par
+  blocs, on aurait conclu à tort à un biais général, uniquement à cause du regroupement des forages.
+- ❌ **Fan ne sait pas classer les sites** : corrélation de Spearman de 0,02 avec les mesures. Utilisée telle quelle,
+  la carte mondiale n'aide pas un foreur à Madagascar.
+- 📊 **L'écart dépend du relief** (analyse descriptive) :
+  - en fond de vallée (HAND < 5 m), Fan est proche des mesures (2,5 m contre 5,0 m) ;
+  - sur versant ou plateau (HAND > 15 m, 576 forages), Fan donne 30,9 m contre 6,0 m mesurés.
+  Deux explications envisagées avant le calcul sont confortées : la maille de 1 km mélange vallée et versant, et sur
+  les versants et plateaux les forages captent probablement des nappes d'altérites perchées, ou un niveau captif qui
+  remonte dans le forage.
+- 📌 Conséquence : c'est un argument fort pour le modèle hybride recalé sur les forages malgaches (H-C2), avec la
+  position dans le relief comme variable explicative.
