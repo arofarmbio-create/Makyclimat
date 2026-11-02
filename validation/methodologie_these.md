@@ -267,6 +267,9 @@ avant calcul sont :
 - `protocole_intensite_imerg.md` (intensité infra-journalière) ;
 - `protocole_spei_ndvi.md` (SPI ou SPEI face au NDVI).
 
+Le registre de toutes les méthodes et de leurs résultats, avec l'état des lieux demandé par le protocole doctoral
+(§19), est `validation/etat_des_lieux_registre.md` (depuis le 02/11/2026).
+
 ## 7. Contribution méthodologique revendiquée pour la thèse
 
 1. Un cadre reproductible de validation multi-échelle (région, fokontany, commune) pour un système

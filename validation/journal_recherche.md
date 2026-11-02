@@ -139,3 +139,15 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   le pipeline affiche alors la saison précédente (jusqu'au 30/04), comme prévu, mais le contrôle mesurait l'âge depuis
   le 30/04. L'âge est désormais compté depuis le début de la saison en cours ; le seuil de 75 jours est inchangé.
   **Leçon :** un garde-fou doit être testé sur les transitions de calendrier, pas seulement en pleine saison.
+
+### État des lieux et registre (protocole §19 et §22)
+- ✅ `validation/etat_des_lieux_registre.md` : réponses aux cinq questions du protocole, registre de 34 méthodes avec
+  leurs résultats (réussites et échecs), couverture des modules M0-M7 et des expériences E1-E7.
+- 📊 **Constat de résolution :** 74 % des 17 465 fokontany (surface médiane 12,6 km²) sont plus petits qu'une maille
+  CHIRPS (~30 km²). La pluie publiée au fokontany a donc la résolution de la maille, pas celle du fokontany.
+- ❌ **Quatre chapitres lancés le 29/10 n'ont encore aucun résultat**, bloqués par des téléchargements : GloFAS
+  2005-2011 (limite de 6 heures), C3S (tâche annulée après 6 heures), IMERG (6 saisons sur 11, serveur NASA), ET0
+  ERA5-Land (requête refusée par le CDS). Ils deviennent la priorité.
+- ⚠️ Manques principaux face au protocole : aucune station (DGM ou hydrométrique), pas de projections CMIP6, pas
+  d'expérience E1 de fusion, pas de validation spatiale par blocs, pas de séparation explicite reconstitution,
+  anticipation et en cours d'événement.
