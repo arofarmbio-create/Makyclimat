@@ -1,0 +1,5 @@
+distance,forages,erreur_hybride,erreur_krigeage,erreur_fan
+0-25 km,248,2.385,2.869,21.87
+25-50 km,288,2.764,3.091,20.613
+50-100 km,248,3.35,3.525,10.224
+plus de 100 km,196,2.867,3.523,6.703

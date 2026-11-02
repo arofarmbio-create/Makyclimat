@@ -475,3 +475,21 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   est en degrés, et le facteur de réduction calculé en mètres la ramenait à un seul pixel. Corrigé et testé : 8
   classes, dont Ferralsols 294, Luvisols 122, Cambisols 94 et Arenosols 52. **Leçon :** une colonne constante sur
   tout un pays signale une erreur de traitement.
+
+### Carte des nappes : H-C2b, régions entières laissées de côté (`validation/nappes_hc2b.md`)
+- ⚠️ **Non confirmée selon la règle fixée** : l'hybride bat le krigeage dans 6 régions sur 8 (condition 2 remplie),
+  mais le test de Wilcoxon sur l'ensemble des forages n'est pas significatif (p = 0,16). Ce test est dominé par
+  Androy, Anosy et Atsimo-Andrefana (810 forages sur 980), où les deux méthodes se valent.
+- 📊 Descriptif :
+  - **loin des forages connus, l'hybride fait nettement mieux** : Sava (270 km du forage le plus proche) 1,4 m contre
+    3,9 m ; Analanjirofo 1,8 contre 5,0 ; Atsimo-Atsinanana 1,7 contre 3,4 ; Boeny 2,3 contre 2,9 ;
+  - Menabe (16 forages) est l'exception : l'hybride fait 10,8 m d'erreur, contre 8,1 pour le krigeage ;
+  - au-delà de 100 km, 2,9 m contre 3,5 m.
+- 📊 **La carte mondiale de Fan se trompe surtout dans le Sud sec** (21,7 m d'erreur dans l'Androy, 23,9 dans
+  l'Atsimo-Andrefana), bien moins sur la côte est (2,4 à 4,0 m). Lecture probable : le modèle mondial place une nappe
+  régionale profonde là où la pluie est faible, alors que les forages du Sud trouvent souvent de l'eau peu profonde
+  (nappes alluviales ou d'altérites, niveau qui remonte dans le forage). C'est cohérent avec la distinction entre
+  nappe profonde et nappes locales (`biblio_hydrogeologie_grand_sud.md`).
+- 📌 Conclusion de thèse prudente : l'hybride n'est jamais nettement moins bon que le krigeage, sauf en Menabe ; il
+  est bien meilleur que la carte mondiale partout, et prometteur loin des forages. La confirmation demande des
+  forages indépendants dans les régions peu couvertes.
