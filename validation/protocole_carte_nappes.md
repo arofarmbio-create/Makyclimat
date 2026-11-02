@@ -272,3 +272,34 @@ descriptives de la base)** :
 - T0 (carte BGS) ne peut pas être évaluée en laissant un pays de côté, puisqu'elle a été construite avec tous les
   sites : elle n'est donc pas candidate en H-C6 si T1 ou T2 passe H-C5.
 
+**Précisions de mise en œuvre de H-C6 (02/11/2026, fixées avant tout calcul sur Madagascar)** :
+- **Mêmes sources que la base africaine** (métadonnées du BGS), pour ne pas confondre l'écart entre sources avec
+  l'effet recherché :
+  - pluie, jours de pluie, ETP et aridité (pluie / ETP) : CRU TS v4, moyennes annuelles 1981-2010 ;
+  - NDVI : MODIS MOD13 (MOD13C2, 0,05°), moyenne annuelle 2001-2010, MODIS commençant en 2000 ;
+  - groupe d'aquifère : carte hydrogéologique de Madagascar du BGS (Africa Groundwater Atlas), codes regroupés comme
+    dans MacDonald et al. 2012 : B, I, V → « Basement » ; CSF, CSI, CSIF, CSK → « Sedimentary » ; U →
+    « Unconsolidated » ;
+  - sol : groupe de sol de référence WRB le plus probable de SoilGrids, codé sur deux lettres comme l'Atlas des sols
+    d'Afrique (AR, LP, CM…), l'Atlas n'étant pas téléchargeable librement ; écart de source documenté ;
+  - occupation des terres : Globcover 2009 regroupé en cropland, grassland, sparse, shrubland, forest et urban comme
+    la base ; à défaut, ESA WorldCover regroupé de la même façon, écart documenté.
+- **Grille** : les 654 mailles terrestres de la carte BGS de recharge (environ 0,28°), pour comparer directement T0,
+  T1 et T2.
+- **Version retenue pour H-C6, choisie sur H-C5 et avant toute comparaison malgache** : T2 (erreur médiane entre pays
+  la plus faible, 0,24 contre 0,28 pour T1). T1 est calculée et publiée à titre de comparaison.
+- **Intervalle de 80 %** : prédiction ± les 10e et 90e centiles des résidus de T2 obtenus en laissant un pays de
+  côté (H-C5), en log10(R + 1).
+- **Références malgaches indépendantes** (aucune ne vient de la base BGS) et règle de comparaison : la valeur
+  centrale de chaque référence est comparée à l'intervalle de 80 % de la maille (ou à l'intervalle médian des
+  mailles de la zone) :
+  1. Sud de Madagascar, 20 à 100 mm/an (BRGM 2005, cité par AVSF 2016) : valeur centrale 60 mm/an, comparée aux
+     mailles au sud de 23°S ;
+  2. plateau Mahafaly, environ 60 mm/an (profil USAID/Winrock) : mailles du plateau (calcaires éocènes de la carte
+     géologique) ;
+  3. sites de nappe MGMERL retenus en M3 : recharge annuelle par fluctuation de nappe, R = Sy × somme des remontées
+     de saison des pluies, avec Sy de 0,01 à 0,05 dans le socle et de 0,05 à 0,15 dans le sédimentaire (bibliothèque
+     de paramètres) ; valeur centrale au milieu de la fourchette.
+- **H-C6 confirmée** si au moins 60 % de ces références tombent dans l'intervalle (règle fixée plus haut). Avec
+  2 références de la littérature et jusqu'à 7 sites, le résultat reste indicatif ; il est publié comme tel.
+
