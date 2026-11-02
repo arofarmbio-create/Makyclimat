@@ -59,6 +59,20 @@ r = E.parse_gsod(txt)
 check("GSOD : pouces -> mm, 99,99 -> manquant, drapeau conservé",
       r[0] == ("2015-01-01", 25.4, "G") and np.isnan(r[1][1]) and r[2] == ("2015-01-03", 0.0, "I"))
 
+# Forme réelle des fichiers journaliers (sonde du 02/11/2026) : variable de type Grid
+lines = ["Dataset: 3B-DAY-L.MS.MRG.3IMERG.20150115-S000000-E235959.V07B.nc4",
+         "precipitation.lat, " + ", ".join(str(-25.95 + 0.1 * j) for j in range(E.NY))]
+for i in range(E.NX):
+    lines.append(f"precipitation.precipitation[precipitation.time=12793][precipitation.lon={43.05 + 0.1 * i:.2f}], "
+                 + ", ".join(str(i + j / 1000) for j in range(E.NY)))
+gg = E.parse_imerg_ascii("\n".join(lines))
+check("IMERG journalier (forme Grid réelle) : lu, ligne des latitudes ignorée", math.isclose(gg[3, 2], 2.003, abs_tol=1e-5))
+try:
+    E.parse_imerg_ascii("réponse inattendue")
+    check("format inattendu : erreur explicite", False)
+except ValueError:
+    check("format inattendu : erreur explicite", True)
+
 d = E.year_days(2026, dt.date(2026, 11, 2))
 check("année en cours : jusqu'à hier", d[0] == dt.date(2026, 1, 1) and d[-1] == dt.date(2026, 11, 1))
 check("année passée complète", len(E.year_days(2024, dt.date(2026, 11, 2))) == 366)

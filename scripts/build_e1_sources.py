@@ -132,9 +132,14 @@ def imerg_month_files(s, y: int, m: int) -> dict[dt.date, str]:
     raise RuntimeError(f"liste IMERG inaccessible : {url}")
 
 
+DATA_LINE = re.compile(r"^(precipitation\.)?precipitation\[[^\]]+\]\[[^\]]+\],")
+
+
 def parse_imerg_ascii(text: str) -> np.ndarray:
-    """Réponse ASCII OPeNDAP precipitation[0][lon][lat] -> grille commune [lat, lon]."""
-    vals = [list(map(float, ln.split(",")[1:])) for ln in text.splitlines() if re.match(r"precipitation\[0\]\[\d+\],", ln)]
+    """Réponse ASCII OPeNDAP -> grille commune [lat, lon]. Une ligne par longitude ; deux formes acceptées :
+    « precipitation[0][12], v, v… » et, pour les fichiers journaliers (variable de type Grid, vu le 02/11/2026),
+    « precipitation.precipitation[precipitation.time=…][precipitation.lon=43.05], v, v… »."""
+    vals = [list(map(float, ln.split(",")[1:])) for ln in text.splitlines() if DATA_LINE.match(ln)]
     a = np.array(vals, dtype="float32")
     if a.shape != (NX, NY):
         raise ValueError(f"grille IMERG inattendue {a.shape}")
@@ -183,10 +188,10 @@ def part_imerg(days):
             try:
                 r = s.get(url, timeout=120)
                 if r.status_code == 200:
-                    return parse_imerg_ascii(r.text)
+                    return parse_imerg_ascii(r.text)     # un format inattendu lève ValueError : pas de nouvel essai
                 if r.status_code in (401, 403):
                     raise RuntimeError(f"accès refusé (HTTP {r.status_code}) : compte Earthdata ou application GES DISC")
-            except (requests.RequestException, ValueError):
+            except requests.RequestException:
                 pass
             time.sleep(10 * (k + 1))
         return None
