@@ -158,25 +158,36 @@ jobs:
     if: contains(needs.plan.outputs.sources, ' era5 ') && github.event.inputs.sonde == ''
     runs-on: ubuntu-latest
     timeout-minutes: 350
+    strategy:
+      max-parallel: 1          # une seule demande Copernicus à la fois pour tout le compte ; environ 1 h par année
+      fail-fast: false
+      matrix:
+        year: ${{ fromJson(needs.plan.outputs.years) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy pandas pyyaml requests "cdsapi>=0.7.4" xarray netCDF4 h5netcdf
-      - name: Année par année (une requête Copernicus à la fois), publiée aussitôt
+      - name: Déjà publié ?
+        id: done
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          f="era5_${{ matrix.year }}.npz"
+          if gh release view "$TAG" --json assets -q '.assets[].name' | grep -qx "$f"              && ! echo " ${{ needs.plan.outputs.refresh }} " | grep -q " ${{ matrix.year }} "; then
+            echo "$f déjà publié"; echo "skip=1" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.done.outputs.skip != '1'
+        run: pip install numpy pandas pyyaml requests "cdsapi>=0.7.4" xarray netCDF4 h5netcdf
+      - name: Télécharger et publier (après ménage de la file Copernicus du compte)
+        if: steps.done.outputs.skip != '1'
         env:
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
           GH_TOKEN: ${{ github.token }}
         run: |
           python scripts/cds_menage.py --age-min 30 || true      # demandes orphelines d'autres tâches (02/11/2026)
-          have="$(gh release view "$TAG" --json assets -q '.assets[].name')"
-          for y in $(echo '${{ needs.plan.outputs.years }}' | jq -r '.[]'); do
-            f="era5_$y.npz"
-            if echo "$have" | grep -qx "$f" && ! echo " ${{ needs.plan.outputs.refresh }} " | grep -q " $y "; then continue; fi
-            python scripts/build_e1_sources.py --country "$COUNTRY" --source era5 --year "$y" || { echo "::warning::ERA5-Land $y échoué"; continue; }
-            gh release upload "$TAG" "data/$COUNTRY/e1/$f" --clobber
-          done
+          python scripts/build_e1_sources.py --country "$COUNTRY" --source era5 --year "${{ matrix.year }}"
+          gh release upload "$TAG" "data/$COUNTRY/e1/era5_${{ matrix.year }}.npz" --clobber
 
   gsod:
     needs: plan

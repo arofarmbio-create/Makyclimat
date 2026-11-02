@@ -96,8 +96,13 @@ def part_chirps(days):
     def one(d):
         with tempfile.TemporaryDirectory(prefix="e1c_") as tmp:
             gz = Path(tmp) / "f.tif.gz"
-            if not download(CHIRPS_URL.format(y=d.year, m=d.month, d=d.day), gz, retries=5):
-                return None
+            try:
+                if not download(CHIRPS_URL.format(y=d.year, m=d.month, d=d.day), gz, retries=5):
+                    return None
+            except Exception as e:  # noqa: BLE001
+                if "403" in str(e):               # jour pas encore publié : CHC répond 403, pas 404 (02/11/2026)
+                    return None
+                raise
             tif = Path(tmp) / "f.tif"
             with gzip.open(gz, "rb") as fi, open(tif, "wb") as fo:
                 shutil.copyfileobj(fi, fo)
