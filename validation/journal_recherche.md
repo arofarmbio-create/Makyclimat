@@ -431,3 +431,19 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Le transfert vers Madagascar (H-C6) est justifié. Il reste à calculer les variables malgaches (pluie, jours de
   pluie, ETP, aridité, NDVI, aquifère, sol, occupation des terres) et à rassembler les références locales.
 - 📌 Le porteur du projet choisit de relever les tableaux MGMERL affichés à l'écran plutôt que de demander les exports.
+
+### MGMERL : relevé des tableaux affichés (choix du porteur du projet)
+- ✅ L'extension Chrome ne pouvait pas cliquer sur la page (elle restait « en chargement »), mais la lecture par
+  script fonctionne. Relevés le 02/11/2026 (1 000 lignes au plus par tableau, les plus récentes ; fichiers bruts hors
+  git dans `data/mdg/mgmerl_raw/tableaux_affiches_2026-11-02/`) :
+  - **profondeur des forages** (nouveau) : 1 000 forages, médiane 25,0 m (quartiles 18,8 et 35,9 m, maximum 98 m) ;
+  - **résultat des essais de pompage** (nouveau) : 1 000 forages, 565 aptes, 215 non aptes, 219 à refaire, avec leurs
+    coordonnées GPS. C'est un indicateur direct du potentiel des forages ;
+  - niveau statique et conductivité, mis à jour (998 forages communs avec le 27/10) ;
+  - récapitulatif MGMERL : **25 272 forages**, dont 10 283 en socle, 7 655 en sédimentaire non consolidé, 3 813 en
+    sédimentaire consolidé fissuré et 1 403 en roches intrusives.
+- 📊 Observation descriptive (pas un test) : 861 forages ont à la fois une profondeur et un niveau statique. La
+  profondeur médiane des forages (25 m) est bien plus grande que celle du niveau statique (5,8 m) : l'eau remonte
+  dans le forage au-dessus de la zone captée. Cela conforte l'une des explications de l'écart avec la carte de Fan
+  (H-C1), dont la médiane (20,9 m) est plus proche de la profondeur des forages. À intégrer comme variable du modèle
+  hybride (H-C2), sans conclure avant le test.
