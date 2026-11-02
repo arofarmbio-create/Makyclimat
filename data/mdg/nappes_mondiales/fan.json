@@ -1,0 +1,20 @@
+{
+ "url": "http://thredds-gfnl.usc.es/thredds/dodsC/GLOBALWTDFTP/annualmeans/AFRICA_WTD_annualmean.nc",
+ "citation": "Fan Y., Miguez-Macho G., Jobbágy E. G., Jackson R. B., Otero-Casal C. (2017). Hydrologic regulation of plant rooting depth. PNAS 114(40), 10572-10577. doi:10.1073/pnas.1712381114 (mise à jour de Fan et al. 2013, Science 339, 940-943)",
+ "licence": "usage de recherche libre, citation obligatoire ; redistribution non prévue (ne pas republier)",
+ "republication": false,
+ "unite": "m (profondeur de la nappe sous le sol, moyenne annuelle)",
+ "resolution": "30 secondes d'arc (~1 km)",
+ "partie": "fan",
+ "emprise": [
+  43.0,
+  -26.0,
+  51.0,
+  -11.5
+ ],
+ "telecharge_le": "2026-11-02",
+ "resume": {
+  "mailles": 740695,
+  "mediane_m": -15.52
+ }
+}

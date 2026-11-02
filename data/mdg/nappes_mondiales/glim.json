@@ -1,0 +1,30 @@
+{
+ "url": "https://hdl.handle.net/10013/epic.39939.d001",
+ "citation": "Hartmann J., Moosdorf N. (2012). Global Lithological Map Database v1.0 (gridded to 0.5°). PANGAEA, doi:10.1594/PANGAEA.788537",
+ "licence": "CC BY 3.0",
+ "republication": true,
+ "unite": "classe lithologique (code GLiM de premier niveau)",
+ "resolution": "0,5°",
+ "partie": "glim",
+ "emprise": [
+  43.0,
+  -26.0,
+  51.0,
+  -11.5
+ ],
+ "telecharge_le": "2026-11-02",
+ "resume": {
+  "mailles": 204,
+  "classes": {
+   "su": 23,
+   "vb": 10,
+   "ss": 32,
+   "sm": 26,
+   "sc": 1,
+   "va": 4,
+   "mt": 82,
+   "pa": 25,
+   "pi": 1
+  }
+ }
+}

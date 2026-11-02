@@ -1,0 +1,76 @@
+name: "21 - Couches mondiales des nappes (carte nationale)"
+
+# Protocole validation/protocole_carte_nappes.md. Télécharge chaque couche mondiale, la recadre sur Madagascar et la
+# range selon sa licence : release « nappes-mondiales » pour les licences ouvertes (CC BY, ODbL), cache des Actions
+# seulement pour les couches à republication non prévue (Fan et al., fluor). Les métadonnées (.json) vont dans git.
+# Couches figées : lancement manuel, plus une vérification annuelle.
+on:
+  schedule:
+    - cron: "0 7 10 1 *"    # le 10 janvier : vérifie que les couches sont toujours accessibles
+  workflow_dispatch:
+    inputs:
+      parts:
+        description: "Couches (fan fluor socle glhymps glim salinite)"
+        default: "fan fluor socle glhymps glim salinite"
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+  TAG: nappes-mondiales
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      parts: ${{ steps.p.outputs.parts }}
+    steps:
+      - id: p
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ps="${{ github.event.inputs.parts || 'fan fluor socle glhymps glim salinite' }}"
+          echo "parts=$(echo "$ps" | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" -R "$GITHUB_REPOSITORY" \
+            --title "Couches mondiales des nappes, recadrées sur Madagascar (licences ouvertes seulement)" \
+            --notes "GLHYMPS 2.0 (CC BY 4.0, Huscroft et al. 2018), GLiM (CC BY 3.0, Hartmann et Moosdorf 2012), SoilGrids 2017 profondeur du socle (ODbL, Shangguan et al. 2017), salinité Thorslund et van Vliet 2020 (CC BY 4.0). Citations et licences dans chaque fichier .json. scripts/build_nappes_mondiales.py." || true
+
+  couche:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        part: ${{ fromJson(needs.plan.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests rasterio pyogrio geopandas pyproj xarray netCDF4
+      - name: Télécharger et recadrer
+        run: python scripts/build_nappes_mondiales.py --country "$COUNTRY" --part "${{ matrix.part }}"
+      - name: Couche à licence restreinte, gardée en cache (jamais republiée)
+        if: matrix.part == 'fan' || matrix.part == 'fluor'
+        uses: actions/cache/save@v4
+        with:
+          path: data/mdg/nappes_mondiales/${{ matrix.part }}.tif
+          key: nappes-restreint-${{ matrix.part }}-${{ github.run_id }}
+      - name: Couche à licence ouverte, publiée dans la release
+        if: matrix.part != 'fan' && matrix.part != 'fluor'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for f in data/$COUNTRY/nappes_mondiales/${{ matrix.part }}.*; do
+            case "$f" in *.json) ;; *) gh release upload "$TAG" "$f" --clobber ;; esac
+          done
+      - name: Métadonnées (source, licence, unités) dans git
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add data/$COUNTRY/nappes_mondiales/${{ matrix.part }}.json
+          git diff --cached --quiet || (git commit -m "Couche mondiale des nappes : ${{ matrix.part }} (métadonnées)" && \
+            for i in 1 2 3; do git pull --rebase --autostash origin main && git push && break; sleep 10; done)

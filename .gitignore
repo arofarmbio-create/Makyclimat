@@ -27,3 +27,8 @@ data/*/drought/
 # Extractions brutes MGMERL (données publiques, citer MGMERL ; rangées hors git)
 data/*/mgmerl_raw/
 data/*/grids/rain_offseason.npz
+
+# Couches mondiales recadrées (carte des nappes) : rangées en release ou en cache, jamais dans git (licences)
+data/*/nappes_mondiales/*.tif
+data/*/nappes_mondiales/*.gpkg
+data/*/nappes_mondiales/*.csv

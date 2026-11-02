@@ -120,7 +120,7 @@ en UTC. Un workflow programmé qui échoue envoie un courriel au propriétaire d
 | Chaque semaine | 4 - Historique ; 7 - Cyclones ; 8 - Saisonnier SEAS5 ; vérification des sources ; 14 - Reprévisions GloFAS ; 16 - C3S | Le dimanche, le 14 complète les mois manquants de l'archive ; le mercredi, le 16 complète les systèmes C3S manquants ; puis ils ne font plus rien |
 | Chaque mois | 12 - Comptes NASA et Copernicus (le 1er) ; 13 - Routes (le 8) ; 12 - Chocs (le 9) ; 19 - SPI, SPEI et NDVI (le 22) ; 20 - E1 sources de pluie (le 25) | Comptes ou licences à renouveler ; OpenStreetMap ; JIAF ; séries de sécheresse ; pluie CHIRPS, IMERG Late, ERA5-Land et stations GSOD de l'année en cours |
 | Chaque trimestre | 9, 10, 10 bis, 11 - Validations ; 15 - Vérification par l'impact | Nouveaux événements, activations EMS, fiches DesInventar |
-| Chaque année | 16 - Saisonnier hybride C3S (16 octobre) ; 17 et 18 - IMERG (5 et 20 septembre) ; 5 - Hydrologie, 11 - Cultures (janvier) | Prévision C3S d'octobre ; saison IMERG passée ; terrain, couverture du sol |
+| Chaque année | 16 - Saisonnier hybride C3S (16 octobre) ; 17 et 18 - IMERG (5 et 20 septembre) ; 5 - Hydrologie, 11 - Cultures (janvier) ; 21 - Couches mondiales des nappes (10 janvier) | Prévision C3S d'octobre ; saison IMERG passée ; terrain, couverture du sol ; profondeur de nappe, fluor, perméabilité, lithologie, socle, salinité (carte nationale des nappes) |
 | Manuel, volontairement | 1 - Limites et population ; 2 - Normale de pluie ; essais (13, vérification ponctuelle) | Un changement de limites ou de normale (1991-2020) se décide, il ne s'applique pas tout seul |
 
 Garde-fous : une validation programmée **ne publie rien** si ses données sont incomplètes (reprévisions GloFAS,
