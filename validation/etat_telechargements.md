@@ -27,6 +27,8 @@ Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 12 h 40 UTC.*
 | SPEI : ET0 ERA5-Land mensuelle | Copernicus CDS | 1981-2025 | — | tout | même blocage Copernicus que ci-dessus | ⏸ en attente : après ERA5-Land d'E1 |
 | Indice MCT (ERA5 850 hPa) | Copernicus CDS | déc.-févr. 1981-2025 | — | tout | — (script et workflow 22 prêts, testés) | ⏸ en attente : après l'ET0 du SPEI |
 | Reprévisions GloFAS v4 | Copernicus EWDS | 21 saisons x 6 mois = 126 mois | 18 mois | 108 mois | file d'attente pleine (années lancées 2 par 2, 01/11) ; puis en concurrence avec ERA5-Land | ⏸ mis en pause le 02/11 (run 41411661636 annulé) : après l'indice MCT |
+| R-02 bis : IMERG V07 Final demi-horaire, 7 activations EMS | NASA GES DISC | 7 événements (77 jours au total, environ 3 700 requêtes) | — | tout | — (script, fenêtres et workflow 23 prêts, testés) | ⏸ en attente : après IMERG E1 et IMERG pilote, un événement à la fois |
+| R-02 bis : rafales ERA5 (instantaneous_10m_wind_gust) | Copernicus CDS | 7 fenêtres, emprise de Madagascar | — | tout | — (même script, partie « rafales ») | ⏸ en attente : file Copernicus, après l'indice MCT |
 | Prévisions C3S (10 systèmes) | Copernicus CDS | 10 systèmes | 0 | 10 | demande bloquée 5 h sans livraison, qui gênait ERA5-Land | ⏸ en pause depuis le 02/11 : en dernier |
 | IMERG demi-horaire, périmètre pilote | NASA GES DISC | 11 saisons (2014-2024) | 2014, 2017, 2018, 2022, 2023, 2024 | 2015, 2016, 2019, 2020, 2021 | concurrence avec IMERG E1 sur le même compte | ⏸ mis en pause le 02/11 (run 41406653970 annulé) : après IMERG E1 |
 | ONI, DMI, SIOD, MOZ (ERSST) | NOAA | mensuel | ONI, DMI ; SIOD et MOZ en cours | — | — | ⏳ workflow 8 lancé le 02/11 (run 41444771537) |
@@ -39,3 +41,5 @@ Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 12 h 40 UTC.*
   sécurité, testés ; lancement E1 précédent annulé et relancé avec une seule année IMERG à la fois.
 - 02/11, 12 h 30 UTC : créneaux CHIRPS ajoutés au workflow 20 ; relief E1 calculé sur ce PC ; script et workflow de
   l'indice MCT prêts ; GloFAS et IMERG pilote mis en pause pour respecter la règle « un fournisseur à la fois ».
+- 02/11, 12 h 50 UTC : R-02 bis préparé (fenêtres des 7 cyclones dans `validation/r02bis_fenetres.csv`, script
+  `build_r02bis_sources.py`, workflow 23 manuel, tests). Placé dans les files NASA et Copernicus, non lancé.

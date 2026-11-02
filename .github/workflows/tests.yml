@@ -69,6 +69,7 @@ jobs:
           python tests/test_nappes_mgmerl.py
           python tests/test_relief_e1.py
           python tests/test_mct_era5.py
+          python tests/test_r02bis_sources.py
           python tests/test_nappes_mondiales.py
           python scripts/compute_metrics.py --country demo
       - name: Tests de l'interface

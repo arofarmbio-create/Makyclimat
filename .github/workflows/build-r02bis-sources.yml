@@ -1,0 +1,73 @@
+name: "23 - R-02 bis : pluie IMERG demi-horaire et rafales ERA5 des 7 activations EMS"
+
+# Données figées (événements passés) : lancement manuel seulement, une partie à la fois, au rythme des fournisseurs
+# (validation/etat_telechargements.md). IMERG : un événement à la fois, requêtes séquentielles (NASA GES DISC).
+# Rafales : une demande Copernicus à la fois, après ménage de la file du compte.
+on:
+  workflow_dispatch:
+    inputs:
+      part:
+        description: "Partie : imerg ou rafales"
+        default: "imerg"
+      events:
+        description: "Activations (espaces), vide = les 7"
+        default: ""
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+  TAG: r02bis-sources
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      events: ${{ steps.e.outputs.events }}
+    steps:
+      - id: e
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ev="${{ github.event.inputs.events }}"
+          [ -n "$ev" ] || ev="EMSR264 EMSR274 EMSR424 EMSR564 EMSR565 EMSR645 EMSR652"
+          echo "events=$(echo "$ev" | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" -R "$GITHUB_REPOSITORY" \
+            --title "R-02 bis : pluie IMERG et rafales ERA5 par activation EMS" \
+            --notes "validation/protocole_r02bis_echelle_alea.md ; fenêtres dans validation/r02bis_fenetres.csv ; scripts/build_r02bis_sources.py. IMERG V07 Final (NASA), ERA5 (Copernicus)." || true
+
+  telecharger:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        event: ${{ fromJson(needs.plan.outputs.events) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests scipy "cdsapi>=0.7.4" xarray netCDF4 h5netcdf
+      - name: Déjà publié ?
+        id: done
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          p="${{ github.event.inputs.part }}"; f="${p}_${{ matrix.event }}.npz"
+          if gh release view "$TAG" --json assets -q '.assets[].name' | grep -qx "$f"; then echo "skip=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Télécharger et publier
+        if: steps.done.outputs.skip != '1'
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+          CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          p="${{ github.event.inputs.part }}"
+          [ "$p" = "rafales" ] && { python scripts/cds_menage.py --age-min 30 || true; }
+          python scripts/build_r02bis_sources.py --country "$COUNTRY" --part "$p" --event "${{ matrix.event }}"
+          gh release upload "$TAG" "data/$COUNTRY/r02bis/${p}_${{ matrix.event }}.npz" --clobber
