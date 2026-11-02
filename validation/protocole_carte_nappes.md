@@ -329,3 +329,22 @@ forages)** :
 - **H-C2 confirmée** si le modèle hybride bat à la fois la carte de Fan et le krigeage dans plus de la moitié des
   blocs (deux tests du signe unilatéraux, chacun à 5 %). La couverture de l'intervalle de 80 % est publiée.
 
+**H-C2b : extrapolation loin des forages (ajout du 02/11/2026, après le résultat de H-C2 et avant son propre calcul)**
+
+*Statut honnête : ce test est conçu après avoir vu H-C2. Il est plus exigeant, car il mesure ce que H-C2 ne mesurait
+pas (prédire loin de tout forage connu). Mais il utilise les mêmes forages : c'est donc un test complémentaire, à
+confirmer plus tard sur d'autres forages.*
+
+- **Découpage** : chaque **région administrative** comptant au moins 10 forages est laissée de côté entière. Les
+  modèles (hybride et krigeage, réglages identiques à H-C2) sont appris sur toutes les autres régions.
+- **Mesures** : erreur absolue de chaque forage de la région laissée de côté ; distance de chaque forage au forage
+  d'apprentissage le plus proche.
+- **H-C2b confirmée** si les deux conditions suivantes sont réunies :
+  1. sur l'ensemble des forages des régions laissées de côté, l'erreur absolue de l'hybride est plus faible que celle
+     du krigeage (test de Wilcoxon apparié, unilatéral, 5 %) ;
+  2. l'hybride a l'erreur médiane la plus faible dans plus de la moitié des régions laissées de côté.
+- **Analyse descriptive** : erreurs des deux méthodes par classe de distance au forage d'apprentissage le plus proche
+  (0-25, 25-50, 50-100, plus de 100 km). Attendu : l'erreur du krigeage croît avec la distance plus vite que celle de
+  l'hybride.
+- La carte de Fan seule est rapportée à titre de référence.
+
