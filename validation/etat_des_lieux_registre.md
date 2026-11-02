@@ -162,6 +162,12 @@ statut, document détaillé.
 | R-23 | L'intensité infra-journalière (IMERG) détecte-t-elle mieux les inondations pluviales que le cumul ? | `protocole_intensite_imerg.md` | 5 saisons sur 11 téléchargées ; 2014, 2015, 2016, 2019, 2020, 2021 en échec (« liste des fichiers inaccessible » sur le serveur NASA) ; attente allongée et 6 saisons relancées le 02/11 | ⏳ 🔧 |
 | R-24 | Le SPEI suit-il mieux le stress de la végétation (NDVI) que le SPI ? | `protocole_spei_ndvi.md` | Séries pluie et NDVI prêtes ; **ET0 ERA5-Land refusée par le CDS** (« job rejected », 29/10) ; validation non lancée. Cause : file d'attente du CDS pleine ; corrigé et relancé le 02/11 | ⏳ 🔧 |
 
+### 2.4 bis Expérience E1 : fusion et qualité des sources de pluie
+
+| ID | Question | Protocole | État au 02/11/2026 | Statut |
+|---|---|---|---|---|
+| R-35 | La fusion contrôlée de CHIRPS, IMERG Late et ERA5-Land, pondérée par triple collocation, bat-elle la meilleure source seule (stations GSOD, pentades, 2016-2025) ? | `protocole_e1_fusion_pluie.md` | Protocole écrit avant calcul ; téléchargement des 3 sources (2001-2026) et des 25 stations GSOD lancé le 02/11 | ⏳ |
+
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 
 | ID | Méthode | Données et validation | Résultat | Statut | Détail |

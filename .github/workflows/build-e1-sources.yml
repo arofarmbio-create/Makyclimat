@@ -1,0 +1,118 @@
+name: 20 - E1 : sources de pluie (CHIRPS, IMERG Late, ERA5-Land, stations GSOD)
+
+# Expérience E1 du protocole doctoral (validation/protocole_e1_fusion_pluie.md). Télécharge, année par année, la pluie
+# journalière des trois sources sur la grille commune de 0,1° et les relevés des stations GSOD, et les range dans la
+# release « e1-pluie » (hors du dépôt git). Reprend là où il s'est arrêté : une année déjà publiée est sautée, sauf
+# l'année en cours (et l'année précédente en janvier), recalculée à chaque passage mensuel.
+on:
+  schedule:
+    - cron: "0 5 25 * *"    # le 25 de chaque mois : complète l'année en cours (CHIRPS final, ERA5-Land, IMERG)
+  workflow_dispatch:
+    inputs:
+      years:
+        description: "Années séparées par des espaces (vide = 2001 à l'année en cours)"
+        default: ""
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+  TAG: e1-pluie
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      years: ${{ steps.y.outputs.years }}
+      refresh: ${{ steps.y.outputs.refresh }}
+    steps:
+      - id: y
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ys="${{ github.event.inputs.years }}"
+          [ -n "$ys" ] || ys="$(seq 2001 "$(date -u +%Y)" | tr '\n' ' ')"
+          echo "years=$(echo "$ys" | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+          r="$(date -u +%Y)"; [ "$(date -u +%m)" = "01" ] && r="$r $(( $(date -u +%Y) - 1 ))"
+          echo "refresh=$r" >> "$GITHUB_OUTPUT"
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" -R "$GITHUB_REPOSITORY" \
+            --title "E1 : pluie journalière de trois sources et stations GSOD" \
+            --notes "Expérience E1 (validation/protocole_e1_fusion_pluie.md). CHIRPS v2.0 (CHC), IMERG V07 Late (NASA), ERA5-Land (Copernicus), grille commune 0,1° ; GSOD (NOAA). scripts/build_e1_sources.py." || true
+
+  grilles:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      max-parallel: 4
+      fail-fast: false
+      matrix:
+        source: [chirps, imerg]
+        year: ${{ fromJson(needs.plan.outputs.years) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Déjà publié ?
+        id: done
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          f="${{ matrix.source }}_${{ matrix.year }}.npz"
+          if gh release view "$TAG" --json assets -q '.assets[].name' | grep -qx "$f" \
+             && ! echo " ${{ needs.plan.outputs.refresh }} " | grep -q " ${{ matrix.year }} "; then
+            echo "$f déjà publié"; echo "skip=1" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.done.outputs.skip != '1'
+        run: pip install numpy pandas pyyaml requests scipy rasterio
+      - name: Télécharger et publier
+        if: steps.done.outputs.skip != '1'
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/build_e1_sources.py --country "$COUNTRY" --source "${{ matrix.source }}" --year "${{ matrix.year }}"
+          gh release upload "$TAG" "data/$COUNTRY/e1/${{ matrix.source }}_${{ matrix.year }}.npz" --clobber
+
+  era5:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests "cdsapi>=0.7.4" xarray netCDF4 h5netcdf
+      - name: Année par année (une requête Copernicus à la fois), publiée aussitôt
+        env:
+          CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          have="$(gh release view "$TAG" --json assets -q '.assets[].name')"
+          for y in $(echo '${{ needs.plan.outputs.years }}' | jq -r '.[]'); do
+            f="era5_$y.npz"
+            if echo "$have" | grep -qx "$f" && ! echo " ${{ needs.plan.outputs.refresh }} " | grep -q " $y "; then continue; fi
+            python scripts/build_e1_sources.py --country "$COUNTRY" --source era5 --year "$y" || { echo "::warning::ERA5-Land $y échoué"; continue; }
+            gh release upload "$TAG" "data/$COUNTRY/e1/$f" --clobber
+          done
+
+  gsod:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests
+      - name: Stations GSOD de Madagascar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/build_e1_sources.py --country "$COUNTRY" --source gsod
+          gh release upload "$TAG" "data/$COUNTRY/e1/gsod.csv" --clobber

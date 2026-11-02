@@ -166,3 +166,26 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   chaque mercredi complète les systèmes manquants.
 - ❌ puis 🔧 **IMERG (R-23)** : 6 saisons sur 11 échouées sur « liste des fichiers inaccessible » (coupures du
   serveur NASA de plus d'une minute). 🔧 Attente portée à environ 18 minutes avant d'abandonner.
+
+### Expérience E1 : fusion et qualité des sources de pluie
+- ✅ Recherche bibliographique **avant** le protocole. Travaux déjà publiés : Ollivier et al. (2023, J. Hydrol. Reg.
+  Stud. 47) fusionnent 21 produits contre 24 pluviomètres au pas mensuel, et la fusion l'emporte ; Randriatsara et al.
+  (2022, Int. J. Climatol.) comparent 15 jeux de 1983 à 2015, et CHIRPS a les biais les plus faibles. 📌 E1 ne refait
+  donc pas leur comparaison. Elle ajoute :
+  - l'échelle de 5 jours ;
+  - une erreur estimée partout sans pluviomètre (triple collocation, jamais appliquée à Madagascar d'après la
+    recherche) ;
+  - une évaluation par les impacts ;
+  - uniquement des sources disponibles en temps quasi réel.
+- ✅ Protocole écrit avant tout téléchargement : `validation/protocole_e1_fusion_pluie.md` (hypothèses H1-E1 et H3-E1,
+  apprentissage 2001-2015 et test 2016-2025, critère principal KGE par pentade).
+- ✅ 25 stations synoptiques GSOD (NOAA) actives à Madagascar ont été trouvées. ⚠️ Contrôle du 02/11 : jusqu'à 60 % des
+  jours d'une station (Ivato, 2015) portent le drapeau « I » (aucune pluie déclarée, sans certitude) ; Toliara n'a que
+  3 jours en 2024. 📌 Le drapeau « I » sera traité comme manquant, pas comme zéro. Le compter comme zéro aurait
+  faussé la référence.
+- 📌 Autres stations à obtenir : la DGM (démarche du porteur du projet), les stations météorologiques MGMERL (signalées
+  par le porteur du projet le 02/11) et les 24 pluviomètres d'Ollivier et al. (à demander aux auteurs).
+- ✅ Téléchargeur (`build_e1_sources.py`, 13 tests réussis) et workflow mensuel 20 (le 25 de chaque mois).
+- ❌ puis 🔧 Ma relance du 02/11 au matin du workflow GloFAS (14) ne traitait que 2018 : un lancement manuel prend la
+  valeur par défaut du formulaire. Relancé avec les 21 années. **Leçon :** relire les valeurs par défaut d'un
+  formulaire avant un lancement manuel.
