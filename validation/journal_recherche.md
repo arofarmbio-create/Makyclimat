@@ -412,3 +412,11 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - ❌ puis 🔧 CHIRPS 2026 échouait, car le serveur répond « 403 » et non « 404 » pour un jour pas encore publié ;
   corrigé. ERA5-Land découpé en une tâche par année (environ 1 h chacune, une seule à la fois), car 25 années d'affilée
   dépasseraient la limite de 6 heures. Le script IMERG du périmètre pilote est rendu séquentiel lui aussi.
+
+### MGMERL : exports des rapports de forage refusés
+- ❌ Les liens CSV de la console « Ressources en eau > Exportation » (lithologie, essais par palier et de longue durée)
+  répondent « client not found », même connecté avec le compte du porteur du projet et après avoir autorisé
+  api.mwater.co dans l'extension Chrome. C'est le même refus qu'au 27/10/2026 : l'export est réservé aux membres de
+  l'organisation mWater qui gère la console. La consultation reste possible, l'export non. 📌 Pistes : demander
+  l'export ou une adhésion à MGMERL ; à défaut, relever les tableaux affichés à l'écran (limités aux 1 000 lignes
+  les plus récentes).
