@@ -94,5 +94,12 @@ n = C.cds_cancel_stale(Cli(), "era5", session=s, now=NOW)
 check("annule seulement la demande ancienne, en attente, du même jeu", n == 1 and s.deleted == ["a"])
 check("client sans adresse ni clé : rien n'est tenté", C.cds_cancel_stale(object(), "era5", session=s, now=NOW) == 0)
 
+# Ménage de la file (scripts/cds_menage.py) : seules les demandes en file depuis plus de 30 min, tous jeux confondus
+import cds_menage as M  # noqa: E402
+
+jobs = [job("a", "seasonal", "accepted", 5), job("b", "era5", "accepted", 0.2), job("c", "era5", "running", 9)]
+st = M.stale_jobs(jobs, NOW, 30)
+check("ménage : demande en file depuis 5 h annulée, récente et en cours épargnées", [j["jobID"] for j in st] == ["a"])
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

@@ -160,6 +160,7 @@ jobs:
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
           GH_TOKEN: ${{ github.token }}
         run: |
+          python scripts/cds_menage.py --age-min 30 || true      # demandes orphelines d'autres tâches (02/11/2026)
           have="$(gh release view "$TAG" --json assets -q '.assets[].name')"
           for y in $(echo '${{ needs.plan.outputs.years }}' | jq -r '.[]'); do
             f="era5_$y.npz"

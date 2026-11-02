@@ -292,3 +292,13 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
     les modules nappes et téléconnexions ;
   - des eaux de fractures très anciennes (plus de 10 000 ans dans le Karoo, équivalent de l'Isalo).
   Deux hypothèses ajoutées au futur protocole M3 bis : H-N7 (95e centile) et H-N8 (failles).
+
+### ERA5-Land bloqué : la vraie cause
+- ❌ Les relances d'ERA5-Land (E1 et SPEI) ont encore été refusées tout l'après-midi, alors que la file ERA5-Land du
+  compte était vide (« 0 demande pour reanalysis-era5-land »). La seule demande en file était celle du chapitre C3S,
+  lancé à 07 h 30 UTC et toujours bloqué 5 heures plus tard sans rien livrer. D'après le forum ECMWF, la limite porte
+  sur les demandes de l'utilisateur vers ce type d'archive, pas seulement sur un jeu de données.
+- 🔧 C3S est mis en pause (reprise automatique mercredi, ou manuelle une fois ERA5-Land téléchargé). Un script de
+  ménage (`scripts/cds_menage.py`, testé) liste les demandes du compte et annule celles qui sont en file depuis plus
+  de 30 minutes, tous jeux confondus ; il tourne avant chaque série ERA5-Land d'E1. 📌 Règle : une seule famille de
+  téléchargements Copernicus à la fois.
