@@ -45,6 +45,9 @@ dans une région où la sécheresse est meurtrière.
 | ONI | NOAA CPC (déjà dans le système) | 1950 à aujourd'hui |
 | DMI | ERSST v5, `connector_dmi.py` (déjà dans le système) | 1950 à aujourd'hui |
 | SIOD (dipôle subtropical) | ERSST v5, même méthode : (55-65°E, 37-27°S) moins (90-100°E, 28-18°S), Behera et Yamagata (2001) ; à calculer | 1950 à aujourd'hui |
+| Température du canal de Mozambique | ERSST v5, anomalie moyenne sur 35-45°E, 25-15°S ; à calculer (ajout du 02/11, section 9) | 1950 à aujourd'hui |
+| Creux du canal de Mozambique | ERA5, tourbillon à 850 hPa (attribution seulement ; à télécharger) | 1981-2025 |
+| Relief, géologie | GLO-90 et carte BGS (déjà dans le système) | — |
 | Cyclones | IBTrACS (déjà dans le système) | 1981-2025 |
 | Niveaux de nappe | MGMERL HT Analytics (16 sites, 7 retenus en M3) ; puis Water Missions, Lorentz, relevés ACF, GROSoM, à obtenir | 2019-2025 pour l'instant |
 
@@ -125,3 +128,28 @@ Régions du Grand Sud : Androy, Anosy, Atsimo-Andrefana.
 ## 9. Journal des modifications
 
 - 02/11/2026 : version initiale.
+- 02/11/2026, **avant tout calcul**, à la demande du porteur du projet (« pour le sud-ouest, regarde la topographie,
+  le canal de Mozambique et la géologie ») :
+  - **Relief.** Le sud-ouest est sous le vent des Hautes Terres : les alizés y apportent peu de pluie liée au relief,
+    et ses épisodes extrêmes viennent plutôt de systèmes du canal de Mozambique. Le relief de Madagascar crée
+    lui-même le creux du canal de Mozambique (Barimalala et al. 2018, *Geophysical Research Letters* 45, 11380-11389) ;
+    un creux plus marqué donne plus de pluie sur Madagascar. Analyse descriptive ajoutée : les districts du Grand Sud
+    sont classés, avant tout calcul, en « versant au vent » ou « sous le vent » selon l'orientation de la pente
+    principale (relief GLO-90) par rapport aux alizés d'est. Les résultats du maillon A sont présentés pour chacun des
+    deux groupes.
+  - **Canal de Mozambique.**
+    - Nouveau prédicteur connu avant la saison : l'anomalie de température de surface du canal (35-45°E, 25-15°S),
+      moyenne de juillet à septembre, calculée à partir d'ERSST v5 comme le DMI. Le contrôle des tests multiples porte
+      désormais sur 3 régions × 4 indices.
+    - Analyse d'attribution (secondaire, jamais utilisée pour la prévision) : intensité du creux du canal en
+      décembre-février, mesurée par le tourbillon à 850 hPa d'ERA5 au-dessus du canal (données à demander à l'agent de
+      téléchargement, après ERA5-Land).
+    - Dans l'analyse des cyclones : les mois extrêmes sont séparés selon que le cyclone est né ou est passé dans le
+      canal de Mozambique, ou est venu de l'est.
+  - **Géologie.** Pour le maillon B, chaque site de nappe est classé avant tout calcul selon la carte géologique et
+    hydrogéologique (BGS) : sédimentaire ou karst (plateau Mahafaly, Isalo, dépôts côtiers) ou socle cristallin. Les
+    réponses aux mois extrêmes sont décrites séparément par classe. On s'attend à une réponse plus rapide dans le
+    karst, où l'eau s'infiltre vite, que dans le socle, où elle passe par les fractures. Cette attente reste
+    descriptive : avec 7 sites, pas de test.
+  - H-A, H-B et H-B2 gardent le même énoncé. Les ajouts sont des prédicteurs et des stratifications fixés avant tout
+    calcul.

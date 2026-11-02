@@ -312,3 +312,6 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Honnêteté sur les données : les 7 sites MGMERL ont déjà servi en M3, donc le maillon B y est exploratoire. La
   confirmation se fera sur des sites indépendants (Water Missions, Lorentz, ACF, GROSoM, ou mesures postérieures à
   juin 2025).
+- 📌 À la demande du porteur du projet, avant tout calcul : le protocole H-N7 intègre le relief du sud-ouest (sous le
+  vent des Hautes Terres), le canal de Mozambique (température de surface en juillet-septembre comme prédicteur ;
+  creux du canal en attribution, d'après Barimalala et al. 2018) et la géologie des sites (karst ou socle).

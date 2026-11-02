@@ -174,6 +174,13 @@ statut, document détaillé.
 | ID | Question | Protocole | État au 02/11/2026 | Statut |
 |---|---|---|---|---|
 | R-36 | Le SPI et l'indice de recharge du système suivent-ils les niveaux de nappe mesurés par 16 dataloggers MGMERL dans le Grand Sud (2019-2025) ? | `protocole_nappes_mgmerl.md` | 7 sites retenus sur 16. H-N1 : 5/7 sites avec r(SPI-12) > 0, p = 0,23 (non soutenue) ; H-N2, H-N3a, H-N3b non soutenues (excédent, SPEI-12 avec ET0, bilan P − ETR : pas mieux que le SPI). Cumul optimal de 9 à 24 mois selon le site | ❌ négatif, faible puissance (`nappes_mgmerl.md`) |
+| R-38 | Carte nationale des nappes interrogeable en un point GPS (profondeur, type, âge, salinité, fluor, potentiel) : les cartes mondiales sont-elles justes à Madagascar, et un modèle hybride recalé sur les forages malgaches fait-il mieux hors des zones d'apprentissage ? | `protocole_carte_nappes.md` | Protocole écrit avant calcul (H-C1 à H-C4, validation par blocs d'environ 100 km). Couches mondiales en cours de téléchargement (workflow 21) ; recharge mondiale de Jung et al. 2024 non publiée en accès libre ; recharge africaine de MacDonald et al. 2021 derrière un formulaire BGS | ⏳ |
+
+### 2.4 quater Océan, pluies extrêmes et recharge des nappes (H-N7)
+
+| ID | Question | Protocole | État au 02/11/2026 | Statut |
+|---|---|---|---|---|
+| R-39 | L'état de l'océan avant la saison (ONI, DMI, SIOD, canal de Mozambique) annonce-t-il les mois de pluie extrême du Grand Sud, et ces mois font-ils remonter les nappes ? Relief (au vent ou sous le vent) et géologie (karst ou socle) décrits à part | `protocole_climat_extremes_nappes.md` | Protocole écrit avant calcul ; maillon B exploratoire sur les 7 sites MGMERL, confirmatoire sur des sites indépendants à obtenir | ⏳ |
 
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 
