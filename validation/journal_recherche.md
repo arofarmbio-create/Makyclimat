@@ -452,3 +452,18 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   entre sources avec l'effet recherché ; version T2 retenue sur H-C5 ; intervalle de 80 % tiré des résidus par pays ;
   références malgaches (Sud 20-100 mm/an, plateau Mahafaly environ 60 mm/an, fluctuation de nappe aux sites MGMERL).
   Script et 5 tests prêts ; variables malgaches demandées à l'agent de téléchargement.
+
+### Carte des nappes : H-C2 (`validation/nappes_hc2.md`)
+- 📊 999 forages MGMERL, validation par blocs de 1° (25 blocs, chacun prédit sans aucun de ses forages). Erreur
+  absolue médiane entre blocs : carte de Fan seule 6,4 m ; krigeage des seules mesures 3,1 m ; **modèle hybride
+  2,8 m**. L'intervalle de 80 % de l'hybride couvre 76 % des forages : il est bien calibré.
+- ✅ L'hybride bat la carte mondiale dans 23 blocs sur 25 (p < 0,001) : la correction apprise sur les forages
+  malgaches divise l'erreur par plus de deux.
+- ⚠️ **H-C2 non confirmée selon la règle fixée** : face au krigeage, l'hybride ne fait mieux que dans 16 blocs sur
+  25 (p = 0,115). Lecture : les niveaux statiques mesurés varient peu (médiane de 5 à 6 m), donc une simple
+  interpolation des mesures voisines est déjà difficile à battre là où il y a des forages. L'avantage attendu de
+  l'hybride se situe loin des forages, ce que des blocs de 1° entourés d'autres blocs mesurés ne testent pas.
+- 📌 Pistes, qui demanderont un nouveau protocole écrit avant calcul : (1) une validation par grandes régions
+  laissées de côté, qui teste vraiment l'extrapolation loin des forages ; (2) ajouter une carte des failles et la
+  profondeur des forages, quand elles seront disponibles ; (3) l'export complet des 25 272 forages restant
+  inaccessible, élargir avec d'autres sources.
