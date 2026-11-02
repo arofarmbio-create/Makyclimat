@@ -161,6 +161,10 @@ def probe_imerg(day: dt.date) -> None:
         r = s.get(stem + suffix, timeout=120)
         print(f"--- {suffix[:60]} -> HTTP {r.status_code}, {len(r.text)} car., {time.time() - t0:.1f} s")
         print(r.text[:700])
+    days = [day + dt.timedelta(days=k) for k in range(12)]
+    t0 = time.time()
+    got, _ = part_imerg(days)
+    print(f"12 jours avec part_imerg : {sum(g is not None for g in got)} obtenus en {time.time() - t0:.0f} s", flush=True)
 
 
 def part_imerg(days):
@@ -191,8 +195,10 @@ def part_imerg(days):
                     return parse_imerg_ascii(r.text)     # un format inattendu lève ValueError : pas de nouvel essai
                 if r.status_code in (401, 403):
                     raise RuntimeError(f"accès refusé (HTTP {r.status_code}) : compte Earthdata ou application GES DISC")
-            except requests.RequestException:
-                pass
+            except requests.RequestException as e:
+                print(f"  {d} essai {k + 1} : {type(e).__name__}", flush=True)
+            else:
+                print(f"  {d} essai {k + 1} : HTTP {r.status_code}", flush=True)
             time.sleep(10 * (k + 1))
         return None
 
