@@ -269,3 +269,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   - **Conclusion provisoire :** l'indice de nappe du système reste « non validé ». Le SPI seul suit les nappes au
     moins aussi bien, avec une mémoire propre à chaque site. Il faut plus de sites (Water Missions, Lorentz,
     relevés ACF, observatoire du sud-ouest) pour un test concluant.
+
+### Bibliographie : hydrogéologie du Grand Sud (`validation/biblio_hydrogeologie_grand_sud.md`)
+- ✅ L'hypothèse du porteur du projet est confirmée par la littérature. Le Sud a une nappe générale profonde et
+  régionale (socle ou Isalo, puis calcaires, puis côte ; 150 à 200 m sous le plateau Karimbola) et des nappes peu
+  profondes (alluviales et sous-écoulement des rivières, sables côtiers, socle altéré). Un bilan annuel ou mensuel
+  conclut à tort à l'absence de recharge : la recharge vient d'épisodes brutaux (cyclones) et de zones amont (AVSF
+  2016, Guyot 2002). Sur le plateau Mahafaly, le signal de recharge se lisse avec la profondeur (Carrière et al.
+  2023).
+- 📌 Ces lectures expliquent nos résultats M3 (excédent nul dans le Sud, mémoire de 9 à 24 mois, sites qui ne suivent
+  pas la pluie locale). Mais elles arrivent après les résultats : ce sont des hypothèses nouvelles (H-N4 à H-N6),
+  à tester sur des sites indépendants dans un protocole M3 bis écrit avant calcul.
+- ❌ Trois documents n'ont pas pu être téléchargés (pages de protection) : l'article Carrière et al. 2023 en texte
+  intégral, la thèse de Rabemanana et la synthèse de Rakotondraibe (2006). Ils ne sont cités que d'après leur résumé.
