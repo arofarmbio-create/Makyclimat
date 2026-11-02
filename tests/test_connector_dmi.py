@@ -48,5 +48,23 @@ d = D.dmi_series(west2, east, years, months)
 check("cycle saisonnier retiré : DMI nul hors anomalie", np.allclose(d[~k], 0, atol=1e-9))
 check("anomalie ouest +0,8 °C -> DMI +0,8", abs(d[k][0] - 0.8) < 1e-9, str(d[k]))
 
+
+# Zones ajoutées le 02/11/2026 : grille ERSST lat = 88 - 2 i, lon = 2 j
+
+
+def bounds(b):
+    i0, i1, j0, j1 = b
+    return (88 - 2 * i1, 88 - 2 * i0, 2 * j0, 2 * j1)            # lat min, lat max, lon min, lon max
+
+
+check("SIOD ouest : 28-36°S, 56-64°E", bounds(D.SIOD_WEST) == (-36, -28, 56, 64))
+check("SIOD est : 18-28°S, 90-100°E", bounds(D.SIOD_EAST) == (-28, -18, 90, 100))
+check("canal de Mozambique : 16-24°S, 36-44°E", bounds(D.MOZ) == (-24, -16, 36, 44))
+x = 26 + seas
+x2 = x.copy()
+x2[k] += 0.5
+an = D.anomaly_series(x2, years, months)
+check("anomalie d'une seule zone : +0,5 °C en août 2026, nulle ailleurs", abs(an[k][0] - 0.5) < 1e-9 and np.allclose(an[~k], 0, atol=1e-9))
+
 print(f"\n{FAILS} ÉCHEC(S)" if FAILS else "\nTous les tests passent")
 sys.exit(1 if FAILS else 0)

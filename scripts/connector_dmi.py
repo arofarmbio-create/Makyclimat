@@ -8,6 +8,10 @@ moyennée avec un poids cos(latitude) sur la zone ouest (50-70°E, 10°S-10°N) 
 Limites : ERSST est une grille de 2° (plus grossière que HadISST 1° ou OISST 0,25°) ; valeurs proches des séries officielles
 mais pas identiques ; pas de retrait de tendance.
 Sortie : data/enso/dmi_ersst.csv (year, month, value). Le même fichier sert à l'apprentissage et à la prévision.
+Ajout du 02/11/2026 (protocole validation/protocole_climat_extremes_nappes.md), même source et même méthode :
+  - data/enso/siod_ersst.csv : dipôle subtropical de l'océan Indien (Behera et Yamagata 2001), zone ouest
+    (55-65°E, 37-27°S) moins zone est (90-100°E, 28-18°S) ;
+  - data/enso/moz_ersst.csv : anomalie de température de surface du canal de Mozambique (35-45°E, 25-15°S).
 Usage : python scripts/connector_dmi.py
 """
 from __future__ import annotations
@@ -28,6 +32,9 @@ BASELINE = (1991, 2020)
 # indices de grille ERSST (lat = 88 - 2 i, lon = 2 j)
 WEST = (39, 49, 25, 35)                # 10°N..10°S, 50..70°E
 EAST = (44, 49, 45, 55)                # 0..10°S, 90..110°E
+SIOD_WEST = (58, 62, 28, 32)           # 28..36°S, 56..64°E (centres de maille pairs)
+SIOD_EAST = (53, 58, 45, 50)           # 18..28°S, 90..100°E
+MOZ = (52, 56, 18, 22)                 # 16..24°S, 36..44°E (canal de Mozambique ; la terre est masquée)
 
 
 def n_times() -> int:
@@ -75,6 +82,19 @@ def dmi_series(west: np.ndarray, east: np.ndarray, years: np.ndarray, months: np
     return out
 
 
+def anomaly_series(x: np.ndarray, years: np.ndarray, months: np.ndarray) -> np.ndarray:
+    """Anomalie mensuelle d'une seule zone (référence BASELINE, par mois du calendrier)."""
+    return dmi_series(x, np.zeros_like(x), years, months)
+
+
+def write(name: str, years, months, values) -> pd.DataFrame:
+    df = pd.DataFrame({"year": years, "month": months, "value": np.round(values, 3)})
+    out = DATA_DIR / "enso" / name
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    return df
+
+
 def main() -> pd.DataFrame:
     nt = n_times()
     t0 = (FIRST_YEAR - START[0]) * 12
@@ -82,10 +102,10 @@ def main() -> pd.DataFrame:
     w, e = box_mean(box(t0, t1, WEST), WEST), box_mean(box(t0, t1, EAST), EAST)
     k = np.arange(t0, t1 + 1)
     years, months = START[0] + k // 12, 1 + k % 12
-    df = pd.DataFrame({"year": years, "month": months, "value": np.round(dmi_series(w, e, years, months), 3)})
-    out = DATA_DIR / "enso" / "dmi_ersst.csv"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(out, index=False)
+    df = write("dmi_ersst.csv", years, months, dmi_series(w, e, years, months))
+    sw, se = box_mean(box(t0, t1, SIOD_WEST), SIOD_WEST), box_mean(box(t0, t1, SIOD_EAST), SIOD_EAST)
+    write("siod_ersst.csv", years, months, dmi_series(sw, se, years, months))
+    write("moz_ersst.csv", years, months, anomaly_series(box_mean(box(t0, t1, MOZ), MOZ), years, months))
     last = df.iloc[-1]
     print(f"DMI (ERSST v5) : {len(df)} mois, dernier {int(last.year)}-{int(last.month):02d} = {last.value:+.2f} °C ; "
           f"juillet-septembre {int(last.year)} = {df[(df.year == last.year) & df.month.isin([7, 8, 9])].value.mean():+.2f} °C")
