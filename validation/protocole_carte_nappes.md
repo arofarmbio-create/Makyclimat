@@ -157,14 +157,20 @@ de la littérature et des rapports de forage, et affichées comme des règles, p
 | Couche | Source officielle | Licence | Résolution, unité |
 |---|---|---|---|
 | Profondeur de nappe | Fan et al. 2017 (mise à jour de 2013), THREDDS de l'université de Saint-Jacques-de-Compostelle, `GLOBALWTDFTP/annualmeans/AFRICA_WTD_annualmean.nc` | usage de recherche libre, citation obligatoire ; redistribution non prévue | 30″ (~1 km), m, moyenne annuelle |
-| Fluor | Podgorski et Berg 2022, Eawag doi:10.25678/0006GQ (`maps.zip`, 2 Go, `global_F_hazard_model.tif`) | « open data », licence non précisée | 250 m, probabilité de dépasser 1,5 mg/L |
+| Fluor | Podgorski et Berg 2022, Eawag doi:10.25678/0006GQ (`maps.zip`, 2 Go, `global_F_hazard_model.tif`) | « open data », licence non précisée | 250 m, probabilité en % (0-100) de dépasser 1,5 mg/L |
 | Perméabilité et porosité | GLHYMPS 2.0, Borealis doi:10.5683/SP2/TTJNIU (`GLHYMPS.zip`, 2,6 Go) | CC BY 4.0 | polygones ; log10 k (m²), porosité |
 | Lithologie | GLiM, PANGAEA doi:10.1594/PANGAEA.788537 (grille à 0,5°) | CC BY 3.0 | 0,5° (la version fine est intégrée aux polygones de GLHYMPS) |
 | Profondeur du socle | SoilGrids 2017, `BDTICM_M_250m_ll.tif` (ISRIC), Shangguan et al. 2017 | ODbL (partage à l'identique) | 250 m, cm |
-| Salinité | Thorslund et van Vliet 2020, PANGAEA doi:10.1594/PANGAEA.913939 (`Groundwaters_summary.csv`) | CC BY 4.0 | points, µS/cm |
+| Salinité | Thorslund et van Vliet 2020, PANGAEA doi:10.1594/PANGAEA.913939 (`Groundwaters_summary.csv`) | CC BY 4.0 | points, µS/cm ; **aucun point à Madagascar** |
 | Recharge, Afrique | MacDonald et al. 2021, BGS doi:10.5285/45d2b71c-d413-44d4-8b4b-6190527912ff | Open Government Licence | carte de 1970-2020, mm/an ; téléchargement par formulaire BGS (non automatisable), couverture de Madagascar à vérifier |
 | Recharge, monde | Jung et al. 2024 | — | **non publiée en accès libre** : le dépôt Zenodo cité ne contient que des données d'entraînement (péninsule arabique) |
 
 ## 10. Journal des modifications
 
 - 02/11/2026 : version initiale.
+- 02/11/2026, au téléchargement, **avant tout calcul de modèle ou de score** :
+  - la base mondiale de salinité (Thorslund et van Vliet 2020) ne contient **aucun point d'eau souterraine à
+    Madagascar**. H-C4 sera testée sur la conductivité MGMERL seule ; la base mondiale ne sert à rien ici ;
+  - la carte du fluor est en pourcentage (0 à 100), pas en probabilité de 0 à 1 ;
+  - dans la carte de Fan, le niveau de la nappe est négatif sous la surface. La profondeur utilisée est sa valeur
+    absolue.

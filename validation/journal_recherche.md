@@ -315,3 +315,34 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 À la demande du porteur du projet, avant tout calcul : le protocole H-N7 intègre le relief du sud-ouest (sous le
   vent des Hautes Terres), le canal de Mozambique (température de surface en juillet-septembre comme prédicteur ;
   creux du canal en attribution, d'après Barimalala et al. 2018) et la géologie des sites (karst ou socle).
+
+### Carte nationale des nappes (`validation/protocole_carte_nappes.md`, registre R-38)
+- 📌 Idée du porteur du projet : un outil national où l'on pointe un lieu (carte ou coordonnées GPS) pour obtenir une
+  estimation de la profondeur de la nappe, de son type, de son âge, de sa qualité et de son potentiel, avec une marge
+  d'erreur. L'outil oriente les foreurs sans remplacer la géophysique. Sources multiples : cartes mondiales, analogues
+  étrangers et mesures malgaches (MGMERL n'en est qu'une).
+- ✅ Protocole écrit avant tout calcul :
+  - H-C1 : biais de la carte mondiale de Fan face aux forages malgaches ;
+  - H-C2 : le modèle hybride bat la carte mondiale et le krigeage, en validation par blocs d'environ 100 km ;
+  - H-C3 : fiabilité de la carte du fluor ;
+  - H-C4 : salinité plus forte sur les côtes et dans le socle de l'Androy ;
+  - règles d'expert pour le type de nappe et l'âge de l'eau.
+- ✅ Couches mondiales recadrées sur Madagascar (`scripts/build_nappes_mondiales.py`, workflow 21, 7 tests) :
+  - profondeur de nappe Fan et al. 2017 (environ 1 km ; 740 695 mailles ; médiane 15,5 m sous la surface) ;
+  - fluor Podgorski et Berg 2022 (250 m ; 11,7 millions de mailles ; en % de 0 à 100) ;
+  - GLHYMPS 2.0 (4 754 polygones de perméabilité et de porosité) ;
+  - GLiM à 0,5° (204 mailles, surtout métamorphiques) ;
+  - profondeur du socle SoilGrids 2017 : lecture distante en cours (résultat à consigner).
+- 📌 Licences respectées : Fan (usage de recherche, redistribution non prévue) et le fluor (licence non précisée) sont
+  gardés dans le cache des Actions, jamais republiés. GLHYMPS (CC BY 4.0), GLiM (CC BY 3.0) et le socle (ODbL) sont
+  publiés dans la version GitHub `nappes-mondiales`, avec leur citation.
+- ❌ La base mondiale de salinité (Thorslund et van Vliet 2020, plus de 200 000 points) ne contient **aucun point
+  d'eau souterraine à Madagascar**. **Résultat en soi :** Madagascar est absent des bases mondiales de qualité de
+  l'eau, et les données MGMERL comblent un vide.
+- ❌ La recharge mondiale de Jung et al. (2024) n'est pas publiée en accès libre : le dépôt Zenodo cité ne contient
+  que des données d'entraînement de la péninsule arabique. La recharge africaine de MacDonald et al. (2021, licence
+  OGL) passe par un formulaire du BGS, impossible à automatiser : téléchargement manuel à faire.
+- 📌 Fan et al. disposent de très peu de puits à Madagascar. Leur médiane (15,5 m) est plus profonde que celle des
+  relevés MGMERL (4,5 m, `groundwater_limites.md`) : c'est exactement ce que H-C1 testera, sans conclusion
+  aujourd'hui (pas de comparaison point à point faite).
+

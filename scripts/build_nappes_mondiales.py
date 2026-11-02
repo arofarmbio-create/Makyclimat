@@ -42,7 +42,7 @@ SOURCES = {
         "citation": "Podgorski J., Berg M. (2022). Global analysis and prediction of fluoride in groundwater. Nature "
                     "Communications 13, 4232. Données : doi:10.25678/0006GQ",
         "licence": "open data Eawag, licence non précisée (ne pas republier sans accord des auteurs)",
-        "republication": False, "unite": "probabilité (0-1) que le fluor dépasse 1,5 mg/L", "resolution": "250 m"},
+        "republication": False, "unite": "probabilité en % (0-100) que le fluor dépasse 1,5 mg/L (médiane de 21 sur Madagascar au 02/11/2026)", "resolution": "250 m"},
     "socle": {
         "url": "https://files.isric.org/soilgrids/former/2017-03-10/data/BDTICM_M_250m_ll.tif",
         "citation": "Shangguan W., Hengl T. et al. (2017). Mapping the global depth to bedrock for land surface modeling. "
