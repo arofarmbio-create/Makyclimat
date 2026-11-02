@@ -157,10 +157,10 @@ statut, document détaillé.
 
 | ID | Question | Protocole | État au 02/11/2026 | Statut |
 |---|---|---|---|---|
-| R-21 | Les probabilités de crue GloFAS sont-elles fiables, vérifiées par les impacts DesInventar ? | `protocole_verification_impact.md` | Téléchargement des rétroprévisions 2003-2023 : 14 années réussies ; **2005 à 2011 annulées** à la limite de 6 heures (01/11). Validation pas encore lancée | ⏳ ❌ téléchargement à reprendre |
-| R-22 | Une prévision saisonnière hybride (C3S et ENSO/IOD) bat-elle chaque source seule ? | `protocole_saisonnier_multimodele.md` | Tâche annulée après 6 heures le 29/10 ; aucun score | ⏳ ❌ téléchargement à découper |
-| R-23 | L'intensité infra-journalière (IMERG) détecte-t-elle mieux les inondations pluviales que le cumul ? | `protocole_intensite_imerg.md` | 5 saisons sur 11 téléchargées ; 2014, 2015, 2016, 2019, 2020, 2021 en échec (« liste des fichiers inaccessible » sur le serveur NASA) | ⏳ ❌ à relancer |
-| R-24 | Le SPEI suit-il mieux le stress de la végétation (NDVI) que le SPI ? | `protocole_spei_ndvi.md` | Séries pluie et NDVI prêtes ; **ET0 ERA5-Land refusée par le CDS** (« job rejected », 29/10) ; validation non lancée | ⏳ ❌ requête à corriger |
+| R-21 | Les probabilités de crue GloFAS sont-elles fiables, vérifiées par les impacts DesInventar ? | `protocole_verification_impact.md` | Téléchargement des rétroprévisions 2003-2023 : 14 années réussies ; **2005 à 2011 annulées** à la limite de 6 heures (01/11). Validation pas encore lancée. Cause trouvée le 02/11 : file d'attente EWDS pleine (années lancées deux par deux), 17 mois sur 126 seulement ; corrigé et relancé le 02/11 | ⏳ 🔧 |
+| R-22 | Une prévision saisonnière hybride (C3S et ENSO/IOD) bat-elle chaque source seule ? | `protocole_saisonnier_multimodele.md` | Tâche annulée après 6 heures le 29/10, rien gardé (publication en fin de tâche) ; corrigé (publication système par système) et relancé le 02/11 | ⏳ 🔧 |
+| R-23 | L'intensité infra-journalière (IMERG) détecte-t-elle mieux les inondations pluviales que le cumul ? | `protocole_intensite_imerg.md` | 5 saisons sur 11 téléchargées ; 2014, 2015, 2016, 2019, 2020, 2021 en échec (« liste des fichiers inaccessible » sur le serveur NASA) ; attente allongée et 6 saisons relancées le 02/11 | ⏳ 🔧 |
+| R-24 | Le SPEI suit-il mieux le stress de la végétation (NDVI) que le SPI ? | `protocole_spei_ndvi.md` | Séries pluie et NDVI prêtes ; **ET0 ERA5-Land refusée par le CDS** (« job rejected », 29/10) ; validation non lancée. Cause : file d'attente du CDS pleine ; corrigé et relancé le 02/11 | ⏳ 🔧 |
 
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 
