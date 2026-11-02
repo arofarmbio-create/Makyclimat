@@ -332,7 +332,8 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   - fluor Podgorski et Berg 2022 (250 m ; 11,7 millions de mailles ; en % de 0 à 100) ;
   - GLHYMPS 2.0 (4 754 polygones de perméabilité et de porosité) ;
   - GLiM à 0,5° (204 mailles, surtout métamorphiques) ;
-  - profondeur du socle SoilGrids 2017 : lecture distante en cours (résultat à consigner).
+  - profondeur du socle SoilGrids 2017 (250 m ; 11,7 millions de mailles ; médiane 48 m), lue à distance sans
+    télécharger les 8,5 Go du fichier mondial.
 - 📌 Licences respectées : Fan (usage de recherche, redistribution non prévue) et le fluor (licence non précisée) sont
   gardés dans le cache des Actions, jamais republiés. GLHYMPS (CC BY 4.0), GLiM (CC BY 3.0) et le socle (ODbL) sont
   publiés dans la version GitHub `nappes-mondiales`, avec leur citation.
