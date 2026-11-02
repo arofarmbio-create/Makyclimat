@@ -5,7 +5,12 @@ pluie mensuelle, SPI-1 à SPI-24 et recharge12_z, calculés avec exactement les 
 (build_soilwater.rain_series, static_props, et0_grid ; soilwater_core.run_balance, spi, monthly_standardized).
 Les niveaux de nappe eux-mêmes ne sont pas lus ici (fichiers bruts MGMERL gardés hors git, traités par
 validate_nappes_mgmerl.py sur le poste local).
-Sortie : data/<pays>/nappes_sites_indices.csv (site, mois, pluie_mm, spi1..spi24, recharge12_z).
+Trois façons de compter l'évaporation (protocole doctoral E2-B) :
+  aucune (SPI, pluie seule) ; évapotranspiration de RÉFÉRENCE ET0 (FAO-56 Penman-Monteith, ERA5-Land, climatologie
+  2016-2020 : SPEI-n sur P - ET0) ; évapotranspiration RÉELLE ETR (bilan de Thornthwaite-Mather, limitée par l'eau du
+  sol : bilan12_z sur P - ETR, et recharge12_z sur l'excédent infiltré).
+Sortie : data/<pays>/nappes_sites_indices.csv (site, mois, pluie_mm, et0_mm, etr_mm, recharge_mm, spi1..spi24,
+spei3/6/12/24, bilan12_z, recharge12_z).
 Usage : python scripts/build_nappes_sites.py --country mdg
 """
 from __future__ import annotations
@@ -38,10 +43,19 @@ def site_cells(lats, lons, grid, valid):
     return out
 
 
+SPEI_N = (3, 6, 12, 24)
+
+
 def site_indices(P, pet, whc, cn2, month0=11):
-    """P (T, N) pluie mensuelle ; pet (12, N) ; whc, cn2 (N,). Retourne {spi1..spiNMAX, recharge12_z} en (T, N)."""
-    out = {f"spi{n}": C.spi(P, n, month0) for n in range(1, NMAX + 1)}
-    _, _, X, _ = C.run_balance(P, pet, whc, month0=month0, cn2=cn2)
+    """P (T, N) pluie mensuelle ; pet (12, N) ET0 climatologique ; whc, cn2 (N,).
+    Retourne les séries (T, N) : et0_mm, etr_mm, recharge_mm, spi1..spiNMAX, spei<n>, bilan12_z, recharge12_z."""
+    T = P.shape[0]
+    et0 = np.stack([pet[(month0 - 1 + t) % 12] for t in range(T)])             # ET0 du mois du calendrier
+    _, A, X, _ = C.run_balance(P, pet, whc, month0=month0, cn2=cn2)             # A : ETR, X : recharge
+    out = {"et0_mm": et0, "etr_mm": A, "recharge_mm": X}
+    out.update({f"spi{n}": C.spi(P, n, month0) for n in range(1, NMAX + 1)})
+    out.update({f"spei{n}": C.spei(P, et0, n, month0) for n in SPEI_N})
+    out["bilan12_z"] = C.monthly_standardized(C.rolling_sum(P - A, 12), month0)
     out["recharge12_z"] = C.monthly_standardized(C.rolling_sum(X, 12), month0)
     return out
 
@@ -73,7 +87,7 @@ def main() -> None:
     for i, s in enumerate(sites.itertuples()):
         d = pd.DataFrame({"site": s.site, "mois": labels, "pluie_mm": np.round(Ps[:, i], 1)})
         for k, v in ind.items():
-            d[k] = np.round(v[:, i], 3)
+            d[k] = np.round(v[:, i], 1 if k.endswith("_mm") else 3)
         d.insert(2, "decalage_maille_deg", round(cells[i][2], 3))
         frames.append(d)
     out = country_data_dir(args.country) / "nappes_sites_indices.csv"

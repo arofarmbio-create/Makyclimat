@@ -58,11 +58,17 @@ ind = pd.DataFrame({"mois": [str(p) for p in an.index]})
 for k in range(1, V.NMAX + 1):
     ind[f"spi{k}"] = an.to_numpy() * (1 if k == 6 else 0.2) + np.random.default_rng(k).normal(0, 0.05, len(an))
 ind["recharge12_z"] = -an.to_numpy()
+ind["spei12"] = an.to_numpy() * 2              # suit mieux le niveau que spi12 (0,2 x + bruit)
+ind["bilan12_z"] = np.zeros(len(an))
+for c, v in (("pluie_mm", 50.0), ("et0_mm", 120.0), ("etr_mm", 45.0), ("recharge_mm", 3.0)):
+    ind[c] = v
 res = V.analyse_site("simulé", raw, ind)
 check("site retenu (36 mois valides)", res["retenu"] and res["mois_valides"] == 36)
 check("corrélation positive avec l'indice qui suit le niveau", res["r_spi12"] > 0.5)
 check("n* retrouve la durée de cumul la mieux corrélée", res["n_etoile"] == 6)
 check("indice opposé : corrélation négative", res["r_recharge12_z"] < -0.9)
+check("ET0 et ETR distinguées : ETR/ET0 = 45/120", res["etr_sur_et0"] == 0.38 and res["et0_an_mm"] == 1440)
+check("SPEI-12 mieux corrélé que SPI-12 quand il suit le niveau", res["r_spei12"] > res["r_spi12"])
 r, k = V.spearman(np.arange(5.0), np.arange(5.0))
 check("moins de 12 paires : pas de corrélation", np.isnan(r) and k == 5)
 
@@ -71,6 +77,9 @@ df = pd.DataFrame({"retenu": [True] * 10, "r_spi12": [0.5] * 9 + [-0.1], "r_rech
 t = V.tests(df)
 check("H-N1 : 9 sur 10 favorables, p < 0,05", t["H-N1"][:2] == (9, 10) and t["H-N1"][2] < 0.05)
 check("H-N2 : 1 sur 10 favorable, non soutenue", t["H-N2"][:2] == (1, 10) and t["H-N2"][2] > 0.5)
+df2 = df.assign(r_spei12=[0.6] * 10, r_bilan12_z=[0.4] * 10)
+t2 = V.tests(df2)
+check("H-N3a et H-N3b : comparaison au SPI-12 site par site", t2["H-N3a"][:2] == (10, 10) and t2["H-N3b"][:2] == (1, 10))
 
 # Maille du site (build_nappes_sites) : maille en mer -> maille valide la plus proche
 import build_nappes_sites as B  # noqa: E402
@@ -81,6 +90,16 @@ valid[0, 2] = True
 cells = B.site_cells([-11.52, -11.62], [43.12, 43.02], grid, valid)
 check("site sur une maille valide : sa maille", cells[0] == (0, 2, 0.0))
 check("site en mer : maille valide la plus proche, décalage noté", cells[1][:2] == (2, 2) and cells[1][2] > 0)
+
+# Indices aux sites : ET0 de référence et ETR réelle distinguées, ETR jamais supérieure à ET0
+rng = np.random.default_rng(1)
+Pm = rng.gamma(2.0, 40.0, size=(360, 2))
+pet = np.tile(np.array([150, 140, 130, 100, 80, 60, 60, 80, 110, 130, 150, 160], float)[:, None], (1, 2))
+I = B.site_indices(Pm, pet, np.array([100.0, 50.0]), np.array([70.0, 80.0]))
+check("indices aux sites : ET0, ETR, SPEI et bilan P - ETR présents",
+      all(k in I for k in ("et0_mm", "etr_mm", "spei12", "bilan12_z", "recharge12_z", "spi24")))
+check("ETR <= ET0 chaque mois (l'eau du sol limite l'évaporation réelle)", bool(np.all(I["etr_mm"] <= I["et0_mm"] + 1e-9)))
+check("ET0 du mois du calendrier (premier pas = novembre)", I["et0_mm"][0, 0] == 150 and I["et0_mm"][2, 0] == 150)
 
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

@@ -26,6 +26,7 @@ JUMP_M, JUMP_DAYS = 3.0, 7                 # règle 3 : saut durable de la médi
 EC_MAX_MS = 20.0                           # règle 4 (mS/cm)
 MIN_DAYS_MONTH, MIN_MONTHS = 10, 24        # règles 5 et 6
 MIN_PAIRS = 12                             # paires mensuelles minimales pour une corrélation
+EVAP_COLS = ["spei3", "spei6", "spei12", "spei24", "bilan12_z"]   # évaporation de référence (SPEI) ou réelle (bilan)
 NMAX = 24
 ATTRIBUTION = "Données de niveaux de nappe : MGMERL (HT Analytics, UNICEF)"
 
@@ -122,8 +123,16 @@ def analyse_site(name, raw, ind):
     j = pd.DataFrame({"an": an, "lev": m.level, "ec": m.ec_us})
     j.index = j.index.astype(str)
     j = j.join(ind.set_index("mois"), how="left")
-    for col in [f"spi{n}" for n in range(1, NMAX + 1)] + ["recharge12_z"]:
-        res[f"r_{col}"], res[f"n_{col}"] = spearman(j.an.to_numpy(float), j[col].to_numpy(float))
+    for col in [f"spi{n}" for n in range(1, NMAX + 1)] + EVAP_COLS + ["recharge12_z"]:
+        if col in j:
+            res[f"r_{col}"], res[f"n_{col}"] = spearman(j.an.to_numpy(float), j[col].to_numpy(float))
+    # bilan annuel moyen à la maille du site sur les mois mesurés (ET0 de référence contre ETR réelle, protocole E2-B)
+    mm = j[[c for c in ("pluie_mm", "et0_mm", "etr_mm", "recharge_mm") if c in j]].dropna()
+    if len(mm):
+        for c in mm:
+            res[f"{c[:-3]}_an_mm"] = round(float(mm[c].mean() * 12), 0)
+        if "et0_mm" in mm and mm.et0_mm.sum() > 0:
+            res["etr_sur_et0"] = round(float(mm.etr_mm.sum() / mm.et0_mm.sum()), 2)
     res["r_sgi_spi12"], _ = spearman(j.lev.to_numpy(float), j.spi12.to_numpy(float))     # secondaire : cycle compris
     rs = [res[f"r_spi{n}"] for n in range(1, NMAX + 1)]
     if np.isfinite(rs).any():
@@ -144,7 +153,12 @@ def tests(df: pd.DataFrame) -> dict:
     n1, w1 = len(k), int((k.r_spi12 > 0).sum()) if len(k) else 0
     k2 = k[k.r_recharge12_z.notna()] if len(k) else k
     n2, w2 = len(k2), int((k2.r_recharge12_z > k2.r_spi12).sum()) if len(k2) else 0
-    return {"H-N1": (w1, n1, sign_test(w1, n1)), "H-N2": (w2, n2, sign_test(w2, n2))}
+    out = {"H-N1": (w1, n1, sign_test(w1, n1)), "H-N2": (w2, n2, sign_test(w2, n2))}
+    for h, col in (("H-N3a", "r_spei12"), ("H-N3b", "r_bilan12_z")):
+        k3 = k[k[col].notna()] if (len(k) and col in k) else k.iloc[0:0]
+        w3 = int((k3[col] > k3.r_spi12).sum()) if len(k3) else 0
+        out[h] = (w3, len(k3), sign_test(w3, len(k3)))
+    return out
 
 
 def report(df: pd.DataFrame, t: dict, raw_dir: str) -> str:
@@ -155,7 +169,8 @@ def report(df: pd.DataFrame, t: dict, raw_dir: str) -> str:
          f"Séries brutes : `{raw_dir}` (hors git). Indices : `data/mdg/nappes_sites_indices.csv`.", "",
          "## Hypothèses fixées à l'avance", "", "| Hypothèse | Sites favorables | Sites testés | p (test du signe unilatéral) | Conclusion |",
          "|---|---|---|---|---|"]
-    for h, lab in (("H-N1", "r(SPI-12) > 0"), ("H-N2", "r(recharge12_z) > r(SPI-12)")):
+    for h, lab in (("H-N1", "r(SPI-12) > 0"), ("H-N2", "r(recharge12_z) > r(SPI-12)"),
+                   ("H-N3a", "r(SPEI-12, ET0 de référence) > r(SPI-12)"), ("H-N3b", "r(bilan P - ETR réelle) > r(SPI-12)")):
         w, n, p = t[h]
         concl = "soutenue (5 %)" if n and p < 0.05 else ("non testable" if not n else "non soutenue")
         L.append(f"| {h} : {lab} | {w} | {n} | {f(p)} | {concl} |")
@@ -165,6 +180,15 @@ def report(df: pd.DataFrame, t: dict, raw_dir: str) -> str:
         g = lambda k: getattr(r, k, np.nan)
         L.append(f"| {r.site} | {g('mois_valides')} | {'oui' if r.retenu else 'non'} | {f(g('r_spi12'))} | {f(g('r_recharge12_z'))} | "
                  f"{f(g('n_etoile'))} | {f(g('r_n_etoile'))} | {f(g('r_ce_niveau'))} | {f(g('decalage_mois'))} |")
+    L += ["", "## Évaporation de référence et évaporation réelle (protocole doctoral E2-B)", "",
+          "Moyennes annuelles à la maille de chaque site, sur ses mois mesurés. ET0 : FAO-56 Penman-Monteith (ERA5-Land, "
+          "climatologie 2016-2020). ETR : bilan de Thornthwaite-Mather, limitée par l'eau disponible dans le sol.", "",
+          "| Site | Pluie (mm/an) | ET0 (mm/an) | ETR (mm/an) | ETR/ET0 | Recharge (mm/an) | r(SPI-12) | r(SPEI-12) | r(P - ETR) |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    for r in df[df.retenu].itertuples():
+        g = lambda k: getattr(r, k, np.nan)
+        L.append(f"| {r.site} | {f(g('pluie_an_mm'))} | {f(g('et0_an_mm'))} | {f(g('etr_an_mm'))} | {f(g('etr_sur_et0'))} | "
+                 f"{f(g('recharge_an_mm'))} | {f(g('r_spi12'))} | {f(g('r_spei12'))} | {f(g('r_bilan12_z'))} |")
     L += ["", "## Contrôle qualité (règles de la section 4)", "",
           "| Site | Mesures | Hors bornes | Pics | Coupures | Hors segment gardé | Conductivité rejetée |", "|---|---|---|---|---|---|---|"]
     for r in df.itertuples():

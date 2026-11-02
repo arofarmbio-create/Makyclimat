@@ -14,6 +14,9 @@ dataloggers publiées par MGMERL permettent pour la première fois cette compara
 1. Le SPI suit-il les variations du niveau des nappes, et sur quelle durée de cumul (n mois) ?
 2. L'indice de recharge du système fait-il mieux que le SPI de même durée ?
 3. La salinité (conductivité) augmente-t-elle quand le niveau baisse ?
+4. Compter l'évaporation aide-t-il à suivre les nappes, et laquelle ? Le protocole doctoral (E2-B) demande de
+   distinguer l'**évapotranspiration de référence** (ET0, FAO-56 Penman-Monteith : la demande de l'atmosphère sur un
+   gazon bien arrosé) de l'**évapotranspiration réelle** (ETR : ce qui s'évapore vraiment, limité par l'eau du sol).
 
 ## 2. Positionnement (recherche du 02/11/2026)
 
@@ -64,6 +67,12 @@ Tout ce qui est retiré est compté et publié par site.
 - **SGI simplifié (secondaire) :** scores normaux du niveau mensuel brut, cycle saisonnier compris.
 - **SPI-n**, n = 1 à 24 mois : loi gamma par mois du calendrier sur 1981-2025 (fonction existante `soilwater_core.spi`).
 - **`recharge12_z`** : recharge nette cumulée sur 12 mois, en scores normaux, recalculée comme en production.
+- **Trois façons de compter l'évaporation** (ajout du 02/11/2026, section 9) :
+  - aucune : SPI-n (pluie seule) ;
+  - **référence** : SPEI-n (n = 3, 6, 12, 24) sur P − ET0, loi logistique généralisée (`soilwater_core.spei`) ;
+  - **réelle** : `bilan12_z`, P − ETR cumulé sur 12 mois en scores normaux, l'ETR venant du bilan de
+    Thornthwaite-Mather ; et `recharge12_z`, l'excédent qui s'infiltre une fois le sol rempli.
+- Pour chaque site : pluie, ET0, ETR et recharge moyennes annuelles, et rapport ETR/ET0 sur les mois mesurés.
 
 ## 6. Mesures et hypothèses fixées à l'avance
 
@@ -73,6 +82,9 @@ Corrélation de Spearman entre l'indice du mois t et l'anomalie de niveau du moi
   Le cumul de 12 mois est fixé à l'avance, car c'est celui de l'indice de recharge du système.
 - **H-N2** : r(`recharge12_z`) > r(SPI-12) dans plus de la moitié des sites, même test. Une réponse négative
   confirmerait le résultat R-16 : le bilan hydrique simple n'apporte rien de plus que le SPI.
+- **H-N3a** : r(SPEI-12) > r(SPI-12) dans plus de la moitié des sites (test du signe). Compter l'ET0 de référence
+  améliore-t-il le suivi ?
+- **H-N3b** : r(`bilan12_z`, P − ETR) > r(SPI-12), même test. Compter l'ETR réelle améliore-t-il le suivi ?
 - **Descriptif (Q1)** : durée de cumul n* qui maximise r pour chaque site, rapprochée du type d'aquifère et de la
   profondeur médiane. On attend des n* différents d'un site à l'autre (Kumar et al. 2016).
 - **Descriptif (Q3)** : r(conductivité, anomalie de niveau) par site. On attend r < 0 là où l'eau se concentre quand la
@@ -95,7 +107,10 @@ données (n*) est présenté comme descriptif, jamais comme une performance.
   profondeurs absolues.
 - Séries courtes (2 à 6 ans) : peu d'années par mois du calendrier.
 - Comparaison d'un point avec une maille de pluie de 0,05°.
-- L'indice de recharge utilise une ET0 climatologique fixe.
+- L'indice de recharge et le SPEI utilisent une ET0 **climatologique** fixe (2016-2020) : ils ne voient pas les
+  années plus chaudes que la normale. Une ET0 qui varie d'une année à l'autre viendra de la série ERA5-Land du
+  chapitre SPEI-NDVI (R-24), dès qu'elle sera téléchargée ; le calcul sera alors refait et les deux versions publiées.
+- L'ETR est modélisée, pas mesurée : aucune mesure d'évaporation (tour de flux, bac) n'existe dans le Grand Sud.
 
 ## 8. Mise en œuvre
 
@@ -112,3 +127,7 @@ données (n*) est présenté comme descriptif, jamais comme une performance.
 ## 9. Journal des modifications
 
 - 02/11/2026 : version initiale.
+- 02/11/2026, **avant tout calcul de corrélation** (les indices aux sites venaient d'être produits, les niveaux pas
+  encore traités) : à la demande du porteur du projet, ajout de la distinction entre évapotranspiration de référence
+  (ET0) et réelle (ETR) exigée par le protocole doctoral (E2-B). Nouvelles colonnes (et0_mm, etr_mm, recharge_mm,
+  spei3/6/12/24, bilan12_z), nouvelle question 4 et hypothèses H-N3a et H-N3b. H-N1 et H-N2 sont inchangées.
