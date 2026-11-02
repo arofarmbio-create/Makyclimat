@@ -65,6 +65,7 @@ jobs:
           python tests/test_validate.py
           python tests/test_cds_retrieve.py
           python tests/test_e1_sources.py
+          python tests/test_e1_fusion.py
           python tests/test_nappes_mgmerl.py
           python tests/test_nappes_mondiales.py
           python scripts/compute_metrics.py --country demo

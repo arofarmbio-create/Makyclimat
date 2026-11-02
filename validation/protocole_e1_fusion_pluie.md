@@ -168,3 +168,14 @@ Le nombre d'événements est faible : ces résultats sont descriptifs, sans test
 - 02/11/2026, même constat : en 2015, CHIRPS à la maille de Toamasina (2 951 mm) et la station de Toamasina (2 945 mm
   sur 301 jours valides) sont presque égaux. Cela confirme que CHIRPS intègre cette station (section 7). Aucune règle
   ne change : la limite était prévue, et ce chiffre la documente.
+- 02/11/2026, **avant tout calcul de score** (script `validate_e1.py` écrit et testé sur des données simulées), à la
+  demande du porteur du projet (l'altitude agit sur la pression, le vent, la pluie de relief) : les zones de H3-E1 sont
+  définies par le **relief**, pas par des groupes de régions. Pour chaque maille de 0,1°, à partir du relief
+  Copernicus GLO-90 déjà utilisé par le système (ou, à défaut, de l'orographie d'ERA5-Land) :
+  - altitude moyenne ; Hautes Terres si elle dépasse 1 000 m (définition initiale du protocole) ;
+  - rugosité : écart-type de l'altitude dans la maille (relief accidenté ou plat) ;
+  - exposition aux alizés : versant au vent (pente tournée vers l'est) ou sous le vent (tournée vers l'ouest).
+  On s'attend à ce que les erreurs des satellites (pluie de relief mal vue par l'infrarouge) et d'ERA5-Land (relief
+  lissé) augmentent avec la rugosité et sur les versants au vent. Ces trois couches sont demandées à l'agent de
+  téléchargement. Côte : maille à moins de 20 km de la mer (masque mer du système). L'évaluation par les impacts
+  (section 6.3) sera ajoutée au script quand les trois sources seront complètes.
