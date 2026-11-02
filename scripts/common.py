@@ -131,6 +131,45 @@ def download(url: str, dest: Path, retries: int = 3, timeout: int = 120) -> bool
     return False
 
 
+def cds_cancel_stale(client, dataset: str, max_age_h: float = 6.0, session=None, now=None) -> int:
+    """Liste les demandes du compte encore en file chez Copernicus et annule celles de `dataset` en attente depuis
+    plus de `max_age_h` heures. Ce sont des demandes orphelines (tâche GitHub annulée ou arrivée à sa limite de temps
+    avant la réponse) : elles occupent la file du compte et font refuser les nouvelles (02/11/2026). Les demandes
+    récentes, peut-être attendues par une autre tâche en cours, ne sont jamais touchées. Retourne le nombre annulé."""
+    import datetime as dt
+    import requests
+    base, key = getattr(client, "url", "").rstrip("/"), getattr(client, "key", "")
+    if not base or not key:
+        return 0
+    s = session or requests.Session()
+    h = {"PRIVATE-TOKEN": key}
+    try:
+        r = s.get(f"{base}/retrieve/v1/jobs", params={"status": ["accepted", "running"], "limit": 100},
+                  headers=h, timeout=60)
+        r.raise_for_status()
+        jobs = r.json().get("jobs", [])
+    except Exception as e:  # noqa: BLE001  (diagnostic seulement : ne doit jamais faire échouer la requête)
+        print(f"  liste des demandes Copernicus indisponible : {type(e).__name__}", flush=True)
+        return 0
+    now = now or dt.datetime.now(dt.timezone.utc)
+    mine = [j for j in jobs if j.get("processID") == dataset]
+    print(f"  demandes en file chez Copernicus : {len(jobs)} au total, {len(mine)} pour {dataset}", flush=True)
+    n = 0
+    for j in mine:
+        try:
+            age = (now - dt.datetime.fromisoformat(str(j.get("created", "")).replace("Z", "+00:00"))).total_seconds() / 3600
+        except ValueError:
+            continue
+        if j.get("status") == "accepted" and age > max_age_h:
+            try:
+                s.delete(f"{base}/retrieve/v1/jobs/{j['jobID']}", headers=h, timeout=60).raise_for_status()
+                n += 1
+                print(f"  demande orpheline annulée (en attente depuis {age:.0f} h)", flush=True)
+            except Exception as e:  # noqa: BLE001
+                print(f"  annulation impossible : {type(e).__name__}", flush=True)
+    return n
+
+
 def cds_retrieve(client, dataset: str, request: dict, target, waits: int = 6, pause: int = 900) -> None:
     """Requête Copernicus (CDS, EWDS). Si la file d'attente du jeu est pleine pour ce compte (« Maximum number queued
     requests », vu le 29/10 et le 01/11/2026), attend et réessaie au lieu d'échouer ; toute autre erreur remonte avec
@@ -143,6 +182,8 @@ def cds_retrieve(client, dataset: str, request: dict, target, waits: int = 6, pa
         except requests.HTTPError as e:
             msg = e.response.text[:800] if e.response is not None else str(e)
             if "queued requests" in msg and attempt < waits:
+                if attempt == 0:
+                    cds_cancel_stale(client, dataset)
                 print(f"  file d'attente Copernicus pleine ({dataset}), nouvel essai dans {pause // 60} min "
                       f"({attempt + 1}/{waits})", flush=True)
                 time.sleep(pause)

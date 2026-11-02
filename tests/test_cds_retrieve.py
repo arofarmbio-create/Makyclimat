@@ -51,5 +51,48 @@ c = Client(['{"title":"licence non acceptée"}'])
 e = error_of(c)
 check("autre refus : erreur immédiate, sans attente", e is not None and "licence" in e and c.calls == 1)
 
+# Demandes orphelines : seules celles du même jeu, en attente depuis plus de 6 h, sont annulées
+import datetime as dt  # noqa: E402
+
+NOW = dt.datetime(2026, 11, 2, 12, tzinfo=dt.timezone.utc)
+
+
+class Resp:
+    def __init__(self, data=None):
+        self.data = data
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return self.data
+
+
+class Sess:
+    def __init__(self, jobs):
+        self.jobs, self.deleted = jobs, []
+
+    def get(self, url, params=None, headers=None, timeout=None):
+        return Resp({"jobs": self.jobs})
+
+    def delete(self, url, headers=None, timeout=None):
+        self.deleted.append(url.rsplit("/", 1)[1])
+        return Resp()
+
+
+class Cli:
+    url, key = "https://cds.example/api", "cle-de-test"
+
+
+def job(i, ds, status, hours):
+    return {"jobID": i, "processID": ds, "status": status, "created": (NOW - dt.timedelta(hours=hours)).isoformat()}
+
+
+s = Sess([job("a", "era5", "accepted", 30), job("b", "era5", "accepted", 1), job("c", "era5", "running", 30),
+          job("d", "autre", "accepted", 30)])
+n = C.cds_cancel_stale(Cli(), "era5", session=s, now=NOW)
+check("annule seulement la demande ancienne, en attente, du même jeu", n == 1 and s.deleted == ["a"])
+check("client sans adresse ni clé : rien n'est tenté", C.cds_cancel_stale(object(), "era5", session=s, now=NOW) == 0)
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

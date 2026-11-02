@@ -12,6 +12,9 @@ on:
       years:
         description: "Années séparées par des espaces (vide = 2001 à l'année en cours)"
         default: ""
+      sources:
+        description: "Sources à lancer (chirps imerg era5 gsod)"
+        default: "chirps imerg era5 gsod"
 
 permissions:
   contents: write
@@ -26,6 +29,8 @@ jobs:
     outputs:
       years: ${{ steps.y.outputs.years }}
       refresh: ${{ steps.y.outputs.refresh }}
+      grids: ${{ steps.y.outputs.grids }}
+      sources: ${{ steps.y.outputs.sources }}
     steps:
       - id: y
         env:
@@ -36,19 +41,24 @@ jobs:
           echo "years=$(echo "$ys" | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
           r="$(date -u +%Y)"; [ "$(date -u +%m)" = "01" ] && r="$r $(( $(date -u +%Y) - 1 ))"
           echo "refresh=$r" >> "$GITHUB_OUTPUT"
+          src=" ${{ github.event.inputs.sources || 'chirps imerg era5 gsod' }} "
+          echo "sources=$src" >> "$GITHUB_OUTPUT"
+          g=""; for x in chirps imerg; do echo "$src" | grep -q " $x " && g="$g $x"; done
+          echo "grids=$(echo $g | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
           gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" -R "$GITHUB_REPOSITORY" \
             --title "E1 : pluie journalière de trois sources et stations GSOD" \
             --notes "Expérience E1 (validation/protocole_e1_fusion_pluie.md). CHIRPS v2.0 (CHC), IMERG V07 Late (NASA), ERA5-Land (Copernicus), grille commune 0,1° ; GSOD (NOAA). scripts/build_e1_sources.py." || true
 
   grilles:
     needs: plan
+    if: needs.plan.outputs.grids != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
       max-parallel: 4
       fail-fast: false
       matrix:
-        source: [chirps, imerg]
+        source: ${{ fromJson(needs.plan.outputs.grids) }}
         year: ${{ fromJson(needs.plan.outputs.years) }}
     steps:
       - uses: actions/checkout@v4
@@ -79,6 +89,7 @@ jobs:
 
   era5:
     needs: plan
+    if: contains(needs.plan.outputs.sources, ' era5 ')
     runs-on: ubuntu-latest
     timeout-minutes: 350
     steps:
@@ -102,6 +113,7 @@ jobs:
 
   gsod:
     needs: plan
+    if: contains(needs.plan.outputs.sources, ' gsod ')
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
