@@ -18,6 +18,8 @@ jobs:
           node-version: "20"
       - run: pip install numpy pandas pyyaml requests geopandas pyogrio shapely rasterio scipy pytest
       - run: npm install --no-save jsdom
+      - name: "Fichiers de workflow lisibles (un deux-points dans un nom non cité les rend invalides, 02/11/2026)"
+        run: python -c "import glob, yaml; [yaml.safe_load(open(f, encoding='utf-8')) for f in glob.glob('.github/workflows/*.yml')]; print('workflows OK')"
       - name: Données simulées et tests de la chaîne de données
         run: |
           python tests/make_synthetic.py
