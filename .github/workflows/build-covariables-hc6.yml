@@ -1,0 +1,36 @@
+name: "24 - Covariables de la recharge BGS (protocole carte des nappes, H-C6)"
+
+# Ajoute à data/mdg/nappes_mondiales/covariables_hc6.csv (654 mailles BGS de 0,28°) : climat CRU TS v4.10 1981-2010
+# (UEA, ODbL), type d'aquifère et géologie (carte hydrogéologique BGS de Madagascar), sol WRB (SoilGrids, ISRIC).
+# Une partie après l'autre, un fichier à la fois chez chaque fournisseur. Données figées : lancement manuel.
+on:
+  workflow_dispatch:
+    inputs:
+      parts:
+        description: "Parties (cru geologie sol)"
+        default: "cru geologie sol"
+
+permissions:
+  contents: write
+
+jobs:
+  covariables:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests scipy rasterio geopandas pyogrio shapely xarray netCDF4 h5netcdf
+      - name: Parties demandées, l'une après l'autre
+        run: |
+          for p in ${{ github.event.inputs.parts }}; do
+            python scripts/build_covariables_hc6.py --country mdg --part "$p" || echo "::warning::partie $p échouée"
+          done
+      - name: Publier
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add data/mdg/nappes_mondiales/covariables_hc6.csv
+          git diff --cached --quiet || (git commit -m "Covariables H-C6 de la recharge BGS" && git pull --rebase --autostash origin main && git push)

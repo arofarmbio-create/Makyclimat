@@ -33,3 +33,4 @@ data/*/nappes_mondiales/*.tif
 data/*/nappes_mondiales/*.gpkg
 data/*/nappes_mondiales/*.csv
 data/*/bgs_recharge_raw/
+!data/*/nappes_mondiales/covariables_hc6.csv
