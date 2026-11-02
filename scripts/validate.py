@@ -13,6 +13,14 @@ import sys
 from common import country_docs_dir, load_config
 
 
+def rain_age_days(through: dt.date, today: dt.date, start_month: int) -> int:
+    """Âge des données de pluie. En début de saison, update_rainfall.py se replie sur la saison précédente tant
+    qu'aucune donnée de la nouvelle n'est publiée : ce repli n'est pas « ancien », l'âge court depuis le début
+    de la saison en cours."""
+    season_start = dt.date(today.year if today.month >= start_month else today.year - 1, start_month, 1)
+    return (today - max(through, season_start)).days
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
@@ -48,8 +56,7 @@ def main() -> None:
     month = dt.date.today().month
     in_season = (month >= sm or month <= em) if sm > em else (sm <= month <= em)
     if not args.skip_age and in_season:
-        through = dt.date.fromisoformat(meta["data_through"])
-        age = (dt.date.today() - through).days
+        age = rain_age_days(dt.date.fromisoformat(meta["data_through"]), dt.date.today(), sm)
         if age > args.max_age_days:
             errors.append(f"données de pluie trop anciennes ({age} jours)")
     if errors:
