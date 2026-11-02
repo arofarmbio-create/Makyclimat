@@ -361,3 +361,17 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   sont fixées à l'avance. 📌 Le porteur du projet demande des conclusions fermes : la nouveauté sera établie par une
   recherche bibliographique systématique et traçable (bases, requêtes, nombre de travaux examinés, motifs de rejet),
   pas par une impression.
+
+### Agent de téléchargement (décision du porteur du projet, 02/11/2026)
+- 📌 Un seul agent gère désormais tous les téléchargements, petit à petit, sans demandes simultanées auprès d'un même
+  fournisseur. État tenu dans `validation/etat_telechargements.md`.
+- ❌ puis 🔧 **IMERG, la vraie cause** : une requête seule passe en 3 secondes, mais dès que plusieurs partent en
+  parallèle, le serveur NASA répond 503 puis coupe les connexions. Nos 3 tâches de 6 fils épuisaient chaque jour en
+  retentatives. Le code est maintenant séquentiel, avec une attente de 60 à 300 s sur les refus et un arrêt après
+  10 jours d'échec de suite (testé). IMERG E1 tourne une année à la fois ; IMERG pilote, GloFAS et C3S sont en pause
+  dans l'ordre de la file.
+- ✅ Relief sur la grille E1 (altitude, rugosité, exposition aux alizés) depuis GLO-90, pour les zones de H3-E1 :
+  5 432 mailles, dont 844 au-dessus de 1 000 m. Contrôles : Antananarivo à 1 260 m ; la façade est majoritairement au
+  vent (+5,9 m/km en médiane), l'ouest des Hautes Terres sous le vent.
+- ✅ Script et workflow de l'indice du canal de Mozambique (ERA5 850 hPa, H-N7) prêts, en attente de leur tour dans la
+  file Copernicus.
