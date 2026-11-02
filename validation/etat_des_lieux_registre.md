@@ -173,7 +173,7 @@ statut, document détaillé.
 
 | ID | Question | Protocole | État au 02/11/2026 | Statut |
 |---|---|---|---|---|
-| R-36 | Le SPI et l'indice de recharge du système suivent-ils les niveaux de nappe mesurés par 16 dataloggers MGMERL dans le Grand Sud (2019-2025) ? | `protocole_nappes_mgmerl.md` | Protocole écrit avant calcul ; séries téléchargées (hors git) ; scripts et 16 tests écrits ; indices aux sites en cours de calcul sur GitHub | ⏳ |
+| R-36 | Le SPI et l'indice de recharge du système suivent-ils les niveaux de nappe mesurés par 16 dataloggers MGMERL dans le Grand Sud (2019-2025) ? | `protocole_nappes_mgmerl.md` | 7 sites retenus sur 16. H-N1 : 5/7 sites avec r(SPI-12) > 0, p = 0,23 (non soutenue) ; H-N2, H-N3a, H-N3b non soutenues (excédent, SPEI-12 avec ET0, bilan P − ETR : pas mieux que le SPI). Cumul optimal de 9 à 24 mois selon le site | ❌ négatif, faible puissance (`nappes_mgmerl.md`) |
 
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 

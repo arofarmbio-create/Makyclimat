@@ -252,3 +252,20 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   11. 🔧 La version complète précédente a été restaurée par un nouveau commit. Ajouts : un garde-fou (une série en
   retard de plus de 3 mois n'est jamais publiée), un cache des mois déjà téléchargés et 3 téléchargements simultanés
   au lieu de 6.
+- 📊 **Résultats M3 (`validation/nappes_mgmerl.md`), une fois les défauts corrigés.** 7 sites sur 16 retenus (au
+  moins 24 mois valides ; Betioky F2 compte 23 sauts de capteur).
+  - **H-N1 non soutenue** : r(SPI-12, anomalie de niveau) > 0 dans 5 sites sur 7, p = 0,23. Avec 7 sites, il
+    faudrait 7 sur 7 pour conclure.
+  - **H-N2, H-N3a et H-N3b non soutenues** : ni l'excédent du bilan (1 sur 5), ni l'ET0 de référence (SPEI-12,
+    3 sur 7), ni l'ETR réelle (P − ETR, 2 sur 7) ne suivent mieux les nappes que la pluie seule. Avec une ET0
+    climatologique, le SPEI est presque identique au SPI (Ankaramena 0,71 contre 0,69).
+  - Le cumul le mieux corrélé varie de 9 à 24 mois selon le site, ce qui confirme Kumar et al. (2016) : une durée
+    unique pour tout le pays ne convient pas.
+  - Les deux sites les plus secs (Andaboly et Sihanamaro, environ 500 mm/an, ETR/ET0 de 0,28 à 0,29) réagissent à
+    l'inverse de la pluie de 12 mois. Explications possibles : pompage, ou recharge lointaine. À Sihanamaro, la
+    conductivité monte quand le niveau baisse (r = −0,74), sur une eau déjà salée (environ 3 800 µS/cm).
+  - Sécheresse de 2019-2022 : le niveau le plus bas arrive le même mois que le SPI-12 le plus bas à Ankaramena,
+    Ankaranabo et Sihanamaro, mais 11 à 13 mois plus tard à Ihazoambo et Andaboly.
+  - **Conclusion provisoire :** l'indice de nappe du système reste « non validé ». Le SPI seul suit les nappes au
+    moins aussi bien, avec une mémoire propre à chaque site. Il faut plus de sites (Water Missions, Lorentz,
+    relevés ACF, observatoire du sud-ouest) pour un test concluant.
