@@ -189,3 +189,15 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - ❌ puis 🔧 Ma relance du 02/11 au matin du workflow GloFAS (14) ne traitait que 2018 : un lancement manuel prend la
   valeur par défaut du formulaire. Relancé avec les 21 années. **Leçon :** relire les valeurs par défaut d'un
   formulaire avant un lancement manuel.
+
+### Audit de sécurité et de licences du dépôt (demandé par le porteur du projet)
+- ✅ Aucune clé, aucun jeton et aucun mot de passe dans le code ni dans les 353 commits de l'historique.
+- 📌 Le dépôt **reste public** (décision du porteur du projet) : les minutes GitHub Actions sont illimitées.
+  En privé, les quelque 6 000 minutes par mois mesurées dépasseraient le quota gratuit de 2 000.
+- 🔧 Données personnelles retirées des extraits mWater (`inputs/mwater/`) : noms et identifiants des contributeurs
+  (« Added by user », « Last modified by user », « Custom ID assigned by ») et liens vers les photos. Le système ne
+  s'en servait pas (seule la position GPS est utilisée) ; nombre de sites inchangé (27 981 écoles, 3 837 centres de
+  santé). ⚠️ Ces colonnes restent dans l'historique git ; l'en effacer demanderait de réécrire l'historique (non fait).
+- 🔧 `emdat_corroboration.md` recopiait les chiffres d'EM-DAT, alors que sa licence (CC BY-NC-ND) l'interdit dans un
+  dépôt public. Le tableau ne garde plus que le verdict de la comparaison. **Leçon :** une note qui affirme un usage
+  « interne » doit être relue en sachant où elle est publiée.

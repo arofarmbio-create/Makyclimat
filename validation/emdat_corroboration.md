@@ -15,30 +15,33 @@ rapprochées des 22 événements de `evenements.csv` par nom/année. Comparaison
 
 ## Résultat
 
-| Événement | Décès MKC | Décès EM-DAT | Touchés MKC | Touchés EM-DAT (Total / No. Affected) | Remarque |
-|---|---|---|---|---|---|
-| Enawo 2017 | — | 81 | 434 000 | 434 253 / 434 000 | **Concordance quasi exacte** (touchés) |
-| Batsirai 2022 | 92 | 92 | 112 115 | 112 115 / 112 115 | **Concordance exacte** |
-| Emnati 2022 | 15 | 15 | — | 169 000 / 169 000 | **Concordance exacte** (décès) |
-| Belna 2019 | 1 | 5 | — | 20 293 / 14 000 | Écart décès (source MKC probablement un bilan précoce) |
-| Gamane 2024 | 19 | 22 | 89 465 | 89 469 / 89 465 | Concordance quasi exacte |
-| Jude 2025 | 2 | — | 19 100 | — | Hors couverture de l'archive (postérieur à fin 2024) |
-| Sécheresse Grand Sud 2020-2022 | — | — | 2 200 000 | — / 1 680 000 | Périmètre différent (EM-DAT : 2020-2024, drought unique ; MKC : 2020-2022) — pas comparable terme à terme |
-| Ava 2018 | 33 | 73 | 123 000 | 161 318 / 161 318 | **Écart net** (décès et touchés) |
-| Freddy 2023 | 11 | 17 | 116 701 | 299 000 / 299 000 | **Écart net** (touchés : MKC couvre une partie seulement — un seul rapport DREF) |
-| Alvaro 2024 | 19 | 10 | 33 000 | 25 837 / 25 837 | Écart modéré dans les deux sens |
-| Gezani 2026 | 40 | — | — | — | Hors couverture de l'archive |
-| Geralda 1994 | 231 | 200 | — | 540 043 / 500 000 | EM-DAT combine deux cyclones ("Daisy, Geralda") — comparaison directe peu fiable |
-| Eline 2000 | — | 130 | 737 000 | 736 937 / 736 937 | **Concordance quasi exacte** (touchés) ; EM-DAT combine "Eline, Gloria" |
-| Hudah 2000 | — | 23 | 369 271 | 369 272 / 369 271 | **Concordance quasi exacte** (touchés) |
-| Gafilo 2004 | 237 (`remarque` : 172 à 363 selon les sources) | 363 | 773 000 | 988 139 / 773 000 | `No. Affected` EM-DAT = touchés MKC exactement ; le chiffre de décès EM-DAT (363) confirme la borne haute déjà citée dans `evenements.csv` |
-| Elita 2004 | 29 | 32 | — | 44 290 / — | Proche |
-| Hubert 2010 | 85 | 120 | 192 000 | 192 132 / 192 000 | `No. Affected` quasi exact ; décès nettement plus élevé côté EM-DAT |
-| Giovanna 2012 | 31 | 35 | — | 250 284 / 250 000 | Proche |
-| Haruna 2013 | 26 | 42 | 40 000 | 40 281 / 40 154 | Touchés quasi exacts ; décès nettement plus élevé côté EM-DAT |
-| Diane 2020 | 49 | 40 (*) | — | — | (*) EM-DAT n'a pas d'entrée "Diane" — l'épisode est probablement enregistré sous "2020-0016-MDG" (inondation, 1-24 janv. 2020, 40 décès), chevauchant les dates de Diane (21 janv.-3 févr.) ; rapprochement plausible mais pas certain |
-| Ana 2022 | 34 | 55 | 62 000 | 131 555 / 131 555 | **Écart net** (touchés : MKC = un rapport DREF partiel, EM-DAT = bilan consolidé) |
-| Fytia 2026 | 1 | — | 22 067 | — | Hors couverture de l'archive |
+*Tableau revu le 02/11/2026 : le dépôt est public, et la licence d'EM-DAT (CC BY-NC-ND) interdit d'y redistribuer
+ses chiffres sous une forme dérivée. Seul le verdict de la comparaison est publié ; aucun chiffre EM-DAT n'apparaît
+ici. Les chiffres MakyClimat restent dans `evenements.csv`, avec leurs sources. Le calcul détaillé se refait à partir
+de l'archive EM-DAT, que chacun peut obtenir auprès du CRED.*
+
+| Événement | Personnes touchées | Décès |
+|---|---|---|
+| Enawo 2017 | Concordance quasi exacte | Pas de chiffre MakyClimat |
+| Batsirai 2022 | Concordance exacte | Concordance exacte |
+| Emnati 2022 | Pas de chiffre MakyClimat | Concordance exacte |
+| Belna 2019 | Pas de chiffre MakyClimat | Écart (EM-DAT plus élevé ; source MakyClimat probablement un bilan précoce) |
+| Gamane 2024 | Concordance quasi exacte | Écart faible |
+| Ava 2018 | **Écart net** | **Écart net** (EM-DAT plus élevé) |
+| Freddy 2023 | **Écart net** (MakyClimat ne couvre qu'une partie : un seul rapport DREF) | Écart (EM-DAT plus élevé) |
+| Alvaro 2024 | Écart modéré | Écart modéré (MakyClimat plus élevé) |
+| Geralda 1994 | Non comparable (EM-DAT réunit deux cyclones) | Non comparable |
+| Eline 2000 | Concordance quasi exacte (EM-DAT réunit deux cyclones) | Pas de chiffre MakyClimat |
+| Hudah 2000 | Concordance quasi exacte | Pas de chiffre MakyClimat |
+| Gafilo 2004 | Concordance exacte (« No. Affected ») | Confirme la borne haute déjà indiquée dans `evenements.csv` |
+| Elita 2004 | Pas de chiffre MakyClimat | Proche |
+| Hubert 2010 | Concordance quasi exacte (« No. Affected ») | Écart net (EM-DAT plus élevé) |
+| Giovanna 2012 | Pas de chiffre MakyClimat | Proche |
+| Haruna 2013 | Concordance quasi exacte | Écart net (EM-DAT plus élevé) |
+| Diane 2020 | — | Rapprochement plausible mais incertain : pas d'entrée « Diane », une inondation de janvier 2020 chevauche ses dates |
+| Ana 2022 | **Écart net** (MakyClimat : rapport DREF partiel ; EM-DAT : bilan consolidé) | Écart (EM-DAT plus élevé) |
+| Sécheresse Grand Sud 2020-2022 | Non comparable (périodes différentes) | — |
+| Jude 2025, Gezani 2026, Fytia 2026 | Hors couverture de l'archive (fin 2024) | — |
 
 ## Lecture
 
@@ -63,7 +66,6 @@ rapprochées des 22 événements de `evenements.csv` par nom/année. Comparaison
 
 ## Suite possible
 
-Une colonne `deces_emdat` (à titre de référence croisée, pas comme remplacement) pourrait être ajoutée à
-`evenements.csv` pour les 18 événements couverts par EM-DAT — à discuter : cela resterait un usage interne
-(comparaison), pas une republication de données EM-DAT, mais le format reste à trancher pour ne pas
-dépasser le cadre « validation interne uniquement » choisi par l'utilisateur.
+📌 Décision du 02/11/2026 : le dépôt reste public. Aucune colonne de chiffres EM-DAT ne sera donc ajoutée à
+`evenements.csv`. La comparaison reste un contrôle interne, refait à la demande à partir de l'archive EM-DAT, qui
+n'est jamais versée dans le dépôt.
