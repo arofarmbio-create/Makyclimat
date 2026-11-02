@@ -394,3 +394,14 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   remonte dans le forage.
 - 📌 Conséquence : c'est un argument fort pour le modèle hybride recalé sur les forages malgaches (H-C2), avec la
   position dans le relief comme variable explicative.
+
+### Carte des nappes : transfert de connaissances (note du porteur du projet)
+- ✅ Le porteur du projet a téléchargé lui-même les données du BGS (MacDonald et al. 2021) : la carte africaine de
+  recharge, qui couvre Madagascar (médiane 109 mm/an ; Grand Sud environ 78 mm/an, cohérent avec les 20 à 100 mm/an
+  du BRGM), et la base des 134 sites de recharge mesurée (30 pays, aucun à Madagascar). Fichiers bruts gardés hors
+  git en attendant la vérification de la licence.
+- ✅ Sa note « modélisation par transfert de connaissances » est versée au dépôt
+  (`validation/notes_porteur/`) et traduite en section 10 du protocole, avant tout calcul. Elle prévoit des
+  analogues par distance de Gower sur le climat, les sols, le relief, la végétation et l'aquifère (pas la géologie
+  seule, selon sa réserve), une bibliothèque de paramètres, trois versions de transfert (T0, T1, T2), une validation
+  en laissant un pays de côté (H-C5) et une calibration sur les références malgaches (H-C6).

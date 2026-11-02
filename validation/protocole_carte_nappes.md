@@ -194,4 +194,66 @@ de la littérature et des rapports de forage, et affichées comme des règles, p
     - corrélation de Spearman entre Fan et la mesure : Fan classe-t-il au moins les sites dans le bon ordre ?
   - **Publication** : seulement des statistiques par classe et par bloc. Les valeurs de Fan point par point ne sont
     pas republiées (licence).
+- 02/11/2026, **avant tout calcul de recharge** : ajout de la section « Transfert de connaissances et calibration
+  régionale », à partir de la note du porteur du projet
+  (`validation/notes_porteur/modelisation_transfert_connaissance.txt`) et des données du BGS qu'il a téléchargées.
+
+## 10. Transfert de connaissances et calibration régionale (recharge et paramètres des aquifères)
+
+**Principe, proposé par le porteur du projet.** Madagascar n'a presque pas de mesures de recharge. On transfère donc
+les connaissances acquises dans des zones africaines analogues, puis on les calibre sur les données malgaches
+disponibles. La réserve du porteur du projet est retenue comme règle : *une géologie similaire ne signifie pas une
+recharge similaire* ; le climat, les sols, le relief, la végétation et l'occupation des terres comptent aussi.
+
+**Données (téléchargées par le porteur du projet le 02/11/2026, fichiers bruts hors git en attendant la vérification
+de la licence)** :
+- carte africaine de recharge à long terme (MacDonald et al. 2021), environ 0,28°. Elle couvre Madagascar : 654
+  mailles, médiane 109 mm/an (Grand Sud environ 78, Nord environ 141) ;
+- base de 134 sites de recharge mesurée dans 30 pays, **aucun à Madagascar**. Pour chaque site : recharge (meilleure
+  estimation, basse et haute), méthode, confiance, pluie, nombre de jours de pluie, évapotranspiration potentielle,
+  aridité, NDVI, groupe d'aquifère (sédimentaire 80, socle 35, non consolidé 19), sol, occupation des terres.
+
+**Étapes :**
+1. **Analogues.** Pour chaque maille malgache, on calcule les mêmes variables que dans la base (pluie CHIRPS, jours de
+   pluie, ETP ERA5-Land, aridité, NDVI MODIS, groupe d'aquifère selon la carte BGS de Madagascar, sol SoilGrids,
+   occupation des terres WorldCover). On cherche les sites africains les plus proches selon une distance de Gower sur
+   toutes ces variables, pas sur la géologie seule. **Domaine d'applicabilité** : une maille dont le site le plus
+   proche est au-delà du 95e centile des distances entre sites africains est signalée « extrapolation », avec une
+   confiance faible.
+2. **Bibliothèque de paramètres** (`validation/bibliotheque_parametres_aquiferes.csv`) : recharge (base BGS),
+   porosité et perméabilité (GLHYMPS), porosité efficace du socle altéré et fissuré (2 à 8 %, Maréchal, Dewandel,
+   sud de l'Inde), productivité (BGS), âges et salinité des analogues (section 3 ter de
+   `biblio_hydrogeologie_grand_sud.md`). Chaque ligne indique la source, le pays, la formation et le niveau de
+   confiance.
+3. **Transfert, trois versions comparées** :
+   - **T0** : la carte BGS telle quelle ;
+   - **T1** : un modèle reconstruit sur les 134 sites (régression de la recharge, en logarithme, sur les variables
+     ci-dessus), puis appliqué avec nos variables malgaches, plus fines ;
+   - **T2** : moyenne pondérée des recharges des k sites analogues les plus proches (k = 5, poids selon la distance de
+     Gower).
+4. **Validation du transfert, avant Madagascar** : on laisse un pays africain de côté à chaque fois (pas de découpage
+   aléatoire, protocole doctoral §11), pour mesurer ce que vaut un transfert vers un pays inconnu.
+5. **Calibration et contrôle malgaches.** Références locales indépendantes :
+   - fourchettes de la littérature (20 à 100 mm/an dans le Sud, BRGM 2005 ; environ 60 mm/an sur le plateau
+     Mahafaly) ;
+   - recharge estimée aux sites de nappe MGMERL par fluctuation de nappe, R = Sy × Δh, avec Sy tiré de la
+     bibliothèque (fourchette, pas une valeur unique) ;
+   - observatoire GROSoM quand ses données seront obtenues.
+6. **Sorties à plusieurs niveaux** (maille, fokontany, commune, district, région), chacune avec un intervalle et un
+   niveau de confiance (dans le domaine des analogues ou en extrapolation).
+7. **Scénarios** : sensibilité de la recharge transférée à la pluie (±10 %, protocole doctoral E7) et aux scénarios
+   climatiques, quand le module de projections existera.
+
+**Hypothèses fixées à l'avance :**
+- **H-C5** : en laissant un pays de côté, T1 ou T2 a une erreur (sur le logarithme de la recharge) plus faible que la
+  référence naïve (médiane africaine). Test du signe entre pays, 5 %.
+- **H-C6** : à Madagascar, au moins 60 % des références locales indépendantes tombent dans l'intervalle de 80 % de la
+  meilleure version de transfert retenue en H-C5. La version est choisie **avant** la comparaison aux références
+  malgaches.
+- Si H-C5 échoue, aucune recharge transférée n'est publiée comme estimation : seule la carte BGS reste affichée,
+  avec sa source et la mention « modèle africain non validé à Madagascar ».
+
+**Limites propres au transfert** : peu de sites de socle (35) et surtout en Afrique australe et de l'Ouest ; pas de
+site insulaire ni sous influence cyclonique comparable ; recharge de long terme (moyenne), pas année par année ;
+incertitude des méthodes de mesure des sites (bilan de chlorure, fluctuation de nappe), déjà fournie par la base.
 

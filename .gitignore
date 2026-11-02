@@ -32,3 +32,4 @@ data/*/grids/rain_offseason.npz
 data/*/nappes_mondiales/*.tif
 data/*/nappes_mondiales/*.gpkg
 data/*/nappes_mondiales/*.csv
+data/*/bgs_recharge_raw/
