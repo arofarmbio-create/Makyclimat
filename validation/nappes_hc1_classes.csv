@@ -1,0 +1,10 @@
+variable,classe,mediane_mesure_m,mediane_fan_m,n,ecart_median_m,biais_moyen_m,erreur_absolue_mediane_m,p_wilcoxon
+classe_relief,bas de versant (5-15 m),6.3,12.039,175,3.293,4.866,6.399,0.0
+classe_relief,fond de vallée (HAND < 5 m),5.02,2.533,248,-1.411,1.782,5.082,0.751
+classe_relief,versant ou plateau (> 15 m),6.0,30.861,576,24.166,24.637,24.224,0.0
+productivite,inconnue,14.575,0.0,20,-14.02,-16.401,14.02,0.0
+productivite,productivité BGS 40 %,5.035,24.674,592,18.976,19.122,18.976,0.0
+productivite,productivité BGS 50 %,7.39,3.082,65,-2.225,-1.309,5.085,0.01
+productivite,productivité BGS 67 %,8.91,30.961,88,20.572,28.085,20.572,0.0
+productivite,productivité BGS 72 %,6.1,14.511,180,6.033,8.9,8.327,0.0
+productivite,productivité BGS 90 %,7.215,15.511,54,5.047,9.331,7.252,0.001
