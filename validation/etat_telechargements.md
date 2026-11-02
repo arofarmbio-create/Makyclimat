@@ -31,7 +31,7 @@ Mis à jour à chaque étape. Dernière mise à jour : 02/11/2026, 12 h 40 UTC.*
 | R-02 bis : rafales ERA5 (instantaneous_10m_wind_gust) | Copernicus CDS | 7 fenêtres, emprise de Madagascar | — | tout | — (même script, partie « rafales ») | ⏸ en attente : file Copernicus, après l'indice MCT |
 | Prévisions C3S (10 systèmes) | Copernicus CDS | 10 systèmes | 0 | 10 | demande bloquée 5 h sans livraison, qui gênait ERA5-Land | ⏸ en pause depuis le 02/11 : en dernier |
 | IMERG demi-horaire, périmètre pilote | NASA GES DISC | 11 saisons (2014-2024) | 2014, 2017, 2018, 2022, 2023, 2024 | 2015, 2016, 2019, 2020, 2021 | concurrence avec IMERG E1 sur le même compte | ⏸ mis en pause le 02/11 (run 41406653970 annulé) : après IMERG E1 |
-| ONI, DMI, SIOD, MOZ (ERSST) | NOAA | mensuel | ONI, DMI ; SIOD et MOZ en cours | — | — | ⏳ workflow 8 lancé le 02/11 (run 41444771537) |
+| ONI, DMI, SIOD, MOZ (ERSST) | NOAA | mensuel depuis 1950 | ONI, DMI, SIOD et MOZ (921 mois, jusqu'à 2026-09) | — | prévision saisonnière Open-Meteo du même workflow : délai dépassé (TimeoutError), sans lien avec ERSST | ✅ SIOD et MOZ produits et commités le 02/11 (workflow 8, run 41444771537) ; la prévision Open-Meteo se refera lundi |
 | Niveaux de nappe HT Analytics | MGMERL (dossier partagé) | 16 sites | 16 séries (juin 2025) | Water Missions, Lorentz, relevés ACF | — | ✅ manuel, hors git |
 | Rapports de forage, exports MGMERL | MGMERL (api.mwater.co) | lithologie, essais de pompage | — | tout | l'extension Chrome n'a pas le droit d'accéder à api.mwater.co | ⛔ décision humaine : autoriser le site dans l'extension |
 
