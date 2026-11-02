@@ -42,5 +42,8 @@ check("légende WRB -> codes de 2 lettres", H.wrb_legend(qml) == {3: "AR", 12: "
 check("occupation : classe regroupée majoritaire (arbres + mangrove = forêt)",
       H.worldcover_group({10: 0.3, 95: 0.2, 30: 0.4, 40: 0.05}) == "forest")
 
+check("réduction SoilGrids : carte en degrés (0,00208°) -> facteur 5 ; carte en mètres (250 m) -> 4",
+      H.read_scale(0.0020833, True) == 5 and H.read_scale(250.0, False) == 4)
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

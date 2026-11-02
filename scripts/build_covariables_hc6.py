@@ -174,6 +174,13 @@ def wrb_legend(qml_text: str) -> dict[int, str]:
     return out
 
 
+def read_scale(pixel: float, geographic: bool) -> int:
+    """Facteur de réduction pour lire environ 1 km par pixel. La carte WRB est en degrés (0,002°) : un calcul en mètres
+    la ramenait à un seul pixel et donnait la même classe partout (02/11/2026)."""
+    target = 0.01 if geographic else 1000.0
+    return max(1, int(round(target / pixel)))
+
+
 def part_sol(df: pd.DataFrame) -> pd.DataFrame:
     """Une seule lecture réduite (environ 1 km) de la carte WRB sur l'emprise, puis échantillonnage local."""
     import rasterio
@@ -190,7 +197,7 @@ def part_sol(df: pd.DataFrame) -> pd.DataFrame:
             cy = [BBOX[1], BBOX[1], BBOX[3], BBOX[3]]
             X, Y = warp("EPSG:4326", s.crs, cx, cy)
             win = from_bounds(min(X), min(Y), max(X), max(Y), s.transform).round_offsets().round_lengths()
-            scale = max(1, int(round(1000 / abs(s.transform.a))))             # pixels d'environ 1 km
+            scale = read_scale(abs(s.transform.a), s.crs.is_geographic)     # pixels d'environ 1 km
             shape = (max(1, int(win.height // scale)), max(1, int(win.width // scale)))
             a = s.read(1, window=win, out_shape=shape, resampling=Resampling.nearest)
             t = s.window_transform(win) * rasterio.Affine.scale(win.width / shape[1], win.height / shape[0])
