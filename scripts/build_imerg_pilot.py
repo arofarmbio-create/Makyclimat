@@ -57,13 +57,13 @@ def pilot_box(country: str):
 
 def day_files(s, day: dt.date) -> list[str]:
     url = f"{BASE}/data/{COLL}/{day.year}/{day.timetuple().tm_yday:03d}/"
-    for k in range(5):
+    for k in range(8):                                     # coupures du serveur NASA de plusieurs minutes (29/10/2026)
         try:
             r = s.get(url, timeout=120)
             r.raise_for_status()
             return sorted(set(re.findall(r'href="(3B-HHR[^"]+\.HDF5)"', r.text)))
         except requests.RequestException:
-            time.sleep(5 * (k + 1))
+            time.sleep(30 * (k + 1))
     raise RuntimeError(f"liste des fichiers inaccessible : {url}")
 
 

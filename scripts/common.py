@@ -131,6 +131,25 @@ def download(url: str, dest: Path, retries: int = 3, timeout: int = 120) -> bool
     return False
 
 
+def cds_retrieve(client, dataset: str, request: dict, target, waits: int = 6, pause: int = 900) -> None:
+    """Requête Copernicus (CDS, EWDS). Si la file d'attente du jeu est pleine pour ce compte (« Maximum number queued
+    requests », vu le 29/10 et le 01/11/2026), attend et réessaie au lieu d'échouer ; toute autre erreur remonte avec
+    le message du serveur."""
+    import requests
+    for attempt in range(waits + 1):
+        try:
+            client.retrieve(dataset, request, str(target))
+            return
+        except requests.HTTPError as e:
+            msg = e.response.text[:800] if e.response is not None else str(e)
+            if "queued requests" in msg and attempt < waits:
+                print(f"  file d'attente Copernicus pleine ({dataset}), nouvel essai dans {pause // 60} min "
+                      f"({attempt + 1}/{waits})", flush=True)
+                time.sleep(pause)
+                continue
+            raise RuntimeError(f"{dataset} refusé : {msg}") from e
+
+
 def hdx_resources(dataset: str) -> list[dict]:
     """Liste les ressources d'un jeu de données HDX (API CKAN publique)."""
     import requests

@@ -151,3 +151,18 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - ⚠️ Manques principaux face au protocole : aucune station (DGM ou hydrométrique), pas de projections CMIP6, pas
   d'expérience E1 de fusion, pas de validation spatiale par blocs, pas de séparation explicite reconstitution,
   anticipation et en cours d'événement.
+
+### Chapitres bloqués : causes trouvées et corrigées
+- ❌ puis 🔧 **ERA5-Land (SPEI, R-24) et GloFAS (vérification par l'impact, R-21)** : le refus « job rejected » venait
+  de Copernicus : « Maximum number queued requests for this dataset has been reached. Please configure your scripts to
+  request data sequentially ». Les relances successives du 29/10 et les années GloFAS lancées deux par deux
+  remplissaient la file d'attente du compte. Sur GloFAS, 2012 à 2023 « réussissaient » en 2 minutes sans rien
+  télécharger : seuls 17 mois sur 126 étaient faits. 🔧 Toutes les requêtes Copernicus passent par une même
+  fonction qui attend 15 minutes et réessaie (6 fois) quand la file est pleine (`common.cds_retrieve`, testée) ;
+  GloFAS télécharge une année à la fois. **Leçon :** une tâche « réussie » doit être vérifiée par ce qu'elle a
+  produit, pas par son statut.
+- ❌ puis 🔧 **C3S (prévision hybride, R-22)** : la tâche a tourné 6 heures et a été arrêtée sans rien garder, car
+  les fichiers n'étaient publiés qu'à la fin. 🔧 Chaque système est publié dès qu'il est téléchargé, et un lancement
+  chaque mercredi complète les systèmes manquants.
+- ❌ puis 🔧 **IMERG (R-23)** : 6 saisons sur 11 échouées sur « liste des fichiers inaccessible » (coupures du
+  serveur NASA de plus d'une minute). 🔧 Attente portée à environ 18 minutes avant d'abandonner.

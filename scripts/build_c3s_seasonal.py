@@ -20,7 +20,7 @@ from pathlib import Path
 
 import numpy as np
 
-from common import country_data_dir, load_config, save_grid
+from common import cds_retrieve, country_data_dir, load_config, save_grid
 
 # systèmes opérationnels en octobre 2026, avec rétroprévisions 1993-2016 (API de contraintes du CDS, 29/10/2026)
 SYSTEMS = ["ecmwf:51", "ukmo:610", "meteo_france:9", "dwd:22", "cmcc:4", "ncep:2", "jma:4", "eccc:4", "eccc:5", "bom:2"]
@@ -30,10 +30,10 @@ LEADS = list(range(1, 7))
 
 
 def retrieve(c, centre, system, years, area, out):
-    c.retrieve("seasonal-monthly-single-levels", {
+    cds_retrieve(c, "seasonal-monthly-single-levels", {
         "originating_centre": centre, "system": system, "variable": ["total_precipitation"], "product_type": ["monthly_mean"],
         "year": [str(y) for y in years], "month": [f"{INIT_MONTH:02d}"], "leadtime_month": [str(k) for k in LEADS],
-        "area": area, "data_format": "grib"}, str(out))
+        "area": area, "data_format": "grib"}, out)
 
 
 def read(path: Path, years):

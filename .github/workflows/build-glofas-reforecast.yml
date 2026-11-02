@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
-      max-parallel: 2          # file d'attente EWDS par utilisateur
+      max-parallel: 1          # une requête à la fois : EWDS refuse au-delà d'une file par compte (01/11/2026)
       fail-fast: false
       matrix:
         year: ${{ fromJson(needs.plan.outputs.years) }}

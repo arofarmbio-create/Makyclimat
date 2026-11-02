@@ -5,6 +5,7 @@ name: 16 - Prévision saisonnière hybride (multi-modèles C3S + ENSO/IOD)
 on:
   schedule:
     - cron: "0 6 16 10 *"   # le 16 octobre : prévisions C3S d'octobre publiées
+    - cron: "0 6 * * 3"     # chaque mercredi : complète les systèmes manquants (sans effet une fois complet)
   workflow_dispatch:
 
 permissions:
@@ -38,8 +39,13 @@ jobs:
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          python scripts/build_c3s_seasonal.py --country "$COUNTRY"
-          for f in data/$COUNTRY/c3s/*.npz; do gh release upload "$TAG" "$f" --clobber; done
+          # système par système, publié aussitôt : une tâche arrêtée à 6 heures ne perd plus ce qui est déjà là (29/10/2026)
+          for s in $(cd scripts && python -c "import build_c3s_seasonal as b; print(' '.join(b.SYSTEMS))"); do
+            python scripts/build_c3s_seasonal.py --country "$COUNTRY" --systems "$s" || { echo "::warning::$s échoué"; continue; }
+            f="data/$COUNTRY/c3s/${s/:/_}.npz"
+            [ -f "$f" ] && gh release upload "$TAG" "$f" --clobber
+          done
+          echo "systèmes disponibles : $(ls data/$COUNTRY/c3s/*.npz 2>/dev/null | wc -l) sur 10"
       - name: Validation et prévision hybride
         run: python scripts/validate_c3s_hybrid.py --country "$COUNTRY"
       - name: Publier

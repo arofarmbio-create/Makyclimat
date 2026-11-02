@@ -18,7 +18,7 @@ from pathlib import Path
 
 import numpy as np
 
-from common import country_data_dir, load_config, save_grid
+from common import cds_retrieve, country_data_dir, load_config, save_grid
 
 WINDOWS = ((1, 3), (4, 7), (8, 15))      # jours d'échéance, bornes incluses
 Q_KEEP = 5.0                             # m³/s
@@ -75,7 +75,7 @@ def main() -> None:
             continue
         raw = Path(tempfile.mkdtemp()) / "refc.grib"
         t0 = time.time()
-        c.retrieve("cems-glofas-reforecast", request(cfg, args.year, m), str(raw))
+        cds_retrieve(c, "cems-glofas-reforecast", request(cfg, args.year, m), raw)
         r = reduce(raw)
         raw.unlink()
         save_grid(out, **r)

@@ -22,7 +22,7 @@ import pandas as pd
 import requests
 
 import soilwater_core as C
-from common import country_data_dir, load_config, read_units
+from common import cds_retrieve, country_data_dir, load_config, read_units
 
 ERA5_VARS = ["2m_temperature", "2m_dewpoint_temperature", "10m_u_component_of_wind", "10m_v_component_of_wind",
              "surface_solar_radiation_downwards", "surface_pressure"]
@@ -60,10 +60,10 @@ def district_means(field, idx):
 
 
 def _era5_retrieve(c, ys, lat1, lon0, lat0, lon1, f):
-    c.retrieve("reanalysis-era5-land-monthly-means", {
+    cds_retrieve(c, "reanalysis-era5-land-monthly-means", {
         "product_type": ["monthly_averaged_reanalysis"], "variable": ERA5_VARS, "year": [str(y) for y in ys],
         "month": [f"{m:02d}" for m in range(1, 13)], "time": ["00:00"], "area": [lat1, lon0, lat0, lon1],
-        "data_format": "netcdf", "download_format": "unarchived"}, str(f))
+        "data_format": "netcdf", "download_format": "unarchived"}, f)
 
 
 def part_et0(cfg, units, years):
@@ -75,10 +75,7 @@ def part_et0(cfg, units, years):
     for y0 in range(years[0], years[1] + 1, 5):
         ys = [y for y in range(y0, min(y0 + 5, years[1] + 1))]
         f = Path(tempfile.mkdtemp()) / "era5land.nc"
-        try:
-            _era5_retrieve(c, ys, lat1, lon0, lat0, lon1, f)
-        except requests.HTTPError as e:                       # message du CDS (licence, requête) au lieu d'un « 400 » muet
-            raise RuntimeError(f"ERA5-Land refusé : {e.response.text[:800] if e.response is not None else e}") from e
+        _era5_retrieve(c, ys, lat1, lon0, lat0, lon1, f)
         ds = xr.open_dataset(f)
         tname = "valid_time" if "valid_time" in ds.dims else "time"
         lat, lon = ds.latitude.values, ds.longitude.values
