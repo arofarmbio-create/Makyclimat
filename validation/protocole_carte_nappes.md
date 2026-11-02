@@ -257,3 +257,18 @@ de la licence)** :
 site insulaire ni sous influence cyclonique comparable ; recharge de long terme (moyenne), pas année par année ;
 incertitude des méthodes de mesure des sites (bilan de chlorure, fluctuation de nappe), déjà fournie par la base.
 
+**Précisions de mise en œuvre de H-C5 (02/11/2026, fixées avant le calcul, après lecture des seules statistiques
+descriptives de la base)** :
+- variable modélisée : log10(R + 1), car 7 sites sur 134 ont une recharge nulle ;
+- T1 : régression ridge (λ = 1) sur la pluie, les jours de pluie, l'ETP, l'aridité et le NDVI standardisés, plus le
+  groupe d'aquifère et l'occupation des terres (indicatrices). Le type de sol (21 classes, souvent 1 ou 2 sites) est
+  écarté de T1 pour éviter le surapprentissage ; il reste dans la distance de T2 ;
+- T2 : 5 plus proches voisins selon la distance de Gower (variables numériques ramenées à leur étendue ; variables
+  qualitatives : 0 si identiques, 1 sinon), poids 1 / (distance + 0,01) ;
+- référence naïve : médiane de log10(R + 1) des pays d'apprentissage ;
+- erreur d'un pays : médiane des erreurs absolues de ses sites (en log10) ;
+- deux versions testées : chacune passe H-C5 si le test du signe entre pays donne p < 0,025 (correction de
+  Bonferroni) ;
+- T0 (carte BGS) ne peut pas être évaluée en laissant un pays de côté, puisqu'elle a été construite avec tous les
+  sites : elle n'est donc pas candidate en H-C6 si T1 ou T2 passe H-C5.
+

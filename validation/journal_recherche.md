@@ -420,3 +420,14 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   l'organisation mWater qui gère la console. La consultation reste possible, l'export non. 📌 Pistes : demander
   l'export ou une adhésion à MGMERL ; à défaut, relever les tableaux affichés à l'écran (limités aux 1 000 lignes
   les plus récentes).
+
+### Carte des nappes : H-C5 confirmée (`validation/transfert_recharge_hc5.md`)
+- ✅ Sur les 134 sites du BGS (30 pays), chaque pays est prédit par un modèle qui ne l'a jamais vu. Erreur médiane
+  sur log10(R + 1) : 0,62 pour la référence naïve (un facteur 4 environ sur la recharge), 0,28 pour T1 (régression
+  ridge), 0,24 pour T2 (5 analogues selon la distance de Gower, un facteur 1,7 à 1,8 environ). T1 bat la référence
+  dans 26 pays sur 30, T2 dans 24 sur 29 (p < 0,001 pour les deux).
+- ⚠️ Les pays où le transfert échoue (Burkina Faso, Cameroun, Éthiopie, Maroc) sont des cas de socle ou de relief.
+  C'est à surveiller pour les Hautes Terres malgaches.
+- 📌 Le transfert vers Madagascar (H-C6) est justifié. Il reste à calculer les variables malgaches (pluie, jours de
+  pluie, ETP, aridité, NDVI, aquifère, sol, occupation des terres) et à rassembler les références locales.
+- 📌 Le porteur du projet choisit de relever les tableaux MGMERL affichés à l'écran plutôt que de demander les exports.
