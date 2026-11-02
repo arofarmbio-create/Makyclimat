@@ -2,11 +2,20 @@
 import sys
 from pathlib import Path
 
-import pytest
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import common as C  # noqa: E402
+
+FAILS = 0
+FULL = '{"traceback":"Maximum number queued requests for this dataset has been reached."}'
+
+
+def check(name, cond, extra=""):
+    global FAILS
+    print(("OK    " if cond else "ÉCHEC ") + name + (" — " + extra if extra else ""))
+    if not cond:
+        FAILS += 1
 
 
 class Rep:
@@ -24,24 +33,23 @@ class Client:
             raise requests.HTTPError("400", response=Rep(self.errors.pop(0)))
 
 
-FULL = '{"traceback":"Maximum number queued requests for this dataset has been reached."}'
+def error_of(client, **kw):
+    try:
+        C.cds_retrieve(client, "jeu", {}, "f", pause=0, **kw)
+    except RuntimeError as e:
+        return str(e)
+    return None
 
 
-def test_file_pleine_puis_succes():
-    c = Client([FULL, FULL])
-    C.cds_retrieve(c, "jeu", {}, "f", pause=0)
-    assert c.calls == 3
+c = Client([FULL, FULL])
+check("file pleine deux fois puis réussite : trois essais, pas d'erreur", error_of(c) is None and c.calls == 3)
+c = Client([FULL] * 10)
+e = error_of(c, waits=2)
+check("file toujours pleine : abandon après les essais prévus, message du serveur conservé",
+      e is not None and "queued requests" in e and c.calls == 3)
+c = Client(['{"title":"licence non acceptée"}'])
+e = error_of(c)
+check("autre refus : erreur immédiate, sans attente", e is not None and "licence" in e and c.calls == 1)
 
-
-def test_file_toujours_pleine_echoue_avec_message():
-    c = Client([FULL] * 10)
-    with pytest.raises(RuntimeError, match="queued requests"):
-        C.cds_retrieve(c, "jeu", {}, "f", waits=2, pause=0)
-    assert c.calls == 3
-
-
-def test_autre_refus_immediat():
-    c = Client(['{"title":"licence non acceptée"}'])
-    with pytest.raises(RuntimeError, match="licence"):
-        C.cds_retrieve(c, "jeu", {}, "f", pause=0)
-    assert c.calls == 1
+print(f"\n{FAILS} échec(s)")
+sys.exit(1 if FAILS else 0)
