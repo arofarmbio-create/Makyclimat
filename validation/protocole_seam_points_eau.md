@@ -81,3 +81,14 @@ MEAH, SEAM (2026). Fan et al. (2017) pour la carte mondiale de la nappe ; MacDon
 ## 7. Journal des modifications
 
 - 03/11/2026 : version initiale.
+- 03/11/2026, **après le premier calcul** (`seam_utilite.md`) : 45,8 % des forages et puits partagent leurs
+  coordonnées exactes avec d'autres (jusqu'à 955 au même point), donc des positions par défaut (centre de commune ou
+  de localité probable), que le critère Q1 ne détectait pas. H-S1 était non soutenue (ρ = −0,04 à 5 km). Un contrôle
+  ajouté **après coup**, avec les seuls ouvrages à position unique (17 682 sur 32 630), donne ρ = −0,11 (p = 0,001,
+  négatif dans 6 régions sur 7) ; ce contrôle ne vaut pas confirmation.
+  - **H-S1b**, enregistrée ici avant le test d'apport : même indice que H-S1, calculé sur les seuls ouvrages à
+    position unique.
+  - Test d'apport (test 2 de Q3) appliqué à H-S1b, sans changement : part de puits et nombre d'ouvrages dans 5 km
+    ajoutés à l'hybride S0 ; gardés seulement si les deux critères principaux de la phase 0 s'améliorent.
+  - Le rapport publie les deux versions (toutes positions, positions uniques).
+
