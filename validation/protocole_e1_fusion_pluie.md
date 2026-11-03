@@ -190,4 +190,18 @@ Le nombre d'événements est faible : ces résultats sont descriptifs, sans test
     donnée en second. Médianes par classe, et corrélation de Spearman entre r et la rugosité sur les mailles.
   - Attendu (déjà écrit le 02/11) : r plus faible quand la rugosité croît et sur les versants au vent, surtout pour
     ERA5-Land (relief lissé) et pour les satellites (pluie de relief). Analyse descriptive, sans test de signification.
+- 03/11/2026, **avant tout calcul de la section 6.3** (impacts) : précisions de mise en œuvre.
+  - Versions comparées : CHIRPS, IMERG Late, ERA5-Land (brutes), B (moyenne simple), C (fusion). Pour le pas
+    journalier, C est construite comme à la pentade : chaque source ramenée à la moyenne et à l'écart-type
+    **journaliers** de CHIRPS par mois du calendrier sur 2001-2015, puis moyenne pondérée avec les poids de la triple
+    collocation déjà calculés (pentades), sans nouveau réglage.
+  - Inondations pluviales (périmètre pilote, même code que R-09 : `validate_pluvial.py`, indicateur « pluie sur
+    3 jours ») : pluie de chaque version à la maille de 0,1° du fokontany ; seuils locaux (retour 2 et 5 ans) tirés de
+    la **même version** sur les saisons 2001-2002 à 2014-2015 ; évaluation sur les saisons 2016-2017 à 2024-2025.
+    Mesures : événements détectés, épisodes sans correspondance, AUC des communes EMS.
+  - Sécheresse du Grand Sud : pluie mensuelle moyenne par région (mailles de 0,1° des fokontany de la région),
+    SPI-3 et SPI-12 de production (`soilwater_core.spi`, référence 2001-2025, commune à toutes les versions) ;
+    mesures : minimum de juillet 2019 à juin 2023 pour Androy, Anosy et Atsimo-Andrefana, et leur rang parmi les
+    régions (1 = la plus sèche), comme R-14.
+  - Descriptif, sans test ; une version n'est pas « choisie » sur ces résultats.
 
