@@ -55,8 +55,13 @@ waits = []
 t = N.fetch(S([R(503), requests.ConnectionError(), R(200, "ok")]), "u", sleep=waits.append)
 check("attente croissante sur 503 et coupure", t == "ok" and waits == [60, 120])
 
-dmr = '<Dataset><Int16 name="CMG_0_05_Deg_Monthly_NDVI"><Dim/></Int16><UInt8 name="CMG_0_05_Deg_Monthly_pixel_reliability"/></Dataset>'
-check("variables trouvées dans la description DAP4", N.find_var_dmr(dmr, "ndvi") == "CMG_0_05_Deg_Monthly_NDVI")
+dmr = ('<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#"><Group name="MOD_Grid_monthly_CMG_VI"><Group name="Data_Fields">'
+       '<Int16 name="CMG_0_05_Deg_Monthly_NDVI"/><UInt8 name="CMG_0_05_Deg_Monthly_pixel_reliability"/></Group></Group></Dataset>')
+check("chemin DAP4 complet, groupes compris",
+      N.find_var_dmr(dmr, "ndvi") == "/MOD_Grid_monthly_CMG_VI/Data_Fields/CMG_0_05_Deg_Monthly_NDVI")
+csv = ("/MOD_Grid_monthly_CMG_VI/Data_Fields/CMG_0_05_Deg_Monthly_NDVI[0], 1, 2\n"
+       "/MOD_Grid_monthly_CMG_VI/Data_Fields/CMG_0_05_Deg_Monthly_NDVI[1], 3, 4\n")
+check("lecture CSV DAP4 (chemin complet)", N.parse_ascii_grid(csv, "/MOD_Grid_monthly_CMG_VI/Data_Fields/CMG_0_05_Deg_Monthly_NDVI").tolist() == [[1, 2], [3, 4]])
 waits = []
 check("400 : pas de nouvel essai", N.fetch(S([R(400, "bad")]), "u", sleep=waits.append) is None and waits == [])
 

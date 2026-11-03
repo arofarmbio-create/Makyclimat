@@ -33,7 +33,7 @@ def granule_id(year: int, month: int) -> str | None:
     r = requests.get(CMR, params={"short_name": "MOD13C2", "version": "061", "page_size": 5,
                                   "temporal": f"{year}-{month:02d}-01T00:00:00Z,{year}-{month:02d}-02T00:00:00Z"}, timeout=60)
     r.raise_for_status()
-    ids = [e["title"] for e in r.json()["feed"]["entry"] if f".A{year}{pd.Timestamp(year, month, 1).dayofyear:03d}." in e["title"]]
+    ids = [e["title"] for e in r.json()["feed"]["entry"] if f".A{year}{pd.Timestamp(year, month, 1).day_of_year:03d}." in e["title"]]
     return ids[0] if ids else None
 
 
@@ -47,10 +47,10 @@ def find_var(dds: str, *words: str) -> str:
 
 
 def parse_ascii_grid(text: str, var: str) -> np.ndarray:
-    """Réponse ASCII OPeNDAP d'un tableau 2D -> tableau (lignes, colonnes)."""
-    leaf = var.split(".")[-1]
+    """Réponse ASCII (DAP2) ou CSV (DAP4) d'un tableau 2D -> tableau (lignes, colonnes)."""
+    leaf = re.split(r"[./]", var)[-1]
     rows = [list(map(float, ln.split(",")[1:])) for ln in text.splitlines()
-            if re.match(r"^\s*(?:[\w.]*\.)?" + re.escape(leaf) + r"\[\d+\],", ln)]
+            if re.match(r"^\s*(?:[\w./]*[./])?" + re.escape(leaf) + r"\[\d+\],", ln)]
     if not rows:
         raise ValueError("réponse OPeNDAP sans données")
     return np.array(rows, dtype="float32")
@@ -67,10 +67,24 @@ def bearer_session(user: str, password: str) -> requests.Session:
 
 
 def find_var_dmr(dmr: str, *words: str) -> str:
-    """Comme find_var, sur la description DAP4 (.dmr) : <Int16 name="...">."""
-    names = re.findall(r'<(?:Int16|UInt8|Int8|Float32|UInt16)\s+name="([^"]+)"', dmr)
+    """Chemin complet DAP4 (« /groupe/.../variable ») de la première variable dont le nom contient tous les mots.
+    MOD13C2 n'est servi qu'en DAP4 (types non représentables en DAP2, réponse du 03/11/2026)."""
+    import xml.etree.ElementTree as ET
+    root = ET.fromstring(dmr)
+    types = {"Int16", "UInt8", "Int8", "Float32", "UInt16"}
+    names = []
+
+    def walk(node, path):
+        for ch in node:
+            tag = ch.tag.split("}")[-1]
+            nm = ch.get("name")
+            if tag == "Group" and nm:
+                walk(ch, path + "/" + nm)
+            elif tag in types and nm:
+                names.append(path + "/" + nm)
+    walk(root, "")
     for n in names:
-        if all(w.lower() in n.lower() for w in words):
+        if all(w.lower() in n.split("/")[-1].lower() for w in words):
             return n
     raise ValueError(f"variable {words} introuvable parmi {names[:15]}")
 
@@ -116,17 +130,13 @@ def main() -> None:
     args = ap.parse_args()
     s = bearer_session(os.environ["EARTHDATA_USER"], os.environ["EARTHDATA_PASSWORD"])
     gid = granule_id(2005, 1)
-    dds = fetch(s, OPENDAP + gid + ".dds")
-    if dds:
-        v_ndvi, v_rel = find_var(dds, "ndvi"), find_var(dds, "reliability")
-    else:
-        dmr = fetch(s, OPENDAP + gid + ".dmr.xml")
-        if not dmr:
-            raise SystemExit("description du granule inaccessible (.dds et .dmr.xml)")
-        v_ndvi, v_rel = find_var_dmr(dmr, "ndvi"), find_var_dmr(dmr, "reliability")
+    dmr = fetch(s, OPENDAP + gid + ".dmr.xml")
+    if not dmr:
+        raise SystemExit("description DAP4 du granule inaccessible")
+    v_ndvi, v_rel = find_var_dmr(dmr, "ndvi"), find_var_dmr(dmr, "reliability")
     print(f"granule {gid} ; variables : {v_ndvi}, {v_rel}", flush=True)
     if args.probe:
-        t = fetch(s, OPENDAP + gid + f".ascii?{v_ndvi}[{ROW0}:{ROW0 + 2}][{COL0}:{COL0 + 2}]")
+        t = fetch(s, OPENDAP + gid + f".dap.csv?dap4.ce={v_ndvi}[{ROW0}:{ROW0 + 2}][{COL0}:{COL0 + 2}]")
         print(t[:800] if t else "aucune réponse")
         return
     total = np.zeros((ROW1 - ROW0 + 1, COL1 - COL0 + 1))
@@ -136,8 +146,8 @@ def main() -> None:
         for m in range(1, 13):
             g = granule_id(y, m)
             sub = f"[{ROW0}:{ROW1}][{COL0}:{COL1}]"
-            tn = fetch(s, OPENDAP + g + f".ascii?{v_ndvi}{sub}") if g else None
-            tr = fetch(s, OPENDAP + g + f".ascii?{v_rel}{sub}") if g else None
+            tn = fetch(s, OPENDAP + g + f".dap.csv?dap4.ce={v_ndvi}{sub}") if g else None
+            tr = fetch(s, OPENDAP + g + f".dap.csv?dap4.ce={v_rel}{sub}") if g else None
             time.sleep(1.0)
             if tn is None or tr is None:
                 print(f"  {y}-{m:02d} : manquant", flush=True)
