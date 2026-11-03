@@ -119,6 +119,13 @@ def test_spi():
     assert np.isnan(z1[dry]).all(), "SPI-1 d'un mois de saison sèche (normale < 25 mm) doit être vide"
     assert np.isfinite(z1[~dry][:, :2]).all(), "les mois pluvieux gardent leur SPI"
     assert np.allclose(z1[~dry], C.spi(Pd, 1, 1)[~dry], equal_nan=True), "le masque ne modifie pas les autres valeurs"
+    # mois manquant : les cumuls qui le contiennent sont vides, pas « secs » (E1, décembre 2021 absent de CHIRPS, 03/11/2026)
+    Pm = P.copy()
+    Pm[100, 0] = np.nan
+    zm = C.spi(Pm, 3, 1)
+    assert np.isnan(zm[100:103, 0]).all(), "les 3 cumuls contenant le mois manquant doivent être vides"
+    assert np.allclose(zm[103:, 0], z3[103:, 0], atol=0.1), "les autres cumuls changent à peine (ajustement sans 3 valeurs)"
+    assert np.array_equal(zm[:, 1:], z3[:, 1:], equal_nan=True), "les autres séries sont strictement intactes"
 
 
 if __name__ == "__main__":

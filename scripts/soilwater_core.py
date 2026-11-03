@@ -242,10 +242,15 @@ def spi(P, n, month0, min_mean_mm=None):
     from scipy import special, stats
     T = P.shape[0]
     S = rolling_sum(np.asarray(P, float), n)
+    bad = ~np.isfinite(np.asarray(P, float))                 # un mois manquant n'est pas un mois sec (comme le SPEI)
+    if n > 1:
+        bad = rolling_sum(bad.astype(float), n) > 0
+    S[bad] = np.nan
     out = np.full(S.shape, np.nan)
     cal = np.array([(month0 - 1 + t) % 12 for t in range(T)])
     for m in range(12):
-        idx = np.where((cal == m) & np.isfinite(S[:, 0] if S.ndim > 1 else S))[0]
+        fin = np.isfinite(S)
+        idx = np.where((cal == m) & (fin.any(axis=1) if S.ndim > 1 else fin))[0]   # chaque série garde ses propres mois valides
         if len(idx) < 20:
             continue
         x = S[idx]
@@ -262,7 +267,7 @@ def spi(P, n, month0, min_mean_mm=None):
         G = special.gammainc(alpha[None, :], np.maximum(x, 0) / np.maximum(beta[None, :], 1e-9))
         H = q[None, :] + (1 - q[None, :]) * G
         z = np.clip(stats.norm.ppf(np.clip(H, 1e-6, 1 - 1e-6)), -3.09, 3.09)
-        z = np.where(ok & (npos >= 15)[None, :], z, np.nan)
+        z = np.where(ok & (npos >= 15)[None, :] & (nok >= 20)[None, :], z, np.nan)
         if min_mean_mm is not None:
             mean_cum = np.where(ok, x, 0).sum(axis=0) / np.maximum(nok, 1)
             z = np.where((mean_cum >= min_mean_mm)[None, :], z, np.nan)

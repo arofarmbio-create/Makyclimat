@@ -16,8 +16,8 @@ Généré le 2026-11-03 par `scripts/validate_e1_impacts.py`, selon `validation/
 
 | Version | Indice | Androy | Anosy | Atsimo Andrefana |
 |---|---|---|---|---|
-| chirps | SPI-3 | -3.09 (rang 1) | -3.09 (rang 1) | -3.09 (rang 1) |
-| chirps | SPI-12 | -2.35 (rang 8) | -2.41 (rang 6) | -2.33 (rang 9) |
+| chirps | SPI-3 | -2.31 (rang 4) | -2.35 (rang 3) | -2.40 (rang 2) |
+| chirps | SPI-12 | -2.64 (rang 1) | -2.54 (rang 3) | -2.19 (rang 7) |
 | imerg | SPI-3 | -2.37 (rang 10) | -2.29 (rang 14) | -2.10 (rang 20) |
 | imerg | SPI-12 | -2.92 (rang 3) | -2.76 (rang 7) | -2.60 (rang 11) |
 | era5 | SPI-3 | -2.48 (rang 6) | -2.44 (rang 9) | -2.47 (rang 7) |

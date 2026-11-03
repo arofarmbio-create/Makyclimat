@@ -669,13 +669,20 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   inondations sur 4, ERA5-Land 2. Épisodes sans événement : 3 pour B et C, 4 pour CHIRPS, 5 pour ERA5-Land, 6 pour
   IMERG. Les AUC des trois événements EMS changent de classement d'un événement à l'autre (CHIRPS 0,18 à 0,81) :
   aucune version ne domine. Lecture descriptive : la moyenne des sources réduit les fausses alertes à détection égale.
-- 📊 **Sécheresse du Grand Sud 2019-2023** : au SPI-12, la sécheresse est classée plus haut par les versions qui
-  incluent IMERG et ERA5-Land (C : Androy rang 1, Anosy 2, Atsimo-Andrefana 5 ; ERA5-Land 1, 3, 4) que par CHIRPS
-  (rangs 8, 6, 9). Au SPI-3, CHIRPS atteint la borne −3,09 dans les trois régions.
-- ❌ Écart corrigé : le premier passage omettait le seuil de normale minimale du SPI de production prévu par les
-  précisions. Corrigé et relancé. J'avais attribué les −3,09 de CHIRPS à cet oubli : **c'était faux**, ils restent
-  après correction. Leur cause (mois de saison des pluies presque sans pluie dans CHIRPS) n'est pas vérifiée : à
-  examiner avant d'en tirer une conclusion.
+- 📊 **Sécheresse du Grand Sud 2019-2023** (résultat corrigé, voir ci-dessous) : au SPI-12, toutes les versions
+  placent la sécheresse parmi les plus fortes du pays : Androy rang 1 avec CHIRPS, ERA5-Land, B et C (rang 3 avec
+  IMERG) ; Anosy rang 2 à 7 ; Atsimo-Andrefana rang 4 à 11. Au SPI-3, les rangs sont plus dispersés (IMERG et C
+  classent Atsimo-Andrefana loin, rangs 19 et 20). Un seul épisode : aucune version n'est départagée.
+- ❌ Deux écarts trouvés et corrigés, résultats recalculés :
+  - le premier passage omettait le seuil de normale minimale du SPI de production prévu par les précisions ;
+  - **cause réelle des SPI-3 de CHIRPS à −3,09** (que j'avais d'abord attribués, à tort, au seuil) : les 31 jours de
+    décembre 2021 sont vides dans le fichier CHIRPS d'E1 (téléchargement échoué à la construction ; IMERG et
+    ERA5-Land sont complets), et `soilwater_core.spi` comptait un mois manquant comme 0 mm. Le premier résultat
+    (« CHIRPS classe la sécheresse plus bas au SPI-12 : rangs 8, 6, 9 ») était faux pour la même raison.
+  - Correction de `spi` : un cumul contenant un mois manquant est manquant (comme le SPEI) ; et chaque série choisit
+    ses propres mois valides (avant, un trou dans la première série retirait ce mois de l'ajustement de toutes les
+    séries). Sans mois manquant, le SPI est strictement inchangé : la production n'est pas modifiée. Test ajouté.
+  - 📌 Décembre 2021 de CHIRPS est à récupérer dans la release E1 (agent).
 - 📌 Lecture d'ensemble d'E1 : aucune hypothèse confirmatoire n'est soutenue (5 stations) ; H3-E1 montre un net
   avantage d'IMERG sur les versants au vent ; les impacts ne départagent pas les versions, la fusion ne fait jamais
   nettement pire et réduit les fausses alertes de crue. Le système garde CHIRPS (règle 6.4) ; le levier pour aller
