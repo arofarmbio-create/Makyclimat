@@ -24,7 +24,8 @@ blo, bhi = R.saturated([30, 5], [3, 2], [9, 8])
 check("épaisseur saturée bornée à 0", list(blo) == [21, 0] and list(bhi) == [27, 3])
 check("10 m saturés à Sy 0,05 = 500 mm d'eau", R.volume_mm(10, 0.05) == 500)
 check("renouvellement 500 mm / 50 mm/an = 10 ans ; recharge nulle -> manquant", np.allclose(R.renewal_years([500, 1], [50, 0]), [10, np.nan], equal_nan=True))
-check("prélèvements : 1 000 habitants à 20 L/j sur 1 km² = 7,3 mm/an", abs(R.withdrawals_mm(1000, 1.0) - 7.3) < 1e-9)
+check("prélèvements : 1 000 habitants à 15 L/j (Sphère) sur 1 km² = 5,475 mm/an", abs(R.withdrawals_mm(1000, 1.0) - 5.475) < 1e-9)
+check("Antananarivo : 47 % desservis par l'eau de surface (6 arrondissements)", len(R.SURFACE_NETWORK) == 6 and set(R.SURFACE_NETWORK.values()) == {0.47})
 check("classes d'exploitation", list(R.label([0.05, 0.2, 0.5, np.nan], R.CLASSES)) == ["faible", "modéré", "élevé", ""])
 check("eau salée : une classe de plus, sans dépasser « élevé »",
       list(R.worsen(np.array(["faible", "élevé", "modéré"], dtype=object), np.array([True, True, False]))) == ["modéré", "élevé", "modéré"])
@@ -45,7 +46,7 @@ r = R.compute(fk).iloc[0]
 check("stock central : 20 m × Sy 0,05 = 1 000 mm ; τ = 20 ans", abs(r.v_mm - 1000) < 1e-9 and abs(r.tau_ans - 20) < 1e-9)
 check("fourchette de τ : bas = 17 × 0,02 × 1 000 / 150, haut = 22 × 0,08 × 1 000 / 20",
       abs(r.tau_bas_ans - 340 / 150) < 1e-9 and abs(r.tau_haut_ans - 88) < 1e-9)
-check("indice 36,5 / 50 = 0,73 -> élevé ; Grand Sud signalé", abs(r.exploitation - 0.73) < 1e-9 and r.risque == "élevé" and r.grand_sud)
+check("indice 27,375 / 50 = 0,5475 -> élevé ; Grand Sud signalé", abs(r.exploitation - 0.5475) < 1e-9 and r.risque == "élevé" and r.grand_sud)
 
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

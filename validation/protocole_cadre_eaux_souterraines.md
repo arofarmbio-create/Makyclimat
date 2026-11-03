@@ -211,4 +211,16 @@ journal à chaque étape, réussite ou échec.
   - Contrôle de vraisemblance (sans critère de rejet) : distribution de τ comparée aux âges d'eau de la littérature
     (`biblio_hydrogeologie_grand_sud.md`, section 3 ter) et à l'observation de terrain du porteur du projet.
   - Sorties : `external/nappes_ressource.csv` (format du système) et `validation/nappes_ressource.md`.
+- 03/11/2026, **avant le calcul v2** (demande du porteur du projet : se fonder sur des normes et des statistiques
+  publiées, ne rien inventer) :
+  - **Norme de consommation : Sphère, 15 L par personne et par jour** (Manuel Sphère 2018, standard
+    d'approvisionnement en eau 2.1 : boisson, cuisine, hygiène). **Correction** : la version précédente du protocole
+    attribuait 20 L à Sphère ; c'était une erreur, 20 L est le seuil OMS d'« accès de base » (Howard et al., OMS,
+    2020). Sensibilité : 20 L (OMS, accès de base) et 50 L (OMS, accès intermédiaire).
+  - **Commune urbaine d'Antananarivo** (6 arrondissements, districts MG11118 à MG11123) : le réseau JIRAMA y est
+    alimenté par une seule production, Mandroseza, qui capte l'Ikopa (environ 140 500 m³/j), avec un taux de desserte
+    de 47 % (Ognard et Taglioni 2019, Les Cahiers d'Outre-Mer 280, citant ARTELIA 2014). Les prélèvements dans la nappe
+    n'y portent que sur la population non desservie : population × (1 − 0,47) × norme.
+  - Autres villes : aucune statistique publique vérifiée sur la part de l'eau de surface ; règle générale inchangée,
+    et les chefs-lieux de district sont signalés comme surestimés possibles.
 

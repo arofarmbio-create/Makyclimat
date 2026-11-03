@@ -6,7 +6,8 @@
 - Épaisseur saturée b = profondeur du socle (SoilGrids) − niveau statique (carte nationale), bornée à 0.
 - Volume V = 10⁶ × b × Sy (m³/km²), Sy selon le groupe d'aquifère BGS.
 - Renouvellement τ = V / (10³ × R) (années).
-- Prélèvements : population (WorldPop 2015 ramenée au total communal SEAM 2025) × 20 L/j ; indice d'exploitation =
+- Prélèvements : population (WorldPop 2015 ramenée au total communal SEAM 2025) × 15 L/j (Sphère), hors population
+  desservie par un réseau d'eau de surface (Antananarivo : 47 %) ; indice d'exploitation =
   prélèvements / R, aggravé d'une classe si la conductivité voisine (moins de 5 km) dépasse 3 000 µS/cm.
 Toutes les grandeurs sont des approximations publiées en fourchette.
 Sorties : data/<pays>/external/nappes_ressource.csv, validation/nappes_ressource.md.
@@ -28,7 +29,9 @@ from common import ROOT, country_data_dir, read_units
 
 SY = {"Basement": (0.02, 0.08), "Sedimentary": (0.05, 0.15), "Unconsolidated": (0.05, 0.15)}
 SY_OTHER = (0.02, 0.15)
-LITRES, LITRES_SENS = 20.0, (15.0, 50.0)
+LITRES, LITRES_SENS = 15.0, (20.0, 50.0)       # Sphère 2018 (standard 2.1) ; sensibilité OMS accès de base et intermédiaire
+SURFACE_NETWORK = {d: 0.47 for d in ("MG11118", "MG11119", "MG11120", "MG11121", "MG11122", "MG11123")}
+# Commune urbaine d'Antananarivo : réseau JIRAMA alimenté par l'Ikopa (Mandroseza), desserte 47 % (Ognard et Taglioni 2019)
 CLASSES = [(0.1, "faible"), (0.4, "modéré"), (np.inf, "élevé")]
 TAU_CLASSES = [(10, "renouvelable (moins de 10 ans)"), (100, "lent (10 à 100 ans)"), (np.inf, "peu renouvelable (plus de 100 ans)")]
 EC_LIMIT, EC_RADIUS_KM = 3000.0, 5.0
@@ -128,7 +131,7 @@ def compute(fk: pd.DataFrame) -> pd.DataFrame:
     out["prelev_mm"] = withdrawals_mm(fk.pop_ajustee, fk.area_km2)
     with np.errstate(divide="ignore", invalid="ignore"):
         out["exploitation"] = out.prelev_mm / fk.r_mm
-        out["exploitation_15L"] = withdrawals_mm(fk.pop_ajustee, fk.area_km2, LITRES_SENS[0]) / fk.r_mm
+        out["exploitation_20L"] = withdrawals_mm(fk.pop_ajustee, fk.area_km2, LITRES_SENS[0]) / fk.r_mm
         out["exploitation_50L"] = withdrawals_mm(fk.pop_ajustee, fk.area_km2, LITRES_SENS[1]) / fk.r_mm
     out["risque_base"] = label(out.exploitation, CLASSES)
     out["risque"] = worsen(out.risque_base, (fk.conductivite_us > EC_LIMIT).to_numpy())
@@ -146,11 +149,12 @@ def report(r: pd.DataFrame, reg: pd.DataFrame, matched: float, wtf: pd.DataFrame
     if test:
         L += ["**Essai de code sur la carte v1 (extrait de 1 000 relevés) : résultats non publiables.**", ""]
     L += [f"Population : WorldPop 2015 ramenée aux totaux communaux SEAM 2025 ({matched:.0%} des communes appariées par leur nom ; "
-          "facteur 1 ailleurs). Prélèvements : 20 L par personne et par jour (sensibilité 15 et 50 L).", "",
+          "facteur 1 ailleurs). Prélèvements : 15 L par personne et par jour (norme Sphère 2018), sensibilité 20 et 50 L (OMS). Commune urbaine "
+          "d'Antananarivo : seule la population non desservie par le réseau JIRAMA (eau de l'Ikopa, desserte 47 %) prélève dans la nappe.", "",
           f"- Renouvellement : {share('tau_classe', TAU_CLASSES[0][1]):.0%} renouvelable, {share('tau_classe', TAU_CLASSES[1][1]):.0%} lent, "
           f"{share('tau_classe', TAU_CLASSES[2][1]):.0%} peu renouvelable (valeurs centrales).",
           f"- Risque d'épuisement : {share('risque', 'faible'):.0%} faible, {share('risque', 'modéré'):.0%} modéré, {share('risque', 'élevé'):.0%} élevé "
-          f"(sensibilité : élevé {float((r.exploitation_15L > 0.4).mean()):.0%} à 15 L, {float((r.exploitation_50L > 0.4).mean()):.0%} à 50 L).", "",
+          f"(sensibilité : élevé {float((r.exploitation_20L > 0.4).mean()):.0%} à 20 L, {float((r.exploitation_50L > 0.4).mean()):.0%} à 50 L).", "",
           "| Région | Recharge médiane (mm/an) | Stock médian (mm d'eau) | Renouvellement médian (ans) | Indice d'exploitation médian | Part en risque élevé |",
           "|---|---|---|---|---|---|"]
     for x in reg.sort_values("region").itertuples():
@@ -176,7 +180,7 @@ def main() -> None:
     names = dict(zip(units.pcode, units.name))
     c = pd.read_csv(cdir / "external" / "nappes_carte.csv", dtype={"pcode": str})
     m = c.pivot_table(index="pcode", columns="indicateur", values="valeur")
-    fk = units[units.level == 4][["pcode", "adm1", "adm3", "lon", "lat", "pop", "area_km2"]].merge(m, left_on="pcode", right_index=True)
+    fk = units[units.level == 4][["pcode", "adm1", "adm2", "adm3", "lon", "lat", "pop", "area_km2"]].merge(m, left_on="pcode", right_index=True)
     fk = fk.rename(columns={"niveau_statique_m": "niveau_m", "niveau_statique_bas80_m": "bas80_m", "niveau_statique_haut80_m": "haut80_m"})
     fk["socle_m"] = socle_at(couches / "socle.tif", fk.lon, fk.lat)
     rt = pd.read_csv(cdir / "nappes_mondiales" / "recharge_transferee.csv")
@@ -186,7 +190,7 @@ def main() -> None:
     fk["groupe"] = rt.Aquifer_group.fillna("").to_numpy()[j]
     import etude_seam as S
     fac, matched = commune_factor(units, S.load_communes(cdir / "seam_raw"))
-    fk["pop_ajustee"] = fk["pop"] * fk.adm3.map(fac).fillna(1.0)
+    fk["pop_ajustee"] = fk["pop"] * fk.adm3.map(fac).fillna(1.0) * (1 - fk.adm2.map(SURFACE_NETWORK).fillna(0.0))
     fk["conductivite_us"] = np.nan
     if args.conductivite:
         ec = pd.read_csv(args.conductivite)
