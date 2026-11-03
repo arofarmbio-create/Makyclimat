@@ -569,3 +569,23 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   Gain : 120 petits sous-ensembles au lieu d'environ 11 Go de fichiers mondiaux.
 - ✅ E1 complet ; l'ETP ERA5-Land du SPEI est enfin téléchargée. ⚠️ La validation SPEI qui suit échoue sur un bogue de
   lecture de `et0_cache.json` (`validate_spei_ndvi.py`, `control_et0`), signalé.
+
+### H-C6 : recharge transférée d'Afrique à Madagascar (`validation/transfert_recharge_hc6.md`)
+- ✅ Colonne NDVI remplie par l'agent (MOD13C2 v6.1, moyenne 2001-2010, 120 mois ; sous-ensembles OPeNDAP DAP4 au lieu
+  d'environ 11 Go de fichiers mondiaux). Version T2 (5 analogues, distance de Gower), choisie sur H-C5 avant tout
+  calcul malgache.
+- 📊 Recharge médiane : T2 75 mm/an (Grand Sud 70, Nord 131) ; carte BGS 108 ; T1 (ridge) 233, avec 799 au Nord.
+  276 mailles sur 650 (42 %) n'ont aucun analogue africain proche : la carte y extrapole.
+- ❌ **H-C6 non confirmée** : 3 références malgaches sur 8 dans l'intervalle de 80 % (règle : au moins 60 %). La
+  référence régionale du Sud (BRGM, 20 à 100 mm/an) passe ; 2 sites MGMERL sur 7 passent (Ankaramena, Ankaranabo).
+- 📊 **Les 5 échecs vont dans le même sens** : le transfert surestime la recharge aux sites suivis (prédit 92 à 262
+  mm/an, mesuré 6 à 48 mm/an par fluctuation de nappe). Deux lectures possibles, que les données actuelles ne
+  départagent pas : les analogues africains de socle rechargent davantage que le socle du Sud malgache ; ou la
+  fluctuation de nappe sous-estime (Sy de socle de 0,01 à 0,05, remontées mensuelles seulement).
+- ❌ Défaut trouvé : la référence du plateau Mahafaly n'a pas été évaluée. Le filtre cherchait « Eocene » ou
+  « calcaire » dans la classe géologique BGS, qui n'emploie que des classes larges (« Cretaceous-Tertiary
+  sedimentary »). Même réussie, elle donnerait 4 sur 9 (44 %) : le verdict ne change pas. Non corrigé après coup.
+- 📌 Conséquence pour le protocole-cadre : la recharge reste une **approximation** ; le volume, le renouvellement et
+  le risque d'épuisement porteront une fourchette large de recharge (T2 et fluctuation de nappe), et les sites MGMERL
+  servent de contrôle local.
+

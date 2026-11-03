@@ -1,0 +1,10 @@
+reference,valeur_centrale_mmpa,mailles,intervalle_bas,intervalle_haut,prediction_mediane,dans_intervalle
+"Sud de Madagascar (BRGM 2005, cité par AVSF 2016)",60.0,102,20.6870385855374,359.1869127242451,70.35114329535575,True
+Plateau Mahafaly (profil USAID/Winrock),60.0,0,,,,
+"Site MGMERL Andaboly (Basement, fluctuation de nappe)",5.664368189362765,1,43.09604582425537,731.364566334902,144.0775896374906,False
+"Site MGMERL Ankaramena (Basement, fluctuation de nappe)",197.7632135874878,1,55.248140271126715,933.1913563176971,184.05842098970857,True
+"Site MGMERL Ankaranabo (Basement, fluctuation de nappe)",45.96264586880685,1,22.77194593563336,393.8138784478155,77.210564073693,True
+"Site MGMERL Ihazoambo (Basement, fluctuation de nappe)",45.827170786932626,1,78.80102654420804,1324.367005265167,261.5482708307352,False
+"Site MGMERL Mahavelo (Basement, fluctuation de nappe)",48.305645161290336,1,72.51088292061297,1219.8978125979074,240.8534702351942,False
+"Site MGMERL Nosiomby (Basement, fluctuation de nappe)",22.22834869431644,1,62.51832436271232,1053.9374486233307,207.97759026016274,False
+"Site MGMERL Sihanamaro (Unconsolidated, fluctuation de nappe)",27.23851563465581,1,27.332567370615124,469.55848268647634,92.21517395806238,False
