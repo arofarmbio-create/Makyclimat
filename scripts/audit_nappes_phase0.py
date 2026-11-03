@@ -83,7 +83,7 @@ def coverage(p: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def flow(n_read, n_qc, n_fan, n_reg, n_reg10) -> list[tuple[str, int]]:
-    return [("Relevés lus (tableau MGMERL du 02/11/2026)", n_read), ("Après contrôle (0-200 m, à Madagascar, doublons)", n_qc),
+    return [("Relevés lus (tableau MGMERL complet, extrait le 03/11/2026)", n_read), ("Après contrôle (0-200 m, à Madagascar, doublons)", n_qc),
             ("Avec une valeur de la carte de Fan", n_fan), ("Situés dans un fokontany (région connue)", n_reg),
             ("Dans une région d'au moins 10 forages (validation par région)", n_reg10)]
 
@@ -123,7 +123,7 @@ def report(fl, dens, seasons, crit, cov_r, cov_d) -> str:
 
 def load_sites(country, couches):
     """Forages contrôlés avec leurs variables, leur région et le décompte du diagramme de flux."""
-    src = country_data_dir(country) / "mgmerl_raw" / "tableaux_affiches_2026-11-02" / "mgmerl_niveau_statique.csv"
+    src = country_data_dir(country) / "mgmerl_raw" / "complet_2026-11-03" / "mgmerl_niveau_statique_complet.csv"
     n_read = len(pd.read_csv(src))
     pts = H1.load_points(src)
     df = H2.point_features(country, pts, couches)

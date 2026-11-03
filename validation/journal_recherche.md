@@ -745,3 +745,40 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   Mahajanga, Antsiranana et Antsirabe (ces villes utilisent donc aussi la nappe).
 - 📌 Aucune valeur n'est changée dans le protocole avant d'avoir lu ces sources.
 
+### Extraction complète MGMERL (03/11) et nouvelles sources de nappe
+- ✅ **Tableaux MGMERL complets** (agent, lecture seule, requête de la page rejouée par tranches d'identifiants, une
+  requête à la fois ; aucune tranche à 1 000 lignes) : niveau statique 1 400 relevés (l'histogramme de la page en
+  annonce 1 398, écart de 2 non expliqué), profondeur 1 643, conductivité 13 700, essais de pompage 1 427. Les 1 000
+  lignes du 02/11 y sont toutes. Hors dépôt (`data/mdg/mgmerl_raw/complet_2026-11-03/`).
+- ❌ **Correction** : les 400 relevés de niveau statique ajoutés sont presque tous dans le Sud (Atsimo-Andrefana +164,
+  Androy +161, Anosy +26, Atsimo-Atsinanana +23, Boeny +21). **10 régions sur 24 restent sans aucun niveau statique**
+  même avec toutes les données MGMERL ; l'hypothèse « 11 régions sans forage = artefact de l'extrait » était fausse.
+  Les relevés complets vont de 1994 à 2026 (l'extrait commençait en 2023).
+- 📌 Chaîne relancée sur les données complètes (phase 0, intervalle, carte v2), mêmes protocoles.
+- ✅ **Nouvelle source trouvée** (catalogue GGIS de l'IGRAC, sur une piste du porteur du projet) : observatoire des nappes
+  du Sud-Ouest (Carrière et al. 2021, réseau GROSoM, Action contre la Faim), 10 puits suivis : 7 dans les grès et
+  calcaires de la région de Toliara (2014-2020, 8 700 à 53 000 mesures chacun), 3 dans les sables côtiers d'Anosy
+  (2018-2019). Indépendants de MGMERL. Usages : réponse des nappes sédimentaires à la pluie (M3), référence de recharge
+  du plateau calcaire (absente en H-C6), 10 niveaux indépendants. Licence et séries à vérifier, téléchargement par
+  l'agent.
+- ❌ Couche SADC « gip_BHdata_madagascar » : inaccessible (le portail SADC-GIP a été remplacé par un nouveau site ; la
+  couche n'existe pas dans le catalogue de l'IGRAC). Document IRD (horizon, 010080238) : site en maintenance le
+  03/11, à réessayer.
+
+### Rectification : les 1 400 niveaux statiques ne sont peut-être pas les seuls de MGMERL
+- ❌ J'ai écrit que « la plupart des 25 272 forages n'ont pas de niveau statique ». **Ce n'est pas démontré.** Les 1 400
+  relevés sont ceux dont le champ « Niveau statique d'eau » de la **fiche du point d'eau** est rempli. D'autres
+  tableaux de MGMERL (rapports techniques de forage, tableaux de projets, piézomètres…) peuvent porter un niveau
+  statique dans leurs propres colonnes (remarque du porteur du projet). Recensement systématique confié à l'agent.
+
+### Chaîne relancée sur les 1 400 relevés (phase 0, intervalle, carte v2)
+- 📊 Flux : 1 400 lus, 1 400 après contrôle, 1 399 avec Fan, 1 385 dans une région d'au moins 10 forages (9 régions).
+- 📊 Référence S0 : hybride 3,26 m [1,98 ; 5,21] (critère 1) et 3,03 m [1,73 ; 3,90] (critère 2) ; krigeage 4,06 et
+  3,49 m ; Fan seule 8,56 et 8,05 m (biais +17,6 m). Proche de l'extrait (3,39 et 3,17 m) : la conclusion ne change
+  pas, l'hybride reste devant sans écart démontré.
+- 📊 Intervalle calibré : couverture de 80 à 81 % dans chaque classe de distance (avant : 68 à 82 %) ; facteurs 0,95 à
+  1,26. Menabe reste à 44 % (16 forages), Atsimo-Atsinanana à 68 %.
+- 📊 Carte v2 : 54 % des fokontany en extrapolation (52 % en v1) ; les Hautes Terres restent à 95-99 %. Grand Sud :
+  erreur médiane attendue 2,1 m (2,4 m en v1). Betsiboka a désormais un forage. 10 régions sans aucun niveau statique.
+- 📌 Phases 1 et étude SEAM (H-S1) non relancées : leurs conclusions portent sur l'extrait de 1 000 relevés.
+

@@ -3,7 +3,7 @@
 Gauche : profondeur estimée par fokontany (une teinte, du clair au foncé). Droite : fiabilité, selon la distance au
 forage d'apprentissage le plus proche, et en gris foncé les fokontany en extrapolation (terrain jamais vu par les forages).
 Contours des régions : docs/data/<pays>/geo/adm1.geojson. Entrée : data/<pays>/external/nappes_carte.csv.
-Sortie : validation/figures/nappes_carte_v1.svg.
+Sortie : validation/figures/nappes_carte_v2.svg.
 Usage : python scripts/figure_nappes_carte.py --country mdg
 """
 from __future__ import annotations
@@ -75,8 +75,8 @@ def svg(fk: pd.DataFrame, regions: list) -> str:
         yy = ly + (i // 2) * 18
         xx = W + GAP + PAD + (i % 2) * 190
         out.append(f'<rect x="{xx}" y="{yy}" width="12" height="12" fill="{c}"/><text x="{xx + 16}" y="{yy + 10}" font-size="11" fill="#333">{lab}</text>')
-    notes = ["Carte version 1 (03/11/2026) : approximation. Modèle hybride (carte mondiale de Fan et al. 2017 corrigée sur 980 forages MGMERL).",
-             "Erreur médiane mesurée hors des régions d'apprentissage : 2,4 m près des forages, 2,8 à 3,4 m au-delà de 25 km.",
+    notes = ["Carte version 2 (03/11/2026, 1 385 forages MGMERL) : approximation. Modèle hybride (carte mondiale de Fan et al. 2017 corrigée sur 1 385 forages MGMERL).",
+             "Erreur médiane mesurée hors des régions d'apprentissage : 2,1 m près des forages, 2,5 à 3,1 m au-delà de 25 km.",
              "En gris foncé, l'erreur n'est pas connue : le terrain (altitude, relief, pluie, socle) sort de ce que les forages ont vu.",
              "Sources : MGMERL, Fan et al. 2017, Copernicus GLO-90, CHIRPS, SoilGrids, GLiM, GLHYMPS. MakyClimat."]
     for i, n in enumerate(notes):
@@ -96,8 +96,8 @@ def main() -> None:
     gj = json.loads((ROOT / "docs" / "data" / args.country / "geo" / "adm1.geojson").read_text(encoding="utf-8"))
     out = ROOT / "validation" / "figures"
     out.mkdir(exist_ok=True)
-    (out / "nappes_carte_v1.svg").write_text(svg(fk, [f["geometry"] for f in gj["features"]]), encoding="utf-8")
-    print(f"figure : validation/figures/nappes_carte_v1.svg ({len(fk)} fokontany)")
+    (out / "nappes_carte_v2.svg").write_text(svg(fk, [f["geometry"] for f in gj["features"]]), encoding="utf-8")
+    print(f"figure : validation/figures/nappes_carte_v2.svg ({len(fk)} fokontany)")
 
 
 if __name__ == "__main__":

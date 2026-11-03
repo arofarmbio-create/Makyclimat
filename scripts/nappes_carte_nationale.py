@@ -28,7 +28,8 @@ import validate_nappes_hc2b as H2b
 from common import ROOT, country_data_dir, read_units
 
 BATCH = 2000
-SOURCE = "MakyClimat niveau statique v1 (validation/nappes_carte_nationale.md)"
+VERSION = "2 (tableau MGMERL complet du 03/11/2026)"
+SOURCE = "MakyClimat niveau statique v2 (validation/nappes_carte_nationale.md)"
 
 
 def expected_error(dist_km, table: pd.DataFrame) -> np.ndarray:
@@ -63,11 +64,11 @@ def to_external(fk: pd.DataFrame, date: str) -> pd.DataFrame:
     return out.assign(date=date, source=SOURCE)
 
 
-def report(reg: pd.DataFrame, n_fk: int, n_ok: int, extra_share: float, cmp: dict, train_regions: set) -> str:
-    L = ["# Carte nationale du niveau statique (version 1)", "",
+def report(reg: pd.DataFrame, n_fk: int, n_ok: int, extra_share: float, cmp: dict, train_regions: set, n_train: int, version: str) -> str:
+    L = [f"# Carte nationale du niveau statique (version {version})", "",
          f"Générée le {dt.date.today().isoformat()} par `scripts/nappes_carte_nationale.py`, selon "
          "`validation/protocole_cadre_eaux_souterraines.md` (phase 5, précisions du 03/11/2026 fixées avant le calcul). "
-         "Modèle : hybride S0 entraîné sur 980 forages MGMERL ; intervalle de 80 % calibré selon la distance. "
+         f"Modèle : hybride S0 entraîné sur {n_train} forages MGMERL ; intervalle de 80 % calibré selon la distance. "
          "**Niveau de preuve : approximation**, validée par région entière sur 8 régions ; pas encore de confirmation sur "
          "des forages indépendants (phase 4).", "",
          f"{n_ok} fokontany estimés sur {n_fk} ; {extra_share:.0%} en extrapolation (terrain hors de l'étendue des forages).", "",
@@ -123,7 +124,7 @@ def main() -> None:
     cmp = {"n": len(both), "ecart": float(np.median(np.abs(both.profondeur_m - both.pcode.map(wt)))) if len(both) else float("nan")}
     train_regions = set(train.region)
     (ROOT / "validation" / "nappes_carte_nationale.md").write_text(
-        report(reg, len(fk), int(ok.sum()), float(np.nanmean(fk.extrapolation)), cmp, train_regions), encoding="utf-8")
+        report(reg, len(fk), int(ok.sum()), float(np.nanmean(fk.extrapolation)), cmp, train_regions, len(train), VERSION), encoding="utf-8")
     print(f"Carte nationale : {int(ok.sum())} fokontany estimés ; rapport dans validation/nappes_carte_nationale.md")
 
 

@@ -4,45 +4,46 @@ Généré le 2026-11-03 par `scripts/audit_nappes_phase0.py`, selon `validation/
 
 ## 1. Diagramme de flux des données
 
-**1000** : Relevés lus (tableau MGMERL du 02/11/2026)
+**1400** : Relevés lus (tableau MGMERL complet, extrait le 03/11/2026)
 
-↓ **1000** : Après contrôle (0-200 m, à Madagascar, doublons)
+↓ **1400** : Après contrôle (0-200 m, à Madagascar, doublons)
 
-↓ **999** : Avec une valeur de la carte de Fan
+↓ **1399** : Avec une valeur de la carte de Fan
 
-↓ **999** : Situés dans un fokontany (région connue)
+↓ **1399** : Situés dans un fokontany (région connue)
 
-↓ **980** : Dans une région d'au moins 10 forages (validation par région)
+↓ **1385** : Dans une région d'au moins 10 forages (validation par région)
 
 ## 2. Densité des forages par région
 
 | Région | Forages | Part | Forages pour 1 000 km² |
 |---|---|---|---|
-| Androy | 346 | 34.6% | 18.25 |
-| Atsimo Andrefana | 296 | 29.6% | 4.44 |
-| Anosy | 168 | 16.8% | 5.69 |
-| Atsimo Atsinanana | 55 | 5.5% | 3.31 |
-| Sava | 50 | 5.0% | 2.10 |
-| Analanjirofo | 25 | 2.5% | 2.45 |
-| Boeny | 24 | 2.4% | 0.77 |
-| Menabe | 16 | 1.6% | 0.33 |
-| Ambatosoa | 7 | 0.7% | 0.61 |
-| Fitovinany | 6 | 0.6% | 0.80 |
-| Analamanga | 3 | 0.3% | 0.17 |
-| Vatovavy | 2 | 0.2% | 0.15 |
+| Androy | 507 | 36.2% | 26.74 |
+| Atsimo Andrefana | 460 | 32.9% | 6.90 |
+| Anosy | 194 | 13.9% | 6.57 |
+| Atsimo Atsinanana | 78 | 5.6% | 4.69 |
+| Sava | 50 | 3.6% | 2.10 |
+| Boeny | 45 | 3.2% | 1.44 |
+| Analanjirofo | 25 | 1.8% | 2.45 |
+| Menabe | 16 | 1.1% | 0.33 |
+| Ambatosoa | 10 | 0.7% | 0.87 |
+| Fitovinany | 6 | 0.4% | 0.80 |
+| Vatovavy | 3 | 0.2% | 0.23 |
+| Analamanga | 3 | 0.2% | 0.17 |
+| Betsiboka | 1 | 0.1% | 0.03 |
 | Amoron I Mania | 1 | 0.1% | 0.06 |
 
 ## 3. Dates et saisons des relevés
 
-Relevés datés de 06/2023 à 09/2026. Par année : 2023 : 236, 2024 : 95, 2025 : 601, 2026 : 68. Saison des pluies (novembre à avril) : 368 ; saison sèche : 632.
+Relevés datés de 09/1994 à 09/2026. Par année : 1994 : 1, 2001 : 50, 2002 : 60, 2003 : 72, 2004 : 59, 2008 : 1, 2021 : 1, 2022 : 49, 2023 : 340, 2024 : 95, 2025 : 604, 2026 : 68. Saison des pluies (novembre à avril) : 533 ; saison sèche : 867.
 
 ## 4. Référence S0 (validation par région entière)
 
 | Méthode | Critère 1 : erreur moyennée par région (m) [IC 95 %] | Critère 2 : erreur à plus de 50 km (m) [IC 95 %] | Biais moyen (m) |
 |---|---|---|---|
-| Carte de Fan seule | 9.14 [4.13 ; 14.75] | 8.02 [3.80 ; 14.26] | +15.73 |
-| Krigeage | 4.09 [3.15 ; 5.36] | 3.52 [3.23 ; 3.94] | -0.28 |
-| Hybride (forêt de quantiles) | 3.39 [1.93 ; 5.64] | 3.17 [1.79 ; 4.27] | -1.20 |
+| Carte de Fan seule | 8.56 [3.84 ; 14.37] | 8.05 [3.74 ; 14.33] | +17.60 |
+| Krigeage | 4.06 [3.30 ; 5.18] | 3.49 [3.33 ; 3.88] | -0.03 |
+| Hybride (forêt de quantiles) | 3.26 [1.98 ; 5.21] | 3.03 [1.73 ; 3.90] | -0.95 |
 
 Avec 8 régions, les intervalles de confiance sont larges : ils mesurent ce que la phase 0 permet de conclure.
 
@@ -50,18 +51,19 @@ Avec 8 régions, les intervalles de confiance sont larges : ils mesurent ce que 
 
 | Région | Forages | Couverture |
 |---|---|---|
+| Ambatosoa | 10 | 60% |
 | Analanjirofo | 25 | 76% |
-| Androy | 346 | 88% |
-| Anosy | 168 | 75% |
-| Atsimo Andrefana | 296 | 64% |
-| Atsimo Atsinanana | 55 | 78% |
-| Boeny | 24 | 75% |
-| Menabe | 16 | 50% |
-| Sava | 50 | 88% |
+| Androy | 507 | 85% |
+| Anosy | 194 | 72% |
+| Atsimo Andrefana | 460 | 73% |
+| Atsimo Atsinanana | 78 | 65% |
+| Boeny | 45 | 73% |
+| Menabe | 16 | 44% |
+| Sava | 50 | 90% |
 
 | Distance au forage d'apprentissage le plus proche | Forages | Couverture | Erreur Fan (m) | Erreur krigeage (m) | Erreur hybride (m) |
 |---|---|---|---|---|---|
-| 0-25 km | 248 | 84% | 21.9 | 2.9 | 2.4 |
-| 25-50 km | 288 | 80% | 20.6 | 3.1 | 2.8 |
-| 50-100 km | 248 | 75% | 10.2 | 3.5 | 3.4 |
-| plus de 100 km | 196 | 65% | 6.7 | 3.5 | 2.9 |
+| 0-25 km | 396 | 82% | 21.7 | 3.1 | 2.1 |
+| 25-50 km | 441 | 79% | 23.2 | 3.0 | 2.5 |
+| 50-100 km | 340 | 74% | 10.0 | 3.4 | 3.1 |
+| plus de 100 km | 208 | 68% | 6.5 | 3.6 | 3.0 |

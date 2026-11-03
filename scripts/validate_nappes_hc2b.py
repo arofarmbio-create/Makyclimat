@@ -93,7 +93,7 @@ def main() -> None:
     ap.add_argument("--couches", default=None)
     args = ap.parse_args()
     couches = Path(args.couches) if args.couches else country_data_dir(args.country) / "nappes_mondiales"
-    src = country_data_dir(args.country) / "mgmerl_raw" / "tableaux_affiches_2026-11-02" / "mgmerl_niveau_statique.csv"
+    src = country_data_dir(args.country) / "mgmerl_raw" / "complet_2026-11-03" / "mgmerl_niveau_statique_complet.csv"
     df = H2.point_features(args.country, H1.load_points(src), couches)
     pc = locate_points(args.country, df.lon.tolist(), df.lat.tolist())
     geo = pd.read_csv(country_data_dir(args.country) / "external" / "geology.csv")
