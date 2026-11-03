@@ -648,3 +648,15 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   l'Ouest), ce que la phase 2 (lithologie et failles) doit traiter. 
   La valeur de 76 % au-delà de 100 km est juste au-dessus du seuil.
 
+### Grille de pluie de Météo Madagascar (map.meteomadagascar.mg) : examinée, non ajoutée à E1
+- ✅ Examinée le 03/11 (lecture seule, OPeNDAP) : « Madagascar_v3 » (ALL, CLM, MON), pluie journalière, décadaire et
+  mensuelle à 0,0375°, 267 × 387 mailles, 476 mois (environ 1981-2020) ; pages mises à jour en 2021. Organisation
+  typique d'ENACTS (pluviomètres nationaux fusionnés au satellite), non nommée sur le site. Aucun jeu de stations
+  brutes exposé.
+- 📌 **Décision : non ajoutée**, pour trois raisons. (1) Elle s'arrête vers 2020 : inutilisable dans un système mis à
+  jour automatiquement. (2) Elle contient les pluviomètres : la comparer aux stations ne serait pas une validation
+  indépendante, ce qui est justement le manque d'E1. (3) Sa part satellite est probablement proche de celle de
+  CHIRPS : l'hypothèse d'erreurs indépendantes de la triple collocation serait violée. Une source de plus
+  n'apporterait pas l'information manquante (des pluviomètres indépendants) et ajouterait du bruit au modèle.
+- 📌 Ce qui ferait avancer E1 : les relevés bruts des pluviomètres nationaux, non publiés sur ce site.
+
