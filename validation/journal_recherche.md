@@ -688,3 +688,24 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   nettement pire et réduit les fausses alertes de crue. Le système garde CHIRPS (règle 6.4) ; le levier pour aller
   plus loin est un jeu de pluviomètres indépendants.
 
+### Carte nationale du niveau statique, version 1 (`validation/nappes_carte_nationale.md`, figure `validation/figures/nappes_carte_v1.svg`)
+- ✅ Précisions fixées et commitées avant le calcul. 17 453 fokontany estimés sur 17 465 (12 sans valeur de la carte
+  de Fan). Profondeur, intervalle de 80 % calibré selon la distance, erreur attendue, drapeau d'extrapolation ;
+  agrégats par commune, district et région. Sortie séparée (`external/nappes_carte.csv`), le produit en service
+  (`watertable.csv`) n'est pas remplacé.
+- 📊 Profondeurs médianes régionales de 3,8 m (Ambatosoa) à 7,3 m (Androy). Le Grand Sud (Androy, Anosy,
+  Atsimo-Andrefana : 6,9 à 7,3 m) ressort plus profond que l'Est (Analanjirofo 3,9 m, Fitovinany 3,9 m).
+- ❌ **52 % des fokontany sont en extrapolation** : leur terrain sort de ce que les 980 forages ont vu. C'est
+  presque tout le cœur des Hautes Terres : Analamanga 99 %, Amoron'i Mania 98 %, Itasy 97 %, Vakinankaratra 96 %,
+  Haute Matsiatra 96 %. Les forages MGMERL sont en basse altitude ; l'altitude des Hautes Terres dépasse leur
+  étendue. Dans ces zones, l'erreur affichée (2,4 à 3,4 m, tirée de la distance seule) **n'est pas une erreur
+  mesurée** : la précision y est inconnue. La carte y est un ordre de grandeur, pas une estimation validée.
+- 📊 Fiable au sens mesuré : le Grand Sud et le Sud-Est (Androy 2 % d'extrapolation, Atsimo-Andrefana 15 %, Anosy
+  31 %, Atsimo-Atsinanana 23 %), avec un forage connu à moins de 10 km en médiane et une erreur médiane de 2,4 m.
+- 📊 Comparaison au produit en service (plus proche relevé à 15 km) sur 5 161 fokontany : écart médian 2,3 m, du même
+  ordre que l'erreur de l'hybride ; rien ne dit lequel est juste.
+- 📌 Limites connues : l'hybride resserre les estimations vers la moyenne des forages (profondeurs régionales entre 4
+  et 7 m) ; les nappes profondes de fissures ne sont pas représentées ; Atsimo-Andrefana et Menabe ont une
+  couverture d'intervalle trop faible (65 et 50 %). Ce qui améliorerait le plus la carte : des forages des Hautes
+  Terres (archives du porteur du projet, phase 4) et la lithologie et les failles (phase 2).
+

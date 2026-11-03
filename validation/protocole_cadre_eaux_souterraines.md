@@ -179,7 +179,7 @@ journal à chaque étape, réussite ou échec.
     si au moins une variable de terrain (altitude, HAND, pente, pluie annuelle, profondeur du socle) sort de
     l'étendue des forages d'apprentissage (percentiles 1 et 99, comme l'étude SEAM).
   - Niveau de preuve : « approximation, validée par région hors des zones d'apprentissage sur 8 régions » ; les
-    13 régions sans forage sont signalées.
+    11 régions sans aucun forage (et les 5 qui en ont moins de 10) sont signalées. Correction le 03/11, avant calcul : « 13 » était une erreur de comptage.
   - Licence de la carte de Fan : la prédiction de l'hybride (Fan corrigée) est un produit dérivé ; elle est publiée par
     fokontany, jamais la valeur de Fan elle-même.
   - Sortie dans un fichier séparé (`data/<pays>/external/nappes_carte.csv`) : le produit en service
