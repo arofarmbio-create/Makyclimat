@@ -108,5 +108,11 @@ check("année passée complète", len(E.year_days(2024, dt.date(2026, 11, 2))) =
 check("CHIRPS : adresse de secours en .tif non compressé",
       E.chirps_plain_url("https://x/p05/2021/chirps-v2.0.2021.12.15.tif.gz") == "https://x/p05/2021/chirps-v2.0.2021.12.15.tif")
 
+pr = np.ones((5, E.NY, E.NX), "float32")
+pr[1] = np.nan
+pr[3, :, :] = np.nan
+pr[3, 0, 0] = 1.0
+check("jours entièrement vides : seul le jour sans aucune maille", E.empty_days(pr) == [1])
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

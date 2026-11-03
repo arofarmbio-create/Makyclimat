@@ -86,6 +86,11 @@ def corner_mean_01(arr: np.ndarray) -> np.ndarray:
 
 
 # ---------- CHIRPS ----------
+def empty_days(pr: np.ndarray) -> list[int]:
+    """Indices des jours entièrement vides (aucune maille renseignée)."""
+    return [k for k in range(len(pr)) if not np.isfinite(pr[k]).any()]
+
+
 def chirps_plain_url(url: str) -> str:
     """Adresse du même jour en .tif non compressé (certains mois, comme décembre 2021, ne sont publiés que sous cette
     forme sur le serveur CHC)."""
@@ -101,7 +106,7 @@ def part_chirps(days):
 
     def get(url, dest):
         try:
-            return download(url, dest, retries=5)
+            return download(url, dest, retries=8)              # CHC très chargé : plus de patience sur les 429
         except Exception as e:  # noqa: BLE001
             if "403" in str(e):                   # jour pas encore publié : CHC répond 403, pas 404 (02/11/2026)
                 return False
@@ -119,7 +124,7 @@ def part_chirps(days):
             arr, lon0, lat0, _ = read_crop(tif, [LON0 - 0.05, LAT0 - 0.05, LON1 + 0.05, LAT1 + 0.05])
             return block_mean_005(arr, lon0, lat0)
 
-    with cf.ThreadPoolExecutor(2) as ex:                     # CHC refuse (429) au-delà de quelques requêtes simultanées
+    with cf.ThreadPoolExecutor(1) as ex:                     # CHC refuse (429) même à 2 requêtes simultanées (03/11/2026)
         return list(ex.map(one, days)), "CHIRPS v2.0 journalier, 0,05° -> 0,1° (moyenne 2 x 2)"
 
 
@@ -329,6 +334,8 @@ def main() -> None:
     ap.add_argument("--year", type=int)
     ap.add_argument("--first-year", type=int, default=2001)
     ap.add_argument("--probe", help="diagnostic IMERG sur un jour AAAA-MM-JJ")
+    ap.add_argument("--completer", action="store_true",
+                    help="repartir du fichier existant et ne télécharger que les jours entièrement vides")
     args = ap.parse_args()
     load_config(args.country)
     out_dir = country_data_dir(args.country) / "e1"
@@ -342,17 +349,30 @@ def main() -> None:
         return
     days = year_days(args.year, today)
     t0 = time.time()
-    grids, desc = {"chirps": part_chirps, "imerg": part_imerg, "era5": part_era5}[args.source](days)
-    pr = np.full((len(days), NY, NX), np.nan, "float32")
-    missing = 0
-    for k, g in enumerate(grids):
-        if g is None:
-            missing += 1
-        else:
-            pr[k] = g
+    path = out_dir / f"{args.source}_{args.year}.npz"
+    part = {"chirps": part_chirps, "imerg": part_imerg, "era5": part_era5}[args.source]
+    if args.completer and path.exists():
+        old = np.load(path)
+        pr = np.full((len(days), NY, NX), np.nan, "float32")
+        pr[: min(len(days), len(old["pluie"]))] = old["pluie"][: len(days)]
+        todo = empty_days(pr)
+        print(f"  {len(todo)} jours entièrement vides à compléter", flush=True)
+        grids, desc = part([days[k] for k in todo]) if todo else ([], str(old["source"]))
+        for k, g in zip(todo, grids):
+            if g is not None:
+                pr[k] = g
+        missing = len(empty_days(pr))
+    else:
+        grids, desc = part(days)
+        pr = np.full((len(days), NY, NX), np.nan, "float32")
+        missing = 0
+        for k, g in enumerate(grids):
+            if g is None:
+                missing += 1
+            else:
+                pr[k] = g
     if missing == len(days):
         raise SystemExit(f"{args.source} {args.year} : aucun jour obtenu")
-    path = out_dir / f"{args.source}_{args.year}.npz"
     save_grid(path, pluie=pr, start=np.array(days[0].isoformat()), lat=LATS, lon=LONS, source=np.array(desc),
               jours_manquants=np.array(missing), cree=np.array(dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")))
     print(f"{path.name} : {len(days)} jours, {missing} manquants, {NY} x {NX} mailles, "

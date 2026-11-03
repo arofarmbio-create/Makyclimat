@@ -115,7 +115,12 @@ jobs:
           EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          python scripts/build_e1_sources.py --country "$COUNTRY" --source "${{ matrix.source }}" --year "${{ matrix.year }}"
+          # année forcée déjà publiée : repartir du fichier et ne télécharger que les jours vides (03/11/2026)
+          extra=""; mkdir -p "data/$COUNTRY/e1"
+          if echo " ${{ github.event.inputs.forcer }} " | grep -q " ${{ matrix.year }} " &&              gh release download "$TAG" --pattern "${{ matrix.source }}_${{ matrix.year }}.npz" --dir "data/$COUNTRY/e1" --clobber; then
+            extra="--completer"
+          fi
+          python scripts/build_e1_sources.py --country "$COUNTRY" --source "${{ matrix.source }}" --year "${{ matrix.year }}" $extra
           gh release upload "$TAG" "data/$COUNTRY/e1/${{ matrix.source }}_${{ matrix.year }}.npz" --clobber
 
   imerg:
