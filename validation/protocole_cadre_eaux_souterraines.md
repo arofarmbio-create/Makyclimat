@@ -154,4 +154,18 @@ journal à chaque étape, réussite ou échec.
   - Règle inchangée : variables gardées seulement si les deux critères principaux s'améliorent (valeurs centrales).
     Avec des intervalles de confiance qui se recouvrent, l'amélioration est dite « non démontrée » même si elle est
     retenue.
+- 03/11/2026, **avant le calcul** : calibration de l'intervalle de 80 % selon la distance (préalable à la phase 5,
+  constat de la phase 0 : couverture de 84 % à moins de 25 km, 65 % au-delà de 100 km).
+  - Modèle : S0 (hybride de la phase 0, validation par région entière). La part de puits SEAM (H-S1b), gardée selon
+    la règle mais sans gain mesurable, n'est pas ajoutée ici.
+  - Méthode (conforme, par classe de distance) : pour chaque forage prédit hors de sa région, écart normalisé
+    s = (mesure − médiane) / (haut − médiane) si la mesure est au-dessus de la médiane, (médiane − mesure) / (médiane −
+    bas) sinon. Dans chaque classe de distance (0-25, 25-50, 50-100, plus de 100 km), facteur k = 80e centile de s ;
+    intervalle élargi : [médiane − k (médiane − bas) ; médiane + k (haut − médiane)], borné à 0 en bas.
+  - Validation honnête : k est estimé sans la région évaluée (région laissée de côté une seconde fois), puis la
+    couverture est mesurée sur cette région.
+  - **Critère** : couverture de l'intervalle calibré entre 75 et 85 % dans chaque classe de distance (contre 65 à
+    84 % avant). Mesures secondaires : couverture par région, largeur médiane de l'intervalle par classe.
+  - La carte nationale (phase 5) utilisera les k estimés sur toutes les régions, appliqués selon la distance de chaque
+    maille au forage le plus proche.
 
