@@ -637,3 +637,14 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   voient mal la pluie de relief des alizés ; IMERG, avec ses micro-ondes passives, la voit mieux. C'est l'argument
   physique d'une fusion pondérée **par zone**, que les 5 stations GSOD ne permettent pas de tester.
 
+### Intervalle du niveau statique calibré selon la distance (`validation/nappes_intervalle.md`)
+- ✅ Méthode fixée et commitée avant le calcul (calibration conforme par classe de distance, facteurs estimés sans la
+  région évaluée).
+- ✅ **Critère atteint** : couverture de l'intervalle de 80 % entre 76 et 84 % dans toutes les classes (avant : 65 à
+  84 %). Au-delà de 100 km, 65 % → 76 % pour un intervalle élargi de 9,0 à 11,4 m (médiane). Facteurs pour la carte
+  nationale : 0,93 (0-25 km), 1,01, 1,18, 1,24 (plus de 100 km).
+- ❌ **Limite** : la distance ne suffit pas partout. Atsimo-Andrefana reste à 65 % et Menabe à 50 % ; d'autres régions
+  passent au-dessus de 90 % (Boeny 96 %, Sava 94 %). L'erreur dépend aussi de la région (géologie : sédimentaire de
+  l'Ouest), ce que la phase 2 (lithologie et failles) doit traiter. 
+  La valeur de 76 % au-delà de 100 km est juste au-dessus du seuil.
+
