@@ -186,4 +186,29 @@ journal à chaque étape, réussite ou échec.
     (`watertable.csv`, plus proche relevé à 15 km) n'est remplacé qu'après comparaison. Comparaison fixée : sur les
     fokontany où les deux existent, écart médian entre les deux, sans conclusion de justesse (aucune donnée
     indépendante).
+- 03/11/2026, **avant le calcul** : mise en œuvre de la recharge, du volume, du renouvellement et du risque (section
+  5) par fokontany. Calcul sur la carte du niveau statique **v2** (données MGMERL complètes) ; la v1 (extrait de
+  1 000 relevés) ne sert qu'à tester le code et n'est pas publiée.
+  - **Recharge** R (mm/an), moyenne de long terme : transfert T2 (version retenue sur H-C5), maille la plus proche
+    (`recharge_transferee.csv`) ; fourchette = intervalle de 80 % de T2. H-C6 n'étant pas confirmée (surestimation aux
+    sites du Sud), la recharge porte le niveau de preuve « non validé » et le Grand Sud est signalé. Aux 7 sites MGMERL
+    suivis, la recharge par fluctuation de nappe est publiée à côté, comme contrôle local.
+  - **Porosité efficace** Sy selon le groupe d'aquifère BGS de la maille (`Aquifer_group`) : socle 0,02 à 0,08 ;
+    sédimentaire et non consolidé 0,05 à 0,15 ; volcanique ou inconnu : 0,02 à 0,15.
+  - **Épaisseur saturée** b = profondeur du socle (SoilGrids) − niveau statique, ramenée à 0. Bas : socle − borne
+    haute du niveau (intervalle de 80 %) ; haut : socle − borne basse.
+  - **Volume** V = 10⁶ × b × Sy (m³/km²) ; bas = b bas × Sy bas, haut = b haut × Sy haut. Aussi exprimé en mm d'eau
+    (10³ × b × Sy), comparable à la recharge.
+  - **Renouvellement** τ = V / (10³ × R) en années ; bas = V bas / R haut ; haut = V haut / R bas. Classes de la
+    section 5 (moins de 10 ans, 10 à 100, plus de 100), appliquées à la valeur centrale (V et R centraux, Sy au
+    milieu de sa fourchette).
+  - **Prélèvements** (mm/an) = population × 20 L/j × 365 / surface ; population du fokontany (WorldPop 2015, `units.csv`)
+    ramenée au total communal SEAM 2025 (rapport SEAM / WorldPop de la commune ; facteur 1 si la commune manque dans
+    SEAM). Sensibilité 15 et 50 L/j.
+  - **Indice d'exploitation** = prélèvements / R central ; classes faible (< 0,1), modéré (0,1 à 0,4), élevé (> 0,4) ;
+    aggravation d'une classe si la conductivité MGMERL la plus proche (à moins de 5 km) dépasse 3 000 µS/cm. La règle
+    « niveaux en baisse » attend les séries des sites suivis et n'est pas appliquée en v1.
+  - Contrôle de vraisemblance (sans critère de rejet) : distribution de τ comparée aux âges d'eau de la littérature
+    (`biblio_hydrogeologie_grand_sud.md`, section 3 ter) et à l'observation de terrain du porteur du projet.
+  - Sorties : `external/nappes_ressource.csv` (format du système) et `validation/nappes_ressource.md`.
 
