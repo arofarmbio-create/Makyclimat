@@ -223,4 +223,16 @@ journal à chaque étape, réussite ou échec.
     n'y portent que sur la population non desservie : population × (1 − 0,47) × norme.
   - Autres villes : aucune statistique publique vérifiée sur la part de l'eau de surface ; règle générale inchangée,
     et les chefs-lieux de district sont signalés comme surestimés possibles.
+- 03/11/2026, **avant le calcul v2** : Antananarivo, desserte réelle du réseau.
+  - Le taux de 47 % (Ognard et Taglioni 2019) porte sur la **commune urbaine** (6 arrondissements) et date de
+    2012-2014. Le chiffre de 70 % cité par l'étude préparatoire de la JICA sur Toamasina n'est pas utilisé : sa zone
+    et sa définition n'ont pas pu être vérifiées.
+  - En 2026, la JIRAMA estimait son déficit de production à 100 000 m³/j (mai 2026) et distribuait par tours d'eau,
+    avec des baisses de pression et des fuites nombreuses (157 sur 195 km, avril 2026 ; L'Express de Madagascar,
+    Newsmada, Madagascar Tribune). Un ménage raccordé mais privé d'eau se rabat sur les puits et les sources.
+  - Règle : **fourchette** pour les fokontany de la commune urbaine. Borne basse : 47 % de la population desservie
+    par le réseau (ne prélève pas dans la nappe). Borne haute : 0 % (coupures, toute la population prélève dans la
+    nappe). Les deux indices d'exploitation sont publiés ; les fokontany dont la classe de risque change entre les
+    deux bornes sont signalés. Aucune valeur centrale n'est retenue (pas de volume distribué par personne publié).
+  - Effet non chiffré, signalé : les fuites du réseau rechargent la nappe urbaine (et la polluent).
 
