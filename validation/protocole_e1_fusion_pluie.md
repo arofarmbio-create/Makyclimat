@@ -179,3 +179,15 @@ Le nombre d'événements est faible : ces résultats sont descriptifs, sans test
   lissé) augmentent avec la rugosité et sur les versants au vent. Ces trois couches sont demandées à l'agent de
   téléchargement. Côte : maille à moins de 20 km de la mer (masque mer du système). L'évaluation par les impacts
   (section 6.3) sera ajoutée au script quand les trois sources seront complètes.
+- 03/11/2026, après le calcul principal (H1-E1, H1-E1b) et **avant tout calcul par zone** : seuils de H3-E1.
+  - Hautes Terres : altitude moyenne de la maille ≥ 1 000 m.
+  - Rugosité : trois classes par les tiers de la distribution des mailles terrestres (plat, moyen, accidenté).
+  - Exposition : au vent si `exposition_est` > +2 m/km, sous le vent si < −2 m/km, sinon « sans grand versant ».
+  - Côte : centre de la maille à moins de 20 km d'une maille de mer (mailles de 0,1° sans valeur de triple
+    collocation).
+  - Mesure principale : corrélation avec la pluie vraie (r de la triple collocation), sans unité, donc comparable
+    entre zones sèches et humides ; la variance d'erreur (mm² par pentade), qui croît avec la quantité de pluie, est
+    donnée en second. Médianes par classe, et corrélation de Spearman entre r et la rugosité sur les mailles.
+  - Attendu (déjà écrit le 02/11) : r plus faible quand la rugosité croît et sur les versants au vent, surtout pour
+    ERA5-Land (relief lissé) et pour les satellites (pluie de relief). Analyse descriptive, sans test de signification.
+
