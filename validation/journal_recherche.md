@@ -722,3 +722,11 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 **Leçon** : un total rond (1 000) est un signal de troncature ; tout extrait doit être comparé au total annoncé
   par la source avant usage.
 
+### Recharge, volume, renouvellement, risque : code prêt, calcul en attente des données MGMERL complètes
+- ✅ Mise en œuvre fixée avant calcul (protocole-cadre, 03/11) ; script `nappes_ressource.py` et 12 tests.
+- ✅ Essai de bout en bout sur la carte v1 (extrait de 1 000 relevés), **non publié** : la chaîne tourne sur les
+  17 465 fokontany ; 79 % des communes SEAM appariées par leur nom.
+- 📌 Limite repérée à l'essai : la règle « toute la population prélève dans la nappe » gonfle le risque en ville
+  (Analamanga), où l'eau vient surtout de surface. Elle reste appliquée telle quelle (règle fixée) et sera signalée
+  dans le rapport v2 ; une correction par la source d'approvisionnement demanderait un nouveau protocole.
+

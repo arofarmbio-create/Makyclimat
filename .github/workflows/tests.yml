@@ -79,6 +79,7 @@ jobs:
           python tests/test_e1_impacts.py
           python tests/test_nappes_intervalle.py
           python tests/test_nappes_carte_nationale.py
+          python tests/test_nappes_ressource.py
           python tests/test_nappes_mgmerl.py
           python tests/test_relief_e1.py
           python tests/test_mct_era5.py
