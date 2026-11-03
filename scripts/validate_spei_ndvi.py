@@ -114,7 +114,7 @@ def control_et0(E, units, country):
     cache = json.loads(p.read_text())
     sel = [m for m in E.index if 2016 <= int(m[:4]) <= 2020]
     ours = E.loc[sel].groupby([int(m[5:7]) for m in sel]).mean().mean(axis=1)
-    om = np.nanmean(np.array([v for v in cache.values() if v]), axis=0)
+    om = np.nanmean(np.array([v for k, v in cache.items() if not k.startswith("_") and v and len(v) == 12]), axis=0)  # « _years » : période du cache
     df = pd.DataFrame({"mois": range(1, 13), "et0_era5land_pm_mm": ours.reindex(range(1, 13)).to_numpy(), "et0_openmeteo_mm": om})
     df.round(1).to_csv(DATA_DIR.parent / "validation" / "spei_controle_et0.csv", index=False)
     return df
