@@ -1,0 +1,11 @@
+decoupage,classe,mailles,r_chirps,var_chirps,r_imerg,var_imerg,r_era5,var_era5
+altitude,moins de 1 000 m,4421,0.873,291.087,0.898,260.914,0.842,404.019
+altitude,Hautes Terres (≥ 1 000 m),844,0.87,313.566,0.893,260.708,0.825,406.388
+rugosité,moyen,1755,0.875,284.958,0.893,267.453,0.839,400.662
+rugosité,plat,1755,0.885,244.583,0.905,217.459,0.853,373.193
+rugosité,accidenté,1755,0.86,365.562,0.894,287.451,0.829,441.842
+exposition,sans grand versant,1421,0.886,259.403,0.899,227.732,0.849,377.033
+exposition,au vent (est),1659,0.843,561.54,0.915,284.604,0.807,663.533
+exposition,sous le vent (ouest),2185,0.882,254.265,0.882,264.802,0.85,351.582
+côte,côte (moins de 20 km),511,0.845,357.354,0.939,189.647,0.818,476.931
+côte,intérieur,4754,0.874,290.691,0.893,267.445,0.84,401.187

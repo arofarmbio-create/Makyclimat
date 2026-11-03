@@ -36,3 +36,8 @@ data/*/nappes_mondiales/*.gpkg
 data/*/nappes_mondiales/*.csv
 data/*/bgs_recharge_raw/
 !data/*/nappes_mondiales/covariables_hc6.csv
+data/*/e1/chirps_*.npz
+data/*/e1/imerg_*.npz
+data/*/e1/era5_*.npz
+data/*/e1/gsod.csv
+data/*/e1/e1_tc.npz

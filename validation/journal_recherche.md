@@ -624,3 +624,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Verdict : SEAM est **utile** pour la pression (risque d'épuisement) et la représentativité ; **pas** comme source
   de niveau statique ni comme variable de la carte.
 
+### E1, H3-E1 : erreur des sources selon le relief (`validation/e1_relief.md`)
+- ✅ Seuils des zones fixés et commités avant le calcul par zone (altitude 1 000 m, tiers de rugosité, exposition
+  ±2 m/km, côte à moins de 20 km).
+- 📊 **IMERG tient sur les versants au vent et sur la côte** : r = 0,92 sur les versants est (CHIRPS 0,84, ERA5-Land
+  0,81) et 0,94 sur la côte (0,84 et 0,82). La variance d'erreur de CHIRPS et d'ERA5-Land y double presque (562 et
+  664 mm² par pentade contre 285 pour IMERG). Sous le vent, CHIRPS et IMERG sont à égalité (0,88).
+- 📊 Toutes les sources se dégradent en relief accidenté, ERA5-Land le plus (Spearman entre r et rugosité −0,24),
+  puis CHIRPS (−0,21), IMERG le moins (−0,10). Les Hautes Terres en tant que telles changent peu (r presque égal
+  au-dessus et au-dessous de 1 000 m) : c'est l'exposition et la rugosité qui comptent, pas l'altitude.
+- 📌 Lecture : là où les pluviomètres manquent (versant est), CHIRPS s'appuie sur l'infrarouge et sa climatologie, qui
+  voient mal la pluie de relief des alizés ; IMERG, avec ses micro-ondes passives, la voit mieux. C'est l'argument
+  physique d'une fusion pondérée **par zone**, que les 5 stations GSOD ne permettent pas de tester.
+
