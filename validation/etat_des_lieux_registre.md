@@ -187,7 +187,7 @@ statut, document détaillé.
 
 | ID | Question | Protocole | État au 03/11/2026 | Statut |
 |---|---|---|---|---|
-| R-41 | Carte nationale du niveau statique avec sa précision connue, puis recharge, volume, renouvellement et risque d'épuisement, prévus à court, moyen et long terme | `protocole_cadre_eaux_souterraines.md` | Protocole-cadre écrit avant calcul ; phase 0 (audit et référence S0) en cours | ⏳ |
+| R-41 | Carte nationale du niveau statique avec sa précision connue, puis recharge, volume, renouvellement et risque d'épuisement, prévus à court, moyen et long terme | `protocole_cadre_eaux_souterraines.md` | Phase 0 faite (03/11) : 11 régions sur 24 sans forage ; S0 par région, hybride 3,4 m [1,9 ; 5,6], krigeage 4,1 m [3,2 ; 5,4], Fan 9,1 m ; intervalle de 80 % trop étroit loin des forages (65 % au-delà de 100 km) (`nappes_phase0_audit.md`) | ⏳ |
 
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 

@@ -71,6 +71,7 @@ jobs:
           python tests/test_transfert_madagascar.py
           python tests/test_nappes_hc2.py
           python tests/test_nappes_hc2b.py
+          python tests/test_nappes_phase0.py
           python tests/test_nappes_mgmerl.py
           python tests/test_relief_e1.py
           python tests/test_mct_era5.py

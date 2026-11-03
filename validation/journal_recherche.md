@@ -508,3 +508,21 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   domaine de fiabilité).
 - 📌 Formules fixées à l'avance : volume = 10⁶ × épaisseur saturée × Sy ; renouvellement τ = V / R ; risque =
   prélèvements / recharge, en classes.
+
+### Phase 0 : audit des forages et référence S0 (`validation/nappes_phase0_audit.md`)
+- ✅ Diagramme de flux : 1 000 relevés lus ; 1 000 après contrôle ; 999 avec une valeur de Fan ; 999 dans un
+  fokontany ; 980 dans une région d'au moins 10 forages. L'écart de 999 à 980 (19 forages) vient des 5 régions qui en
+  ont moins de 10.
+- 📊 **Déséquilibre géographique** : de 18,3 forages pour 1 000 km² dans l'Androy à 0,06 dans l'Amoron'i Mania, soit
+  un rapport de 300. **11 régions sur 24 n'ont aucun forage** dans ce relevé, dont presque toutes les Hautes Terres.
+- 📊 Relevés de juin 2023 à septembre 2026 : 368 en saison des pluies, 632 en saison sèche (323 en juin).
+- 📊 Référence S0, par région entière laissée de côté :
+  - critère 1 (moyenne par région) : Fan 9,1 m [4,1 ; 14,8], krigeage 4,1 m [3,2 ; 5,4], hybride 3,4 m [1,9 ; 5,6] ;
+  - critère 2 (forages à plus de 50 km) : Fan 8,0 m, krigeage 3,5 m [3,2 ; 3,9], hybride 3,2 m [1,8 ; 4,3] ;
+  - biais moyen de Fan : +15,7 m.
+  Les intervalles se recouvrent : la phase 0 ne permet pas de départager l'hybride et le krigeage. C'est la référence
+  des phases suivantes.
+- ❌ **L'intervalle de 80 % devient trop étroit loin des forages** : il couvre 84 % des forages à moins de 25 km, mais
+  65 % au-delà de 100 km (50 % en Menabe, 64 % en Atsimo-Andrefana). Le modèle est trop sûr de lui là où il n'a pas de
+  données. 📌 À corriger avant la carte nationale : élargir l'intervalle selon la distance au forage le plus proche
+  (calibration par classe de distance), pour un domaine de fiabilité honnête.
