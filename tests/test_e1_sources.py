@@ -105,5 +105,8 @@ d = E.year_days(2026, dt.date(2026, 11, 2))
 check("année en cours : jusqu'à hier", d[0] == dt.date(2026, 1, 1) and d[-1] == dt.date(2026, 11, 1))
 check("année passée complète", len(E.year_days(2024, dt.date(2026, 11, 2))) == 366)
 
+check("CHIRPS : adresse de secours en .tif non compressé",
+      E.chirps_plain_url("https://x/p05/2021/chirps-v2.0.2021.12.15.tif.gz") == "https://x/p05/2021/chirps-v2.0.2021.12.15.tif")
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

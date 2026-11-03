@@ -18,6 +18,9 @@ on:
       sonde:
         description: "Diagnostic IMERG sur un jour (AAAA-MM-JJ) au lieu des téléchargements"
         default: ""
+      forcer:
+        description: "Années à recalculer même si déjà publiées (espaces)"
+        default: ""
 
 permissions:
   contents: write
@@ -42,7 +45,7 @@ jobs:
           ys="${{ github.event.inputs.years }}"
           [ -n "$ys" ] || ys="$(seq 2001 "$(date -u +%Y)" | tr '\n' ' ')"
           echo "years=$(echo "$ys" | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
-          r="$(date -u +%Y)"; [ "$(date -u +%m)" = "01" ] && r="$r $(( $(date -u +%Y) - 1 ))"
+          r="$(date -u +%Y) ${{ github.event.inputs.forcer }}"; [ "$(date -u +%m)" = "01" ] && r="$r $(( $(date -u +%Y) - 1 ))"
           echo "refresh=$r" >> "$GITHUB_OUTPUT"
           src=" ${{ github.event.inputs.sources || 'chirps imerg era5 gsod' }} "
           echo "sources=$src" >> "$GITHUB_OUTPUT"

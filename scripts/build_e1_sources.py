@@ -86,6 +86,12 @@ def corner_mean_01(arr: np.ndarray) -> np.ndarray:
 
 
 # ---------- CHIRPS ----------
+def chirps_plain_url(url: str) -> str:
+    """Adresse du même jour en .tif non compressé (certains mois, comme décembre 2021, ne sont publiés que sous cette
+    forme sur le serveur CHC)."""
+    return url[:-3] if url.endswith(".tif.gz") else url
+
+
 def part_chirps(days):
     import gzip
     import shutil
@@ -93,19 +99,23 @@ def part_chirps(days):
     from chirps import read_crop
     from common import download
 
+    def get(url, dest):
+        try:
+            return download(url, dest, retries=5)
+        except Exception as e:  # noqa: BLE001
+            if "403" in str(e):                   # jour pas encore publié : CHC répond 403, pas 404 (02/11/2026)
+                return False
+            raise
+
     def one(d):
         with tempfile.TemporaryDirectory(prefix="e1c_") as tmp:
-            gz = Path(tmp) / "f.tif.gz"
-            try:
-                if not download(CHIRPS_URL.format(y=d.year, m=d.month, d=d.day), gz, retries=5):
-                    return None
-            except Exception as e:  # noqa: BLE001
-                if "403" in str(e):               # jour pas encore publié : CHC répond 403, pas 404 (02/11/2026)
-                    return None
-                raise
-            tif = Path(tmp) / "f.tif"
-            with gzip.open(gz, "rb") as fi, open(tif, "wb") as fo:
-                shutil.copyfileobj(fi, fo)
+            gz, tif = Path(tmp) / "f.tif.gz", Path(tmp) / "f.tif"
+            url = CHIRPS_URL.format(y=d.year, m=d.month, d=d.day)
+            if get(url, gz):
+                with gzip.open(gz, "rb") as fi, open(tif, "wb") as fo:
+                    shutil.copyfileobj(fi, fo)
+            elif not get(chirps_plain_url(url), tif):   # décembre 2021 : publié en .tif non compressé (03/11/2026)
+                return None
             arr, lon0, lat0, _ = read_crop(tif, [LON0 - 0.05, LAT0 - 0.05, LON1 + 0.05, LAT1 + 0.05])
             return block_mean_005(arr, lon0, lat0)
 
