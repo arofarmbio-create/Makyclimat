@@ -560,3 +560,12 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   relèvent du suivi aux 16 sites (court terme, M3). Phase 2 (failles et lithologie) sur la base S0, sans ces
   variables.
 
+- ✅ Colonne NDVI des covariables H-C6 : MOD13C2 v6.1, moyenne 2001-2010 (120 mois sur 120, pixels fiables). Vérifié :
+  forêt 0,76, prairie 0,45, corrélation de 0,69 avec la pluie CRU.
+  ❌ puis 🔧 Deux obstacles franchis avant les données :
+  - le service OPeNDAP cloud de la NASA refusait la connexion par redirections (400) ; un jeton Earthdata (Bearer)
+    l'a remplacée ;
+  - le jeu n'est pas servi en DAP2 ; passage au DAP4.
+  Gain : 120 petits sous-ensembles au lieu d'environ 11 Go de fichiers mondiaux.
+- ✅ E1 complet ; l'ETP ERA5-Land du SPEI est enfin téléchargée. ⚠️ La validation SPEI qui suit échoue sur un bogue de
+  lecture de `et0_cache.json` (`validate_spei_ndvi.py`, `control_et0`), signalé.

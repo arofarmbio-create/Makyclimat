@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 350
     strategy:
-      max-parallel: 3
+      max-parallel: 1          # GES DISC : une saison et une requête à la fois (503 et coupures en parallèle, 02/11/2026)
       fail-fast: false
       matrix:
         season: ${{ fromJson(needs.plan.outputs.seasons) }}

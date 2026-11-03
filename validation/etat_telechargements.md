@@ -2,7 +2,7 @@
 
 *Tenu par l'agent de téléchargement depuis le 02/11/2026, décision du porteur du projet : un seul agent pour tous les
 téléchargements et liaisons API, petit à petit, sans demandes forcées ni simultanées auprès d'un même fournisseur.
-Mis à jour à chaque étape. Dernière mise à jour : 03/11/2026, 05 h 10 UTC.*
+Mis à jour à chaque étape. Dernière mise à jour : 03/11/2026, 06 h UTC.*
 
 ## Règles de rythme appliquées
 
@@ -29,9 +29,9 @@ Mis à jour à chaque étape. Dernière mise à jour : 03/11/2026, 05 h 10 UTC.*
 | Reprévisions GloFAS v4 | Copernicus EWDS | 21 saisons x 6 mois = 126 mois | 18 mois | 108 mois | file d'attente pleine (années lancées 2 par 2, 01/11) ; puis en concurrence avec ERA5-Land | ⏸ mis en pause le 02/11 (run 41411661636 annulé) : après l'indice MCT |
 | R-02 bis : IMERG V07 Final demi-horaire, 7 activations EMS | NASA GES DISC | 7 événements (77 jours au total, environ 3 700 requêtes) | — | tout | — (script, fenêtres et workflow 23 prêts, testés) | ⏸ en attente : après IMERG E1 et IMERG pilote, un événement à la fois |
 | R-02 bis : rafales ERA5 (instantaneous_10m_wind_gust) | Copernicus CDS | 7 fenêtres, emprise de Madagascar | — | tout | — (même script, partie « rafales ») | ⏸ en attente : file Copernicus, après l'indice MCT |
-| H-C6 : covariables de la recharge BGS | UEA/CRU, BGS, ISRIC, ESA, NASA | 654 mailles de 0,28° | climat CRU, Aquifer_group, GLG, Soil_group, Landcover | NDVI | NDVI : le service OPeNDAP cloud refusait la connexion par redirections (400) puis le DAP2 ; corrigé (jeton Earthdata, DAP4) | ⏳ NDVI MOD13C2 2001-2010 en cours (run 41581208353), une requête à la fois |
+| H-C6 : covariables de la recharge BGS | UEA/CRU, BGS, ISRIC, ESA, NASA | 654 mailles de 0,28° | toutes les colonnes : climat CRU, Aquifer_group, GLG, Soil_group, Landcover, NDVI MOD13C2 2001-2010 (120 mois sur 120) | — | — | ✅ `data/mdg/nappes_mondiales/covariables_hc6.csv` complet le 03/11 |
 | Prévisions C3S (10 systèmes) | Copernicus CDS | 10 systèmes | 0 | 10 | demande bloquée 5 h sans livraison, qui gênait ERA5-Land | ⏸ en pause depuis le 02/11 : en dernier |
-| IMERG demi-horaire, périmètre pilote | NASA GES DISC | 11 saisons (2014-2024) | 2014, 2017, 2018, 2022, 2023, 2024 | 2015, 2016, 2019, 2020, 2021 | concurrence avec IMERG E1 sur le même compte | ⏸ mis en pause le 02/11 (run 41406653970 annulé) : après IMERG E1 |
+| IMERG demi-horaire, périmètre pilote | NASA GES DISC | 11 saisons (2014-2024) | 2014, 2017, 2018, 2022, 2023, 2024 | 2015, 2016, 2019, 2020, 2021 | concurrence avec IMERG E1 (02/11) ; code et workflow rendus séquentiels | ⏳ relancé le 03/11, une saison à la fois |
 | ONI, DMI, SIOD, MOZ (ERSST) | NOAA | mensuel depuis 1950 | ONI, DMI, SIOD et MOZ (921 mois, jusqu'à 2026-09) | — | prévision saisonnière Open-Meteo du même workflow : délai dépassé (TimeoutError), sans lien avec ERSST | ✅ SIOD et MOZ produits et commités le 02/11 (workflow 8, run 41444771537) ; la prévision Open-Meteo se refera lundi |
 | Niveaux de nappe HT Analytics | MGMERL (dossier partagé) | 16 sites | 16 séries (juin 2025) | Water Missions, Lorentz, relevés ACF | — | ✅ manuel, hors git |
 | Rapports de forage, exports MGMERL | MGMERL (api.mwater.co) | lithologie, essais de pompage | — | tout | l'extension Chrome n'a pas le droit d'accéder à api.mwater.co | ⛔ décision humaine : autoriser le site dans l'extension |
@@ -64,4 +64,6 @@ Mis à jour à chaque étape. Dernière mise à jour : 03/11/2026, 05 h 10 UTC.*
   obtenue. NDVI MOD13C2 : 120 sous-ensembles DAP4 au lieu de 11 Go de fichiers mondiaux, avec un jeton Earthdata ;
   lancé. Indice du canal de Mozambique lancé. Ensuite, côté NASA : IMERG pilote puis IMERG R-02 bis ; côté
   Copernicus : rafales R-02 bis, GloFAS, C3S.
+- 03/11, 06 h UTC : colonne NDVI de H-C6 prête (moyenne 0,53 ; forêt 0,76, prairie 0,45 ; corrélation de 0,69 avec la
+  pluie CRU). IMERG pilote relancé (5 saisons, une à la fois). Indice MCT en cours côté Copernicus.
 
