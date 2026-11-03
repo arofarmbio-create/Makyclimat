@@ -24,7 +24,7 @@ import pandas as pd
 
 import soilwater_core as SC
 import validate_e1 as E
-from common import ROOT, country_data_dir, read_units
+from common import ROOT, country_data_dir, load_config, read_units
 
 VERSIONS = ("chirps", "imerg", "era5", "B", "C")
 GRAND_SUD = ("Androy", "Anosy", "Atsimo Andrefana")
@@ -97,8 +97,9 @@ def monthly_by_region(dates, P: np.ndarray, cell_region: np.ndarray) -> pd.DataF
     return pd.DataFrame({r: m.loc[:, cell_region == r].mean(axis=1) for r in regs}, index=m.index.strftime("%Y-%m"))
 
 
-def drought_ranks(M: pd.DataFrame, n: int, regions=GRAND_SUD, period=DROUGHT) -> dict:
-    z = pd.DataFrame(SC.spi(M.to_numpy(), n, int(M.index[0][5:7])), index=M.index, columns=M.columns)
+def drought_ranks(M: pd.DataFrame, n: int, regions=GRAND_SUD, period=DROUGHT, min_mean_mm=None) -> dict:
+    """min_mean_mm : seuil de normale minimale de la production (config du pays), comme le SPI publié."""
+    z = pd.DataFrame(SC.spi(M.to_numpy(), n, int(M.index[0][5:7]), min_mean_mm=min_mean_mm), index=M.index, columns=M.columns)
     mn = z.loc[period[0]:period[1]].min()
     rank = mn.rank(method="min")
     return {r: (float(mn[r]), int(rank[r])) for r in regions if r in mn.index}
@@ -148,6 +149,7 @@ def main() -> None:
     V = daily_versions(common, raw, w)
     th = pd.read_csv(country_data_dir(args.country) / "flood_thresholds.csv", dtype={"pcode": str})
     pilot = leaves.adm3.isin(set(th[np.isfinite(th.q2)].pcode)).to_numpy()
+    min_mm = float(load_config(args.country)["rainfall"].get("min_normal_mm", 25))
     fl, dr = [], []
     for v in VERSIONS:
         print(f"E1 impacts : {v}", flush=True)
@@ -155,7 +157,7 @@ def main() -> None:
             fl.append({"version": v, **flood_scores(args.country, common, V[v][:, leaf_cell[pilot]], Path(tmp))})
         M = monthly_by_region(common, V[v], cell_region)
         for n in (3, 12):
-            r = drought_ranks(M, n)
+            r = drought_ranks(M, n, min_mean_mm=min_mm)
             dr.append({"version": v, "indice": f"SPI-{n}", **{f"r{i}": (f"{r[g][0]:+.2f} (rang {r[g][1]})" if g in r else "—")
                                                                for i, g in enumerate(GRAND_SUD)}})
     fl, dr = pd.DataFrame(fl), pd.DataFrame(dr)

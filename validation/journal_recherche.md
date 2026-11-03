@@ -660,3 +660,24 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   n'apporterait pas l'information manquante (des pluviomètres indépendants) et ajouterait du bruit au modèle.
 - 📌 Ce qui ferait avancer E1 : les relevés bruts des pluviomètres nationaux, non publiés sur ce site.
 
+### E1, section 6.3 : les versions de la pluie face aux impacts (`validation/e1_impacts.md`)
+- ✅ Précisions fixées et commitées avant le calcul. Données journalières des trois sources téléchargées depuis la
+  release ; ❌ une coupure réseau a tronqué 8 fichiers, et un premier contrôle (erreur de guillemets dans mon script)
+  les a déclarés bons à tort. Le calcul a planté, sans résultat faux. Contrôle refait par taille exacte et lecture ;
+  fichiers retéléchargés.
+- 📊 **Inondations du périmètre pilote** (saisons 2016-2017 à 2024-2025) : CHIRPS, IMERG, B et C détectent 3
+  inondations sur 4, ERA5-Land 2. Épisodes sans événement : 3 pour B et C, 4 pour CHIRPS, 5 pour ERA5-Land, 6 pour
+  IMERG. Les AUC des trois événements EMS changent de classement d'un événement à l'autre (CHIRPS 0,18 à 0,81) :
+  aucune version ne domine. Lecture descriptive : la moyenne des sources réduit les fausses alertes à détection égale.
+- 📊 **Sécheresse du Grand Sud 2019-2023** : au SPI-12, la sécheresse est classée plus haut par les versions qui
+  incluent IMERG et ERA5-Land (C : Androy rang 1, Anosy 2, Atsimo-Andrefana 5 ; ERA5-Land 1, 3, 4) que par CHIRPS
+  (rangs 8, 6, 9). Au SPI-3, CHIRPS atteint la borne −3,09 dans les trois régions.
+- ❌ Écart corrigé : le premier passage omettait le seuil de normale minimale du SPI de production prévu par les
+  précisions. Corrigé et relancé. J'avais attribué les −3,09 de CHIRPS à cet oubli : **c'était faux**, ils restent
+  après correction. Leur cause (mois de saison des pluies presque sans pluie dans CHIRPS) n'est pas vérifiée : à
+  examiner avant d'en tirer une conclusion.
+- 📌 Lecture d'ensemble d'E1 : aucune hypothèse confirmatoire n'est soutenue (5 stations) ; H3-E1 montre un net
+  avantage d'IMERG sur les versants au vent ; les impacts ne départagent pas les versions, la fusion ne fait jamais
+  nettement pire et réduit les fausses alertes de crue. Le système garde CHIRPS (règle 6.4) ; le levier pour aller
+  plus loin est un jeu de pluviomètres indépendants.
+

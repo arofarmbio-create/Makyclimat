@@ -168,7 +168,7 @@ statut, document détaillé.
 
 | ID | Question | Protocole | État au 02/11/2026 | Statut |
 |---|---|---|---|---|
-| R-35 | La fusion contrôlée de CHIRPS, IMERG Late et ERA5-Land, pondérée par triple collocation, bat-elle la meilleure source seule (stations GSOD, pentades, 2016-2025) ? | `protocole_e1_fusion_pluie.md` | Fait le 03/11 (`e1_fusion_pluie.md`) : triple collocation IMERG r = 0,90, CHIRPS 0,87, ERA5-Land 0,84 ; H1-E1 et H1-E1b non soutenues (2 stations sur 5, p = 0,81) ; seulement 5 stations GSOD utilisables, test sans puissance ; reste H3-E1 (relief) et §6.3 | ❌ non démontré |
+| R-35 | La fusion contrôlée de CHIRPS, IMERG Late et ERA5-Land, pondérée par triple collocation, bat-elle la meilleure source seule (stations GSOD, pentades, 2016-2025) ? | `protocole_e1_fusion_pluie.md` | Fait le 03/11 (`e1_fusion_pluie.md`) : triple collocation IMERG r = 0,90, CHIRPS 0,87, ERA5-Land 0,84 ; H1-E1 et H1-E1b non soutenues (2 stations sur 5, p = 0,81) ; seulement 5 stations GSOD utilisables, test sans puissance ; H3-E1 : IMERG nettement meilleur sur les versants au vent et la côte (`e1_relief.md`) ; §6.3 : impacts non départagés, moins de fausses alertes de crue pour B et C (`e1_impacts.md`) | ❌ non démontré |
 
 ### 2.4 ter Eaux souterraines : niveaux mesurés (MGMERL)
 
