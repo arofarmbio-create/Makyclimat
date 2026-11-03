@@ -14,7 +14,7 @@ permissions:
 jobs:
   mct:
     runs-on: ubuntu-latest
-    timeout-minutes: 240
+    timeout-minutes: 350          # la demande peut attendre plus de 4 h dans la file Copernicus (03/11/2026)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

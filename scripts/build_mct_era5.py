@@ -54,7 +54,7 @@ def main() -> None:
     args = ap.parse_args()
     import cdsapi
     import xarray as xr
-    c = cdsapi.Client(url="https://cds.climate.copernicus.eu/api", key=os.environ["CDS_API_KEY"], quiet=True,
+    c = cdsapi.Client(url="https://cds.climate.copernicus.eu/api", key=os.environ["CDS_API_KEY"], quiet=False,
                       progress=False, timeout=1800)
     f = Path(tempfile.mkdtemp()) / "mct.nc"
     cds_retrieve(c, "reanalysis-era5-pressure-levels-monthly-means", {
