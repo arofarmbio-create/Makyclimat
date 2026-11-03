@@ -1,0 +1,41 @@
+name: "25 - NDVI MOD13C2 2001-2010 pour les covariables H-C6"
+
+# Sous-ensemble Madagascar de MOD13C2 v6.1 (NASA, OPeNDAP cloud, compte Earthdata), une requête à la fois.
+# Données figées : lancement manuel ; « sonde » vérifie d'abord les noms de variables.
+on:
+  workflow_dispatch:
+    inputs:
+      sonde:
+        description: "true = vérifier seulement les noms de variables"
+        default: "true"
+
+permissions:
+  contents: write
+
+jobs:
+  ndvi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests
+      - name: NDVI MOD13C2
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+        run: |
+          if [ "${{ github.event.inputs.sonde }}" = "true" ]; then
+            python scripts/build_ndvi_mod13c2.py --probe
+          else
+            python scripts/build_ndvi_mod13c2.py --country mdg
+          fi
+      - name: Publier
+        if: github.event.inputs.sonde != 'true'
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add data/mdg/nappes_mondiales/covariables_hc6.csv
+          git diff --cached --quiet || (git commit -m "Covariables H-C6 : NDVI MOD13C2 2001-2010" && git pull --rebase --autostash origin main && git push)
