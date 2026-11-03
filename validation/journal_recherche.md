@@ -730,3 +730,18 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   (Analamanga), où l'eau vient surtout de surface. Elle reste appliquée telle quelle (règle fixée) et sera signalée
   dans le rapport v2 ; une correction par la source d'approvisionnement demanderait un nouveau protocole.
 
+### Taux de desserte JIRAMA des grandes villes : recherche du 03/11 (incomplète)
+- 📊 Trouvé et vérifié dans le texte :
+  - Antananarivo : 47 % de desserte (Ognard et Taglioni 2019, données ARTELIA 2014 et 2012), une seule production
+    (Mandroseza, eau de l'Ikopa, 140 500 m³/j) ; **mais** l'étude préparatoire de la JICA sur Toamasina (tableau 2022)
+    écrit « le taux d'accès à l'eau potable est aujourd'hui de 30 % seulement [à Toamasina], alors qu'il s'élève à
+    70 % à Antananarivo ». Les deux chiffres ne mesurent peut-être pas la même chose (desserte par le réseau,
+    bornes-fontaines comprises ou non) ni la même zone (commune urbaine ou agglomération).
+  - Toamasina : taux d'accès 30 % (JICA, vers 2022-2023) ; source d'eau brute non encore lue.
+  - JIRAMA (site officiel) : 67 centres d'exploitation, 80 lieux de captage, sans détail par ville.
+- 📌 Pistes repérées, non lues (crédits Firecrawl épuisés pour la journée) : étude d'impact de l'adduction d'eau
+  de Toliara (projet PIC 2), document sur la rivière Besokatra (taux de desserte de 79,1 % d'après les statistiques
+  JIRAMA, ville à identifier), suite du rapport JICA de Toamasina, appel d'offres JIRAMA de 21 forages de production à
+  Mahajanga, Antsiranana et Antsirabe (ces villes utilisent donc aussi la nappe).
+- 📌 Aucune valeur n'est changée dans le protocole avant d'avoir lu ces sources.
+
