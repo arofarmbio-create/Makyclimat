@@ -493,3 +493,18 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Conclusion de thèse prudente : l'hybride n'est jamais nettement moins bon que le krigeage, sauf en Menabe ; il
   est bien meilleur que la carte mondiale partout, et prometteur loin des forages. La confirmation demande des
   forages indépendants dans les régions peu couvertes.
+
+## 03/11/2026
+
+### Module eaux souterraines : protocole-cadre (`validation/protocole_cadre_eaux_souterraines.md`)
+- ✅ Écrit avant tout nouveau calcul. Il rassemble les demandes du porteur du projet (carte précise du niveau statique ;
+  recharge, volume, renouvellement, risque d'épuisement ; court, moyen et long terme), les deux textes d'audit du
+  02/11 et les résultats déjà obtenus.
+- 📌 Critères principaux fixés pour toutes les phases : erreur moyennée par région (chaque région pèse autant) et
+  erreur à plus de 50 km du forage connu le plus proche, avec intervalles de confiance par rééchantillonnage des
+  régions.
+- 📌 Phases du niveau statique : 0 (audit, référence S0), 1 (conditions de mesure), 2 (S1 failles et lithologie
+  cartographiées, S2 linéaments), 3 (régression-krigeage), 4 (confirmation sur forages indépendants), 5 (cartes avec
+  domaine de fiabilité).
+- 📌 Formules fixées à l'avance : volume = 10⁶ × épaisseur saturée × Sy ; renouvellement τ = V / R ; risque =
+  prélèvements / recharge, en classes.

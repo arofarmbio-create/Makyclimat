@@ -183,6 +183,12 @@ statut, document détaillé.
 |---|---|---|---|---|
 | R-39 | L'état de l'océan avant la saison (ONI, DMI, SIOD, canal de Mozambique) annonce-t-il les mois de pluie extrême du Grand Sud, et ces mois font-ils remonter les nappes ? Relief (au vent ou sous le vent) et géologie (karst ou socle) décrits à part | `protocole_climat_extremes_nappes.md` | Protocole écrit avant calcul ; maillon B exploratoire sur les 7 sites MGMERL, confirmatoire sur des sites indépendants à obtenir | ⏳ |
 
+### 2.4 quinquies Module eaux souterraines (protocole-cadre)
+
+| ID | Question | Protocole | État au 03/11/2026 | Statut |
+|---|---|---|---|---|
+| R-41 | Carte nationale du niveau statique avec sa précision connue, puis recharge, volume, renouvellement et risque d'épuisement, prévus à court, moyen et long terme | `protocole_cadre_eaux_souterraines.md` | Protocole-cadre écrit avant calcul ; phase 0 (audit et référence S0) en cours | ⏳ |
+
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 
 | ID | Méthode | Données et validation | Résultat | Statut | Détail |
