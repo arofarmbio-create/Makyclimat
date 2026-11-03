@@ -168,4 +168,22 @@ journal à chaque étape, réussite ou échec.
     84 % avant). Mesures secondaires : couverture par région, largeur médiane de l'intervalle par classe.
   - La carte nationale (phase 5) utilisera les k estimés sur toutes les régions, appliqués selon la distance de chaque
     maille au forage le plus proche.
+- 03/11/2026, **avant le calcul** : première carte nationale du niveau statique (phase 5, version 1, avant les
+  phases 2 à 4).
+  - Unité : chacun des 17 465 fokontany (point représentatif de `units.csv`), puis agrégation par commune, district
+    et région (médiane des fokontany ; part des fokontany en extrapolation).
+  - Modèle : hybride S0 (mêmes variables et réglages), entraîné sur les 980 forages ; médiane et intervalle de 80 %,
+    élargi par les facteurs k selon la distance au forage le plus proche (`nappes_intervalle_k.csv`).
+  - Fiabilité affichée en chaque fokontany : distance au forage le plus proche, classe de distance, **erreur attendue**
+    = erreur médiane de l'hybride dans cette classe en validation par région (phase 0), et drapeau **extrapolation**
+    si au moins une variable de terrain (altitude, HAND, pente, pluie annuelle, profondeur du socle) sort de
+    l'étendue des forages d'apprentissage (percentiles 1 et 99, comme l'étude SEAM).
+  - Niveau de preuve : « approximation, validée par région hors des zones d'apprentissage sur 8 régions » ; les
+    13 régions sans forage sont signalées.
+  - Licence de la carte de Fan : la prédiction de l'hybride (Fan corrigée) est un produit dérivé ; elle est publiée par
+    fokontany, jamais la valeur de Fan elle-même.
+  - Sortie dans un fichier séparé (`data/<pays>/external/nappes_carte.csv`) : le produit en service
+    (`watertable.csv`, plus proche relevé à 15 km) n'est remplacé qu'après comparaison. Comparaison fixée : sur les
+    fokontany où les deux existent, écart médian entre les deux, sans conclusion de justesse (aucune donnée
+    indépendante).
 

@@ -33,7 +33,7 @@ et les stations n'ont jamais servi à rien régler.
    5 mm alors que la médiane des trois produits (CHIRPS, IMERG, ERA5-Land) à sa maille dépasse 50 mm ce mois-là. Le
    contrôle du 02/11 a déjà relevé ce cas (Tsihombe à 0 mm en décembre, janvier et mars).
 3. Jour manquant : manquant, jamais zéro.
-4. **Contrôle croisé** Fort Dauphin et station GSOD de Tolagnaro (environ 1 km) : sur les jours complets communs,
+4. **Contrôle croisé** Fort Dauphin et station GSOD de Tolagnaro (environ 1,6 km) : sur les jours complets communs,
    rapport des cumuls et corrélation par pentade. Le pluviomètre Davis est jugé fiable si le rapport est compris entre
    0,7 et 1,3 et la corrélation dépasse 0,7 ; sinon ses scores sont publiés à part, signalés « douteux ».
 5. Une station garde ses scores d'une saison si elle a au moins 15 pentades complètes de novembre à avril.
