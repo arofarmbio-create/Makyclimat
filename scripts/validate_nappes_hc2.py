@@ -87,9 +87,9 @@ def glhymps_at(path, lons, lats) -> np.ndarray:
 
 
 # ---------------- modèles ----------------
-def hybrid_predict(train: pd.DataFrame, test: pd.DataFrame, seed=0):
+def hybrid_predict(train: pd.DataFrame, test: pd.DataFrame, seed=0, features=None):
     from quantile_forest import RandomForestQuantileRegressor
-    feats = [f for f in FEATURES if f in train]
+    feats = [f for f in (features or FEATURES) if f in train]
     xtr, xte = train[feats].fillna(-999).to_numpy(), test[feats].fillna(-999).to_numpy()
     y = (train.mesure_m - train.fan_m).to_numpy()
     m = RandomForestQuantileRegressor(n_estimators=N_TREES, min_samples_leaf=MIN_LEAF, random_state=seed, n_jobs=-1)

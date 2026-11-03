@@ -168,7 +168,7 @@ statut, document détaillé.
 
 | ID | Question | Protocole | État au 02/11/2026 | Statut |
 |---|---|---|---|---|
-| R-35 | La fusion contrôlée de CHIRPS, IMERG Late et ERA5-Land, pondérée par triple collocation, bat-elle la meilleure source seule (stations GSOD, pentades, 2016-2025) ? | `protocole_e1_fusion_pluie.md` | Protocole écrit avant calcul. Données au 02/11, 16 h 40 UTC : CHIRPS 2001-2025, IMERG Late 2001-2011, ERA5-Land 2015, GSOD (24 stations), relief 0,1° ; le reste en cours, une demande à la fois (`etat_telechargements.md`) | ⏳ |
+| R-35 | La fusion contrôlée de CHIRPS, IMERG Late et ERA5-Land, pondérée par triple collocation, bat-elle la meilleure source seule (stations GSOD, pentades, 2016-2025) ? | `protocole_e1_fusion_pluie.md` | Fait le 03/11 (`e1_fusion_pluie.md`) : triple collocation IMERG r = 0,90, CHIRPS 0,87, ERA5-Land 0,84 ; H1-E1 et H1-E1b non soutenues (2 stations sur 5, p = 0,81) ; seulement 5 stations GSOD utilisables, test sans puissance ; reste H3-E1 (relief) et §6.3 | ❌ non démontré |
 
 ### 2.4 ter Eaux souterraines : niveaux mesurés (MGMERL)
 
@@ -187,7 +187,7 @@ statut, document détaillé.
 
 | ID | Question | Protocole | État au 03/11/2026 | Statut |
 |---|---|---|---|---|
-| R-41 | Carte nationale du niveau statique avec sa précision connue, puis recharge, volume, renouvellement et risque d'épuisement, prévus à court, moyen et long terme | `protocole_cadre_eaux_souterraines.md` | Phase 0 faite (03/11) : 11 régions sur 24 sans forage ; S0 par région, hybride 3,4 m [1,9 ; 5,6], krigeage 4,1 m [3,2 ; 5,4], Fan 9,1 m ; intervalle de 80 % trop étroit loin des forages (65 % au-delà de 100 km) (`nappes_phase0_audit.md`) | ⏳ |
+| R-41 | Carte nationale du niveau statique avec sa précision connue, puis recharge, volume, renouvellement et risque d'épuisement, prévus à court, moyen et long terme | `protocole_cadre_eaux_souterraines.md` | Phase 0 faite (03/11) : 11 régions sur 24 sans forage ; S0 par région, hybride 3,4 m [1,9 ; 5,6], krigeage 4,1 m [3,2 ; 5,4], Fan 9,1 m ; intervalle de 80 % trop étroit loin des forages (65 % au-delà de 100 km) (`nappes_phase0_audit.md`). Phase 1 faite (03/11) : saison, SPI-3 et SPI-12 rejetés (critère 1 : 3,39 → 3,53 m ; critère 2 : 3,17 → 3,10 m, non démontré) (`nappes_phase1.md`) | ⏳ |
 
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 

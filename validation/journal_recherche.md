@@ -526,3 +526,37 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   65 % au-delà de 100 km (50 % en Menabe, 64 % en Atsimo-Andrefana). Le modèle est trop sûr de lui là où il n'a pas de
   données. 📌 À corriger avant la carte nationale : élargir l'intervalle selon la distance au forage le plus proche
   (calibration par classe de distance), pour un domaine de fiabilité honnête.
+
+### E1 : fusion contrôlée des sources de pluie (`validation/e1_fusion_pluie.md`, workflow 25)
+- ✅ Calcul complet sur 2001-2025 (9 131 jours communs aux trois sources) : triple collocation sur l'apprentissage
+  2001-2015 (pentades de novembre à avril), test sur les stations GSOD 2016-2025.
+- 📊 Triple collocation, médianes sur les mailles terrestres : IMERG Late r = 0,90 (variance d'erreur 261 mm² par
+  pentade), CHIRPS r = 0,87 (297), ERA5-Land r = 0,84 (405). Poids moyens de la fusion : IMERG 0,42, CHIRPS 0,32,
+  ERA5-Land 0,26. La triple collocation échoue (variance négative) sur 24 mailles terrestres seulement sur 5 265. Le
+  rapport affiche 6 359 mailles « à poids égaux » : ce nombre compte aussi les mailles de mer, sans objet.
+- ❌ **H1-E1 non soutenue** (fusion C contre IMERG, la meilleure source seule fixée sur l'apprentissage) : 2 stations
+  favorables sur 5, p = 0,81. **H1-E1b non soutenue** (C contre la moyenne simple B) : 2 sur 5, p = 0,81.
+- ❌ **Limite principale : 5 stations seulement** ont assez de pentades sur 2016-2025, sur les 24 stations GSOD
+  téléchargées. Avec 5 stations, le test du signe ne peut conclure dans aucun sens (même 5 sur 5 donnerait p = 0,03
+  au mieux). Le résultat est donc « non démontré », pas « la fusion est inutile ».
+- 📊 Lecture station par station : la fusion gagne nettement à Sainte-Marie (KGE 0,79 contre 0,46 pour IMERG), perd à
+  Toamasina, où CHIRPS est le meilleur (0,55). CHIRPS intègre des stations GTS, probablement en partie celles-ci
+  (protocole §7) : la comparaison le favorise.
+- 📌 Suite fixée par le protocole : zones de relief H3-E1 (altitude, rugosité, exposition) et évaluation de l'effet
+  sur les sorties du système (§6.3). Pour une validation plus puissante, il faut d'autres pluviomètres indépendants ;
+  la triple collocation, elle, ne dépend pas des stations et reste valable sur toute l'île.
+
+### Phase 1 eaux souterraines : conditions de mesure (`validation/nappes_phase1.md`)
+- ✅ Précisions écrites dans le protocole-cadre avant le calcul (date du rapport MGMERL, saison, SPI-3 et SPI-12 du
+  mois du relevé à la maille CHIRPS). Grilles SPI des 48 derniers mois produites sur GitHub (workflow 26, release
+  « spi-grilles », mise à jour le 26 de chaque mois) : octobre 2022 à septembre 2026. 962 forages sur 980 ont un SPI
+  (les autres n'ont pas de date ou une date antérieure aux grilles).
+- 📊 La référence S0 est reproduite à l'identique (3,39 m et 3,17 m) : même code que la phase 0.
+- ❌ **Variables rejetées** (règle fixée avant le calcul) : le critère 1 se dégrade (3,39 → 3,53 m, écart +0,14 m
+  [0,00 ; +0,29]) ; le critère 2 baisse à peine (3,17 → 3,10 m, écart −0,08 m [−0,15 ; +0,32], non démontré). La
+  couverture de l'intervalle de 80 % ne change pas (65 % au-delà de 100 km).
+- 📌 Lecture : à l'échelle de l'île, la pluie des mois précédant le relevé n'explique pas les écarts entre forages ;
+  ce sont la position et le terrain qui comptent. Cela ne dit rien des variations d'un même forage dans le temps, qui
+  relèvent du suivi aux 16 sites (court terme, M3). Phase 2 (failles et lithologie) sur la base S0, sans ces
+  variables.
+

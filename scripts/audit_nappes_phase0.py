@@ -121,21 +121,17 @@ def report(fl, dens, seasons, crit, cov_r, cov_d) -> str:
     return "\n".join(L) + "\n"
 
 
-def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--country", default="mdg")
-    ap.add_argument("--couches", default=None)
-    args = ap.parse_args()
-    couches = Path(args.couches) if args.couches else country_data_dir(args.country) / "nappes_mondiales"
-    src = country_data_dir(args.country) / "mgmerl_raw" / "tableaux_affiches_2026-11-02" / "mgmerl_niveau_statique.csv"
+def load_sites(country, couches):
+    """Forages contrôlés avec leurs variables, leur région et le décompte du diagramme de flux."""
+    src = country_data_dir(country) / "mgmerl_raw" / "tableaux_affiches_2026-11-02" / "mgmerl_niveau_statique.csv"
     n_read = len(pd.read_csv(src))
     pts = H1.load_points(src)
-    df = H2.point_features(args.country, pts, couches)
-    pc = locate_points(args.country, df.lon.tolist(), df.lat.tolist())
-    geo = pd.read_csv(country_data_dir(args.country) / "external" / "geology.csv")
+    df = H2.point_features(country, pts, couches)
+    pc = locate_points(country, df.lon.tolist(), df.lat.tolist())
+    geo = pd.read_csv(country_data_dir(country) / "external" / "geology.csv")
     prod = geo[geo.indicateur == "aquifer_productivity_pct"].set_index("pcode").valeur
     df["productivite"] = [float(prod[c]) if c in prod.index else np.nan for c in pc]
-    u = read_units(args.country)
+    u = read_units(country)
     reg = u[u.level == 1].set_index("pcode")
     adm1 = u[u.level == 4].set_index("pcode").adm1
     df["region"] = [reg.name.get(adm1.get(c, ""), "inconnue") for c in pc]
@@ -143,6 +139,16 @@ def main() -> None:
     df = df[np.isfinite(df.fan_m)]
     n_reg = int((df.region != "inconnue").sum())
     df = df[df.region != "inconnue"].reset_index(drop=True)
+    return df, pts, n_read, n_fan, n_reg, reg
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--country", default="mdg")
+    ap.add_argument("--couches", default=None)
+    args = ap.parse_args()
+    couches = Path(args.couches) if args.couches else country_data_dir(args.country) / "nappes_mondiales"
+    df, pts, n_read, n_fan, n_reg, reg = load_sites(args.country, couches)
     counts = df.region.value_counts()
     n_reg10 = int(counts[counts >= H2b.MIN_REGION].sum())
     area = reg.set_index("name").area_km2
