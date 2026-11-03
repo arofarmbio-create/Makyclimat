@@ -26,6 +26,7 @@ data/*/drought/
 
 # Extractions brutes MGMERL (données publiques, citer MGMERL ; rangées hors git)
 data/*/mgmerl_raw/
+data/*/seam_raw/
 data/*/grids/rain_offseason.npz
 data/*/grids/spi_grilles.npz
 
