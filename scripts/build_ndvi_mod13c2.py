@@ -56,6 +56,25 @@ def parse_ascii_grid(text: str, var: str) -> np.ndarray:
     return np.array(rows, dtype="float32")
 
 
+def bearer_session(user: str, password: str) -> requests.Session:
+    """Session avec jeton Earthdata (en-tête Bearer), méthode recommandée pour les services cloud de la NASA : la
+    chaîne de redirections de connexion répondait 400 (03/11/2026)."""
+    r = requests.post("https://urs.earthdata.nasa.gov/api/users/find_or_create_token", auth=(user, password), timeout=60)
+    r.raise_for_status()
+    s = requests.Session()
+    s.headers["Authorization"] = f"Bearer {r.json()['access_token']}"
+    return s
+
+
+def find_var_dmr(dmr: str, *words: str) -> str:
+    """Comme find_var, sur la description DAP4 (.dmr) : <Int16 name="...">."""
+    names = re.findall(r'<(?:Int16|UInt8|Int8|Float32|UInt16)\s+name="([^"]+)"', dmr)
+    for n in names:
+        if all(w.lower() in n.lower() for w in words):
+            return n
+    raise ValueError(f"variable {words} introuvable parmi {names[:15]}")
+
+
 def fetch(s, url: str, tries: int = 6, sleep=time.sleep) -> str | None:
     for k in range(tries):
         try:
@@ -64,6 +83,9 @@ def fetch(s, url: str, tries: int = 6, sleep=time.sleep) -> str | None:
                 return r.text
             if r.status_code in (401, 403):
                 raise RuntimeError(f"accès refusé (HTTP {r.status_code}) : compte Earthdata")
+            if r.status_code in (400, 404):                 # requête invalide : la répéter ne sert à rien
+                print(f"  HTTP {r.status_code} : {r.text[:300]}", flush=True)
+                return None
             why = f"HTTP {r.status_code}"
         except requests.RequestException as e:
             why = type(e).__name__
@@ -87,16 +109,21 @@ def cell_means(ndvi: np.ndarray, lons, lats) -> list[float]:
 
 
 def main() -> None:
-    import build_imerg_pilot as P                       # session Earthdata (redirections URS)
+    import os
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
     ap.add_argument("--probe", action="store_true")
     args = ap.parse_args()
-    s = P.session()
+    s = bearer_session(os.environ["EARTHDATA_USER"], os.environ["EARTHDATA_PASSWORD"])
     gid = granule_id(2005, 1)
     dds = fetch(s, OPENDAP + gid + ".dds")
-    v_ndvi = find_var(dds, "ndvi")
-    v_rel = find_var(dds, "reliability")
+    if dds:
+        v_ndvi, v_rel = find_var(dds, "ndvi"), find_var(dds, "reliability")
+    else:
+        dmr = fetch(s, OPENDAP + gid + ".dmr.xml")
+        if not dmr:
+            raise SystemExit("description du granule inaccessible (.dds et .dmr.xml)")
+        v_ndvi, v_rel = find_var_dmr(dmr, "ndvi"), find_var_dmr(dmr, "reliability")
     print(f"granule {gid} ; variables : {v_ndvi}, {v_rel}", flush=True)
     if args.probe:
         t = fetch(s, OPENDAP + gid + f".ascii?{v_ndvi}[{ROW0}:{ROW0 + 2}][{COL0}:{COL0 + 2}]")

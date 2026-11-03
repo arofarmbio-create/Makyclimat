@@ -55,5 +55,10 @@ waits = []
 t = N.fetch(S([R(503), requests.ConnectionError(), R(200, "ok")]), "u", sleep=waits.append)
 check("attente croissante sur 503 et coupure", t == "ok" and waits == [60, 120])
 
+dmr = '<Dataset><Int16 name="CMG_0_05_Deg_Monthly_NDVI"><Dim/></Int16><UInt8 name="CMG_0_05_Deg_Monthly_pixel_reliability"/></Dataset>'
+check("variables trouvées dans la description DAP4", N.find_var_dmr(dmr, "ndvi") == "CMG_0_05_Deg_Monthly_NDVI")
+waits = []
+check("400 : pas de nouvel essai", N.fetch(S([R(400, "bad")]), "u", sleep=waits.append) is None and waits == [])
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)
