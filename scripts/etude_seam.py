@@ -31,6 +31,7 @@ RADII_KM, MAIN_RADIUS, EXCL_KM, MIN_WORKS = (2.0, 5.0, 10.0), 5.0, 0.2, 5
 TERRAIN = ["altitude_m", "hand", "pente", "pluie_mm", "socle_m"]
 NATIONAL_POP_2025 = 30.3e6       # projection nationale (Nations unies, WPP 2024), ordre de grandeur pour Q4
 BBOX = (43.0, -26.0, 51.0, -11.5)
+BATCH = 2000
 
 
 # ---------------- lecture ----------------
@@ -134,6 +135,18 @@ def hs1_test(df: pd.DataFrame, col="part_puits") -> dict:
             "soutenue": bool(rho < 0 and p < 0.01 and neg >= 6)}
 
 
+def hs1_block(mg: pd.DataFrame, works: pd.DataFrame):
+    """Test 1 de H-S1 pour chaque rayon ; renvoie le test au rayon principal, la sensibilité, l'indice et le nombre d'ouvrages."""
+    is_well = works["type"].isin(WELLS).to_numpy()
+    sens, main = {}, None
+    for rad in RADII_KM:
+        s, n = well_share(mg.lat.to_numpy(), mg.lon.to_numpy(), works.lat.to_numpy(), works.lon.to_numpy(), is_well, rad)
+        if rad == MAIN_RADIUS:
+            main = (s, n)
+        sens[rad] = hs1_test(mg.assign(part_puits=s))
+    return sens[MAIN_RADIUS], sens, *main
+
+
 # ---------------- Q4 ----------------
 def pressure(com: pd.DataFrame) -> dict:
     pop = com.population.fillna(0)
@@ -149,7 +162,7 @@ def failures(pts: pd.DataFrame) -> pd.DataFrame:
     return g.reset_index()
 
 
-def report(q1, q2, tvd, out_share, q3, q3_sens, q3b, q4, q5_rho, n_seam_bores) -> str:
+def report(q1, q2, tvd, out_share, versions, q4, q5_rho, n_seam_bores, shared_share) -> str:
     L = ["# Les données SEAM du ministère de l'Eau sont-elles utiles à MakyClimat ?", "",
          f"Généré le {dt.date.today().isoformat()} par `scripts/etude_seam.py`, selon `validation/protocole_seam_points_eau.md` "
          "(fixé avant le calcul). Source : MEAH / SEAM, lecture publique. Analyse exploratoire.", "",
@@ -165,24 +178,29 @@ def report(q1, q2, tvd, out_share, q3, q3_sens, q3b, q4, q5_rho, n_seam_bores) -
     L += ["", f"Forages SEAM hors de l'étendue des relevés pour au moins une variable : **{out_share:.1%}** (la carte y "
           "extrapole). Une DMS au-delà de 0,25 en valeur absolue signale un déséquilibre. Classes lithologiques GLiM : distance "
           f"de variation totale entre les deux répartitions {tvd:.2f} (0 : identiques, 1 : disjointes).", "",
-          "## Q3. H-S1 : la part de puits autour d'un forage signale-t-elle une nappe peu profonde ?", "",
-          f"Rayon {MAIN_RADIUS:g} km (ouvrages à moins de {EXCL_KM * 1000:.0f} m exclus, au moins {MIN_WORKS} ouvrages) : "
-          f"ρ de Spearman = {q3['rho']:+.2f} (p = {q3['p']:.1g}, {q3['n']} forages) ; ρ négatif dans "
-          f"{q3['regions_negatives']} régions sur {len(q3['regions'])}. **H-S1 {'soutenue' if q3['soutenue'] else 'non soutenue'}**.", "",
-          "| Région | ρ |", "|---|---|"]
-    L += [f"| {r} | {v:+.2f} |" for r, v in sorted(q3["regions"].items())]
-    L += ["", "Sensibilité au rayon : " + " ; ".join(f"{k:g} km : ρ = {v['rho']:+.2f} (n = {v['n']})" for k, v in q3_sens.items()) + ".", ""]
-    if q3b is not None:
-        res, keep, shown = q3b
-        L += ["Apport à l'hybride S0 (critères de la phase 0) :", "",
-              "| Critère | S0 (m) | S0 + part de puits (m) | Écart [IC 95 %] |", "|---|---|---|---|"]
-        for c, lab in (("c1", "1 : erreur moyennée par région"), ("c2", "2 : erreur à plus de 50 km")):
-            r = res[c]
-            L.append(f"| {lab} | {r['s0']:.2f} | {r['s1']:.2f} | {r['s1'] - r['s0']:+.2f} [{r['ecart_ic'][0]:+.2f} ; {r['ecart_ic'][1]:+.2f}] |")
-        L += ["", f"Décision : variable **{'gardée' if keep else 'rejetée'}**" + (" (amélioration démontrée)." if shown else
-              " (amélioration non démontrée)." if keep else "."), ""]
-    else:
-        L += ["Test d'apport à l'hybride non fait : H-S1 n'est pas soutenue (règle du protocole).", ""]
+          "## Q3. La part de puits autour d'un forage signale-t-elle une nappe peu profonde ?", "",
+          f"{shared_share:.1%} des forages et puits partagent leurs coordonnées exactes avec d'autres (positions par défaut). "
+          "H-S1 (protocole initial) utilise toutes les positions ; H-S1b (modification datée du 03/11/2026, après le "
+          "premier calcul) les seules positions uniques.", ""]
+    for label, (q3, q3_sens, q3b) in versions.items():
+        L += [f"### {label}", "",
+              f"Rayon {MAIN_RADIUS:g} km (ouvrages à moins de {EXCL_KM * 1000:.0f} m exclus, au moins {MIN_WORKS} ouvrages) : "
+              f"ρ de Spearman = {q3['rho']:+.2f} (p = {q3['p']:.1g}, {q3['n']} forages) ; ρ négatif dans "
+              f"{q3['regions_negatives']} régions sur {len(q3['regions'])}. **{'Soutenue' if q3['soutenue'] else 'Non soutenue'}**.", "",
+              "| Région | ρ |", "|---|---|"]
+        L += [f"| {r} | {v:+.2f} |" for r, v in sorted(q3["regions"].items())]
+        L += ["", "Sensibilité au rayon : " + " ; ".join(f"{k:g} km : ρ = {v['rho']:+.2f} (n = {v['n']})" for k, v in q3_sens.items()) + ".", ""]
+        if q3b is not None:
+            res, keep, shown = q3b
+            L += ["Apport à l'hybride S0 (critères de la phase 0) :", "",
+                  "| Critère | S0 (m) | S0 + part de puits (m) | Écart [IC 95 %] |", "|---|---|---|---|"]
+            for c, lab in (("c1", "1 : erreur moyennée par région"), ("c2", "2 : erreur à plus de 50 km")):
+                r = res[c]
+                L.append(f"| {lab} | {r['s0']:.2f} | {r['s1']:.2f} | {r['s1'] - r['s0']:+.2f} [{r['ecart_ic'][0]:+.2f} ; {r['ecart_ic'][1]:+.2f}] |")
+            L += ["", f"Décision : variable **{'gardée' if keep else 'rejetée'}**" + (" (amélioration démontrée)." if shown else
+                  " (amélioration non démontrée)." if keep else "."), ""]
+        else:
+            L += ["Test d'apport à l'hybride non fait : hypothèse non soutenue (règle du protocole).", ""]
     L += ["## Q4. Pression sur la ressource par commune", "",
           f"{q4['communes']} communes ; population non nulle dans {q4['part_population_non_nulle']:.1%} ; total "
           f"{q4['population_totale'] / 1e6:.1f} millions (écart à la projection nationale {q4['ecart_projection']:+.1%}) ; médiane "
@@ -193,6 +211,23 @@ def report(q1, q2, tvd, out_share, q3, q3_sens, q3b, q4, q5_rho, n_seam_bores) -
           f"Corrélation de Spearman, par district (au moins 20 forages), entre la part de forages en panne ou abandonnés et "
           f"la profondeur médiane mesurée des relevés MGMERL du district : {q5_rho}.", ""]
     return "\n".join(L) + "\n"
+
+
+def terrain_by_batch(country, bores: pd.DataFrame, couches, cache: Path, size=BATCH) -> pd.DataFrame:
+    """Variables de terrain des forages SEAM, par lots (mémoire bornée), gardées en cache local hors dépôt."""
+    import gc
+    if cache.exists():
+        c = pd.read_csv(cache)
+        if len(c) == len(bores) and np.allclose(c.lat, bores.lat) and np.allclose(c.lon, bores.lon):
+            return c
+    parts = []
+    for i in range(0, len(bores), size):
+        parts.append(H2.point_features(country, bores.iloc[i:i + size][["lon", "lat"]].copy(), couches).drop(columns="fan_m"))
+        print(f"terrain : {min(i + size, len(bores))} forages sur {len(bores)}", flush=True)
+        gc.collect()
+    out = pd.concat(parts, ignore_index=True)
+    out.to_csv(cache, index=False)
+    return out
 
 
 def main() -> None:
@@ -208,23 +243,21 @@ def main() -> None:
     gw = gw.reset_index(drop=True)
     mg, *_ = A.load_sites(args.country, couches)
     bores = gw[gw["type"].isin(BORES)].reset_index(drop=True)
-    seam_f = H2.point_features(args.country, bores[["lon", "lat"]].copy(), couches)
+    seam_f = terrain_by_batch(args.country, bores, couches, raw / "forages_terrain.csv")
     q2 = representativeness(mg, seam_f)
     out_share = float(outside_share(mg, seam_f).mean())
-    is_well = gw["type"].isin(WELLS).to_numpy()
-    sens = {}
-    for rad in RADII_KM:
-        s, n = well_share(mg.lat.to_numpy(), mg.lon.to_numpy(), gw.lat.to_numpy(), gw.lon.to_numpy(), is_well, rad)
-        if rad == MAIN_RADIUS:
-            mg["part_puits"], mg["n_ouvrages"] = s, n
-        sens[rad] = hs1_test(mg.assign(part_puits=s))
-    q3 = sens[MAIN_RADIUS]
-    q3b = None
-    if q3["soutenue"]:
-        p0 = A.s0_predictions(mg)
-        p1 = A.s0_predictions(mg, hybrid=partial(H2.hybrid_predict, features=H2.FEATURES + ["part_puits", "n_ouvrages"]))
-        res = P1.compare(p0, p1)
-        q3b = (res, *P1.decide(res))
+    shared = gw.groupby(["lat", "lon"]).id.transform("size") > 1
+    versions = {}
+    for label, works in (("H-S1 (toutes positions)", gw), ("H-S1b (positions uniques)", gw[~shared].reset_index(drop=True))):
+        q3, sens, share, n = hs1_block(mg, works)
+        q3b = None
+        if q3["soutenue"]:
+            m = mg.assign(part_puits=share, n_ouvrages=n)
+            p0 = A.s0_predictions(m)
+            p1 = A.s0_predictions(m, hybrid=partial(H2.hybrid_predict, features=H2.FEATURES + ["part_puits", "n_ouvrages"]))
+            res = P1.compare(p0, p1)
+            q3b = (res, *P1.decide(res))
+        versions[label] = (q3, sens, q3b)
     q4 = pressure(load_communes(raw))
     f = failures(pts)
     mg_d = pd.DataFrame({"district": [None] * len(mg)})  # districts MGMERL : rattachés par le plus proche forage SEAM
@@ -237,7 +270,7 @@ def main() -> None:
     q5 = (f"ρ = {stats.spearmanr(f.en_panne, f.niveau_median_m)[0]:+.2f} sur {len(f)} districts" if len(f) >= 8
           else f"non calculé ({len(f)} districts seulement avec relevés et au moins 20 forages)")
     vd = ROOT / "validation"
-    (vd / "seam_utilite.md").write_text(report(q1, q2, class_distance(mg, seam_f), out_share, q3, sens, q3b, q4, q5, len(bores)), encoding="utf-8")
+    (vd / "seam_utilite.md").write_text(report(q1, q2, class_distance(mg, seam_f), out_share, versions, q4, q5, len(bores), float(shared.mean())), encoding="utf-8")
     q2.round(3).to_csv(vd / "seam_representativite.csv", index=False)
     print("SEAM : rapport écrit dans validation/seam_utilite.md")
 

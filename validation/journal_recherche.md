@@ -589,3 +589,38 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   le risque d'épuisement porteront une fourchette large de recharge (T2 et fluctuation de nappe), et les sites MGMERL
   servent de contrôle local.
 
+### SPEI contre SPI face au NDVI (`validation/spei_ndvi.md`, R-24)
+- 🔧 Échec du 03/11 (run 41579128422) : le contrôle de l'ET0 lisait la clé « _years » du cache Open-Meteo comme une
+  série de 12 mois. Corrigé, test ajouté, relancé avec succès.
+- ✅ **H1 soutenue** : dans les districts secs, le SPEI suit mieux le NDVI que le SPI dans 31 districts sur 36
+  (p < 0,001 ; r médian 0,52 contre 0,50).
+- ❌ **H2 non soutenue** : on attendait l'absence de gain dans les districts humides ; le SPEI y gagne aussi (51 sur
+  84, p = 0,03 ; 55 sur 84 pour la meilleure combinaison, p = 0,003), avec des écarts de corrélation très faibles.
+- 📊 Sécheresse du Grand Sud 2020-2022 : SPEI-6 sous −1 pendant 21 mois (minimum −2,32) contre 14 mois pour le
+  SPI-6 (minimum −1,81), même mois de début (février 2020) : le SPEI montre un épisode plus long et plus intense.
+- 📊 Contrôle de l'ET0 : la Penman-Monteith ERA5-Land de ce travail est **plus basse que celle d'Open-Meteo** tous les
+  mois, de 7 % (décembre) à 27 % (juillet), l'écart étant plus fort en saison sèche. Cause probable déjà signalée
+  dans les limites : ET0 calculée sur moyennes mensuelles, qui lissent le déficit de vapeur. À garder en tête pour
+  les bilans d'eau ; le SPEI, standardisé, y est moins sensible.
+
+### Données SEAM du ministère de l'Eau (`validation/seam_utilite.md`, R-42)
+- ✅ Protocole écrit et commité avant calcul (`protocole_seam_points_eau.md`). Données lues sans connexion par l'agent
+  (GET seul, une requête à la fois) : 86 049 points d'eau géolocalisés, 5 173 systèmes AEP, tableaux par commune.
+  Hors dépôt ; aucune liaison avec d'autres bases (demande du porteur du projet).
+- ❌ **Qualité** : 45,8 % des forages et puits partagent leurs coordonnées exactes (jusqu'à 955 au même point) :
+  positions par défaut. Le critère Q1 (positions à Madagascar) était atteint mais ne détectait pas ce défaut.
+- 📊 **Représentativité** : les 1 000 relevés MGMERL sont plus secs que les 15 384 forages SEAM (pluie 962 contre
+  1 300 mm/an, DMS +0,46) ; 24 % des forages du pays sont hors de l'étendue des relevés pour au moins une variable de
+  terrain. Utile pour le domaine de fiabilité de la carte. (Deux exécutions donnent 23,8 % et 24,0 % : écart non
+  expliqué, sans effet sur la conclusion.)
+- ❌ **H-S1 non soutenue** avec toutes les positions (ρ = −0,04). **H-S1b** (positions uniques, enregistrée après
+  le premier calcul) : ρ = −0,11, p = 0,001, négatif dans 6 régions sur 7 ; ajoutée à l'hybride, la part de puits
+  est **gardée selon la règle mais sans gain réel** (critère 1 : 3,39 → 3,38 m ; critère 2 : 3,17 → 3,15 m ; IC des
+  écarts contenant 0). Lien réel mais trop faible pour améliorer la carte.
+- ✅ **Pression** : population par commune complète (99,1 % des communes, 29,9 millions, −1,3 % de la projection) ;
+  médiane de 1 884 habitants par ouvrage d'eau souterraine fonctionnel. Retenue pour l'indice d'épuisement.
+- 📊 Exploratoire : plus de forages en panne dans les districts où la nappe mesurée est profonde (ρ = +0,37, 31
+  districts, p = 0,04).
+- 📌 Verdict : SEAM est **utile** pour la pression (risque d'épuisement) et la représentativité ; **pas** comme source
+  de niveau statique ni comme variable de la carte.
+
