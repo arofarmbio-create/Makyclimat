@@ -143,3 +143,15 @@ journal à chaque étape, réussite ou échec.
 ## 10. Journal des modifications
 
 - 03/11/2026 : version initiale.
+- 03/11/2026, **avant le calcul de la phase 1** (la phase 0 est publiée) : précisions de mise en œuvre.
+  - Date du relevé : « Date du rapport » du tableau MGMERL. Limite : c'est la date du rapport, qui peut différer de
+    quelques jours de la mesure.
+  - Variables ajoutées à l'hybride S0 : saison (1 de novembre à avril, 0 sinon), et SPI-3 et SPI-12 du mois du
+    relevé à la maille CHIRPS du forage, calculés avec la fonction de production (`soilwater_core.spi`, loi gamma par
+    mois du calendrier, 1981 à aujourd'hui, même seuil de normale minimale qu'en production). Un relevé du mois en
+    cours prend le dernier mois complet.
+  - Mêmes réglages de forêt, même découpage par région, mêmes critères et intervalles de confiance que la phase 0.
+  - Règle inchangée : variables gardées seulement si les deux critères principaux s'améliorent (valeurs centrales).
+    Avec des intervalles de confiance qui se recouvrent, l'amélioration est dite « non démontrée » même si elle est
+    retenue.
+
