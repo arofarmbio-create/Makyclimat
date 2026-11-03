@@ -709,3 +709,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   couverture d'intervalle trop faible (65 et 50 %). Ce qui améliorerait le plus la carte : des forages des Hautes
   Terres (archives du porteur du projet, phase 4) et la lithologie et les failles (phase 2).
 
+### ⚠️ Avertissement : les forages MGMERL utilisés depuis le 02/11 ne sont qu'un extrait de 1 000 lignes
+- ❌ Constaté le 03/11 sur remarque du porteur du projet : les quatre tableaux MGMERL extraits le 02/11 (niveau
+  statique, conductivité, profondeur de forage, essais de pompage) ont **tous exactement 1 000 lignes**. La plateforme
+  n'affichait que les 1 000 premières lignes. MGMERL compte 64 701 points d'eau et 25 272 forages (tableau par type
+  d'aquifère).
+- 📌 Résultats concernés (ils restent publiés, signalés comme portant sur cet extrait) : H-C1, H-C2, H-C2b, phase 0
+  (dont « 11 régions sur 24 sans forage », artefact de l'extrait), phase 1, étude SEAM (Q2, H-S1, H-S1b), intervalle
+  calibré et carte nationale v1. Les méthodes et protocoles restent valables ; seules les données changent.
+- 📌 Suite : extraction complète par l'agent de téléchargement (lecture seule, découpage sous la limite d'affichage,
+  totaux contrôlés), puis relance de la chaîne avec les mêmes protocoles (phase 0, intervalle, carte v2).
+- 📌 **Leçon** : un total rond (1 000) est un signal de troncature ; tout extrait doit être comparé au total annoncé
+  par la source avant usage.
+
