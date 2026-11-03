@@ -1,0 +1,43 @@
+name: "25 - E1 : analyse de la fusion des sources de pluie"
+
+# Protocole validation/protocole_e1_fusion_pluie.md. Lit la pluie journalière des trois sources et les stations GSOD
+# rangées dans la release « e1-pluie » (workflow 20), puis applique scripts/validate_e1.py (pentades, triple
+# collocation, fusion, stations). Publie le rapport ; les cartes d'erreur vont dans la release. Manuel.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  COUNTRY: mdg
+  TAG: e1-pluie
+
+jobs:
+  analyse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas pyyaml requests scipy
+      - name: Données E1 (release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p data/$COUNTRY/e1
+          gh release download "$TAG" --pattern "chirps_*.npz" --pattern "imerg_*.npz" --pattern "era5_*.npz" --pattern "gsod.csv" --dir data/$COUNTRY/e1 --clobber
+          ls data/$COUNTRY/e1 | wc -l
+      - name: Analyse E1
+        run: python scripts/validate_e1.py --country "$COUNTRY"
+      - name: Publier
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "$TAG" data/$COUNTRY/e1/e1_tc.npz --clobber
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add validation/e1_fusion_pluie.md validation/e1_stations.csv
+          git diff --cached --quiet || (git commit -m "E1 : résultats de la fusion des sources de pluie" && git pull --rebase --autostash origin main && git push)
