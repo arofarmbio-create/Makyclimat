@@ -1,0 +1,35 @@
+name: "27 - Classe GLiM vectorielle aux points (transfert par analogues)"
+
+# Protocole validation/protocole_transfert_analogues.md (reprise du 04/11/2026). Télécharge la GLiM vectorielle
+# (1,14 Go, Hambourg), lit la classe lithologique aux points de inputs/analogues/points_glim.csv et ne publie que ces
+# classes (la base elle-même n'est pas redistribuée). Manuel.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  glim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas pyogrio pyproj shapely geopandas
+      - name: Télécharger la GLiM vectorielle
+        run: |
+          curl -sSL -o glim.zip "https://www.dropbox.com/s/9vuowtebp9f1iud/LiMW_GIS%202015.gdb.zip?dl=1"
+          ls -la glim.zip
+          unzip -q glim.zip -d glim
+          find glim -maxdepth 2 -name "*.gdb" -type d
+      - name: Classes aux points
+        run: python scripts/glim_points.py --gdb "$(find glim -maxdepth 2 -name '*.gdb' -type d | head -1)"
+      - name: Publier les classes
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add inputs/analogues/glim_points_classes.csv
+          git diff --cached --quiet || (git commit -m "GLiM vectorielle : classes lithologiques aux points du transfert par analogues" && git pull --rebase --autostash origin main && git push)
