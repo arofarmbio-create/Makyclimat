@@ -65,31 +65,31 @@ def aquifer(classes) -> np.ndarray:
 
 
 # ---------------- analogues ----------------
-def gower(train: pd.DataFrame, test: pd.DataFrame) -> np.ndarray:
+def gower(train: pd.DataFrame, test: pd.DataFrame, num=None) -> np.ndarray:
     """Distance de Gower (tests × sources) sur NUM (écart rapporté à l'étendue des sources) et le type d'aquifère."""
     parts = []
-    for c in NUM:
+    for c in (num or NUM):
         rng = float(np.nanmax(train[c]) - np.nanmin(train[c])) or 1.0
         parts.append(np.abs(test[c].to_numpy(float)[:, None] - train[c].to_numpy(float)[None, :]) / rng)
     parts.append((test.aquifer.to_numpy()[:, None] != train.aquifer.to_numpy()[None, :]).astype(float))
     return np.nanmean(np.stack(parts), axis=0)
 
 
-def knn_log(train: pd.DataFrame, test: pd.DataFrame, k=K) -> np.ndarray:
-    d = gower(train, test)
+def knn_log(train: pd.DataFrame, test: pd.DataFrame, k=K, num=None) -> np.ndarray:
+    d = gower(train, test, num)
     idx = np.argsort(d, axis=1)[:, :k]
     y = np.log10(np.maximum(train.R.to_numpy(float), 0.1))
     return np.median(y[idx], axis=1)
 
 
-def loco(df: pd.DataFrame, min_sites=3) -> pd.DataFrame:
+def loco(df: pd.DataFrame, min_sites=3, num=None) -> pd.DataFrame:
     """Niveau 1 : chaque pays laissé de côté ; erreur absolue log du modèle et de la référence naïve (médiane du type)."""
     rows = []
     for ctry, g in df.groupby("country"):
         if len(g) < min_sites:
             continue
         tr = df[df.country != ctry]
-        pred = knn_log(tr, g)
+        pred = knn_log(tr, g, num=num)
         ytr = np.log10(np.maximum(tr.R, 0.1))
         naive = np.array([ytr[tr.aquifer == a].median() if (tr.aquifer == a).any() else ytr.median() for a in g.aquifer])
         y = np.log10(np.maximum(g.R, 0.1)).to_numpy()
@@ -123,7 +123,8 @@ def load_sources(path_xlsx, grid, head, vect: dict | None = None) -> pd.DataFram
     df = pd.DataFrame({"wid": [f"wan_{i}" for i in range(len(w))], "lat": w.lat, "lon": w.lon, "R": pd.to_numeric(w.Recharge_mmpa, errors="coerce"),
                        "P": pd.to_numeric(w.Prep_mmpa, errors="coerce"), "PET": pd.to_numeric(w.PET_mm, errors="coerce"),
                        "Aridity": pd.to_numeric(w.Aridity, errors="coerce"),
-                       "country": w.Country_Name.fillna(w.Country).astype(str), "bgs": w.Aquifer_group})
+                       "country": w.Country_Name.fillna(w.Country).astype(str), "bgs": w.Aquifer_group,
+                       "fkarst": pd.to_numeric(w.fkarst, errors="coerce").fillna(0.0)})
     df = df.dropna(subset=["lat", "lon", "R", "P", "PET", "Aridity"]).reset_index(drop=True)
     df["glim"] = [vect.get(i.lower(), "") for i in df.wid] if vect is not None else glim_class(df.lat, df.lon, grid, head)
     df["aquifer"] = aquifer(df.glim)
@@ -161,6 +162,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
     ap.add_argument("--typage", choices=["grille", "vectoriel"], default="grille")
+    ap.add_argument("--karst", action="store_true", help="test H-K1 (fraction karstique ajoutée)")
     args = ap.parse_args()
     adir = country_data_dir(args.country) / "analogues"
     vect = None
@@ -172,6 +174,9 @@ def main() -> None:
     b = src.dropna(subset=["bgs"])
     accord = f"{float((b.bgs == b.aquifer).mean()):.0%} sur {len(b)} sites" if len(b) else "non mesurable"
     lo = loco(src)
+    if args.karst:
+        run_karst(src, lo, adir, args.country)
+        return
     wins = int((lo.erreur_modele < lo.erreur_naive).sum())
     t_lo = (wins, len(lo), sign_test(wins, len(lo)))
     h = hr1(src)
@@ -210,6 +215,49 @@ def main() -> None:
     (vd / f"transfert_analogues{suf}.md").write_text(txt, encoding="utf-8")
     sites[["site", "source", "aquifer", "r_mm", "mondial_mm", "t2_mm", "mondial_gagne"]].round(1).to_csv(vd / f"transfert_analogues_madagascar{suf}.csv", index=False)
     print(f"Analogues : niveau 1 {t_lo[0]}/{t_lo[1]} ; H-R1 p = {h.get('p')} ; H-T1 {t1[0]}/{t1[1]} ; H-T2 rho = {rho:+.2f}")
+
+
+def run_karst(src: pd.DataFrame, lo_base: pd.DataFrame, adir, country) -> None:
+    """H-K1 : confirmatoire dans les sources (pays laissé de côté, avec contre sans karst) ; exploratoire à Madagascar."""
+    numk = NUM + ["fkarst"]
+    lo_k = loco(src, num=numk)
+    m = lo_base.merge(lo_k, on=["pays", "sites"], suffixes=("_sans", "_karst"))
+    wins = int((m.erreur_modele_karst < m.erreur_modele_sans).sum())
+    ties = int((m.erreur_modele_karst == m.erreur_modele_sans).sum())
+    n = len(m) - ties
+    p = sign_test(wins, n)
+    sites = pd.read_csv(ROOT / "validation" / "transfert_analogues_madagascar_vectoriel.csv")
+    coords = pd.read_csv(ROOT / "inputs" / "mgmerl" / "mgmerl_dataloggers_ht_analytics_sites.csv")
+    gro = pd.read_csv(country_data_dir(country) / "nappes_mondiales" / "grosom" / "puits_grosom.csv")
+    ll = {**{r.site.lower(): (r.lat, r.lon) for r in coords.itertuples()}, **{r.nom.lower(): (r.lat, r.lon) for r in gro.itertuples()}}
+    cov = pd.read_csv(country_data_dir(country) / "nappes_mondiales" / "covariables_hc6.csv")
+    fk = pd.read_csv(ROOT / "inputs" / "analogues" / "fkarst_mdg.csv")
+    fk = {i.lower(): v for i, v in zip(fk.id, fk.fkarst)}
+    sites["lat"] = [ll[s.lower()][0] for s in sites.site]
+    sites["lon"] = [ll[s.lower()][1] for s in sites.site]
+    j = [int(np.argmin((cov.lat - la) ** 2 + (cov.lon - lo_) ** 2)) for la, lo_ in zip(sites.lat, sites.lon)]
+    sites["P"], sites["PET"], sites["Aridity"] = cov.LTA_P_mmpa.to_numpy()[j], cov.LTA_PET_mm.to_numpy()[j], cov.Aridity.to_numpy()[j]
+    sites["fkarst"] = [fk.get(f"mdg_{s}".lower(), 0.0) for s in sites.site]
+    sites["karst_mm"] = 10 ** knn_log(src, sites, num=numk)
+    y = np.log10(sites.r_mm)
+    wk = int((np.abs(np.log10(sites.karst_mm) - y) < np.abs(np.log10(sites.t2_mm) - y)).sum())
+    rho, pr = stats.spearmanr(sites.karst_mm, sites.r_mm)
+    L = ["# H-K1 : la fraction karstique améliore-t-elle le transfert par analogues ?", "",
+         f"Généré le {dt.date.today().isoformat()} par `scripts/transfert_analogues.py --typage vectoriel --karst`, selon "
+         "`validation/protocole_transfert_analogues.md` (H-K1, fixée avant le calcul). Karst : WOKAM v1 (Chen et al. 2017, BGR), "
+         "formule de Wan et al. 2024 ; couche non redistribuée.", "",
+         "## Test confirmatoire (sources, indépendant de Madagascar)", "",
+         f"En laissant chaque pays de côté, le modèle avec karst a une erreur plus faible que sans karst dans {wins} pays sur {n} "
+         f"({ties} égalités écartées) ; test du signe p = {p:.3f}. Erreur médiane : sans karst {m.erreur_modele_sans.median():.3f}, "
+         f"avec karst {m.erreur_modele_karst.median():.3f}. **H-K1 {'soutenue' if p < 0.05 else 'non soutenue'}**.", "",
+         "## Exploratoire (Madagascar, 12 sites)", "",
+         "| Site | Fraction karstique | Mesurée (mm/an) | Sans karst | Avec karst | T2 africain |", "|---|---|---|---|---|---|"]
+    for r in sites.itertuples():
+        L.append(f"| {r.site} | {r.fkarst:.2f} | {r.r_mm:.0f} | {r.mondial_mm:.0f} | {r.karst_mm:.0f} | {r.t2_mm:.0f} |")
+    L += ["", f"Avec karst : plus proche que T2 sur {wk} sites sur {len(sites)} ; Spearman avec la mesure ρ = {rho:+.2f} (p = {pr:.3f}). "
+          "Exploratoire : ces sites ont suggéré l'hypothèse.", ""]
+    (ROOT / "validation" / "transfert_analogues_karst.md").write_text("\n".join(L) + "\n", encoding="utf-8")
+    print(f"H-K1 : {wins}/{n} pays (p = {p:.3f}) ; Madagascar {wk}/{len(sites)}, rho = {rho:+.2f}")
 
 
 if __name__ == "__main__":

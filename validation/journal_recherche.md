@@ -886,3 +886,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Piste (non testée, à écrire avant tout test) : ces formations de Toliara sont en partie calcaires ; la compilation
   de Wan donne une fraction karstique (fkarst) par site. Une recharge karstique, plus forte, pourrait expliquer l'écart.
 
+### H-K1 : le karst dans le transfert par analogues (`validation/transfert_analogues_karst.md`)
+- ✅ Hypothèse et définition de la fraction karstique (formule de Wan et al. 2024 sur WOKAM) fixées et commitées avant
+  le calcul. WOKAM (BGR) : licence d'usage sans redistribution ; seules les fractions aux sites sont publiées.
+- 📊 Les 5 puits sédimentaires de la région de Toliara (et Betioky F2, Analalentika, Vovomena) sont en karst continu
+  (fraction 0,61) ; Behavandra 0,38 ; aucun autre site.
+- ❌ **H-K1 non soutenue (test confirmatoire dans les sources)** : ajouter la fraction karstique à la distance entre
+  analogues ne réduit l'erreur que dans 8 pays sur 23 (p = 0,95) ; erreur médiane inchangée (0,351 contre 0,354).
+- 📊 Exploratoire Madagascar : les sites karstiques passent de 60 à 74 mm/an prédits (mesurés 80 à 195) ; l'ordre
+  spatial reste faux (ρ = −0,37).
+- 📌 Lecture : le karst seul, comme simple variable de distance, ne suffit pas à expliquer la forte recharge de Toliara.
+  Le karst agit sans doute sur la **dynamique** (infiltration rapide) plus que sur la moyenne climatique des analogues :
+  c'est précisément ce que THMS permet de tester (H-M3).
+
