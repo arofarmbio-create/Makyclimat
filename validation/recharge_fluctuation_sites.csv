@@ -1,0 +1,26 @@
+site,source,groupe,t2_mm,mesures,gardees,mois,retenu,r_bas,r_haut,r_mm,r_jour_bas,r_jour_haut,r_jour_mm,debut,fin,rapport,rapport_jour
+Andaboly,HT (MGMERL),Basement,144.078,5255,3219,28,True,1.888,9.441,5.664,29.408,147.039,88.223,2019-12,2022-03,0.039,0.612
+Sihanamaro,HT (MGMERL),Unconsolidated,92.215,7714,7713,53,True,13.619,40.858,27.239,426.213,1278.64,852.427,2019-12,2024-04,0.295,9.244
+Behavandra,HT (MGMERL),Basement,109.443,4498,1676,20,False,,,,,,,,,,
+Ihazoambo,HT (MGMERL),Basement,261.548,3020,3020,27,True,15.276,76.379,45.827,23.358,116.792,70.075,2019-12,2022-02,0.175,0.268
+Ankaramena,HT (MGMERL),Basement,184.058,5760,4785,29,True,65.921,329.605,197.763,130.454,652.271,391.362,2020-12,2025-01,1.074,2.126
+AnKaranabO,HT (MGMERL),Basement,77.211,5248,4865,39,True,15.321,76.604,45.963,65.107,325.533,195.32,2019-12,2023-02,0.595,2.53
+Manasoa,HT (MGMERL),Basement,207.978,51,51,0,False,,,,,,,,,,
+Marokibo,HT (MGMERL),Basement,251.274,366,340,3,False,,,,,,,,,,
+Ampasimalemy,HT (MGMERL),Basement,207.978,3124,2423,14,False,,,,,,,,,,
+BETIOKYF2,HT (MGMERL),Sedimentary,32.553,7888,1353,11,False,,,,,,,,,,
+Mahatsinjo,HT (MGMERL),Basement,245.531,187,183,2,False,,,,,,,,,,
+Karimbary,HT (MGMERL),Basement,240.854,155,100,1,False,,,,,,,,,,
+Nosiomby,HT (MGMERL),Basement,207.978,7376,7356,41,True,6.218,31.09,18.654,41.744,208.722,125.233,2023-01,2026-05,0.09,0.602
+Mahavelo,HT (MGMERL),Basement,240.854,6406,6223,35,True,16.102,80.509,48.306,39.942,199.708,119.825,2023-01,2025-11,0.201,0.498
+Mahafasa,HT (MGMERL),Basement,95.01,1478,1454,8,False,,,,,,,,,,
+Maromena,GROSoM,Unconsolidated,92.36,7703,7703,11,False,,,,,,,,,,
+Ankirikiriky,GROSoM,Basement,219.158,7701,7701,11,False,,,,,,,,,,
+Anapemba,GROSoM,Basement,219.158,7702,7702,11,False,,,,,,,,,,
+Analalentika,GROSoM,Unconsolidated,37.911,8744,8744,12,False,,,,,,,,,,
+Maroarivo,GROSoM,Unconsolidated,37.911,23014,23014,32,True,92.375,277.125,184.75,433.049,1299.147,866.098,2016-06,2020-05,4.873,22.846
+Ambatofotsy,GROSoM,Unconsolidated,37.911,30452,30366,42,True,48.133,144.4,96.267,227.423,682.269,454.846,2016-06,2019-11,2.539,11.998
+Vovomena,GROSoM,Unconsolidated,37.911,35063,6507,11,False,,,,,,,,,,
+Ankandy,GROSoM,Unconsolidated,37.911,48377,48377,67,True,95.819,287.456,191.637,180.685,542.055,361.37,2014-05,2019-11,5.055,9.532
+Ankazomanga_P06,GROSoM,Unconsolidated,37.911,35997,35997,51,True,39.827,119.481,79.654,156.181,468.544,312.362,2014-05,2019-11,2.101,8.239
+Ankazomanga_P01,GROSoM,Unconsolidated,37.911,49631,49631,68,True,97.579,292.738,195.158,257.588,772.765,515.177,2014-05,2020-05,5.148,13.589

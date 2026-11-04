@@ -832,3 +832,21 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Niveau de preuve : approximation non validée. Améliorations possibles sans le ministère : recharge du Sud par
   fluctuation de nappe (capteurs HT jusqu'en 2026, puits GROSoM), bétail si une source est vérifiée.
 
+### Recharge mesurée par fluctuation des nappes, Grand Sud (`validation/recharge_fluctuation.md`)
+- ✅ Protocole fixé et commité avant le calcul. 25 séries (15 capteurs HT 2019-2026, 10 puits GROSoM) ; **12 sites
+  retenus** (au moins 24 mois valides) ; 13 écartés (séries trop courtes, dont 6 puits GROSoM d'un an).
+- ❌ **Règle de correction non remplie** : rapport médian mesurée / T2 = 0,83 [IC 95 % 0,19 ; 3,71], 50 % des sites
+  sous 1. T2 n'est pas jugée surestimée dans l'ensemble du Grand Sud ; aucune correction n'est appliquée.
+- 📊 **Résultat exploratoire important (non prévu par une hypothèse)** : l'écart dépend de la géologie.
+  - Socle (capteurs HT d'Androy, Anosy, Atsimo-Atsinanana) : T2 **surestime** sur 6 des 7 sites (rapports 0,04 à 0,60 ;
+    Ankaramena 1,07).
+  - Formations sédimentaires de la région de Toliara (GROSoM, classées « non consolidé » par la carte BGS) : T2
+    **sous-estime** sur les 5 sites (rapports 2,1 à 5,2 ; recharge mesurée 80 à 195 mm/an contre 38 transférés).
+  Une correction régionale unique serait donc fausse ; une correction par type d'aquifère demanderait une hypothèse
+  écrite à l'avance et plus de sites.
+- ❌ La méthode journalière (sensibilité) donne des valeurs parfois très élevées (852 mm/an à Sihanamaro) : le bruit de
+  capteur passe le seuil de 1 cm/jour. Elle n'est pas fiable telle quelle ; le pas mensuel reste la référence.
+- 📌 Conséquence pour le risque d'épuisement : dans le socle du Grand Sud, la recharge T2 est probablement trop forte
+  (risque sous-estimé) ; dans les grès et calcaires de Toliara, elle est probablement trop faible (risque surestimé).
+  À écrire comme hypothèse H-R1 (biais du transfert selon le type d'aquifère) avant tout test confirmatoire.
+
