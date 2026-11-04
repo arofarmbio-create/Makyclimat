@@ -47,3 +47,8 @@ la pression dans le Sud.
 ## 7. Journal des modifications
 
 - 04/11/2026 : version initiale.
+- 04/11/2026, **avant calcul** : déclinaison par **sous-bassin** (16 177 sous-bassins de `hydro.npz`, seuil de 300 km²),
+  mêmes indicateurs et même règle de fiabilité ; seuls les sous-bassins contenant au moins un fokontany sont décrits ;
+  nom = « sous-bassin n° x du bassin de … » (bassin majoritaire de ses fokontany). Le rapport liste les 30 sous-bassins
+  au bilan le plus fort parmi ceux d'au moins 1 000 habitants, et la répartition des classes de bilan.
+

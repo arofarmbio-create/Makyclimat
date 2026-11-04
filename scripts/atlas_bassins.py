@@ -97,16 +97,36 @@ def report(t: pd.DataFrame) -> str:
     return "\n".join(L).replace(",", " ") + "\n"
 
 
+def report_sub(t: pd.DataFrame) -> str:
+    cls = t.classe_bilan.value_counts()
+    L = ["# Atlas des nappes par sous-bassin (version 1, carte du niveau statique v2)", "",
+         f"Généré le {dt.date.today().isoformat()} par `scripts/atlas_bassins.py --niveau sous-bassin`, selon "
+         "`validation/protocole_atlas_bassins.md` (déclinaison du 04/11, fixée avant le calcul). Mêmes réserves que l'atlas par bassin.", "",
+         f"{len(t)} sous-bassins avec au moins un fokontany ; fiabilité : {int((t.fiabilite == 'mesurée').sum())} mesurée, "
+         f"{int((t.fiabilite == 'partielle').sum())} partielle, {int((t.fiabilite == 'non mesurée').sum())} non mesurée. "
+         f"Classes de bilan : faible {int(cls.get('faible', 0))}, modéré {int(cls.get('modéré', 0))}, élevé {int(cls.get('élevé', 0))} "
+         f"(réseau d'Antananarivo coupé : élevé {int((t.bilan_sans_reseau > 0.4).sum())}).", "",
+         "## Les 30 sous-bassins au bilan le plus fort (au moins 1 000 habitants)", "",
+         "| Sous-bassin | Population | Bilan (réseau 47 %) | Bilan (réseau coupé) | Recharge (mm/an) | Niveau médian (m) | Fiabilité |",
+         "|---|---|---|---|---|---|---|"]
+    for r in t[t.population >= 1000].sort_values("bilan_sans_reseau", ascending=False).head(30).itertuples():
+        L.append(f"| {r.nom} | {r.population:,.0f} | {r.bilan:.3f} | {r.bilan_sans_reseau:.3f} | {r.recharge_mm:.0f} | {r.niveau_median_m:.1f} | {r.fiabilite} |")
+    return "\n".join(L).replace(",", " ") + "\n"
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
+    ap.add_argument("--niveau", choices=["bassin", "sous-bassin"], default="bassin")
     args = ap.parse_args()
     cdir = country_data_dir(args.country)
+    key = "basin" if args.niveau == "bassin" else "subbasin"
     units = read_units(args.country)
     fk = units[units.level == 4][["pcode", "adm2", "adm3", "lon", "lat", "pop", "area_km2"]].reset_index(drop=True)
     h = load_grid(grid_dir(args.country) / "hydro.npz")
     g = (float(h["lon0"]), float(h["lat0"]), float(h["res"]))
-    fk["basin"] = H2.grid_sample(h["basin"], *g, fk.lon, fk.lat).astype(int)
+    fk["main"] = H2.grid_sample(h["basin"], *g, fk.lon, fk.lat).astype(int)
+    fk["basin"] = H2.grid_sample(h[key], *g, fk.lon, fk.lat).astype(int)
     carte = pivot(cdir / "external" / "nappes_carte.csv", ["niveau_statique_m", "niveau_statique_erreur_attendue_m", "niveau_statique_extrapolation"])
     res = pivot(cdir / "external" / "nappes_ressource.csv", ["recharge_mm_an", "stock_mm", "renouvellement_ans"])
     hyd = pivot(cdir / "external" / "hydro.csv", ["elev_mean_m", "slope_mean_pct", "hand_lt5_pct"])
@@ -122,12 +142,20 @@ def main() -> None:
     fk["prelev_mm"] = NR.withdrawals_mm(fk.pop_ajustee, fk.area_km2)
     fk["prelev_sans_reseau_mm"] = NR.withdrawals_mm(pop_seam, fk.area_km2)
     wells = H1.load_points(cdir / "mgmerl_raw" / "complet_2026-11-03" / "mgmerl_niveau_statique_complet.csv")
-    wb = pd.Series(H2.grid_sample(h["basin"], *g, wells.lon, wells.lat).astype(int)).value_counts()
+    wb = pd.Series(H2.grid_sample(h[key], *g, wells.lon, wells.lat).astype(int)).value_counts()
     gj = json.loads((ROOT / "docs" / "data" / args.country / "hydro" / "basins.geojson").read_text(encoding="utf-8"))
     names = {int(f["properties"]["id"]): f["properties"]["name"] for f in gj["features"]}
+    if key == "subbasin":
+        dn = dict(zip(units.pcode, units.name))
+        dist = fk.groupby("basin").adm2.agg(lambda s: s.mode().iloc[0])
+        names = {int(sb): f"sous-bassin n° {sb} ({dn.get(d, d)})" for sb, d in dist.items()}
     t = aggregate(fk, wb, names)
-    (ROOT / "validation" / "atlas_bassins.md").write_text(report(t), encoding="utf-8")
-    t.round(3).to_csv(cdir / "external" / "nappes_bassins.csv", index=False)
+    if key == "basin":
+        (ROOT / "validation" / "atlas_bassins.md").write_text(report(t), encoding="utf-8")
+        t.round(3).to_csv(cdir / "external" / "nappes_bassins.csv", index=False)
+    else:
+        (ROOT / "validation" / "atlas_sousbassins.md").write_text(report_sub(t), encoding="utf-8")
+        t.round(3).to_csv(cdir / "external" / "nappes_sousbassins.csv", index=False)
     print(f"Atlas : {len(t)} bassins ; fiabilité mesurée {int((t.fiabilite == 'mesurée').sum())}")
 
 

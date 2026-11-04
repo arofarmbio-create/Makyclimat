@@ -934,3 +934,17 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Suite : bassins hydrogéologiques (lignes de partage de la nappe) dans les plaines côtières où ils peuvent
   s'écarter des bassins de surface ; demande ciblée au ministère pour les bassins n° 1 et Tsiribihina.
 
+### Atlas par sous-bassin (`validation/atlas_sousbassins.md`)
+- ✅ Déclinaison fixée avant calcul. 1 420 sous-bassins avec au moins un fokontany ; fiabilité : 27 mesurés, 867
+  partiels, 526 non mesurés.
+- 📊 Bilan prélèvements / recharge : 1 310 faibles, 74 modérés, **36 élevés**, tous dans de petits bassins côtiers de
+  l'Ouest autour des villes : Toliara (Toliary-I et II), Mahajanga I, Morondava, Maintirano, Morombe. La pression
+  apparaît à l'échelle fine et disparaît à l'échelle du grand bassin.
+- ❌ **Réserve majeure, vérifiée** : ces bilans dépendent de la recharge transférée T2, fausse à ces endroits.
+  Mahajanga : T2 = 6,8 mm/an pour 1 472 mm de pluie (carte BGS : 124 mm/an) : le bilan y est surestimé d'un facteur
+  proche de 18 ; c'est en grande partie un **artefact**. Toliara : T2 = 20 mm/an, alors que les puits karstiques
+  voisins mesurent 80 à 195 mm/an. Les villes côtières de l'Ouest sont bien les points de pression les plus probables,
+  mais l'ampleur n'est pas connue.
+- 📌 Correctif à écrire avant tout recalcul : contrôle de vraisemblance de la recharge (rapport recharge / pluie
+  comparé aux fourchettes publiées par type de roche) avant tout calcul de bilan.
+
