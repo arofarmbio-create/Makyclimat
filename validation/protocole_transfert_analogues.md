@@ -89,4 +89,18 @@ références) ; journal et registre (nouvelle entrée R-43).
     (publié, sans critère de rejet).
   - Variables du transfert (distance de Gower) : pluie annuelle, ETP, aridité, type d'aquifère (GLiM), occupation du
     sol, pente ; mêmes définitions pour les sites sources et malgaches, tirées des mêmes produits.
+- 04/11/2026, **avant tout calcul** : mise en œuvre.
+  - GLiM utilisée : grille à 0,5° (Hartmann et Moosdorf 2012, PANGAEA 10.1594/PANGAEA.788537, CC BY 3.0), classe
+    dominante de la maille (codes 1 à 16). Point sans classe (mer à 0,5°) : maille voisine la plus proche avec une classe.
+  - Variables de la distance de Gower : pluie annuelle, ETP, aridité, type d'aquifère (GLiM). **Pente et occupation du
+    sol exclues** : leurs définitions dans la compilation de Wan ne peuvent pas être reproduites pour les sites malgaches
+    (vocabulaires et produits différents). Sites malgaches : pluie, ETP et aridité de la maille la plus proche de
+    `covariables_hc6.csv` (définitions du BGS, reprises par la compilation). k = 5 analogues, prédiction = médiane des
+    log-recharges des analogues.
+  - Référence T2 de H-T1 : valeurs T2 déjà publiées aux sites (`recharge_fluctuation_sites.csv`), sans recalcul.
+  - H-R1 sur la base mondiale : modèle « africain » = mêmes k = 5 analogues mais pris parmi les seuls sites africains de
+    la compilation ; il prédit chaque site non africain ; surestimation = prédiction > mesure. Test exact de Fisher
+    unilatéral : la surestimation est plus fréquente sur le socle que sur le sédimentaire et le non consolidé réunis.
+  - Niveau 1 (sources) : modèle mondial en laissant un pays de côté, contre la référence naïve (médiane du même type
+    d'aquifère parmi les autres pays) ; test du signe sur les pays (au moins 3 sites), comme H-C5.
 
