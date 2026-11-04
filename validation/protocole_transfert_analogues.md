@@ -103,4 +103,14 @@ références) ; journal et registre (nouvelle entrée R-43).
     unilatéral : la surestimation est plus fréquente sur le socle que sur le sédimentaire et le non consolidé réunis.
   - Niveau 1 (sources) : modèle mondial en laissant un pays de côté, contre la référence naïve (médiane du même type
     d'aquifère parmi les autres pays) ; test du signe sur les pays (au moins 3 sites), comme H-C5.
+- 04/11/2026, **après le premier calcul** (`transfert_analogues.md` : H-T1 soutenue, H-T2 et H-R1 non soutenues ;
+  règle GLiM 0,5° d'accord avec le BGS sur 47 % seulement) : **typage du terrain au point** par la GLiM vectorielle
+  (polygones, même classification et même règle de correspondance qu'en section 4 précisée le 04/11), à la place de la
+  grille à 0,5°.
+  - Statut : **reprise annoncée d'un test déjà fait** (risque de choix après coup). Les deux versions sont publiées
+    côte à côte ; aucune n'est retenue sur la base de son résultat. La conclusion du protocole (démontré, plausible,
+    rejeté) ne peut être relevée que si H-T1 **et** H-T2 réussissent avec la GLiM vectorielle **et** si l'accord avec le
+    type du BGS sur les sites africains dépasse 70 % (sinon le typage reste jugé insuffisant).
+  - Toutes les autres règles (variables, k = 5, sites, tests, seuils) restent inchangées.
+  - Mise en œuvre : téléchargement lourd sur GitHub (workflow), qui ne renvoie que la classe GLiM aux points demandés.
 
