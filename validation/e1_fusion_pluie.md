@@ -1,6 +1,6 @@
 # E1 : fusion contrôlée des sources de pluie
 
-Généré le 2026-11-03 par `scripts/validate_e1.py`, selon `validation/protocole_e1_fusion_pluie.md` (fixé avant les calculs). Années disponibles : 2001-2025 (9131 jours communs).
+Généré le 2026-11-04 par `scripts/validate_e1.py`, selon `validation/protocole_e1_fusion_pluie.md` (fixé avant les calculs). Années disponibles : 2001-2025 (9131 jours communs).
 
 ## Triple collocation (apprentissage 2001-2015, pentades de novembre à avril)
 
@@ -21,9 +21,9 @@ Meilleure source seule (fixée sur l'apprentissage) : **imerg**. Mailles avec po
 
 | Station | Pentades | KGE CHIRPS | KGE IMERG | KGE ERA5-Land | KGE B | KGE C |
 |---|---|---|---|---|---|---|
-| FASCENE | 102 | 0.60 | 0.56 | 0.51 | 0.63 | 0.55 |
-| SAMBAVA | 115 | 0.44 | 0.46 | 0.12 | 0.38 | 0.42 |
-| SAINTE MARIE | 140 | 0.60 | 0.46 | 0.50 | 0.54 | 0.79 |
+| FASCENE | 102 | 0.60 | 0.56 | 0.51 | 0.62 | 0.55 |
+| SAMBAVA | 115 | 0.43 | 0.46 | 0.12 | 0.38 | 0.42 |
+| SAINTE MARIE | 140 | 0.61 | 0.46 | 0.50 | 0.54 | 0.79 |
 | TOAMASINA | 303 | 0.55 | 0.40 | 0.44 | 0.51 | 0.47 |
 | TOLAGNARO | 109 | 0.20 | 0.39 | 0.28 | 0.35 | 0.34 |
 
