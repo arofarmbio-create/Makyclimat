@@ -1,0 +1,29 @@
+name: "28 - Bassins hydrogéologiques comparés aux bassins de surface"
+
+# Protocole validation/protocole_bassins_hydrogeologiques.md. Télécharge le modèle de terrain GLO-90 (comme le
+# workflow hydro), calcule la charge de la nappe (terrain − profondeur de la carte v2), les bassins sur cette surface et
+# leur écart aux bassins de surface. Publie le rapport et le tableau par bassin. Manuel.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bassins:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Bassins hydrogéologiques
+        run: cd scripts && python bassins_hydrogeologiques.py --country mdg
+      - name: Publier
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add validation/bassins_hydrogeologiques.md inputs/hydrogeologie/divergence_bassins.csv
+          git diff --cached --quiet || (git commit -m "Bassins hydrogéologiques : comparaison aux bassins de surface" && git pull --rebase --autostash origin main && git push)
