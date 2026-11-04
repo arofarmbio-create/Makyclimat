@@ -41,3 +41,4 @@ data/*/e1/imerg_*.npz
 data/*/e1/era5_*.npz
 data/*/e1/gsod.csv
 data/*/e1/e1_tc.npz
+data/*/nappes_mondiales/grosom/
