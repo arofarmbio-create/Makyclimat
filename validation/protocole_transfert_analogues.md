@@ -74,3 +74,19 @@ références) ; journal et registre (nouvelle entrée R-43).
 ## 9. Journal des modifications
 
 - 04/11/2026 : version initiale.
+- 04/11/2026, **avant tout calcul** : sources effectivement disponibles (vérifiées par l'agent, licences comprises).
+  - **Source principale de H-T1 et H-R1** : compilation de Wan, Döll et Müller Schmied (2024, figshare
+    10.6084/m9.figshare.23592666, CC BY 4.0) : 821 estimations de recharge mesurée regroupées par maille de 0,5°
+    (Moeck, MacDonald, Mohan, Scanlon, Hartmann, Döll…), avec pluie, ETP, aridité, sol, pente, occupation du sol, méthode
+    et niveau de confiance. Moeck et al. 2020 (CC0, 5 207 estimations) n'a que la position et la recharge : réservé à une
+    vérification de robustesse. Berghuijs et al. 2022 ne contient que des grilles : non utilisé. Aucun site malgache ni
+    sri-lankais.
+  - **Type d'aquifère** (absent pour 709 des 821 sites) : attribué **à tous les sites, malgaches compris**, à partir de la
+    carte lithologique mondiale GLiM (Hartmann et Moosdorf 2012), même règle partout : métamorphiques et plutoniques
+    (mt, pa, pb, pi) → socle ; sédimentaires siliciclastiques, carbonatés et mixtes (ss, sc, sm) → sédimentaire ;
+    sédiments non consolidés (su) → non consolidé ; volcaniques (va, vb, vi, py) → volcanique ; autres → inconnu
+    (exclus des tests). Contrôle : accord entre cette règle et le type d'aquifère du BGS sur les sites africains
+    (publié, sans critère de rejet).
+  - Variables du transfert (distance de Gower) : pluie annuelle, ETP, aridité, type d'aquifère (GLiM), occupation du
+    sol, pente ; mêmes définitions pour les sites sources et malgaches, tirées des mêmes produits.
+
