@@ -782,3 +782,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   erreur médiane attendue 2,1 m (2,4 m en v1). Betsiboka a désormais un forage. 10 régions sans aucun niveau statique.
 - 📌 Phases 1 et étude SEAM (H-S1) non relancées : leurs conclusions portent sur l'extrait de 1 000 relevés.
 
+### Séries GROSoM téléchargées (04/11) ; CHIRPS 2021 réparé
+- ✅ **GROSoM** (Carrière et al. 2021, Hydrological Processes 35:e14108 ; IGRAC-GGIS, jeu 2538) : 10 puits, mesures
+  horaires (sondes TD-Diver, UTC), **cotes du niveau d'eau en m au-dessus du niveau de la mer**, pas des profondeurs
+  (la fiche des puits donne l'altitude du sol pour convertir). 9 séries complètes ; Ambatofotsy partielle (30 452 sur
+  53 085 mesures : manquent 2014-05 à 2016-05 et 2019-11 à 2020-05 ; l'autre accès demanderait environ 5 300
+  requêtes, non lancé). Trous longs : Maroarivo 503 jours, Ankazomanga P06 420 jours. Hors dépôt.
+- ⚠️ **Licence des données non indiquée** (fiche IGRAC sans texte ; l'article est en CC BY-NC-ND, ce qui ne couvre pas
+  les données ; le dépôt Mendeley cité n'existe plus). Usage : analyse de recherche citée (Carrière et al. 2021,
+  IGRAC-GGIS), aucune redistribution des séries ; seuls des résultats agrégés seront publiés.
+- ✅ **CHIRPS 2021 réparé** (agent) : décembre 2021 n'existait sur le serveur qu'en .tif non compressé ; le script le
+  gère et ne retélécharge que les jours vides. Contrôle des 25 années des 3 sources : plus aucun jour vide. E1
+  (workflow 25) et §6.3 relancés.
+
