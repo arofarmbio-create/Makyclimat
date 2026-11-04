@@ -871,3 +871,18 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   **transfert plausible pour l'ordre de grandeur, non démontré pour la répartition spatiale**. À ne pas présenter comme
   démontré.
 
+### Transfert par analogues : reprise annoncée avec la GLiM vectorielle (`validation/transfert_analogues_vectoriel.md`)
+- ✅ Reprise inscrite au protocole avant calcul, avec une règle de conclusion plus exigeante. GLiM vectorielle v1.1
+  (Hambourg, 1,14 Go) lue sur GitHub (workflow 27) ; seules les classes aux 847 points sont publiées (4 sans classe).
+  Coordonnées réelles des sites sources (Map_Latitude, Map_Longitude) au lieu du centre de maille.
+- 🔧 Bogue corrigé pendant la reprise : un site (« AnKaranabO ») n'était pas apparié à cause des majuscules.
+- 📊 Accord du typage avec le BGS sur les sites africains : 58 % (47 % avec la grille 0,5°) : mieux, mais sous le
+  seuil fixé de 70 %.
+- 📊 Niveau 1 inchangé (22 pays sur 29, p = 0,004). **H-T1 soutenue, plus nettement** : 11 sites sur 12 (p = 0,003).
+  **H-T2 toujours non soutenue** (ρ = −0,37, p = 0,24) ; H-R1 toujours non soutenue (p = 0,96).
+- 📌 **Conclusion selon la règle : inchangée, transfert plausible, non démontré.** Le transfert mondial donne le bon
+  ordre de grandeur mais ne reproduit pas le contraste spatial : les puits sédimentaires de la région de Toliara
+  (80 à 195 mm/an mesurés) restent prédits à 60 mm/an.
+- 📌 Piste (non testée, à écrire avant tout test) : ces formations de Toliara sont en partie calcaires ; la compilation
+  de Wan donne une fraction karstique (fkarst) par site. Une recharge karstique, plus forte, pourrait expliquer l'écart.
+

@@ -117,14 +117,15 @@ def hr1(df: pd.DataFrame) -> dict:
             "part_socle": table[0][0] / max(sum(table[0]), 1), "part_sedi": table[1][0] / max(sum(table[1]), 1)}
 
 
-def load_sources(path_xlsx, grid, head) -> pd.DataFrame:
+def load_sources(path_xlsx, grid, head, vect: dict | None = None) -> pd.DataFrame:
+    """vect : classes GLiM vectorielles par identifiant « wan_<ligne> » (reprise du 04/11) ; sinon grille à 0,5°."""
     w = pd.read_excel(path_xlsx)
-    df = pd.DataFrame({"lat": w.lat, "lon": w.lon, "R": pd.to_numeric(w.Recharge_mmpa, errors="coerce"),
+    df = pd.DataFrame({"wid": [f"wan_{i}" for i in range(len(w))], "lat": w.lat, "lon": w.lon, "R": pd.to_numeric(w.Recharge_mmpa, errors="coerce"),
                        "P": pd.to_numeric(w.Prep_mmpa, errors="coerce"), "PET": pd.to_numeric(w.PET_mm, errors="coerce"),
                        "Aridity": pd.to_numeric(w.Aridity, errors="coerce"),
                        "country": w.Country_Name.fillna(w.Country).astype(str), "bgs": w.Aquifer_group})
     df = df.dropna(subset=["lat", "lon", "R", "P", "PET", "Aridity"]).reset_index(drop=True)
-    df["glim"] = glim_class(df.lat, df.lon, grid, head)
+    df["glim"] = [vect.get(i.lower(), "") for i in df.wid] if vect is not None else glim_class(df.lat, df.lon, grid, head)
     df["aquifer"] = aquifer(df.glim)
     return df[df.aquifer != "Unknown"].reset_index(drop=True)
 
@@ -159,10 +160,15 @@ def report(n_src, accord, lo, t_lo, h, mdg, t1, t2) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
+    ap.add_argument("--typage", choices=["grille", "vectoriel"], default="grille")
     args = ap.parse_args()
     adir = country_data_dir(args.country) / "analogues"
+    vect = None
+    if args.typage == "vectoriel":
+        g = pd.read_csv(ROOT / "inputs" / "analogues" / "glim_points_classes.csv", keep_default_na=False)
+        vect = {i.lower(): x for i, x in zip(g.id, g.xx)}       # appariement insensible à la casse (AnKaranabO)
     grid, head = read_ascii_grid(adir / "glim" / "ex" / "glim_wgs84_0point5deg.txt.asc")
-    src = load_sources(adir / "recharge_mondiale" / "figshare_23592666" / "1_Ground-based-estimates.xlsx", grid, head)
+    src = load_sources(adir / "recharge_mondiale" / "figshare_23592666" / "1_Ground-based-estimates.xlsx", grid, head, vect)
     b = src.dropna(subset=["bgs"])
     accord = f"{float((b.bgs == b.aquifer).mean()):.0%} sur {len(b)} sites" if len(b) else "non mesurable"
     lo = loco(src)
@@ -180,7 +186,8 @@ def main() -> None:
     cov = pd.read_csv(country_data_dir(args.country) / "nappes_mondiales" / "covariables_hc6.csv")
     j = [int(np.argmin((cov.lat - la) ** 2 + (cov.lon - lo_) ** 2)) for la, lo_ in zip(sites.lat, sites.lon)]
     sites["P"], sites["PET"], sites["Aridity"] = cov.LTA_P_mmpa.to_numpy()[j], cov.LTA_PET_mm.to_numpy()[j], cov.Aridity.to_numpy()[j]
-    sites["aquifer"] = aquifer(glim_class(sites.lat, sites.lon, grid, head))
+    sites["aquifer"] = (aquifer([vect.get(f"mdg_{s}".lower(), "") for s in sites.site]) if vect is not None
+                        else aquifer(glim_class(sites.lat, sites.lon, grid, head)))
     sites["mondial_mm"] = 10 ** knn_log(src, sites)
     y = np.log10(sites.r_mm)
     sites["mondial_gagne"] = np.abs(np.log10(sites.mondial_mm) - y) < np.abs(np.log10(sites.t2_mm) - y)
@@ -191,8 +198,17 @@ def main() -> None:
     ordre = bool(sed.any() and (~sed).any() and sites.mondial_mm[sed].median() > sites.mondial_mm[~sed].median())
     t2 = {"rho": float(rho), "p": float(p), "ordre": ordre, "soutenue": bool(rho > 0 and p < 0.05 and ordre)}
     vd = ROOT / "validation"
-    (vd / "transfert_analogues.md").write_text(report(len(src), accord, lo, t_lo, h, sites, t1, t2), encoding="utf-8")
-    sites[["site", "source", "aquifer", "r_mm", "mondial_mm", "t2_mm", "mondial_gagne"]].round(1).to_csv(vd / "transfert_analogues_madagascar.csv", index=False)
+    suf = "" if vect is None else "_vectoriel"
+    txt = report(len(src), accord, lo, t_lo, h, sites, t1, t2)
+    if vect is not None:
+        acc = float((b.bgs == b.aquifer).mean()) if len(b) else 0.0
+        ok = t1[0] >= 10 and t1[2] < 0.05 and t2["soutenue"] and acc > 0.7
+        txt = txt.replace("# Transfert de connaissances depuis des régions analogues : recharge", "# Transfert par analogues : recharge, typage par la GLiM vectorielle (reprise annoncée)")
+        verdict = "transfert démontré" if ok else "inchangée (plausible, non démontré)"
+        txt += ("\nRègle de la reprise (fixée avant calcul) : conclusion relevée à « démontré » seulement si H-T1 et H-T2 "
+                f"réussissent et si l'accord avec le BGS dépasse 70 % (ici {acc:.0%}). **Conclusion : {verdict}**.\n")
+    (vd / f"transfert_analogues{suf}.md").write_text(txt, encoding="utf-8")
+    sites[["site", "source", "aquifer", "r_mm", "mondial_mm", "t2_mm", "mondial_gagne"]].round(1).to_csv(vd / f"transfert_analogues_madagascar{suf}.csv", index=False)
     print(f"Analogues : niveau 1 {t_lo[0]}/{t_lo[1]} ; H-R1 p = {h.get('p')} ; H-T1 {t1[0]}/{t1[1]} ; H-T2 rho = {rho:+.2f}")
 
 
