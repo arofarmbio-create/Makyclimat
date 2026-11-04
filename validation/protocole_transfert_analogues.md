@@ -113,4 +113,17 @@ références) ; journal et registre (nouvelle entrée R-43).
     type du BGS sur les sites africains dépasse 70 % (sinon le typage reste jugé insuffisant).
   - Toutes les autres règles (variables, k = 5, sites, tests, seuils) restent inchangées.
   - Mise en œuvre : téléchargement lourd sur GitHub (workflow), qui ne renvoie que la classe GLiM aux points demandés.
+- 04/11/2026, **avant tout calcul de ce test** : hypothèse **H-K1 (karst)**, suggérée par les résultats (les puits
+  sédimentaires de la région de Toliara, en partie calcaires, sont sous-estimés) ; elle est donc **exploratoire à
+  Madagascar** et ne peut y être confirmée qu'avec d'autres sites.
+  - Variable : fraction karstique de la maille (WOKAM, carte mondiale des aquifères karstiques, Chen et al. 2017),
+    même définition que la colonne fkarst de la compilation de Wan ; pour les sites malgaches, lue sur WOKAM au point
+    (fraction 0 ou 1 selon que le point est dans un polygone karstique ; la définition exacte de fkarst sera vérifiée
+    et notée avant le calcul).
+  - **Test confirmatoire (sources, indépendant de Madagascar)** : ajout de la fraction karstique comme cinquième variable
+    de la distance de Gower ; en laissant chaque pays de côté, le modèle avec karst bat le modèle sans karst dans plus
+    de la moitié des pays (test du signe unilatéral, p < 0,05). **H-K1 soutenue** si ce test réussit.
+  - **Test exploratoire (Madagascar)** : H-T1 et H-T2 recalculées avec la variable karst ; rapportées comme
+    exploratoires, quelle qu'en soit l'issue.
+  - Typage GLiM : version vectorielle (reprise du 04/11).
 
