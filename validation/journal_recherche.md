@@ -850,3 +850,24 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   (risque sous-estimé) ; dans les grès et calcaires de Toliara, elle est probablement trop faible (risque surestimé).
   À écrire comme hypothèse H-R1 (biais du transfert selon le type d'aquifère) avant tout test confirmatoire.
 
+### Transfert de connaissances depuis des régions analogues : recharge (`validation/transfert_analogues.md`, R-43)
+- ✅ Protocole et mise en œuvre fixés et commités avant le calcul. Sources : Wan, Döll et Müller Schmied 2024
+  (821 estimations, CC BY 4.0), GLiM 0,5° (CC BY 3.0) ; 335 sites sources gardés (type d'aquifère connu).
+- ✅ **Niveau 1 atteint (dans les sources)** : en laissant chaque pays de côté, le transfert par analogues bat la
+  référence naïve dans 22 pays sur 29 (p = 0,004) ; erreur médiane 0,31 contre 0,49 (log10 de la recharge).
+- ✅ **H-T1 soutenue** : sur les 12 sites malgaches mesurés, le transfert mondial est plus proche de la mesure que le
+  transfert africain T2 sur 10 sites (p = 0,019). Il corrige surtout les grosses surestimations du socle (Ihazoambo :
+  87 contre 262 mm/an transférés par T2, 46 mesurés) et rapproche les sites sédimentaires de Toliara (60 contre 38).
+- ❌ **H-T2 non soutenue** : le transfert mondial ne classe pas les sites dans le bon ordre (ρ = −0,46, p = 0,14) ; il
+  sous-estime encore le sédimentaire de Toliara (60 contre 80 à 195 mesurés) et surestime le socle d'Andaboly (104
+  contre 6).
+- ❌ **H-R1 non soutenue sur la base mondiale** : le modèle africain hors d'Afrique ne surestime pas plus le socle (31 %)
+  que le sédimentaire (49 %), p = 0,95. Le biais vu à Madagascar n'est pas une règle générale.
+- ❌ Point faible repéré : la règle GLiM à 0,5° ne s'accorde avec le type d'aquifère du BGS que sur **47 %** des sites
+  africains ; à Madagascar, Nosiomby est classé « non consolidé » et Mahavelo « volcanique ». La maille de 0,5° (environ
+  55 km) est trop grossière pour typer un forage. Amélioration possible, à écrire avant tout recalcul : GLiM vectorielle
+  ou carte géologique nationale (phase 2).
+- 📌 **Verdict selon le protocole (section 5)** : niveau 1 réussi ; niveau 2 partagé (H-T1 réussie, H-T2 échouée) :
+  **transfert plausible pour l'ordre de grandeur, non démontré pour la répartition spatiale**. À ne pas présenter comme
+  démontré.
+
