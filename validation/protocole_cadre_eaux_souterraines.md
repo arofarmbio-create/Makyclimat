@@ -235,4 +235,22 @@ journal à chaque étape, réussite ou échec.
     nappe). Les deux indices d'exploitation sont publiés ; les fokontany dont la classe de risque change entre les
     deux bornes sont signalés. Aucune valeur centrale n'est retenue (pas de volume distribué par personne publié).
   - Effet non chiffré, signalé : les fuites du réseau rechargent la nappe urbaine (et la polluent).
+- 04/11/2026, **avant le calcul de la ressource** : autres usages de l'eau (demande du porteur du projet : se fonder
+  sur des statistiques publiées).
+  - Statistique nationale vérifiée (FAO AQUASTAT, fiche pays Madagascar, valeurs 2023) : prélèvement total 29,86 km³/an,
+    dont agriculture 29,54, industrie 0,20, municipal 0,12 ; **eau de surface 29,83 km³, eau souterraine 0,03 km³** ;
+    638 870 ha équipés pour l'irrigation, tous en irrigation de surface.
+  - **Constat à publier** : 0,03 km³/an (30 millions de m³) de prélèvements souterrains officiels est inférieur à la
+    seule consommation domestique de la population hors réseau à la norme Sphère (environ 30 millions d'habitants ×
+    15 L/j ≈ 0,16 km³/an, dont la majorité rurale puise dans des puits et forages). La statistique officielle ne
+    compte probablement pas l'auto-approvisionnement rural ; le calcul par la population est donc gardé.
+  - **Irrigation** : aucune irrigation par la nappe documentée à l'échelle nationale (AQUASTAT) ; non ajoutée à
+    l'indice. Signalée comme limite locale possible (petits périmètres sur puits dans le Sud).
+  - **Industrie et mines** (0,20 km³/an, source non précisée) : sans localisation publique, non ajoutées ; signalées.
+  - **Bétail** : aucun effectif officiel récent par région trouvé (l'enquête INSTAT-PNUD de l'Androy porte sur
+    2017-2018 ; la presse indique qu'il n'existe pas de statistique officielle récente pour l'Anosy et l'Androy). Piste
+    : densité de bovins de la FAO (Gridded Livestock of the World) et une norme de consommation par tête publiée. **Le
+    bétail n'est ajouté que si ces deux sources sont vérifiées avant le calcul** ; sinon l'indice reste « pression
+    domestique » et le bétail est signalé comme pression manquante, sans doute forte dans le Grand Sud.
+  - Indicateur séparé (plus tard, protocole propre) : pression urbaine sur la qualité de la nappe.
 
