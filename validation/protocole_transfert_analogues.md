@@ -126,4 +126,10 @@ références) ; journal et registre (nouvelle entrée R-43).
   - **Test exploratoire (Madagascar)** : H-T1 et H-T2 recalculées avec la variable karst ; rapportées comme
     exploratoires, quelle qu'en soit l'issue.
   - Typage GLiM : version vectorielle (reprise du 04/11).
+- 04/11/2026, **avant le calcul de H-K1** : définition de la fraction karstique vérifiée (documentation ReWaterGAP,
+  résumé de Wan et al. 2024, WRR, doi:10.1029/2023WR036182, éq. 4) : f_karst = min(0,9 ; Σ part_i × aire karstique_i /
+  aire continentale de la maille de 0,5°), part = 0,4 pour le karst discontinu et 0,9 pour le karst continu ou mixte.
+  Sites malgaches : même formule appliquée à WOKAM v1 (BGR ; couche non redistribuée, licence BGR), valeurs dans
+  `inputs/analogues/fkarst_mdg.csv` (0 pour les sites absents du fichier). La compilation de Wan fournit fkarst pour
+  les sites sources (colonne « fkarst »).
 
