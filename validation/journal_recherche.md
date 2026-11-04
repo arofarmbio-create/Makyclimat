@@ -815,3 +815,20 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   dans MGMERL. La carte v2 repose donc sur toutes les données MGMERL disponibles ; les 10 régions sans mesure le
   restent. Pas de carte v3 nécessaire pour l'instant.
 
+### Ressource en eau souterraine v1 (carte v2) : recharge, stock, renouvellement, risque (`validation/nappes_ressource.md`)
+- ✅ Règles fixées avant le calcul (protocole-cadre, 03-04/11) : norme Sphère 15 L/j, fourchette d'Antananarivo,
+  autres usages non comptés faute de données vérifiées (bétail : licence de la carte FAO de densité incertaine,
+  normes publiées de 9 à 50 L par tête et par jour ; irrigation et industrie sans localisation).
+- 📊 Renouvellement (valeurs centrales) : 41 % renouvelable (moins de 10 ans), 45 % lent, 13 % peu renouvelable. Les
+  plus longs : Menabe 245 ans, Melaky 173, Boeny 163, Atsimo-Andrefana 131 (recharge faible, socle profond) ; les
+  plus courts sur la côte est (2 à 3 ans).
+- 📊 Risque d'épuisement (pression domestique) : 93 % faible, 6 % modéré, 1 % élevé (2 % à 20 L, 6 % à 50 L).
+- 📊 **Antananarivo** : risque élevé dans 13 % des 192 fokontany si le réseau JIRAMA dessert 47 % de la population,
+  **86 % s'il est coupé** ; 145 fokontany changent de classe. La desserte réelle du réseau est le facteur dominant du
+  risque en ville.
+- ❌ **Limites qui biaisent le risque vers le bas dans le Grand Sud** : (1) la recharge transférée surestime d'un
+  facteur 3 à 30 aux sites suivis (6 à 48 mm/an mesurés contre 77 à 262 transférés) ; (2) le bétail abreuvé aux
+  puits n'est pas compté. Le risque « faible » du Sud n'est donc pas une conclusion ; c'est une borne basse.
+- 📌 Niveau de preuve : approximation non validée. Améliorations possibles sans le ministère : recharge du Sud par
+  fluctuation de nappe (capteurs HT jusqu'en 2026, puits GROSoM), bétail si une source est vérifiée.
+

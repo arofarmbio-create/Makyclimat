@@ -159,6 +159,13 @@ def report(r: pd.DataFrame, reg: pd.DataFrame, matched: float, wtf: pd.DataFrame
           "|---|---|---|---|---|---|"]
     for x in reg.sort_values("region").itertuples():
         L.append(f"| {x.region} | {x.r_mm:.0f} | {x.v_mm:.0f} | {x.tau_ans:.0f} | {x.exploitation:.3f} | {x.eleve:.0%} |")
+    cua = r[r.adm2.isin(list(SURFACE_NETWORK))]
+    if len(cua):
+        L += ["", f"Commune urbaine d'Antananarivo ({len(cua)} fokontany) : risque élevé dans {float((cua.risque == 'élevé').mean()):.0%} "
+              f"des fokontany si le réseau JIRAMA dessert 47 % de la population, {float((cua.risque_sans_reseau == 'élevé').mean()):.0%} "
+              f"s'il est coupé ; {int(cua.bascule_antananarivo.sum())} fokontany changent de classe entre les deux."]
+    L += ["", "Non comptés (aucune donnée publique vérifiée) : bétail, irrigation par la nappe, industrie et mines. L'indice mesure la "
+          "pression **domestique** ; dans le Grand Sud, le bétail abreuvé aux puits l'augmente sans doute fortement."]
     if wtf is not None and len(wtf):
         L += ["", "Contrôle local (sites MGMERL suivis, recharge par fluctuation de nappe, H-C6) :", "",
               "| Site | Fluctuation de nappe (mm/an) | Transfert T2 (mm/an) |", "|---|---|---|"]
@@ -190,7 +197,9 @@ def main() -> None:
     fk["groupe"] = rt.Aquifer_group.fillna("").to_numpy()[j]
     import etude_seam as S
     fac, matched = commune_factor(units, S.load_communes(cdir / "seam_raw"))
-    fk["pop_ajustee"] = fk["pop"] * fk.adm3.map(fac).fillna(1.0) * (1 - fk.adm2.map(SURFACE_NETWORK).fillna(0.0))
+    pop_seam = fk["pop"] * fk.adm3.map(fac).fillna(1.0)
+    fk["pop_ajustee"] = pop_seam * (1 - fk.adm2.map(SURFACE_NETWORK).fillna(0.0))   # borne basse : réseau qui dessert
+    fk["pop_sans_reseau"] = pop_seam                                                # borne haute : coupures (Antananarivo)
     fk["conductivite_us"] = np.nan
     if args.conductivite:
         ec = pd.read_csv(args.conductivite)
@@ -199,6 +208,10 @@ def main() -> None:
                            "ec": pd.to_numeric(ec["Conductivité électrique (uS/cm)"], errors="coerce")}).dropna()
         fk["conductivite_us"] = nearest_values(fk.lat, fk.lon, ec.lat, ec.lon, ec.ec, EC_RADIUS_KM)
     r = compute(fk)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        r["exploitation_sans_reseau"] = withdrawals_mm(fk.pop_sans_reseau, fk.area_km2) / fk.r_mm
+    r["risque_sans_reseau"] = worsen(label(r.exploitation_sans_reseau, CLASSES), (fk.conductivite_us > EC_LIMIT).to_numpy())
+    r["bascule_antananarivo"] = fk.adm2.isin(list(SURFACE_NETWORK)).to_numpy() & (r.risque != r.risque_sans_reseau)
     r["region"] = r.adm1.map(names)
     reg = r.groupby("region").agg(r_mm=("r_mm", "median"), v_mm=("v_mm", "median"), tau_ans=("tau_ans", "median"),
                                   exploitation=("exploitation", "median"), eleve=("risque", lambda s: float((s == "élevé").mean()))).reset_index()
@@ -211,9 +224,10 @@ def main() -> None:
     if not args.sortie_test:
         cols = {"r_mm": "recharge_mm_an", "r_bas_mm": "recharge_bas80_mm_an", "r_haut_mm": "recharge_haut80_mm_an",
                 "v_mm": "stock_mm", "v_bas_mm": "stock_bas_mm", "v_haut_mm": "stock_haut_mm", "tau_ans": "renouvellement_ans",
-                "exploitation": "indice_exploitation"}
+                "exploitation": "indice_exploitation", "exploitation_sans_reseau": "indice_exploitation_sans_reseau"}
         rows = [pd.DataFrame({"pcode": r.pcode, "indicateur": ind, "valeur": r[col].astype(float).round(3)}) for col, ind in cols.items()]
         rows.append(pd.DataFrame({"pcode": r.pcode, "indicateur": "risque_epuisement", "valeur": r.risque}))
+        rows.append(pd.DataFrame({"pcode": r.pcode, "indicateur": "risque_epuisement_sans_reseau", "valeur": r.risque_sans_reseau}))
         out = pd.concat(rows, ignore_index=True)
         out = out[out.valeur.astype(str).ne("") & out.valeur.astype(str).ne("nan")]
         out.assign(date=dt.date.today().isoformat(), source=SOURCE).to_csv(cdir / "external" / "nappes_ressource.csv", index=False)
