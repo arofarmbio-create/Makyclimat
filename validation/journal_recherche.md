@@ -798,4 +798,7 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   AUC 0,18 ; 0,73 ; 0,80 ; SPI-12 Androy rang 2 au lieu de 1), **conclusions inchangées** : aucune version ne
   domine ; B et C gardent le moins d'épisodes sans correspondance (3) ; toutes classent la sécheresse du Sud parmi
   les plus fortes.
+- 📊 E1 principal (workflow 25) relancé avec décembre 2021 complet : triple collocation inchangée (apprentissage
+  2001-2015, non concerné) ; KGE aux stations modifiés d'au plus 0,01 ; H1-E1 et H1-E1b toujours non soutenues
+  (2 sur 5, p = 0,81).
 
