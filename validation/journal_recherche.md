@@ -794,4 +794,8 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - ✅ **CHIRPS 2021 réparé** (agent) : décembre 2021 n'existait sur le serveur qu'en .tif non compressé ; le script le
   gère et ne retélécharge que les jours vides. Contrôle des 25 années des 3 sources : plus aucun jour vide. E1
   (workflow 25) et §6.3 relancés.
+- 📊 E1 §6.3 recalculé avec décembre 2021 complet : chiffres légèrement modifiés (CHIRPS : 8 épisodes au lieu de 9,
+  AUC 0,18 ; 0,73 ; 0,80 ; SPI-12 Androy rang 2 au lieu de 1), **conclusions inchangées** : aucune version ne
+  domine ; B et C gardent le moins d'épisodes sans correspondance (3) ; toutes classent la sécheresse du Sud parmi
+  les plus fortes.
 
