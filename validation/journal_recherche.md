@@ -802,3 +802,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   2001-2015, non concerné) ; KGE aux stations modifiés d'au plus 0,01 ; H1-E1 et H1-E1b toujours non soutenues
   (2 sur 5, p = 0,81).
 
+### Recensement de toutes les colonnes « niveau statique / niveau d'eau » de MGMERL (04/11)
+- ✅ Recensement par la définition de la console « Ressources en eau » et le schéma des tables (tous onglets, widgets
+  et couches). Les 1 400 relevés de la fiche point d'eau sont des colonnes **combinées**, calculées à partir des
+  rapports techniques de forage (RTF) et des essais de pompage : les niveaux des RTF y sont donc déjà.
+- 📊 Tableau des autorisations ANDEA : 322 lignes, 317 niveaux statiques ; 310 identiques à la fiche point d'eau, 1 à
+  moins de 50 m ; **1 seul nouveau point localisable** (Anosy, 7,51 m). Autres colonnes du schéma (RTF « longue
+  durée », water_asset) : affichées dans aucun tableau, inaccessibles. Bulletin de sécheresse : moyennes régionales.
+- ✅ Nouveau : lectures des 16 capteurs HT Analytics, **58 713 lectures de juin 2019 au 31 mai 2026** (nos séries
+  M3 s'arrêtaient en 2025) ; sans coordonnées dans la table (rattachement par code de site à faire).
+- 📌 **Conclusion** : les 1 400 relevés (+1) constituent bien l'ensemble des niveaux statiques par forage accessibles
+  dans MGMERL. La carte v2 repose donc sur toutes les données MGMERL disponibles ; les 10 régions sans mesure le
+  restent. Pas de carte v3 nécessaire pour l'instant.
+
