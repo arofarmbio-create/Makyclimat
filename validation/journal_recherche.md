@@ -899,3 +899,21 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   Le karst agit sans doute sur la **dynamique** (infiltration rapide) plus que sur la moyenne climatique des analogues :
   c'est précisément ce que THMS permet de tester (H-M3).
 
+### Test THMS (mémoire hydrique du sous-sol) dans le Grand Sud (`validation/thms_test_sud.md`, R-44)
+- ✅ Protocole fixé et commité avant le calcul ; idée du porteur du projet (note gardée hors du dépôt public). Précision
+  de mise en œuvre : capacité du sol prise dans une grille fixe de 8 valeurs (25 à 400 mm) pour un calage rapide.
+  12 sites (7 capteurs HT sur le socle, 5 puits GROSoM karstiques de Toliara) ; calage sur 60 %, validation sur 40 %.
+- ❌ **H-M1 non soutenue** : le modèle à plusieurs mémoires choisi par l'AIC ne bat la mémoire unique en validation que
+  sur 2 sites sur 12 (Andaboly 0,03 → 0,24 ; Nosiomby 0,48 → 0,62) ; l'AIC garde une seule mémoire sur 7 sites.
+  Selon la règle fixée, **pas d'extension nationale** de THMS sous cette forme.
+- ❌ Ajustements faibles sur plusieurs sites (KGE de validation négatif à Sihanamaro, Ankazomanga P06 ; −20 à
+  Ankaramena, probablement un décalage du capteur entre calage et validation) ; Sy souvent à sa borne : le rapport
+  recharge / Sy est mal identifié avec 1 à 3 ans de données par site.
+- 📊 **Signal exploratoire (H-M2, H-M3), cohérent avec le karst** : les 5 puits karstiques de Toliara sont tous
+  décrits par **une seule mémoire rapide** (temps de 1 à 10 jours sur 4 d'entre eux, 55 jours sur P06), alors que les
+  sites du socle retenant 2 ou 3 mémoires ont une part rapide faible (0,07 à 0,49) et une partie lente. Le karst agit
+  donc bien sur la **dynamique** (transfert rapide), ce que la variable de distance de H-K1 ne voyait pas. Ce n'est
+  pas une preuve : peu de sites, hypothèse suggérée en partie par ces mêmes données.
+- 📌 Pour un test probant de THMS : séries plus longues (5 ans et plus), plus de sites hors du Sud (ministère),
+  séparation du ruissellement, et un test spatial (paramètres prédits par la géologie sur des sites non calés).
+
