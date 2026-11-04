@@ -917,3 +917,20 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Pour un test probant de THMS : séries plus longues (5 ans et plus), plus de sites hors du Sud (ministère),
   séparation du ruissellement, et un test spatial (paramètres prédits par la géologie sur des sites non calés).
 
+### Atlas des nappes par bassin versant, v1 (`validation/atlas_bassins.md`)
+- ✅ Protocole fixé avant calcul. 108 grands bassins ; fiches : niveau statique, fiabilité, recharge, stock,
+  renouvellement, bilan prélèvements / recharge, relief, eau du sol. Fichier `external/nappes_bassins.csv`.
+- 📊 **Fiabilité** : 9 bassins « mesurés » (2,9 millions d'habitants, tous dans le Sud et le Sud-Ouest : Saint
+  Augustin, Berano, Marolinta, Androka, Antaritarika, Farafangana…), 75 « partiels » (17,8 millions), 24 « non mesurés »
+  (3,3 millions). Le plus grand bassin habité (n° 1, Boanamary, 56 000 km², 4,8 millions d'habitants, Antananarivo
+  compris) n'a que 31 relevés et reste « partiel » ; celui de la Tsiribihina (3,4 millions) n'en a qu'un.
+- 📊 **À l'échelle du bassin, la pression domestique est faible partout** : bilan prélèvements / recharge de 0,018 au
+  plus (médiane 0,002), même avec le réseau d'Antananarivo coupé (0,005 pour le bassin n° 1). La pression sur la nappe
+  est donc un problème **local** (fokontany denses, villes, Sud aride), dilué à l'échelle du bassin. Bilans les plus forts
+  dans les petits bassins côtiers arides du Sud-Ouest (recharge de 6 à 28 mm/an).
+- ❌ Limites : recharge non validée (biais selon la géologie) ; bétail, irrigation et industrie non comptés ; noms de
+  bassins non uniques (nom de la localité de l'embouchure) : numéro ajouté ; population totale rattachée 24,1 millions
+  (fokontany dont le point tombe hors d'un grand bassin non comptés).
+- 📌 Suite : bassins hydrogéologiques (lignes de partage de la nappe) dans les plaines côtières où ils peuvent
+  s'écarter des bassins de surface ; demande ciblée au ministère pour les bassins n° 1 et Tsiribihina.
+

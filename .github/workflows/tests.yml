@@ -83,6 +83,7 @@ jobs:
           python tests/test_recharge_fluctuation.py
           python tests/test_transfert_analogues.py
           python tests/test_thms.py
+          python tests/test_atlas_bassins.py
           python tests/test_nappes_mgmerl.py
           python tests/test_relief_e1.py
           python tests/test_mct_era5.py
