@@ -168,3 +168,127 @@ Mis à jour à chaque étape. Dernière mise à jour : 03/11/2026, 08 h 45 UTC.*
 | `scripts/glim_vecteur_inspect.py`, `scripts/glim_vecteur_mdg.py`, `scripts/fkarst_mdg.py` | nouveaux, non commités |
 | `.gitignore` | deux lignes ajoutées, non commité |
 
+
+## 09/11/2026 : base BushProof / DDC « Contribution à l'hydrogéologie du Sud de Madagascar » ; chlorure de la pluie
+
+### 1. Conditions d'utilisation (citées mot pour mot)
+
+- Page d'accueil https://hydro-madagascar.weebly.com/, rubrique « Condition d'utilisation et citation » (lue le
+  09/11/2026) : « Toutes les données sur ce site sont libres d'accès et peuvent être librement utilisées. Il est par
+  contre interdit de les vendre ou de s'en approprier la propriété intellectuelle. Ces données sont mises à la
+  disposition du public grâce au soutien de la Direction du Développement et de la Coopération de la Confédération
+  suisse, Berne et de BushProof Sàrl, Antananarivo. » Même page, rubrique « Méthodologie » : « Toutes les données
+  regroupées pour la réalisation de ces travaux sont libre d'accès et doivent être mises à disposition de tous. »
+- Citation demandée (même page et `Citation_référence.pdf` du dépôt de fichiers) : « Al-Zoubaidy M., Monteleone M. et
+  Bünzli, M. - A., 2023, Contribution à l'hydrogéologie du Sud de Madagascar, Base de données géoréférencées et site
+  interactif https://hydro-madagascar.weebly.com/ ; Editeurs: Direction pour le Développement et la Coopération,
+  Berne et BushProof Sàrl, Antananarivo. » Le PDF de citation donne une seconde forme avec l'adresse
+  qgis.bushproof.com.
+- qgis.bushproof.com : simple index Apache de fichiers, sans autre condition. Le catalogue des données (PDF de
+  66 pages) n'en contient pas non plus. Le billet RWSN du 09/10/2023
+  (https://rwsn.blog/2023/10/09/hydrogeology-of-southern-madagascar-new-mapping-tool/) reprend les mêmes conditions
+  en anglais. Aucune licence nommée (ni CC ni autre).
+
+### 2. Téléchargement : serveur disparu, copies partielles de la Wayback Machine
+
+- **Échec du serveur d'origine** : `https://qgis.bushproof.com/content/Hydro%20Sud%20Madagascar/?`, 3 essais
+  (06 h 03, 06 h 06 et 06 h 16 UTC) : `curl: (6) Could not resolve host: qgis.bushproof.com`. Confirmé par deux
+  résolveurs publics : `*** dns.google can't find qgis.bushproof.com: Non-existent domain` (8.8.8.8), même réponse
+  avec 1.1.1.1 ; `bushproof.com` résout toujours (50.6.5.9). Le sous-domaine a été supprimé.
+- **Wayback Machine** : index du répertoire capturés de 2023 à septembre 2024. Le dernier index (19/09/2024) liste :
+  `Cartes thématiques/`, `Catalogue des données_Hydrogéologie Sud Madagascar_2023.pdf` (4,5 Mo),
+  `Citation_référence.pdf`, `Geopacakages QGIS/`, `Présentation_…_2023.pdf` et `Références_…_2023.pdf`. **Aucun
+  fichier Excel** dans l'index racine ni dans les captures ; l'index du dossier `Geopacakages QGIS/` n'est pas
+  archivé (« The Wayback Machine has not archived that URL »). **La base Excel n'est donc pas récupérable.**
+- **Geopackages archivés (captures de mars 2024) : tous coupés à 1 048 576 octets** (1 Mio). La troncature vient
+  de la capture elle-même : les PDF de 4,7 Mo arrivent entiers. SQLite refuse de les ouvrir (« database disk image
+  is malformed ») et la version installée de `sqlite3` (3.50.6) n'a pas `.recover` (« unknown command »).
+  Récupération partielle par lecture directe des pages SQLite (`scripts/sqlite_tronque.py`) : une couche est
+  complète si aucune page de son arbre ne manque.
+
+| Fichier (dans `data/mdg/bushproof_raw/`, ignoré par git) | Pages présentes | Contenu lisible |
+|---|---|---|
+| `Hydrogeologie.gpkg` | 256 / 1 108 | Econd générale 2 046 / 2 048, Econd basses eaux 1 039 (complète), Econd hautes eaux 338 (complète), 3 couches de direction d'écoulement ; **Forages : 65 / 2 880** (349 pages manquantes) ; couches de piézométrie absentes |
+| `Carte_thematique_ZH20.gpkg` | 256 / 915 | forages exploités 685 + abandonnés 111, failles, dykes : **complets** |
+| `Carte_thematique_ZH30.gpkg` | 256 / 545 | 6 couches de forages (267) : **complètes** |
+| `Carte_thematique_ZH40.gpkg` | 256 / 757 | 5 couches de forages (400) : **complètes** |
+| `Climat.gpkg` | 256 / 52 400 | stations (24), isohyètes 2009-2013, tableau P-ETI ; le reste manque |
+| `Geographie.gpkg` | 256 / 121 251 | 105 communes ; le reste manque |
+| `Catalogue_donnees_2023.pdf`, `Citation_reference.pdf` | entiers | descriptions des couches, citation |
+
+- **Échecs Wayback** (3 essais par URL, 2 min d'écart) :
+  - `Geologie.gpkg` : `curl: (56) Recv failure: Connection was reset`, puis deux fois `curl: (6) Could not resolve
+    host: web.archive.org` ;
+  - `Hydrologie.gpkg` : trois réponses HTTP 429 ;
+  - `Carte_thematique_ZH10.gpkg` : deux séries de 3 essais (429, `curl: (6) …`, `curl: (56) schannel: server closed
+    abruptly (missing close_notify)`, 429).
+
+  Les 429 (« Too Many Requests ») sont venus malgré une seule requête à la fois. Le résolveur DNS local a aussi
+  échoué par intermittence (`DNS request timed out`).
+- **Firecrawl** : crédits épuisés (« Insufficient credits for this connected-app request ») ; pages lues avec curl.
+
+### 3. Inventaire (`data/mdg/bushproof_inventaire.json`, sans donnée brute ; `scripts/bushproof_inventaire.py`)
+
+- **Forages réunis** : 1 487 forages distincts (dédoublonnés par ID) sur 2 880 annoncés. Les zones ZH20 (820),
+  ZH30 (267) et ZH40 (400) sont complètes ; **la zone ZH10 manque** (son fichier n'a pas pu être téléchargé).
+  Emprise : 43,874 à 46,600 E ; −25,508 à −23,038. Régions : Atsimo Andrefana et Androy.
+- **152 colonnes** (liste dans le JSON) ; colonnes clés : `Cl-_mg/l`, `DateChimie`, `NO3-_mg/l`, `EC_µ/cm`, `SWL_m`,
+  `DateSWL`, `QPal1…5_m3/h`, `Rabat1…5_m`, `Qexpl_m3/h`, `Tran_m2/s`, `TypeAquif1…3`, `Lat_DD`, `Long_DD`,
+  `Région`, `ZH_code`, `Alt_DEM_m`, `NivPiezo_m`.
+- **Chlorure** : 559 forages avec Cl mesuré et positif (aucune valeur censurée « < »), dont 558 avec une date de
+  chimie et 516 avec du nitrate. Par type d'aquifère (`TypeAquif1`) : fracturé 536, poreux 10, fissuré 2, non
+  renseigné 11, karstique 0. Par région : Atsimo Andrefana 311, Androy 248.
+- **Unité du chlorure : mg/L, vérifiée** de trois façons :
+  - nom de la colonne ;
+  - page Hydrogéologie du site : « Cl-_mg/l= Concentration de ion chlore en mg/l » ;
+  - balance ionique calculée en mg/L sur 556 analyses complètes : erreur médiane −1,8 %, 85 % des analyses à moins
+    de 10 %. En meq/L, la balance serait fausse.
+- **Types d'aquifère (tous forages)** : fracturé 639, poreux 26, fissuré 2, karstique 2, non renseigné 818.
+- **Autres effectifs** :
+  - date de chimie : 980 ;
+  - nitrate : 517 ;
+  - conductivité : 1 133 ;
+  - niveau statique : 1 121, dont 734 datés ;
+  - essai de pompage (débit et rabattement du 1er palier) : 551 ;
+  - débit d'exploitation : 620.
+- **Basses eaux et hautes eaux : 0 forage mesuré aux deux saisons.** La table n'a qu'un `SWL_m`/`DateSWL` et une
+  `DateChimie` par forage, et les couches saisonnières en sont des sous-ensembles. Vérifié sur les couches de
+  conductivité (complètes) : 1 039 forages en basses eaux, 338 en hautes eaux, aucun identifiant commun. Les couches
+  de piézométrie saisonnières (734 et 215 annoncés) ne sont pas dans la partie lisible, mais elles sont construites
+  de la même façon (« forages possédant une mesure de niveau statique prise durant les périodes de saison sèche »).
+- **Quantiles du chlorure (10, 50 et 90 %, par type et par région) : calculés mais scellés** dans
+  `data/mdg/bushproof_inventaire_cl_scelle.json` (ignoré par git, non affiché). Le protocole
+  `validation/protocole_recharge_chlorure.md` (section 4) impose de choisir le dépôt de chlorure avant toute lecture
+  des chlorures de la nappe.
+- **Biais** : la zone ZH10 manque, et les zones ZH20 à ZH40 sont presque uniquement du socle fracturé (536 des
+  559 forages avec Cl). Avec ces données, le test ne pourra rien dire du karst (H-Cl3).
+
+### 4. Chlorure dans la pluie : sources trouvées
+
+Aucune mesure publiée du chlorure de la pluie dans le Sud de Madagascar n'a été trouvée.
+
+| Source | Ce qui est vérifié | Valeurs |
+|---|---|---|
+| Rabemanana V., Violette S., de Marsily G., Robain H., Deffontaines B., Andrieux P., Bensimon M., Parriaux A. (2005). Origin of the high variability of water mineral content in the bedrock aquifers of Southern Madagascar. *Journal of Hydrology* 310, 143-156, doi:10.1016/j.jhydrol.2004.11.025 | résumé seulement (notices EPFL et manuscript.isc.ac) : sels marins apportés par la pluie, concentrés par évaporation ; conductivités de 300 à 30 000 µS/cm | aucune valeur pour la pluie ; texte intégral payant. La thèse (Rabemanana 2002, Paris VI) est sur le serveur IRD, « Site en maintenance » ce jour |
+| Van Wyk E., van Tonder G. J., Vermeulen D. (2011). Characteristics of local groundwater recharge cycles in South African semi-arid hard rock terrains: rainwater input. *Water SA* 37(2) | texte intégral en ligne (SciELO), lu par extraction automatique : à recontrôler sur le PDF | pluie d'été de l'intérieur : 0,3 à 0,5 mg/L (moyennes harmoniques de 0,4 en pointe, 0,8 en début et 1,0 en saison sèche) ; côte du Cap : 3,5 à 16,8 mg/L ; Langebaan Road : 5 à 10 mg/L ; dépôt total de 260 mg/m²/an (Kuruman, Beaufort West, Vryburg, Pretoria Est), dont environ 80 mg/m²/an de dépôt sec ; dépôt sec « approximately 400 mg·m2·yr-1 » pour l'Afrique australe (d'après Eriksson 1960 et Gieske 1992). Pas d'équation en fonction de la distance à la côte |
+| Guan H., Love A. J., Simmons C. T., Makhnin O., Kayaalp A. S. (2010). Factors influencing chloride deposition in a coastal hilly area and application to chloride deposition mapping. *HESS* 14, 801-813, doi:10.5194/hess-14-801-2010 (CC BY 3.0) | **PDF lu** (tableau 1) | Mount Lofty, Australie du Sud, 17 sites : 3,7 à 12,2 mg/L et 1,33 à 6,97 g/m²/an ; la distance à la côte explique 70 % de la variabilité. Analogue de méthode, sous un climat différent |
+| Banks E. W., Cook P., Owor M., Kebede S., Mleta P., Bonsor H., MacDonald A. (2018). Chloride deposition in rainfall to estimate regional groundwater recharge in Africa. EGU2018-14713 (CC BY 4.0) | **résumé lu** | revue des mesures africaines d'au moins un an, en vue d'une carte régionale ; aucune valeur ; publication finale non trouvée |
+| Ferrer N., Folch A., Thomas M. (2019). Gro for GooD project Chloride rainwater results, Kwale County, Kenya. BGS, doi:10.5285/e5c1dd99-f97b-4670-9d78-c2ae6133a722 (Open Government Licence) | fiche lue | chlorure mensuel de la pluie (mg/L), 11 stations, avril 2016 à novembre 2017, côte du Kenya (océan Indien occidental) ; **valeurs non lues** (accès par la page d'accessions BGS, en JavaScript) |
+| Vet R. et al. (2014). A global assessment of precipitation chemistry and deposition… *Atmospheric Environment* 93, 3-100, doi:10.1016/j.atmosenv.2013.10.060 | notice seulement | cartes mondiales des ions majeurs annoncées ; figures non vues |
+| GROSoM (Carrière et al. 2021, *Hydrol. Process.* 35:e14108 ; Carrière et al. 2023, *Hydrogeology Journal* 31, 2337-2346) | résumés | isotopes et piézométrie ; **aucune mesure de chlorure de la pluie** trouvée (Wiley : HTTP 403 ; Springer : authentification ; IRD en maintenance) |
+| Fareze L. P. et al., Isotope characterization of shallow aquifers in the Horombe region (arXiv:1204.1500) | **PDF lu** | isotopes de la pluie, pas de chlorure de la pluie |
+
+Pistes non abouties :
+- thèses de Rabemanana (2002), Garo (2012) et Guyot (2002) ;
+- rapport JICA de 2006 (le DNS de openjicareport.jica.go.jp a échoué ce jour) ;
+- données de Kwale, à obtenir par la page d'accessions du BGS.
+
+### Fichiers produits ou modifiés
+
+| Fichier | Statut git |
+|---|---|
+| `data/mdg/bushproof_raw/` (7 geopackages tronqués, 2 PDF, CSV récupérés dans `recuperation/`) | ignoré (`data/*/bushproof_raw/`, vérifié par `git check-ignore`) |
+| `data/mdg/bushproof_inventaire.json` | versionnable (effectifs et colonnes seulement) |
+| `data/mdg/bushproof_inventaire_cl_scelle.json` | ignoré (quantiles scellés) |
+| `scripts/bushproof_inventaire.py`, `scripts/sqlite_tronque.py` | nouveaux, non commités |
+| `.gitignore` | trois lignes ajoutées, non commité |

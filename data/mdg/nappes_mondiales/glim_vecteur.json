@@ -1,0 +1,15 @@
+{
+ "statut": "téléchargement en cours (09/11/2026) : découpe et surfaces non encore calculées",
+ "url_page_source": "https://www.geo.uni-hamburg.de/en/geologie/forschung/aquatische-geochemie/glim.html",
+ "url_fichier": "https://www.dropbox.com/s/9vuowtebp9f1iud/LiMW_GIS%202015.gdb.zip?dl=1",
+ "fichier": "LiMW_GIS_2015.gdb.zip (géodatabase ESRI, 1 138 691 332 octets annoncés par le serveur)",
+ "version": "LiMW_GIS 2015 : version SIG de la Lithological Map of the World (CCGM 2015), fondée sur GLiM v1.1 selon CSDMS (https://csdms.colorado.edu/wiki/Alldata:GLiM) ; ni v1.0 ni v1.2 au sens strict",
+ "citation": "Hartmann J., Moosdorf N. (2012). The new global lithological map database GLiM: A representation of rock properties at the Earth surface. Geochemistry, Geophysics, Geosystems 13, Q12004, doi:10.1029/2012GC004370",
+ "licence": "non indiquée sur la page de l'Université de Hambourg ni sur le lien Dropbox ; CC BY 3.0 vérifiée seulement pour la version grillée 0,5° (PANGAEA, doi:10.1594/PANGAEA.788537). À confirmer avant toute redistribution de polygones.",
+ "republication": "à confirmer (géométries) ; surfaces agrégées citant la source : a priori sans difficulté",
+ "emprise": [43.0, -26.0, 51.0, -11.5],
+ "telecharge_le": null,
+ "n_polygones_madagascar": null,
+ "surfaces_niveau1": null,
+ "calcul": "scripts/glim_vecteur_mdg.py (surfaces en projection d'Albers équivalente centrée sur Madagascar)"
+}
