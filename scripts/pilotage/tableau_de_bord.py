@@ -1,8 +1,8 @@
 """Tableau de bord LOCAL de la thèse et de MakyClimat — aucun modèle, aucun token.
 
-Lit : pilotage/objectifs.yml (objectifs, tâches, blocages, téléchargements), pilotage/etat/agents.jsonl (écrit par
-les hooks de Claude Code), validation/journal_recherche.md (verdicts des hypothèses), git et GitHub (gh).
-Écrit : pilotage/tableau_de_bord.html (rafraîchissement automatique toutes les 30 s).
+Lit (fichiers locaux, hors dépôt) : pilotage/objectifs.yml, pilotage/protocole_suivi.yml, pilotage/glossaire.yml,
+pilotage/etat/agents.jsonl (écrit par les hooks de Claude Code) ; et validation/journal_recherche.md (verdicts des
+hypothèses), git, GitHub (gh). Écrit : pilotage/tableau_de_bord.html (rafraîchi toutes les 30 s).
 Usage : python scripts/pilotage/tableau_de_bord.py            (une fois)
         python scripts/pilotage/tableau_de_bord.py --boucle   (régénère toutes les 30 s ; Ctrl+C pour arrêter)
 """
@@ -27,6 +27,9 @@ _gh_cache: dict = {"t": 0.0, "runs": []}
 
 VERDICT = re.compile(r"\*\*(H-[A-Za-z0-9-]+)[^*]*?(non soutenue|soutenue|robuste|non confirmée|non vérifiée)")
 SECTION = re.compile(r"^###\s+(.*)")
+FAMILLE = {"H-R": "contrôle de T2 par des bornes africaines (T2c)", "H-L": "T2 corrigée par les mesures malgaches (T2L)",
+           "H-K": "karst", "H-Cl": "bilan de chlorure", "H-P": "puits à sec", "H-C": "carte des nappes",
+           "H-B": "bassins hydrogéologiques", "H-M": "mémoire du sous-sol (THMS)", "H-N": "océan et nappes"}
 
 
 def run(cmd: list[str], timeout: int = 20) -> str:
@@ -36,15 +39,17 @@ def run(cmd: list[str], timeout: int = 20) -> str:
         return ""
 
 
-def lire_objectifs() -> dict:
+def lire(nom: str) -> dict:
     try:
-        return yaml.safe_load((PIL / "objectifs.yml").read_text(encoding="utf-8")) or {}
+        return yaml.safe_load((PIL / nom).read_text(encoding="utf-8")) or {}
+    except FileNotFoundError:
+        return {}
     except Exception as e:
-        return {"erreur": f"objectifs.yml illisible : {e}"}
+        return {"erreur": f"{nom} illisible : {e}"}
 
 
-def agents() -> tuple[list[dict], list[dict]]:
-    """Agents en cours (SubagentStart sans SubagentStop) et derniers lancements (PreToolUse sur Agent)."""
+def agents():
+    """Agents en cours (SubagentStart sans SubagentStop), derniers lancements, dernières fins."""
     p = PIL / "etat" / "agents.jsonl"
     rows = []
     if p.exists():
@@ -53,20 +58,19 @@ def agents() -> tuple[list[dict], list[dict]]:
                 rows.append(json.loads(line))
             except Exception:
                 pass
-    started, stopped = {}, set()
+    started, stopped = {}, {}
     for r in rows:
-        if r.get("evenement") == "SubagentStart" and r.get("agent_id"):
+        if r.get("agent_id") and r.get("evenement") == "SubagentStart":
             started[r["agent_id"]] = r
-        elif r.get("evenement") == "SubagentStop" and r.get("agent_id"):
-            stopped.add(r["agent_id"])
+        elif r.get("agent_id") and r.get("evenement") == "SubagentStop":
+            stopped[r["agent_id"]] = r
     en_cours = [r for a, r in started.items() if a not in stopped]
-    lancements = [r for r in rows if r.get("evenement") == "PreToolUse"][-8:][::-1]
-    fins = {r["agent_id"]: r for r in rows if r.get("evenement") == "SubagentStop" and r.get("agent_id")}
-    return en_cours, lancements, list(fins.values())[-5:][::-1]
+    lancements = [r for r in rows if r.get("evenement") == "PreToolUse"][-6:][::-1]
+    return en_cours, lancements, list(stopped.values())[-4:][::-1]
 
 
 def hypotheses() -> list[tuple[str, str, str]]:
-    """(section du journal, hypothèse, verdict), dans l'ordre du journal ; dernier verdict par hypothèse."""
+    """(section du journal, hypothèse, verdict) ; dernier verdict par couple section-hypothèse."""
     p = ROOT / "validation" / "journal_recherche.md"
     out, sec = {}, ""
     if p.exists():
@@ -75,13 +79,20 @@ def hypotheses() -> list[tuple[str, str, str]]:
             if m:
                 sec = re.sub(r"\s*\(`.*?`\)", "", m.group(1)).strip()
             for h, v in VERDICT.findall(line):
-                out[h] = (sec, h, v)
+                out[(sec, h)] = (sec, h, v)
     return list(out.values())
+
+
+def famille(h: str) -> str:
+    for k in sorted(FAMILLE, key=len, reverse=True):
+        if h.startswith(k):
+            return FAMILLE[k]
+    return ""
 
 
 def github() -> list[dict]:
     if time.time() - _gh_cache["t"] > GH_PERIODE_S:
-        txt = run(["gh", "run", "list", "-L", "8", "--json", "displayTitle,workflowName,status,conclusion,createdAt"])
+        txt = run(["gh", "run", "list", "-L", "6", "--json", "displayTitle,workflowName,status,conclusion,createdAt"])
         try:
             _gh_cache["runs"] = json.loads(txt) if txt else []
         except Exception:
@@ -108,41 +119,57 @@ def telechargements(obj: dict) -> list[dict]:
         elif age is None:
             etat = "absent"
         elif age > ARRET_MIN:
-            etat = "arrêté"
+            etat = "arrêté" if att else "fini"
         else:
-            etat = "en cours"
+            etat = "en_cours"
         out.append({"nom": d.get("nom", ""), "taille": taille, "attendue": att, "etat": etat,
                     "maj": dt.datetime.fromtimestamp(mtime).strftime("%d/%m %H:%M") if mtime else "-"})
     return out
 
 
 def esc(x) -> str:
-    return html.escape(str(x))
+    return html.escape(str(x if x is not None else ""))
 
 
-def mo(n) -> str:
-    return f"{n / 1e6:,.0f} Mo".replace(",", " ")
+CLS = {"fini": "ok", "soutenue": "ok", "robuste": "ok", "success": "ok",
+       "en_cours": "run", "in_progress": "run", "partiel": "warn", "non vérifiée": "warn", "queued": "todo",
+       "bloque": "ko", "arrêté": "ko", "non soutenue": "ko", "non confirmée": "ko", "failure": "ko",
+       "a_faire": "todo", "absent": "todo"}
+LIB = {"fini": "fini", "en_cours": "en cours", "bloque": "bloqué", "a_faire": "à faire", "partiel": "partiel",
+       "success": "réussi", "failure": "échec", "in_progress": "en cours", "queued": "en file"}
 
 
-CLASSE = {"fini": "ok", "en_cours": "run", "en cours": "run", "bloque": "ko", "arrêté": "ko", "a_faire": "todo",
-          "absent": "todo", "soutenue": "ok", "robuste": "ok", "non soutenue": "ko", "non confirmée": "ko",
-          "non vérifiée": "warn", "success": "ok", "failure": "ko", "in_progress": "run", "queued": "todo"}
-LIB = {"fini": "fini", "en_cours": "en cours", "bloque": "bloqué", "a_faire": "à faire"}
+def badge(etat: str) -> str:
+    return f'<span class="b {CLS.get(etat, "todo")}">{esc(LIB.get(etat, etat))}</span>' if etat else ""
 
 
 def carte(titre: str, sous: str = "", etat: str = "") -> str:
-    c = CLASSE.get(etat, "todo")
-    badge = f'<span class="b {c}">{esc(LIB.get(etat, etat))}</span>' if etat else ""
-    return f'<div class="card {c}"><div class="t">{esc(titre)} {badge}</div><div class="s">{esc(sous)}</div></div>'
+    return f'<div class="card {CLS.get(etat, "todo")}"><div class="t">{esc(titre)} {badge(etat)}</div><div class="s">{esc(sous)}</div></div>'
 
 
-def page(obj: dict) -> str:
+def table_suivi(rows: list[dict], avec_manque: bool = True) -> str:
+    tr = "".join(f'<tr><td class="code">{esc(r.get("code"))}</td><td>{esc(r.get("nom"))}</td><td>{badge(r.get("statut", ""))}</td>'
+                 f'<td>{esc(r.get("ou"))}</td>' + (f'<td class="mut">{esc(r.get("manque"))}</td>' if avec_manque else "") + "</tr>"
+                 for r in rows)
+    head = "<tr><th></th><th>Élément</th><th>État</th><th>Où on en est</th>" + ("<th>Ce qui manque</th>" if avec_manque else "") + "</tr>"
+    return f"<table>{head}{tr}</table>"
+
+
+def jauge(rows: list[dict]) -> str:
+    poids = {"fini": 1.0, "en_cours": 0.6, "partiel": 0.4, "a_faire": 0.0, "bloque": 0.0}
+    if not rows:
+        return ""
+    v = 100 * sum(poids.get(r.get("statut"), 0) for r in rows) / len(rows)
+    return f'<div class="bar"><i style="width:{v:.0f}%"></i></div><div class="mut small">{v:.0f} % (fini = 1, en cours = 0,6, partiel = 0,4)</div>'
+
+
+def page() -> str:
+    obj, suivi, glo = lire("objectifs.yml"), lire("protocole_suivi.yml"), lire("glossaire.yml")
     now = dt.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     th = obj.get("these") or {}
-    taches = obj.get("taches") or []
     en_cours, lancements, fins = agents()
     col = {"toi": [], "claude": [], "agent": [], "github": []}
-    for t in taches:
+    for t in obj.get("taches") or []:
         if t.get("statut") != "fini":
             col.setdefault(t.get("qui", "claude"), []).append(carte(t.get("nom", ""), "", t.get("statut", "")))
     for o in obj.get("objectifs") or []:
@@ -152,70 +179,82 @@ def page(obj: dict) -> str:
     for r in en_cours:
         col["agent"].insert(0, carte(f"Agent actif ({r.get('type') or 'agent'})", f"depuis {r.get('quand', '')[11:16]}", "en_cours"))
     for r in lancements:
-        col["agent"].append(carte(r.get("description") or "Agent", f"lancé le {r.get('quand', '')[8:10]}/{r.get('quand', '')[5:7]} "
-                                  f"à {r.get('quand', '')[11:16]}" + (" (arrière-plan)" if r.get("arriere_plan") else ""), ""))
+        q = r.get("quand", "")
+        col["agent"].append(carte(r.get("description") or "Agent", f"lancé le {q[8:10]}/{q[5:7]} à {q[11:16]}", ""))
     for r in fins:
         col["agent"].append(carte(f"Agent terminé ({r.get('type') or 'agent'})", f"à {r.get('quand', '')[11:16]}", "fini"))
     for d in telechargements(obj):
-        pct = f" — {100 * d['taille'] / d['attendue']:.0f} %" if d["attendue"] else ""
-        col["agent"].append(carte(f"Téléchargement : {d['nom']}", f"{mo(d['taille'])}{pct} ; dernière écriture {d['maj']}", d["etat"]))
+        pct = f" · {100 * d['taille'] / d['attendue']:.0f} %" if d["attendue"] else ""
+        col["agent"].append(carte(f"Téléchargement : {d['nom']}", f"{d['taille'] / 1e6:.0f} Mo{pct} · écrit le {d['maj']}", d["etat"]))
     for r in github():
-        etat = r.get("conclusion") or r.get("status") or ""
-        col["github"].append(carte(r.get("workflowName", ""), f"{r.get('displayTitle', '')[:70]} — {r.get('createdAt', '')[:16].replace('T', ' ')}", etat))
+        col["github"].append(carte(r.get("workflowName", ""), f"{r.get('displayTitle', '')[:60]} · {r.get('createdAt', '')[5:16].replace('T', ' ')}",
+                                   r.get("conclusion") or r.get("status") or ""))
     attente = [l for l in run(["git", "log", "origin/main..HEAD", "--format=%s"]).splitlines() if l]
     if attente:
-        col["github"].insert(0, carte(f"{len(attente)} commit(s) pas encore envoyés", attente[0][:80], "bloque"))
-    colonnes = "".join(f'<section class="col"><h2>{t}</h2>{"".join(col.get(k, [])) or "<p class=vide>rien</p>"}</section>'
-                       for k, t in (("toi", "Toi"), ("claude", "Claude"), ("agent", "Agents et téléchargements"), ("github", "GitHub")))
+        col["github"].insert(0, carte(f"{len(attente)} commit(s) à envoyer", attente[0][:70], "bloque"))
+    colonnes = "".join(f'<section><h2>{t}</h2>{"".join(col.get(k, [])) or "<p class=mut>rien</p>"}</section>'
+                       for k, t in (("toi", "Toi"), ("claude", "Claude"), ("agent", "Agents · téléchargements"), ("github", "GitHub")))
 
     objs = ""
     for o in obj.get("objectifs") or []:
         av = int(o.get("avancement", 0))
-        et = "".join(f'<li class="{CLASSE.get(e.get("statut"), "todo")}">{esc(e.get("nom"))} '
-                     f'<span class="b {CLASSE.get(e.get("statut"), "todo")}">{esc(LIB.get(e.get("statut"), e.get("statut")))}</span></li>'
-                     for e in o.get("etapes") or [])
-        objs += f'<div class="obj"><div class="t">{esc(o.get("nom"))} <b>{av} %</b></div><div class="bar"><i style="width:{av}%"></i></div><ul>{et}</ul></div>'
-
-    hyp = "".join(f'<tr><td>{esc(s)}</td><td>{esc(h)}</td><td><span class="b {CLASSE.get(v, "todo")}">{esc(v)}</span></td></tr>'
-                  for s, h, v in hypotheses()[::-1])
-    bloc = "".join(f'<tr><td>{esc(b.get("quoi"))}</td><td>{esc(b.get("effet"))}</td><td>{esc(b.get("qui_peut_debloquer"))}</td></tr>'
+        et = "".join(f'<li>{esc(e.get("nom"))} {badge(e.get("statut", ""))}</li>' for e in o.get("etapes") or [])
+        objs += f'<div class="obj"><div class="t">{esc(o.get("nom"))} <span class="num">{av} %</span></div><div class="bar"><i style="width:{av}%"></i></div><ul>{et}</ul></div>'
+    bloc = "".join(f'<tr><td>{esc(b.get("quoi"))}</td><td>{esc(b.get("effet"))}</td><td class="mut">{esc(b.get("qui_peut_debloquer"))}</td></tr>'
                    for b in obj.get("blocages") or [])
+    hyp = "".join(f'<tr><td class="code">{esc(h)}</td><td>{badge(v)}</td><td>{esc(s)}</td><td class="mut">{esc(famille(h))}</td></tr>'
+                  for s, h, v in hypotheses()[::-1])
+    gl = "".join(f'<tr><td class="code">{esc(g.get("terme"))}</td><td>{esc(g.get("sens"))}</td></tr>' for g in glo.get("termes") or [])
     commits = "".join(f"<li>{esc(l)}</li>" for l in run(["git", "log", "-8", "--format=%ad · %s", "--date=format:%d/%m %H:%M"]).splitlines())
-    err = f'<p class="ko">{esc(obj["erreur"])}</p>' if obj.get("erreur") else ""
+    errs = "".join(f'<p class="kot">{esc(x["erreur"])}</p>' for x in (obj, suivi, glo) if x.get("erreur"))
+
+    proto = ""
+    for cle, titre in (("modules", "Modules M0 à M7 (protocole §6)"), ("experiences", "Expériences E1 à E7 (protocole §10)"),
+                       ("hypotheses", "Hypothèses H1 à H6 (protocole §5)"), ("livrables", "Livrables L1 à L6 (prompt maître §15)")):
+        rows = suivi.get(cle) or []
+        proto += f'<details open><summary>{titre}</summary>{jauge(rows)}{table_suivi(rows, cle in ("modules", "experiences"))}</details>'
 
     return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="refresh" content="{PERIODE_S}">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Pilotage MakyClimat</title><style>
-:root{{--bg:#f6f7f9;--fg:#1d2330;--mut:#667085;--card:#fff;--line:#e3e6eb;--ok:#1a7f4b;--ko:#c0362c;--run:#1f5fbf;--warn:#a96b00;--todo:#667085}}
-@media (prefers-color-scheme:dark){{:root{{--bg:#12151b;--fg:#e6e9ef;--mut:#98a2b3;--card:#1b2029;--line:#2b3240;--ok:#4cc38a;--ko:#ff6b5e;--run:#6ea8ff;--warn:#f0b54a;--todo:#98a2b3}}}}
-body{{margin:0;padding:16px;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,Segoe UI,sans-serif}}
-h1{{font-size:20px;margin:0}} h2{{font-size:15px;margin:0 0 8px}} .mut{{color:var(--mut)}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}}
-.col{{background:transparent}} .card{{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--todo);border-radius:8px;padding:8px 10px;margin-bottom:8px}}
-.card.ok{{border-left-color:var(--ok)}} .card.ko{{border-left-color:var(--ko)}} .card.run{{border-left-color:var(--run)}} .card.warn{{border-left-color:var(--warn)}}
-.t{{font-weight:600}} .s{{color:var(--mut);font-size:12px}} .vide{{color:var(--mut)}}
-.b{{font-size:11px;padding:1px 6px;border-radius:9px;border:1px solid currentColor;font-weight:500;white-space:nowrap}}
-.b.ok,li.ok{{color:var(--ok)}} .b.ko{{color:var(--ko)}} .b.run{{color:var(--run)}} .b.warn{{color:var(--warn)}} .b.todo{{color:var(--todo)}}
-.box{{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}}
-.obj{{margin-bottom:12px}} .bar{{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:4px 0}} .bar i{{display:block;height:100%;background:var(--run)}}
-ul{{margin:4px 0 0 18px;padding:0}} li{{color:var(--fg)}} table{{width:100%;border-collapse:collapse}} td{{padding:4px 6px;border-top:1px solid var(--line);vertical-align:top}}
-.two{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}} .ko{{color:var(--ko)}}
+:root{{--bg:#05080f;--panel:#0a1220;--line:#14324a;--fg:#d6f4ff;--mut:#6f93a8;--acc:#29d3ff;--ok:#3ef0a6;--ko:#ff5a6e;--run:#29d3ff;--warn:#ffc857;--todo:#6f93a8}}
+*{{box-sizing:border-box}} body{{margin:0;padding:16px;background:var(--bg);color:var(--fg);font:14px/1.45 "Segoe UI",system-ui,sans-serif;
+background-image:linear-gradient(rgba(41,211,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(41,211,255,.04) 1px,transparent 1px);background-size:32px 32px}}
+h1{{font:600 20px/1.2 Consolas,"Cascadia Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:0}}
+h2,summary{{font:600 12px/1.2 Consolas,"Cascadia Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin:0 0 10px}}
+summary{{cursor:pointer;margin:6px 0}} .mut{{color:var(--mut)}} .small{{font-size:12px}} .kot{{color:var(--ko)}}
+.head{{border:1px solid var(--line);background:var(--panel);padding:12px 14px;margin-bottom:14px}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:14px}}
+section,.box{{border:1px solid var(--line);background:var(--panel);padding:12px}}
+.card{{border:1px solid var(--line);background:#0c1728;padding:8px 10px;margin-bottom:8px}}
+.card.ok{{border-color:rgba(62,240,166,.45)}} .card.ko{{border-color:rgba(255,90,110,.6)}} .card.run{{border-color:rgba(41,211,255,.6)}} .card.warn{{border-color:rgba(255,200,87,.5)}}
+.t{{font-weight:600}} .s{{color:var(--mut);font-size:12px}}
+.b{{font:11px Consolas,monospace;padding:1px 6px;border:1px solid currentColor;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}}
+.b.ok{{color:var(--ok)}} .b.ko{{color:var(--ko)}} .b.run{{color:var(--run)}} .b.warn{{color:var(--warn)}} .b.todo{{color:var(--todo)}}
+.bar{{height:6px;border:1px solid var(--line);margin:4px 0}} .bar i{{display:block;height:100%;background:var(--acc)}}
+.num{{font-family:Consolas,monospace;color:var(--acc)}} .obj{{margin-bottom:12px}} ul{{margin:4px 0 0 18px;padding:0}}
+table{{width:100%;border-collapse:collapse;font-size:13px}} th{{text-align:left;color:var(--mut);font-weight:500;font-size:12px}}
+td,th{{padding:5px 6px;border-top:1px solid var(--line);vertical-align:top}} td.code{{font-family:Consolas,monospace;color:var(--acc);white-space:nowrap}}
+.two{{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-bottom:14px}}
+.wide{{margin-bottom:14px}} details{{margin-bottom:8px}}
 </style></head><body>
-<h1>Pilotage — thèse et MakyClimat</h1>
+<div class="head"><h1>MakyClimat · pilotage de la thèse</h1>
 <div class="mut">{esc(th.get("titre", ""))}</div>
-<div><b>Question en cours :</b> {esc(th.get("question_en_cours", ""))}</div>
-<div class="mut">Mis à jour le {now} · se rafraîchit toutes les {PERIODE_S} s · aucun token consommé</div>{err}
+<div><span class="mut">Question en cours :</span> {esc(th.get("question_en_cours", ""))}</div>
+<div class="mut small">Mis à jour le {now} · rafraîchi toutes les {PERIODE_S} s · aucun token · suivi du protocole au {esc(suivi.get("mis_a_jour", "?"))}</div>{errs}</div>
 <div class="grid">{colonnes}</div>
+<div class="box wide"><h2>Où on en est : protocole doctoral et prompt maître</h2>{proto}</div>
 <div class="two"><div class="box"><h2>Objectifs et avancement</h2>{objs}</div>
-<div class="box"><h2>Blocages</h2><table>{bloc}</table></div></div>
-<div class="two"><div class="box"><h2>Hypothèses (journal de recherche, plus récentes en haut)</h2><table>{hyp}</table></div>
-<div class="box"><h2>Dernières actions (git)</h2><ul>{commits}</ul></div></div>
+<div class="box"><h2>Blocages</h2><table><tr><th>Quoi</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc}</table></div></div>
+<div class="two"><div class="box"><h2>Hypothèses testées (plus récentes en haut)</h2><table><tr><th></th><th>Verdict</th><th>Étude</th><th>Famille</th></tr>{hyp}</table></div>
+<div class="box"><h2>Glossaire : T2, T2L, T2K…</h2><table>{gl}</table></div></div>
+<div class="box wide"><h2>Dernières actions (git)</h2><ul>{commits}</ul></div>
 </body></html>"""
 
 
 def generer() -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     tmp = OUT.with_suffix(".tmp")
-    tmp.write_text(page(lire_objectifs()), encoding="utf-8")
+    tmp.write_text(page(), encoding="utf-8")
     tmp.replace(OUT)
 
 
