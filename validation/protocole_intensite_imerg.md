@@ -51,3 +51,7 @@ Limites connues :
 ## 5. Journal des modifications
 
 - 29/10/2026 : version initiale.
+- 09/11/2026 (avant le calcul, règle « puissance avant hypothèse ») : la puissance ne peut pas être chiffrée sans le
+  nombre d'événements du périmètre, mais les unités de rééchantillonnage ne sont que 11 saisons et le protocole note
+  « peu d'événements » (2 événements indépendants pour le ruissellement SCS-CN). H1 est donc **déclarée exploratoire
+  dès maintenant** ; le rapport publiera d'abord le nombre d'événements et de jours d'événement par saison.
