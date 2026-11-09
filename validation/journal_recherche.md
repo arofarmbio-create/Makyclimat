@@ -1101,3 +1101,19 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Suite : séparer côte et trajet régional (lignes d'écoulement BushProof, isotopes) ; tester les bassins
   sédimentaires et la côte avec d'autres données ; dater les eaux (tritium, carbone 14) pour mesurer le retard des
   nappes profondes.
+
+### Analyse de puissance des tests de la recharge (`validation/analyse_puissance.md`)
+- ✅ Aucune hypothèse testée : estimation, à partir de résultats publiés, du nombre d'unités indépendantes nécessaires
+  (seuil 5 %, puissance 80 %, 4 000 simulations).
+- 📊 **Puits à sec** : le gain observé de T2L (+0,11 d'AUC) n'avait qu'environ 46 % de chances d'être déclaré avec 120
+  blocs ; le seuil de 0,05 du protocole aurait demandé environ 1 300 blocs. **Bilan de chlorure** : avec 36 blocs, ρ = 0,3
+  n'avait que 43 % de puissance (85 blocs nécessaires).
+- 📊 **Correction locale (type H-L1)** : la puissance plafonne vers 40 % et **baisse quand on ajoute des sites**, parce que
+  la dispersion entre groupes de sites (0,53 en log₁₀) dépasse la demi-largeur de l'intervalle de mesure (0,29) : la
+  règle « moitié des sites retrouvés » devient impossible. Avec une dispersion moitié moindre, 4 groupes par classe
+  suffiraient (82 %).
+- 📊 **Test prospectif** (« 60 % retrouvés ») : 41 nouveaux sites si la carte en retrouve vraiment 80 %, 177 si 70 %.
+- 📌 Conséquences : (1) nos « non soutenus de peu » sont surtout des manques de puissance ; (2) pour la correction locale,
+  il faut d'abord **réduire la dispersion** (classer les roches plus finement) et **l'incertitude de mesure** (essais de
+  pompage pour le rendement spécifique), pas seulement ajouter des sites ; (3) **règle de méthode désormais appliquée** :
+  calculer la puissance avant de fixer une hypothèse ; sous 50 %, le test est déclaré exploratoire dès le départ.
