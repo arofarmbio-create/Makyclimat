@@ -106,3 +106,8 @@ qui explique les dégâts, pas une capacité d'anticipation. Un test d'anticipat
 ## 9. Journal des modifications
 
 - 02/11/2026 : version initiale.
+- 09/11/2026 (avant le calcul, règle « puissance avant hypothèse ») : l'unité indépendante est l'activation EMS ; avec
+  7 activations, un test du signe entre événements exige 7 sur 7 (puissance 21 % si le modèle fin améliore 80 % des
+  événements, `analyse_puissance_retro.md`). Les hypothèses sont **déclarées exploratoires dès maintenant**.
+  Téléchargements ordonnés selon les règles de rythme : IMERG (NASA) après la validation MERRA-2 ; rafales ERA5
+  (Copernicus) après les reprévisions GloFAS réduites.
