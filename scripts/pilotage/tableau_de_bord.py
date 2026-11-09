@@ -1,10 +1,8 @@
-"""Tableau de bord LOCAL de la thèse et de MakyClimat — aucun modèle, aucun token.
+"""Tableau de bord local de la thèse et de MakyClimat (aucun modèle de langage, aucun appel réseau sauf `gh`).
 
-Lit (fichiers locaux, hors dépôt) : pilotage/objectifs.yml, pilotage/protocole_suivi.yml, pilotage/glossaire.yml,
-pilotage/etat/agents.jsonl (écrit par les hooks de Claude Code) ; et validation/journal_recherche.md (verdicts des
-hypothèses), git, GitHub (gh). Écrit : pilotage/tableau_de_bord.html (rafraîchi toutes les 30 s).
-Usage : python scripts/pilotage/tableau_de_bord.py            (une fois)
-        python scripts/pilotage/tableau_de_bord.py --boucle   (régénère toutes les 30 s ; Ctrl+C pour arrêter)
+Lit : pilotage/objectifs.yml, pilotage/protocole_suivi.yml, pilotage/glossaire.yml, pilotage/etat/agents.jsonl (hooks
+de Claude Code), validation/journal_recherche.md, git et GitHub (gh). Écrit : pilotage/tableau_de_bord.html.
+Usage : python scripts/pilotage/tableau_de_bord.py [--boucle]   (--boucle : régénère toutes les 30 s)
 """
 from __future__ import annotations
 
@@ -27,11 +25,19 @@ _gh_cache: dict = {"t": 0.0, "runs": []}
 
 VERDICT = re.compile(r"\*\*(H-[A-Za-z0-9-]+)[^*]*?(non soutenue|soutenue|robuste|non confirmée|non vérifiée)")
 SECTION = re.compile(r"^###\s+(.*)")
-FAMILLE = {"H-R": "contrôle de T2 par des bornes africaines (T2c)", "H-L": "T2 corrigée par les mesures malgaches (T2L)",
-           "H-K": "karst", "H-Cl": "bilan de chlorure", "H-P": "puits à sec", "H-C": "carte des nappes",
-           "H-B": "bassins hydrogéologiques", "H-M": "mémoire du sous-sol (THMS)", "H-N": "océan et nappes"}
+FAMILLE = {"H-R": "Contrôle de T2 par des bornes africaines (T2c)", "H-L": "T2 corrigée par les mesures malgaches (T2L)",
+           "H-K": "Karst", "H-Cl": "Bilan de chlorure", "H-P": "Puits à sec", "H-C": "Carte des nappes",
+           "H-B": "Bassins hydrogéologiques", "H-M": "Mémoire du sous-sol (THMS)", "H-N": "Océan et nappes"}
+MARQUES = {"✅": ("ok", "Réussi"), "❌": ("ko", "Échec"), "📊": ("info", "Résultat"), "📌": ("neutre", "Suite"),
+           "🔧": ("warn", "Correction"), "⚠️": ("warn", "Attention"), "🟡": ("warn", "Piste")}
+ETAT = {"fini": ("ok", "Terminé"), "soutenue": ("ok", "Soutenue"), "robuste": ("ok", "Robuste"), "success": ("ok", "Réussi"),
+        "en_cours": ("info", "En cours"), "in_progress": ("info", "En cours"), "partiel": ("warn", "Partiel"),
+        "non vérifiée": ("warn", "Non vérifiée"), "queued": ("neutre", "En file"), "bloque": ("ko", "Bloqué"),
+        "arrêté": ("ko", "Arrêté"), "non soutenue": ("ko", "Non soutenue"), "non confirmée": ("ko", "Non confirmée"),
+        "failure": ("ko", "Échec"), "a_faire": ("neutre", "À faire"), "absent": ("neutre", "Absent")}
 
 
+# ----------------------------------------------------------------------------------------------- lecture des sources
 def run(cmd: list[str], timeout: int = 20) -> str:
     try:
         return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding="utf-8", timeout=timeout).stdout
@@ -49,7 +55,6 @@ def lire(nom: str) -> dict:
 
 
 def agents():
-    """Agents en cours (SubagentStart sans SubagentStop), derniers lancements, dernières fins."""
     p = PIL / "etat" / "agents.jsonl"
     rows = []
     if p.exists():
@@ -69,24 +74,10 @@ def agents():
     return en_cours, lancements, list(stopped.values())[-4:][::-1]
 
 
-def hypotheses() -> list[tuple[str, str, str]]:
-    """(section du journal, hypothèse, verdict) ; dernier verdict par couple section-hypothèse."""
-    p = ROOT / "validation" / "journal_recherche.md"
-    out, sec = {}, ""
-    if p.exists():
-        for line in p.read_text(encoding="utf-8").splitlines():
-            m = SECTION.match(line)
-            if m:
-                sec = re.sub(r"\s*\(`.*?`\)", "", m.group(1)).strip()
-            for h, v in VERDICT.findall(line):
-                out[(sec, h)] = (sec, h, v)
-    return list(out.values())
-
-
 def etudes() -> list[dict]:
-    """Études du journal de recherche : titre, date, puces (texte complet), verdicts d'hypothèses."""
+    """Études du journal de recherche : titre, date, puces, verdicts d'hypothèses."""
     p = ROOT / "validation" / "journal_recherche.md"
-    out, date, cur, puce = [], "", None, None
+    out, date, cur = [], "", None
     if not p.exists():
         return out
     for line in p.read_text(encoding="utf-8").splitlines():
@@ -102,109 +93,13 @@ def etudes() -> list[dict]:
         if cur is None:
             continue
         if line.startswith("- "):
-            puce = line[2:].strip()
-            cur["puces"].append(puce)
+            cur["puces"].append(line[2:].strip())
         elif line.startswith("  ") and cur["puces"]:
             cur["puces"][-1] += " " + line.strip()
-        for h, v in VERDICT.findall(line):
-            cur["verdicts"].append((h, v))
+        cur["verdicts"] += VERDICT.findall(line)
     for e in out:
         e["verdicts"] = list(dict(e["verdicts"]).items())
     return out
-
-
-def inline(t: str) -> str:
-    """Markdown en ligne minimal : **gras** et `code`, le reste échappé."""
-    t = esc(t)
-    t = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
-    return re.sub(r"`(.+?)`", r"<code>\1</code>", t)
-
-
-def md_html(texte: str) -> str:
-    """Rendu minimal d'un fichier Markdown (titres, puces, tableaux, paragraphes)."""
-    out, table = [], []
-
-    def flush():
-        if table:
-            rows = [r for r in table if not re.match(r"^\|[\s\-:|]+\|$", r)]
-            out.append("<table>" + "".join("<tr>" + "".join(f"<td>{inline(c.strip())}</td>" for c in r.strip("|").split("|")) + "</tr>"
-                                            for r in rows) + "</table>")
-            table.clear()
-    for line in texte.splitlines():
-        if line.startswith("|"):
-            table.append(line.strip())
-            continue
-        flush()
-        if line.startswith("#"):
-            out.append(f"<h4>{inline(line.lstrip('#').strip())}</h4>")
-        elif line.lstrip().startswith(("- ", "* ")) or re.match(r"^\s*\d+\.\s", line):
-            out.append(f"<div class='li'>• {inline(re.sub(r'^\s*([-*]|\d+\.)\s', '', line))}</div>")
-        elif line.strip():
-            out.append(f"<p>{inline(line.strip())}</p>")
-    flush()
-    return "".join(out)
-
-
-def bibliographie(suivi: dict) -> str:
-    html_ = ""
-    for b in suivi.get("bibliographie") or []:
-        p = ROOT / b.get("fichier", "")
-        if not p.exists():
-            continue
-        t = p.read_text(encoding="utf-8")
-        if b.get("section"):
-            i = t.find(b["section"])
-            j = t.find("\n## ", i + 3)
-            t = t[i:j if j > 0 else None] if i >= 0 else ""
-        html_ += f'<details><summary>{esc(b.get("titre"))} <span class="mut">· {esc(b.get("fichier"))}</span></summary><div class="md">{md_html(t)}</div></details>'
-    return html_
-
-
-EMO = {"✅": "ok", "❌": "ko", "📊": "run", "📌": "todo", "🔧": "warn", "⚠️": "warn"}
-
-
-def puce_html(p: str) -> str:
-    c = next((v for k, v in EMO.items() if p.startswith(k)), "")
-    return f'<div class="li {c}">{inline(p)}</div>'
-
-
-def bloc_code(r: dict, liste: list[dict], regles: list[dict], details: dict) -> str:
-    code = r.get("code", "")
-    mine = [e for e in liste if any(code in g.get("codes", []) and re.search(g.get("motif", "^$"), e["titre"]) for g in regles)]
-    ok = sum(p.startswith("✅") for e in mine for p in e["puces"])
-    ko = sum(p.startswith("❌") for e in mine for p in e["puces"])
-    verd = [v for e in mine for _, v in e["verdicts"]]
-    sout = sum(v in ("soutenue", "robuste") for v in verd)
-    rob = sum(v == "robuste" for v in verd)
-    nons = sum(v in ("non soutenue", "non confirmée") for v in verd)
-    resume = (f'<span class="mut small">{len(mine)} études · ✅ {ok} · ❌ {ko} · hypothèses : {sout} soutenues '
-              f'(dont {rob} robustes), {nons} non soutenues</span>')
-    corps = f'<p><b>Où on en est :</b> {inline(r.get("ou", ""))}</p>'
-    if r.get("manque"):
-        corps += f'<p><b>Ce qui manque :</b> {inline(r["manque"])}</p>'
-    d = details.get(code) or {}
-    if d.get("ameliorer"):
-        corps += "<h4>Ce qu'on peut améliorer, et avec quoi</h4><table><tr><th>Quoi</th><th>Avec quoi</th></tr>" + "".join(
-            f"<tr><td>{inline(a.get('quoi', ''))}</td><td>{inline(a.get('avec', ''))}</td></tr>" for a in d["ameliorer"]) + "</table>"
-    if d.get("comparaison"):
-        corps += "<h4>Nous et les autres travaux</h4><table><tr><th>Ce que nous faisons</th><th>Ce que d'autres ont fait</th><th>Référence</th></tr>" + "".join(
-            f"<tr><td>{inline(a.get('nous', ''))}</td><td>{inline(a.get('autres', ''))}</td><td class='mut'>{inline(a.get('ref', ''))}</td></tr>"
-            for a in d["comparaison"]) + "</table>"
-    if mine:
-        corps += "<h4>Études (journal de recherche, plus récentes en haut)</h4>"
-        for e in mine[::-1]:
-            vb = " ".join(f'<span class="code">{esc(h)}</span> {badge(v)}' for h, v in e["verdicts"])
-            corps += (f'<details class="sub"><summary>{esc(e["court"])} <span class="mut">· {esc(e["date"])}</span> {vb}</summary>'
-                      + "".join(puce_html(p) for p in e["puces"]) + "</details>")
-    return (f'<details class="mod"><summary><span class="code">{esc(code)}</span> {esc(r.get("nom"))} {badge(r.get("statut", ""))} '
-            f'{resume}</summary><div class="in">{corps}</div></details>')
-
-
-def famille(h: str) -> str:
-    for k in sorted(FAMILLE, key=len, reverse=True):
-        if h.startswith(k):
-            return FAMILLE[k]
-    return ""
 
 
 def github() -> list[dict]:
@@ -240,51 +135,119 @@ def telechargements(obj: dict) -> list[dict]:
         else:
             etat = "en_cours"
         out.append({"nom": d.get("nom", ""), "taille": taille, "attendue": att, "etat": etat,
-                    "maj": dt.datetime.fromtimestamp(mtime).strftime("%d/%m %H:%M") if mtime else "-"})
+                    "maj": dt.datetime.fromtimestamp(mtime).strftime("%d/%m %H:%M") if mtime else "—"})
     return out
 
 
+# ----------------------------------------------------------------------------------------------- rendu
 def esc(x) -> str:
     return html.escape(str(x if x is not None else ""))
 
 
-CLS = {"fini": "ok", "soutenue": "ok", "robuste": "ok", "success": "ok",
-       "en_cours": "run", "in_progress": "run", "partiel": "warn", "non vérifiée": "warn", "queued": "todo",
-       "bloque": "ko", "arrêté": "ko", "non soutenue": "ko", "non confirmée": "ko", "failure": "ko",
-       "a_faire": "todo", "absent": "todo"}
-LIB = {"fini": "fini", "en_cours": "en cours", "bloque": "bloqué", "a_faire": "à faire", "partiel": "partiel",
-       "success": "réussi", "failure": "échec", "in_progress": "en cours", "queued": "en file"}
+def inline(t: str) -> str:
+    t = esc(t)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    return re.sub(r"`(.+?)`", r"<code>\1</code>", t)
 
 
-def badge(etat: str) -> str:
-    return f'<span class="b {CLS.get(etat, "todo")}">{esc(LIB.get(etat, etat))}</span>' if etat else ""
+def statut(etat: str) -> str:
+    if not etat:
+        return ""
+    c, lib = ETAT.get(etat, ("neutre", etat))
+    return f'<span class="st {c}"><i></i>{esc(lib)}</span>'
 
 
-def carte(titre: str, sous: str = "", etat: str = "") -> str:
-    return f'<div class="card {CLS.get(etat, "todo")}"><div class="t">{esc(titre)} {badge(etat)}</div><div class="s">{esc(sous)}</div></div>'
+def famille(h: str) -> str:
+    for k in sorted(FAMILLE, key=len, reverse=True):
+        if h.startswith(k):
+            return FAMILLE[k]
+    return ""
 
 
-def table_suivi(rows: list[dict], avec_manque: bool = True) -> str:
-    tr = "".join(f'<tr><td class="code">{esc(r.get("code"))}</td><td>{esc(r.get("nom"))}</td><td>{badge(r.get("statut", ""))}</td>'
-                 f'<td>{esc(r.get("ou"))}</td>' + (f'<td class="mut">{esc(r.get("manque"))}</td>' if avec_manque else "") + "</tr>"
-                 for r in rows)
-    head = "<tr><th></th><th>Élément</th><th>État</th><th>Où on en est</th>" + ("<th>Ce qui manque</th>" if avec_manque else "") + "</tr>"
-    return f"<table>{head}{tr}</table>"
+def puce(p: str) -> str:
+    for m, (c, lib) in MARQUES.items():
+        if p.startswith(m):
+            return f'<li><span class="tag {c}">{lib}</span><span>{inline(p[len(m):].strip())}</span></li>'
+    return f'<li><span class="tag neutre">Note</span><span>{inline(p)}</span></li>'
+
+
+def md_html(texte: str) -> str:
+    out, table = [], []
+
+    def flush():
+        if table:
+            rows = [r for r in table if not re.match(r"^\|[\s\-:|]+\|$", r)]
+            out.append('<table class="t">' + "".join("<tr>" + "".join(f"<td>{inline(c.strip())}</td>" for c in r.strip("|").split("|"))
+                                                     + "</tr>" for r in rows) + "</table>")
+            table.clear()
+    for line in texte.splitlines():
+        if line.startswith("|"):
+            table.append(line.strip())
+            continue
+        flush()
+        if line.startswith("#"):
+            out.append(f"<h4>{inline(line.lstrip('#').strip())}</h4>")
+        elif line.lstrip().startswith(("- ", "* ")) or re.match(r"^\s*\d+\.\s", line):
+            out.append(f"<p class='md-li'>{inline(re.sub(r'^\s*([-*]|\d+\.)\s', '', line))}</p>")
+        elif line.strip():
+            out.append(f"<p>{inline(line.strip())}</p>")
+    flush()
+    return "".join(out)
 
 
 def jauge(rows: list[dict]) -> str:
-    poids = {"fini": 1.0, "en_cours": 0.6, "partiel": 0.4, "a_faire": 0.0, "bloque": 0.0}
+    poids = {"fini": 1.0, "en_cours": 0.6, "partiel": 0.4}
     if not rows:
         return ""
     v = 100 * sum(poids.get(r.get("statut"), 0) for r in rows) / len(rows)
-    return f'<div class="bar"><i style="width:{v:.0f}%"></i></div><div class="mut small">{v:.0f} % (fini = 1, en cours = 0,6, partiel = 0,4)</div>'
+    return f'<span class="gauge" title="Terminé = 1 ; en cours = 0,6 ; partiel = 0,4"><span style="width:{v:.0f}%"></span></span><span class="num">{v:.0f} %</span>'
+
+
+def bloc(r: dict, liste: list[dict], regles: list[dict], details: dict) -> str:
+    code = r.get("code", "")
+    mine = [e for e in liste if any(code in g.get("codes", []) and re.search(g.get("motif", "^$"), e["titre"]) for g in regles)]
+    ok = sum(p.startswith("✅") for e in mine for p in e["puces"])
+    ko = sum(p.startswith("❌") for e in mine for p in e["puces"])
+    verd = [v for e in mine for _, v in e["verdicts"]]
+    sout, rob = sum(v in ("soutenue", "robuste") for v in verd), sum(v == "robuste" for v in verd)
+    nons = sum(v in ("non soutenue", "non confirmée") for v in verd)
+    meta = (f'<span class="meta"><b>{len(mine)}</b> études</span><span class="meta"><b>{ok}</b> réussites</span>'
+            f'<span class="meta"><b>{ko}</b> échecs</span><span class="meta"><b>{sout}</b> hyp. soutenues'
+            f'{f" ({rob} robustes)" if rob else ""}</span><span class="meta"><b>{nons}</b> non soutenues</span>')
+    corps = '<dl class="kv">'
+    corps += f'<dt>Où on en est</dt><dd>{inline(r.get("ou", "—"))}</dd>'
+    if r.get("manque"):
+        corps += f'<dt>Ce qui manque</dt><dd>{inline(r["manque"])}</dd>'
+    corps += "</dl>"
+    d = details.get(code) or {}
+    if d.get("ameliorer"):
+        corps += '<h4>Pistes d\'amélioration</h4><table class="t"><tr><th>Quoi</th><th>Avec quoi</th></tr>' + "".join(
+            f"<tr><td>{inline(a.get('quoi', ''))}</td><td>{inline(a.get('avec', ''))}</td></tr>" for a in d["ameliorer"]) + "</table>"
+    if d.get("comparaison"):
+        corps += '<h4>Positionnement par rapport aux travaux existants</h4><table class="t"><tr><th>Ce projet</th><th>Travaux existants</th><th>Référence</th></tr>' + "".join(
+            f"<tr><td>{inline(a.get('nous', ''))}</td><td>{inline(a.get('autres', ''))}</td><td class='muted'>{inline(a.get('ref', ''))}</td></tr>"
+            for a in d["comparaison"]) + "</table>"
+    if mine:
+        corps += "<h4>Études rattachées</h4>"
+        for e in mine[::-1]:
+            vb = "".join(f'<span class="hyp"><code>{esc(h)}</code>{statut(v)}</span>' for h, v in e["verdicts"])
+            corps += (f'<details class="study"><summary><span class="s-title">{esc(e["court"])}</span>'
+                      f'<span class="s-date">{esc(e["date"])}</span>{vb}</summary><ul class="log">'
+                      + "".join(puce(p) for p in e["puces"]) + "</ul></details>")
+    return (f'<details class="row"><summary><code class="id">{esc(code)}</code><span class="r-title">{esc(r.get("nom"))}</span>'
+            f'{statut(r.get("statut", ""))}<span class="metas">{meta}</span></summary><div class="body">{corps}</div></details>')
+
+
+def carte(titre: str, sous: str = "", etat: str = "") -> str:
+    return f'<div class="item"><div class="i-top"><span class="i-title">{esc(titre)}</span>{statut(etat)}</div>{f"<div class=i-sub>{esc(sous)}</div>" if sous else ""}</div>'
 
 
 def page() -> str:
     obj, suivi, glo = lire("objectifs.yml"), lire("protocole_suivi.yml"), lire("glossaire.yml")
-    now = dt.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    now = dt.datetime.now()
     th = obj.get("these") or {}
     en_cours, lancements, fins = agents()
+
     col = {"toi": [], "claude": [], "agent": [], "github": []}
     for t in obj.get("taches") or []:
         if t.get("statut") != "fini":
@@ -294,102 +257,151 @@ def page() -> str:
             if e.get("statut") != "fini" and e.get("qui"):
                 col.setdefault(e["qui"], []).append(carte(e.get("nom", ""), o.get("nom", ""), e.get("statut", "")))
     for r in en_cours:
-        col["agent"].insert(0, carte(f"Agent actif ({r.get('type') or 'agent'})", f"depuis {r.get('quand', '')[11:16]}", "en_cours"))
+        col["agent"].insert(0, carte(f"Agent actif · {r.get('type') or 'agent'}", f"depuis {r.get('quand', '')[11:16]}", "en_cours"))
     for r in lancements:
         q = r.get("quand", "")
-        col["agent"].append(carte(r.get("description") or "Agent", f"lancé le {q[8:10]}/{q[5:7]} à {q[11:16]}", ""))
+        col["agent"].append(carte(r.get("description") or "Agent", f"lancé le {q[8:10]}/{q[5:7]} à {q[11:16]}"))
     for r in fins:
-        col["agent"].append(carte(f"Agent terminé ({r.get('type') or 'agent'})", f"à {r.get('quand', '')[11:16]}", "fini"))
+        col["agent"].append(carte(f"Agent terminé · {r.get('type') or 'agent'}", f"à {r.get('quand', '')[11:16]}", "fini"))
     for d in telechargements(obj):
         pct = f" · {100 * d['taille'] / d['attendue']:.0f} %" if d["attendue"] else ""
-        col["agent"].append(carte(f"Téléchargement : {d['nom']}", f"{d['taille'] / 1e6:.0f} Mo{pct} · écrit le {d['maj']}", d["etat"]))
+        col["agent"].append(carte(d["nom"], f"{d['taille'] / 1e6:,.0f} Mo{pct} · dernière écriture {d['maj']}".replace(",", " "), d["etat"]))
     for r in github():
         col["github"].append(carte(r.get("workflowName", ""), f"{r.get('displayTitle', '')[:60]} · {r.get('createdAt', '')[5:16].replace('T', ' ')}",
                                    r.get("conclusion") or r.get("status") or ""))
     attente = [l for l in run(["git", "log", "origin/main..HEAD", "--format=%s"]).splitlines() if l]
     if attente:
-        col["github"].insert(0, carte(f"{len(attente)} commit(s) à envoyer", attente[0][:70], "bloque"))
-    colonnes = "".join(f'<section><h2>{t}</h2>{"".join(col.get(k, [])) or "<p class=mut>rien</p>"}</section>'
-                       for k, t in (("toi", "Toi"), ("claude", "Claude"), ("agent", "Agents · téléchargements"), ("github", "GitHub")))
+        col["github"].insert(0, carte(f"{len(attente)} commit(s) non envoyé(s)", attente[0][:70], "bloque"))
+    noms = (("toi", "Porteur du projet"), ("claude", "Claude"), ("agent", "Agents et téléchargements"), ("github", "Intégration (GitHub)"))
+    equipe = "".join(f'<div class="lane"><div class="lane-h">{t}<span class="count">{len(col.get(k, []))}</span></div>'
+                     f'{"".join(col.get(k, [])) or "<div class=empty>Rien en attente</div>"}</div>' for k, t in noms)
+
+    liste = etudes()
+    regles, details = suivi.get("regles") or [], suivi.get("details") or {}
+    proto = ""
+    for cle, titre in (("modules", "Modules M0 à M7"), ("experiences", "Expériences E1 à E7"),
+                       ("hypotheses", "Hypothèses générales H1 à H6"), ("livrables", "Livrables L1 à L6 (prompt maître)")):
+        rows = suivi.get(cle) or []
+        proto += (f'<div class="group"><div class="group-h"><h3>{titre}</h3>{jauge(rows)}</div>'
+                  + "".join(bloc(r, liste, regles, details) for r in rows) + "</div>")
 
     objs = ""
     for o in obj.get("objectifs") or []:
         av = int(o.get("avancement", 0))
-        et = "".join(f'<li>{esc(e.get("nom"))} {badge(e.get("statut", ""))}</li>' for e in o.get("etapes") or [])
-        objs += f'<div class="obj"><div class="t">{esc(o.get("nom"))} <span class="num">{av} %</span></div><div class="bar"><i style="width:{av}%"></i></div><ul>{et}</ul></div>'
-    bloc = "".join(f'<tr><td>{esc(b.get("quoi"))}</td><td>{esc(b.get("effet"))}</td><td class="mut">{esc(b.get("qui_peut_debloquer"))}</td></tr>'
-                   for b in obj.get("blocages") or [])
-    hyp = "".join(f'<tr><td class="code">{esc(h)}</td><td>{badge(v)}</td><td>{esc(s)}</td><td class="mut">{esc(famille(h))}</td></tr>'
-                  for s, h, v in hypotheses()[::-1])
-    gl = "".join(f'<tr><td class="code">{esc(g.get("terme"))}</td><td>{esc(g.get("sens"))}</td></tr>' for g in glo.get("termes") or [])
-    commits = "".join(f"<li>{esc(l)}</li>" for l in run(["git", "log", "-8", "--format=%ad · %s", "--date=format:%d/%m %H:%M"]).splitlines())
-    errs = "".join(f'<p class="kot">{esc(x["erreur"])}</p>' for x in (obj, suivi, glo) if x.get("erreur"))
-
-    proto, liste = "", etudes()
-    regles, details = suivi.get("regles") or [], suivi.get("details") or {}
-    for cle, titre in (("modules", "Modules M0 à M7 (protocole §6)"), ("experiences", "Expériences E1 à E7 (protocole §10)")):
-        rows = suivi.get(cle) or []
-        proto += (f'<details open><summary>{titre}</summary>{jauge(rows)}'
-                  + "".join(bloc_code(r, liste, regles, details) for r in rows) + "</details>")
-    for cle, titre in (("hypotheses", "Hypothèses H1 à H6 (protocole §5)"), ("livrables", "Livrables L1 à L6 (prompt maître §15)")):
-        rows = suivi.get(cle) or []
-        proto += f'<details><summary>{titre}</summary>{jauge(rows)}{table_suivi(rows, False)}</details>'
-    biblio = bibliographie(suivi)
+        et = "".join(f'<li><span>{esc(e.get("nom"))}</span>{statut(e.get("statut", ""))}</li>' for e in o.get("etapes") or [])
+        objs += (f'<div class="goal"><div class="goal-h"><span>{esc(o.get("nom"))}</span><span class="gauge"><span style="width:{av}%"></span></span>'
+                 f'<span class="num">{av} %</span></div><ul class="steps">{et}</ul></div>')
+    bloc_ = "".join(f'<tr><td>{esc(b.get("quoi"))}</td><td>{esc(b.get("effet"))}</td><td class="muted">{esc(b.get("qui_peut_debloquer"))}</td></tr>'
+                    for b in obj.get("blocages") or [])
+    hyp_rows = []
+    for e in liste:
+        for h, v in e["verdicts"]:
+            hyp_rows.append((e["court"], e["date"], h, v))
+    hyp = "".join(f'<tr><td><code>{esc(h)}</code></td><td>{statut(v)}</td><td>{esc(s)}</td><td class="muted">{esc(famille(h))}</td><td class="muted nowrap">{esc(d)}</td></tr>'
+                  for s, d, h, v in hyp_rows[::-1])
+    gl = "".join(f'<tr><td class="nowrap"><strong>{esc(g.get("terme"))}</strong></td><td>{esc(g.get("sens"))}</td></tr>' for g in glo.get("termes") or [])
+    biblio = ""
+    for b in suivi.get("bibliographie") or []:
+        p = ROOT / b.get("fichier", "")
+        if not p.exists():
+            continue
+        t = p.read_text(encoding="utf-8")
+        if b.get("section"):
+            i = t.find(b["section"])
+            j = t.find("\n## ", i + 3)
+            t = t[i:j if j > 0 else None] if i >= 0 else ""
+        biblio += f'<details class="row"><summary><span class="r-title">{esc(b.get("titre"))}</span><span class="muted small">{esc(b.get("fichier"))}</span></summary><div class="body md">{md_html(t)}</div></details>'
+    commits = "".join(f'<tr><td class="muted nowrap">{esc(l.split(" | ", 1)[0])}</td><td>{esc(l.split(" | ", 1)[-1])}</td></tr>'
+                      for l in run(["git", "log", "-10", "--format=%ad | %s", "--date=format:%d/%m %H:%M"]).splitlines())
+    errs = "".join(f'<div class="alert">{esc(x["erreur"])}</div>' for x in (obj, suivi, glo) if x.get("erreur"))
+    nav = "".join(f'<a href="#{i}">{t}</a>' for i, t in (("equipe", "Équipe"), ("protocole", "Protocole"), ("objectifs", "Objectifs"),
+                                                        ("hypotheses", "Hypothèses"), ("biblio", "Bibliographie"), ("glossaire", "Glossaire"),
+                                                        ("activite", "Activité")))
 
     return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="refresh" content="{PERIODE_S}">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>Pilotage MakyClimat</title><style>
-:root{{--bg:#05080f;--panel:#0a1220;--line:#14324a;--fg:#d6f4ff;--mut:#6f93a8;--acc:#29d3ff;--ok:#3ef0a6;--ko:#ff5a6e;--run:#29d3ff;--warn:#ffc857;--todo:#6f93a8}}
-*{{box-sizing:border-box}} body{{margin:0;padding:16px;background:var(--bg);color:var(--fg);font:14px/1.45 "Segoe UI",system-ui,sans-serif;
-background-image:linear-gradient(rgba(41,211,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(41,211,255,.04) 1px,transparent 1px);background-size:32px 32px}}
-h1{{font:600 20px/1.2 Consolas,"Cascadia Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:0}}
-h2,summary{{font:600 12px/1.2 Consolas,"Cascadia Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin:0 0 10px}}
-summary{{cursor:pointer;margin:6px 0}} .mut{{color:var(--mut)}} .small{{font-size:12px}} .kot{{color:var(--ko)}}
-.head{{border:1px solid var(--line);background:var(--panel);padding:12px 14px;margin-bottom:14px}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:14px}}
-section,.box{{border:1px solid var(--line);background:var(--panel);padding:12px}}
-.card{{border:1px solid var(--line);background:#0c1728;padding:8px 10px;margin-bottom:8px}}
-.card.ok{{border-color:rgba(62,240,166,.45)}} .card.ko{{border-color:rgba(255,90,110,.6)}} .card.run{{border-color:rgba(41,211,255,.6)}} .card.warn{{border-color:rgba(255,200,87,.5)}}
-.t{{font-weight:600}} .s{{color:var(--mut);font-size:12px}}
-.b{{font:11px Consolas,monospace;padding:1px 6px;border:1px solid currentColor;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}}
-.b.ok{{color:var(--ok)}} .b.ko{{color:var(--ko)}} .b.run{{color:var(--run)}} .b.warn{{color:var(--warn)}} .b.todo{{color:var(--todo)}}
-.bar{{height:6px;border:1px solid var(--line);margin:4px 0}} .bar i{{display:block;height:100%;background:var(--acc)}}
-.num{{font-family:Consolas,monospace;color:var(--acc)}} .obj{{margin-bottom:12px}} ul{{margin:4px 0 0 18px;padding:0}}
-table{{width:100%;border-collapse:collapse;font-size:13px}} th{{text-align:left;color:var(--mut);font-weight:500;font-size:12px}}
-td,th{{padding:5px 6px;border-top:1px solid var(--line);vertical-align:top}} td.code{{font-family:Consolas,monospace;color:var(--acc);white-space:nowrap}}
-.two{{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-bottom:14px}}
-.wide{{margin-bottom:14px}} details{{margin-bottom:8px}}
-details.mod{{border:1px solid var(--line);background:#0c1728;padding:6px 10px;margin:6px 0}} details.mod>summary{{font:14px "Segoe UI",sans-serif;text-transform:none;letter-spacing:0;color:var(--fg)}}
-details.sub{{border-top:1px solid var(--line);padding:4px 0;margin:0}} details.sub>summary{{font:13px "Segoe UI",sans-serif;text-transform:none;letter-spacing:0;color:var(--fg)}}
-.in{{padding:4px 0 6px 10px}} h4{{font:600 12px Consolas,monospace;color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin:10px 0 4px}}
-.li{{padding:3px 0 3px 8px;font-size:13px}} .li.ok{{color:#bdf7de}} .li.ko{{color:#ffc2c9}} .li.warn{{color:#ffe7b3}}
-span.code,code{{font-family:Consolas,monospace;color:var(--acc)}} .md p{{margin:4px 0}} .md td{{font-size:12px}}
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>MakyClimat · Pilotage</title><style>
+:root{{--bg:#f7f8fa;--surface:#fff;--sub:#f2f4f7;--border:#e4e7ec;--text:#101828;--muted:#667085;--accent:#2e5aac;
+--ok:#16794c;--ok-bg:#e7f6ee;--ko:#b42318;--ko-bg:#fdecea;--warn:#a15c07;--warn-bg:#fef4e2;--info:#2e5aac;--info-bg:#eaf0fb;--neutre:#667085;--neutre-bg:#f2f4f7}}
+@media (prefers-color-scheme:dark){{:root{{--bg:#0f1115;--surface:#161a20;--sub:#1c2129;--border:#2a303b;--text:#e7eaf0;--muted:#98a1b2;--accent:#8fb0ec;
+--ok:#5fcf98;--ok-bg:#16301f;--ko:#f28b82;--ko-bg:#3a1c1a;--warn:#f0b45b;--warn-bg:#36290f;--info:#8fb0ec;--info-bg:#1b2840;--neutre:#98a1b2;--neutre-bg:#222833}}}}
+*{{box-sizing:border-box}} html{{scroll-behavior:smooth}}
+body{{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}}
+header{{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--border)}}
+.hwrap{{max-width:1320px;margin:0 auto;padding:12px 24px 0}} .brand{{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}}
+.brand h1{{font-size:16px;font-weight:600;margin:0}} .brand .sub{{color:var(--muted);font-size:13px}} .brand .upd{{margin-left:auto;color:var(--muted);font-size:12px}}
+nav{{display:flex;gap:4px;overflow-x:auto;margin-top:8px}} nav a{{color:var(--muted);text-decoration:none;font-size:13px;padding:8px 10px;border-bottom:2px solid transparent;white-space:nowrap}}
+nav a:hover{{color:var(--text);border-bottom-color:var(--border)}}
+main{{max-width:1320px;margin:0 auto;padding:20px 24px 48px}} section{{margin-bottom:28px;scroll-margin-top:96px}}
+h2{{font-size:15px;font-weight:600;margin:0 0 10px}} h3{{font-size:14px;font-weight:600;margin:0}} h4{{font-size:12px;font-weight:600;color:var(--muted);margin:16px 0 6px;text-transform:none}}
+.lead{{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px}}
+.lead .q{{font-size:15px}} .lead .t{{color:var(--muted);font-size:13px;margin-top:2px}}
+.lanes{{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}}
+.lane{{background:var(--sub);border:1px solid var(--border);border-radius:8px;padding:10px}}
+.lane-h{{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin:2px 2px 8px}}
+.count{{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0 7px;font-weight:500}}
+.item{{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:6px}}
+.i-top{{display:flex;gap:8px;justify-content:space-between;align-items:flex-start}} .i-title{{font-size:13px;font-weight:500}} .i-sub{{color:var(--muted);font-size:12px;margin-top:2px}}
+.empty{{color:var(--muted);font-size:12px;padding:6px 2px}}
+.st{{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;white-space:nowrap;color:var(--neutre)}} .st i{{width:7px;height:7px;border-radius:50%;background:currentColor}}
+.st.ok{{color:var(--ok)}} .st.ko{{color:var(--ko)}} .st.warn{{color:var(--warn)}} .st.info{{color:var(--info)}}
+.card{{background:var(--surface);border:1px solid var(--border);border-radius:8px}}
+.group{{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:14px;overflow:hidden}}
+.group-h{{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}}
+.gauge{{display:inline-block;width:120px;height:6px;background:var(--sub);border-radius:3px;overflow:hidden}} .gauge span{{display:block;height:100%;background:var(--accent)}}
+.num{{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}}
+details.row{{border-bottom:1px solid var(--border)}} details.row:last-child{{border-bottom:0}}
+details>summary{{list-style:none;cursor:pointer}} details>summary::-webkit-details-marker{{display:none}}
+details.row>summary{{display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap}}
+details.row>summary:hover{{background:var(--sub)}}
+details.row>summary::before,details.study>summary::before{{content:"";width:6px;height:6px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;flex:none}}
+details[open]>summary::before{{transform:rotate(45deg)}}
+code{{font:12px ui-monospace,SFMono-Regular,Consolas,monospace}} code.id{{color:var(--muted);min-width:24px}}
+.r-title{{font-weight:500}} .metas{{margin-left:auto;display:flex;gap:14px;color:var(--muted);font-size:12px;flex-wrap:wrap}} .meta b{{color:var(--text);font-weight:600}}
+.body{{padding:4px 16px 16px 46px}}
+dl.kv{{display:grid;grid-template-columns:140px 1fr;gap:4px 16px;margin:8px 0}} dt{{color:var(--muted);font-size:13px}} dd{{margin:0}}
+table.t{{width:100%;border-collapse:collapse;font-size:13px}} .t th{{text-align:left;font-weight:500;color:var(--muted);font-size:12px;border-bottom:1px solid var(--border);padding:6px 8px}}
+.t td{{border-bottom:1px solid var(--border);padding:7px 8px;vertical-align:top}} .t tr:last-child td{{border-bottom:0}}
+details.study{{border:1px solid var(--border);border-radius:6px;margin:6px 0;background:var(--surface)}}
+details.study>summary{{display:flex;align-items:center;gap:10px;padding:8px 10px;flex-wrap:wrap}} .s-title{{font-size:13px;font-weight:500}} .s-date{{color:var(--muted);font-size:12px}}
+.hyp{{display:inline-flex;gap:6px;align-items:center;margin-left:4px}}
+ul.log{{list-style:none;margin:0;padding:4px 12px 10px}} ul.log li{{display:grid;grid-template-columns:86px 1fr;gap:10px;padding:5px 0;border-top:1px solid var(--border);font-size:13px}}
+.tag{{font-size:11px;font-weight:600;border-radius:4px;padding:1px 6px;height:fit-content;text-align:center}}
+.tag.ok{{color:var(--ok);background:var(--ok-bg)}} .tag.ko{{color:var(--ko);background:var(--ko-bg)}} .tag.warn{{color:var(--warn);background:var(--warn-bg)}}
+.tag.info{{color:var(--info);background:var(--info-bg)}} .tag.neutre{{color:var(--neutre);background:var(--neutre-bg)}}
+.cols{{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:16px}} .pad{{padding:14px 16px}}
+.goal{{padding:12px 16px;border-bottom:1px solid var(--border)}} .goal:last-child{{border-bottom:0}}
+.goal-h{{display:flex;align-items:center;gap:12px;font-weight:500}} .goal-h>span:first-child{{flex:1}}
+ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;justify-content:space-between;gap:12px;padding:4px 0;font-size:13px;color:var(--muted)}}
+.muted{{color:var(--muted)}} .small{{font-size:12px}} .nowrap{{white-space:nowrap}}
+.md p{{margin:4px 0;font-size:13px}} .md .md-li{{padding-left:12px;position:relative}} .md .md-li::before{{content:"–";position:absolute;left:0;color:var(--muted)}}
+.scroll{{max-height:520px;overflow:auto}} .alert{{background:var(--ko-bg);color:var(--ko);border-radius:6px;padding:8px 12px;margin-bottom:12px}}
+@media (max-width:640px){{.hwrap,main{{padding-left:16px;padding-right:16px}} .body{{padding-left:16px}} dl.kv{{grid-template-columns:1fr}} .cols{{grid-template-columns:1fr}}}}
 </style></head><body>
-<div class="head"><h1>MakyClimat · pilotage de la thèse</h1>
-<div class="mut">{esc(th.get("titre", ""))}</div>
-<div><span class="mut">Question en cours :</span> {esc(th.get("question_en_cours", ""))}</div>
-<div class="mut small">Mis à jour le {now} · rafraîchi toutes les {PERIODE_S} s · aucun token · suivi du protocole au {esc(suivi.get("mis_a_jour", "?"))}</div>{errs}</div>
-<div class="grid">{colonnes}</div>
-<div class="box wide"><h2>Où on en est : protocole doctoral et prompt maître</h2>{proto}</div>
-<div class="two"><div class="box"><h2>Objectifs et avancement</h2>{objs}</div>
-<div class="box"><h2>Blocages</h2><table><tr><th>Quoi</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc}</table></div></div>
-<div class="two"><div class="box"><h2>Hypothèses testées (plus récentes en haut)</h2><table><tr><th></th><th>Verdict</th><th>Étude</th><th>Famille</th></tr>{hyp}</table></div>
-<div class="box"><h2>Glossaire : T2, T2L, T2K…</h2><table>{gl}</table></div></div>
-<div class="box wide"><h2>Bibliographie et sources</h2>{biblio or "<p class=mut>aucun fichier</p>"}</div>
-<div class="box wide"><h2>Dernières actions (git)</h2><ul>{commits}</ul></div>
+<header><div class="hwrap"><div class="brand"><h1>MakyClimat</h1><span class="sub">Pilotage de la thèse</span>
+<span class="upd">Actualisé à {now:%H:%M:%S} · toutes les {PERIODE_S} s · suivi du protocole au {esc(suivi.get("mis_a_jour", "—"))}</span></div>
+<nav>{nav}</nav></div></header>
+<main>{errs}
+<div class="lead"><div class="q">{esc(th.get("question_en_cours", ""))}</div><div class="t">{esc(th.get("titre", ""))}</div></div>
+<section id="equipe"><h2>Répartition du travail</h2><div class="lanes">{equipe}</div></section>
+<section id="protocole"><h2>Avancement par rapport au protocole doctoral et au prompt maître</h2>{proto}</section>
+<section id="objectifs" class="cols"><div><h2>Objectifs</h2><div class="card">{objs}</div></div>
+<div><h2>Blocages</h2><div class="card pad"><table class="t"><tr><th>Blocage</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc_}</table></div></div></section>
+<section id="hypotheses"><h2>Hypothèses testées</h2><div class="card pad scroll"><table class="t"><tr><th>Code</th><th>Verdict</th><th>Étude</th><th>Famille</th><th>Date</th></tr>{hyp}</table></div></section>
+<section id="biblio"><h2>Bibliographie et sources</h2><div class="group">{biblio or '<div class="pad muted">Aucun fichier</div>'}</div></section>
+<section id="glossaire"><h2>Glossaire</h2><div class="card pad"><table class="t">{gl}</table></div></section>
+<section id="activite"><h2>Activité récente</h2><div class="card pad"><table class="t">{commits}</table></div></section>
+</main>
 <script>
 (function(){{
-  var K="pilotage_ouverts", S="pilotage_defilement";
+  var K="pilotage_ouverts",S="pilotage_defilement",o={{}};
   function cle(d){{var s=d.querySelector("summary");return s?s.textContent.trim().slice(0,90):"";}}
-  var ouverts={{}}; try{{ouverts=JSON.parse(localStorage.getItem(K)||"{{}}");}}catch(e){{}}
-  document.querySelectorAll("details").forEach(function(d){{
-    var k=cle(d); if(k in ouverts) d.open=ouverts[k];
-    d.addEventListener("toggle",function(){{ouverts[k]=d.open;try{{localStorage.setItem(K,JSON.stringify(ouverts));}}catch(e){{}}}});
-  }});
+  try{{o=JSON.parse(localStorage.getItem(K)||"{{}}");}}catch(e){{}}
+  document.querySelectorAll("details").forEach(function(d){{var k=cle(d);if(k in o)d.open=o[k];
+    d.addEventListener("toggle",function(){{o[k]=d.open;try{{localStorage.setItem(K,JSON.stringify(o));}}catch(e){{}}}});}});
   try{{var y=+sessionStorage.getItem(S);if(y)window.scrollTo(0,y);}}catch(e){{}}
   window.addEventListener("beforeunload",function(){{try{{sessionStorage.setItem(S,String(window.scrollY));}}catch(e){{}}}});
 }})();
-</script>
-</body></html>"""
+</script></body></html>"""
 
 
 def generer() -> None:

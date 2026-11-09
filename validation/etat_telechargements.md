@@ -292,3 +292,82 @@ Pistes non abouties :
 | `data/mdg/bushproof_inventaire_cl_scelle.json` | ignoré (quantiles scellés) |
 | `scripts/bushproof_inventaire.py`, `scripts/sqlite_tronque.py` | nouveaux, non commités |
 | `.gitignore` | trois lignes ajoutées, non commité |
+
+## 09/11/2026 : chlorure de la pluie (Kwale, Van Wyk et al. 2011), pour fixer le dépôt de chlorure
+
+But : fixer le dépôt de chlorure du protocole `validation/protocole_recharge_chlorure.md` (section 4) **avant** toute
+lecture des chlorures de la nappe. Le fichier scellé `data/mdg/bushproof_inventaire_cl_scelle.json` n'a pas été
+ouvert. Rythme : une requête à la fois par serveur, sans relance automatique. Une coupure réseau (ENOTFOUND) a
+interrompu la session ; le travail a repris sans perte (fichier Kwale déjà téléchargé).
+
+### 1. Kwale (côte du Kenya) : données téléchargées et recalculées
+
+- **Source** : Ferrer N., Folch A., Thomas M. (2019), BGS, doi:10.5285/e5c1dd99-f97b-4670-9d78-c2ae6133a722.
+  **Licence OGL vérifiée** sur la fiche DOI et sur l'accession (« Contains data supplied by UKRI »).
+- **Accès** : la page d'accessions est en JavaScript, mais son API est publique :
+  `https://webservices.bgs.ac.uk/accessions/items/125757` (métadonnées) puis
+  `.../accessions/download/125757?fileName=GroforGooD_Rainwater%20Chloride_ARCH.xlsx` (22 952 octets, HTTP 200).
+- **Contenu** : 11 stations, pluie mensuelle (mm) et Cl mensuel (mg/L), avril 2016 à novembre 2017, coordonnées en
+  UTM Arc 1960 zone 37S (EPSG:21037). Le fichier dit « mm/d », mais ce sont des cumuls mensuels (jusqu'à 795 mm).
+- **Méthode** (`scripts/chlorure_pluie_kwale.py`) :
+  - Cl pondéré par la pluie = Σ(P·C)/ΣP sur les mois où P et C sont connus ;
+  - dépôt = Cl pondéré × pluie de décembre 2016 à novembre 2017 ;
+  - distance à la côte : conversion en WGS84, puis distance euclidienne en UTM 37S au trait de côte Natural Earth
+    10 m (domaine public, téléchargé). Précision d'environ 1 km.
+- **Résultats** :
+
+| Station | Distance à la côte (km) | Échantillons Cl | Cl pondéré (mg/L) | Pluie avr. 2016-nov. 2017 (mm) | Pluie déc. 2016-nov. 2017 (mm) | Dépôt (mg/m²/an) | Fiabilité |
+|---|---|---|---|---|---|---|---|
+| MSD Msambweni | 1,0 | 9 | 4,00 | 1 938 (3 mois manquants) | 814 (incomplète) | 3 256 | bonne |
+| GZW Gazi | 1,8 | 4 | 0,99 | 1 836 | 1 344 | 1 337 | faible |
+| KIN Kinondo | 1,8 | 6 | 3,43 | 1 896 | 1 280 | 4 393 | faible |
+| FHM Fahamuni | 2,7 | 3 (2 utilisables) | 2,03 | 1 389 | 1 143 | 2 326 | très faible (7 % de la pluie couverte) |
+| PS14 KISCOL | 3,3 | 4 | 1,27 | 2 461 | 1 601 | 2 040 | faible |
+| MWK Muhaka | 5,7 | 4 | 1,55 | 2 254 | 1 463 | 2 266 | faible |
+| PS13 KISCOL | 5,9 | 4 | 1,56 | 2 359 | 1 555 | 2 424 | faible |
+| BTC Base Titanium | 8,6 | 15 | 2,40 | 1 921 (1 mois manquant) | 1 112 (incomplète) | 2 665 | bonne |
+| MWC Mwachande | 9,6 | 17 | 2,18 | 2 427 | 1 528 | 3 334 | bonne |
+| SH Shimba Hills | 12,9 | 16 | 1,78 | 2 017 | 1 389 | 2 478 | bonne |
+| FTP Foot Print | 15,1 | 13 | 1,93 | 1 948 | 1 264 | 2 435 | bonne |
+
+  Stations fiables (5) : Cl pondéré médian **2,2 mg/L** (1,8 à 4,0) ; dépôt médian **2 665 mg/m²/an**. Toutes
+  stations : 1,0 à 4,0 mg/L, 1 337 à 4 393 mg/m²/an. Pas de gradient net au-delà de 3 km sur 15 km.
+- **Douteux** : FHM 2017-02 (44,6 mg/L pour 1 mm), BTC 2017-02 (31,6 mg/L pour 7 mm), KIN 2017-07 (12,8 mg/L pour
+  0 mm, impossible), MWC 2016-07 (21,8 mg/L), MSD 2016-06 (19,1 mg/L) ; pluie de GZW en avril 2016 (4,2 mm contre 178
+  à 618 mm ailleurs) ; valeurs de juin 2016 arrondies à une décimale. Leur poids est faible : sans les mois de moins de
+  10 mm, les moyennes bougent de moins de 0,15 mg/L, sauf FHM. Type de collecteur (humide ou bulk) non précisé.
+
+### 2. Van Wyk et al. (2011), Water SA 37(2), 147-154 : vérifié sur le PDF
+
+PDF SciELO (`/pdf/wsa/v37n2/v37n2a03.pdf`) et figure 2 (`a03fig02m.jpg`) téléchargés et lus. Les valeurs de
+l'entrée du 09/11 (section 4 ci-dessus) sont **confirmées**, avec leurs pages :
+- intérieur, pluie d'été (moyennes harmoniques) : 0,8 mg/L au début, 0,4 en pointe, 1,0 en saison sèche, pour 30, 65
+  et 5 % de la pluie (p. 152) ; pointe de 0,3 à 0,5 mg/L sur 19 stations (p. 152, figure 2 p. 153) ; tableau 1
+  (p. 150) : 0,44 mg/L en été, 2,67 mg/L en hiver ;
+- côte : Cap 3,5 à 16,8 mg/L, Langebaan Road 5 à 10 mg/L (p. 152, tableau 4) ; **côte nord du KwaZulu-Natal (océan
+  Indien) : 3,3 / 4,9 / 5,4 mg/L** (début, pointe, sec ; lu sur la figure 2, p. 153) ;
+- dépôt total de 260 mg/m²/an (Kuruman, Beaufort West, Vryburg, Pretoria Est), dont environ 30 %, soit
+  80 mg/m²/an, de dépôt sec (p. 153 et 154) ; « approximately 400 mg·m2·yr-1 » de dépôt sec cité d'après Eriksson
+  (1960) et Gieske (1992), source secondaire (p. 153) ;
+- **aucune équation en fonction de la distance à la côte** : seulement « almost an order of magnitude higher » sur
+  la côte (p. 154).
+
+### 3. Autres mesures dans l'océan Indien occidental
+
+Aucune mesure du chlorure de la pluie trouvée pour Madagascar, le Mozambique, Maurice, les Comores ou la Tanzanie.
+Pistes notées dans `data/mdg/chlorure_pluie.json` :
+- application « RainfallChloride » (Hydrogeological Repository, bêta, licence non indiquée) : 85 sites
+  sud-africains, Cl = exp(1,866 − 0,192·ln(1+d) − 0,000446·z + décalage selon la convention de mesure). Non vérifiée ;
+- La Réunion : Join (1991) et Grünberger (1989) attribuent le chlorure des nappes aux pluies, mais aucune valeur de
+  pluie n'a été trouvée.
+
+Échecs : CORE (core.ac.uk) HTTP 403 ; AJOL HTTP 403 ; SciELO en HTTP : réponse vide, puis succès en HTTPS.
+
+### Fichiers produits ou modifiés
+
+| Fichier | Statut git |
+|---|---|
+| `data/mdg/chlorure_pluie_raw/` (xlsx et métadonnées Kwale, trait de côte Natural Earth, PDF, HTML et figure de Van Wyk) | ignoré (`data/*/chlorure_pluie_raw/`, vérifié par `git check-ignore`) |
+| `data/mdg/chlorure_pluie.json` | versionnable (valeurs agrégées, références, licences, statut de vérification) |
+| `scripts/chlorure_pluie_kwale.py` | nouveau, non commité |
+| `.gitignore` | deux lignes ajoutées, non commité |

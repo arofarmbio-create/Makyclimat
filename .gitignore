@@ -52,3 +52,6 @@ data/*/bushproof_raw/
 data/*/bushproof_inventaire_cl_scelle.json
 .claude/settings.local.json
 /pilotage/
+
+# Chlorure de la pluie : données brutes téléchargées (Kwale BGS OGL, PDF), jamais dans git
+data/*/chlorure_pluie_raw/
