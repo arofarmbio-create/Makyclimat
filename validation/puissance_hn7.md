@@ -26,3 +26,17 @@ Généré le 2026-11-09 par `scripts/puissance_hn7.py`. Simulation seule, sans l
 - Règle adoptée le 09/11/2026 : si la puissance est inférieure à 50 % pour l'effet plausible, le test est déclaré **exploratoire dès le départ** ; un résultat négatif ne réfutera alors pas le lien océan → pluies extrêmes.
 - Gains possibles sans changer l'hypothèse : remplacer le résultat binaire par le **nombre de mois extrêmes** ou par la pluie maximale mensuelle (variable continue, plus puissante) ; réduire le nombre de tests (une région, un indice choisis par la littérature). Ces changements seraient datés dans le protocole avant tout calcul.
 
+
+## Variantes pour gagner en puissance (simulation du 09/11/2026, avant tout calcul)
+
+Un seul vrai lien ; part des saisons extrêmes 30% pour la version binaire ; 4000 simulations.
+
+| r | Binaire, 9 tests (protocole actuel) | Continu, 9 tests | Binaire, 1 test | **Continu, 1 test** |
+|---|---|---|---|---|
+| 0.2 | 5% | 11% | 12% | **23%** |
+| 0.3 | 10% | 28% | 21% | **47%** |
+| 0.4 | 18% | 54% | 35% | **74%** |
+| 0.5 | 29% | 79% | 51% | **91%** |
+
+Lecture : le résultat continu et le test unique ajoutent chacun de la puissance ; ensemble, ils rendent détectable un lien d'environ 0,4 et donnent une chance réelle à un lien de 0,3. Un lien de 0,2 reste hors de portée avec 45 saisons.
+
