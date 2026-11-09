@@ -1,0 +1,651 @@
+lon,lat,Aquifer_group,T2_mmpa,groupe_t2l,T2L_mmpa,domaine,distance_site_km
+48.9568,-12.515,Basement,181.0324,socle,181.0324,hors domaine,1140.4532
+49.2368,-12.515,Basement,187.0599,socle,187.0599,hors domaine,1144.2562
+49.5168,-12.515,Sedimentary,126.9785,autres,126.9785,hors domaine,1362.0392
+48.9568,-12.795,Basement,196.9443,socle,196.9443,hors domaine,1109.5223
+49.2368,-12.795,Basement,182.6055,socle,182.6055,hors domaine,1113.4256
+49.5168,-12.795,Sedimentary,128.3578,autres,128.3578,hors domaine,1333.6282
+48.9568,-13.075,Unconsolidated,25.5067,autres,25.5067,hors domaine,1280.8383
+49.2368,-13.075,Sedimentary,118.9537,autres,118.9537,hors domaine,1292.8107
+49.5168,-13.075,Basement,71.3439,socle,71.3439,hors domaine,1087.4116
+49.7968,-13.075,Basement,148.2876,socle,148.2876,hors domaine,1092.991
+48.9568,-13.355,Sedimentary,123.1639,autres,123.1639,hors domaine,1252.1659
+49.2368,-13.355,Basement,71.5751,socle,71.5751,hors domaine,1051.8176
+49.5168,-13.355,Basement,146.1435,socle,146.1435,hors domaine,1056.7499
+49.7968,-13.355,Basement,204.0446,socle,204.0446,hors domaine,1062.4821
+48.1168,-13.635,Sedimentary,168.8198,autres,168.8198,hors domaine,1189.7316
+48.3968,-13.635,Unconsolidated,307.5836,autres,307.5836,hors domaine,1200.4093
+48.6768,-13.635,Sedimentary,204.936,autres,204.936,hors domaine,1211.7086
+48.9568,-13.635,Basement,250.7998,socle,250.7998,hors domaine,1016.8036
+49.2368,-13.635,Basement,225.5058,socle,225.5058,hors domaine,1021.0433
+49.5168,-13.635,Basement,259.8364,socle,259.8364,hors domaine,1026.1163
+49.7968,-13.635,Basement,260.2541,socle,260.2541,hors domaine,1032.0103
+50.0768,-13.635,Basement,257.0674,socle,257.0674,hors domaine,1038.7112
+48.1168,-13.915,Sedimentary,197.4757,autres,197.4757,hors domaine,1160.5278
+48.3968,-13.915,Sedimentary,197.2146,autres,197.2146,hors domaine,1171.4556
+48.6768,-13.915,Basement,359.0525,socle,359.0525,hors domaine,982.4283
+48.9568,-13.915,Basement,250.6591,socle,250.6591,hors domaine,985.9259
+49.2368,-13.915,Basement,256.4667,socle,256.4667,hors domaine,990.2915
+49.5168,-13.915,Basement,338.3058,socle,338.3058,hors domaine,995.5136
+49.7968,-13.915,Basement,339.8079,socle,339.8079,hors domaine,1001.5789
+50.0768,-13.915,Basement,349.6713,socle,349.6713,hors domaine,1008.472
+47.8368,-14.195,Basement,200.3811,socle,200.3811,hors domaine,946.0933
+48.1168,-14.195,Sedimentary,196.3417,autres,196.3417,hors domaine,1131.4258
+48.3968,-14.195,Sedimentary,193.7841,autres,193.7841,hors domaine,1142.6153
+48.6768,-14.195,Basement,436.5598,socle,436.5598,hors domaine,951.4589
+48.9568,-14.195,Basement,262.9282,socle,262.9282,hors domaine,955.0647
+49.2368,-14.195,Basement,312.779,socle,312.779,hors domaine,959.5641
+49.5168,-14.195,Basement,347.0704,socle,347.0704,hors domaine,964.9446
+49.7968,-14.195,Basement,342.0485,socle,342.0485,hors domaine,971.1916
+50.0768,-14.195,Basement,335.2985,socle,335.2985,hors domaine,978.2885
+47.8368,-14.475,Basement,181.5418,socle,181.5418,hors domaine,914.9617
+48.1168,-14.475,Sedimentary,26.3037,autres,26.3037,hors domaine,1102.4337
+48.3968,-14.475,Basement,203.9147,socle,203.9147,hors domaine,917.7118
+48.6768,-14.475,Basement,259.5526,socle,259.5526,hors domaine,920.5006
+48.9568,-14.475,Basement,255.3059,socle,255.3059,hors domaine,924.2216
+49.2368,-14.475,Basement,314.2334,socle,314.2334,hors domaine,928.8636
+49.5168,-14.475,Basement,347.1315,socle,347.1315,hors domaine,934.4127
+49.7968,-14.475,Basement,336.097,socle,336.097,hors domaine,940.8529
+50.0768,-14.475,Basement,332.4253,socle,332.4253,hors domaine,948.166
+47.8368,-14.755,Sedimentary,62.8002,autres,62.8002,hors domaine,1062.4913
+48.1168,-14.755,Sedimentary,90.785,autres,90.785,hors domaine,1073.5603
+48.3968,-14.755,Basement,191.1672,socle,191.1672,hors domaine,886.6727
+48.6768,-14.755,Basement,250.1889,socle,250.1889,hors domaine,889.5546
+48.9568,-14.755,Basement,140.8695,socle,140.8695,hors domaine,893.3987
+49.2368,-14.755,Basement,315.4649,socle,315.4649,hors domaine,898.1927
+49.5168,-14.755,Basement,249.154,socle,249.154,hors domaine,903.9215
+49.7968,-14.755,Basement,248.351,socle,248.351,hors domaine,910.5675
+50.0768,-14.755,Basement,322.7664,socle,322.7664,hors domaine,918.1106
+47.2768,-15.035,Sedimentary,71.5377,autres,71.5377,hors domaine,1012.9073
+47.5568,-15.035,Basement,178.9698,socle,178.9698,hors domaine,852.7499
+47.8368,-15.035,Sedimentary,63.1381,autres,63.1381,hors domaine,1033.4565
+48.1168,-15.035,Basement,200.9775,socle,200.9775,hors domaine,853.664
+48.3968,-15.035,Basement,150.6839,socle,150.6839,hors domaine,855.6406
+48.6768,-15.035,Basement,226.1117,socle,226.1117,hors domaine,858.622
+48.9568,-15.035,Basement,254.3082,socle,254.3082,hors domaine,862.598
+49.2368,-15.035,Basement,257.4609,socle,257.4609,hors domaine,867.5547
+49.5168,-15.035,Basement,248.141,socle,248.141,hors domaine,873.4755
+49.7968,-15.035,Basement,247.5938,socle,247.5938,hors domaine,880.3409
+50.0768,-15.035,Basement,319.4425,socle,319.4425,hors domaine,888.1289
+50.3568,-15.035,Basement,258.4882,socle,258.4882,hors domaine,896.8156
+46.7168,-15.315,Unconsolidated,131.0432,autres,131.0432,hors domaine,965.4103
+46.9968,-15.315,Sedimentary,35.7134,autres,35.7134,hors domaine,974.0191
+47.2768,-15.315,Sedimentary,62.4886,autres,62.4886,hors domaine,983.4266
+47.5568,-15.315,Basement,182.3349,socle,182.3349,hors domaine,821.6209
+47.8368,-15.315,Sedimentary,62.9204,autres,62.9204,hors domaine,1004.5462
+48.1168,-15.315,Basement,147.8478,socle,147.8478,hors domaine,822.5681
+48.3968,-15.315,Basement,151.2417,socle,151.2417,hors domaine,824.6161
+48.6768,-15.315,Basement,223.3662,socle,223.3662,hors domaine,827.7046
+48.9568,-15.315,Basement,247.9568,socle,247.9568,hors domaine,831.822
+49.2368,-15.315,Sedimentary,199.4654,autres,199.4654,hors domaine,1069.6487
+49.5168,-15.315,Basement,248.0923,socle,248.0923,hors domaine,843.0794
+49.7968,-15.315,Basement,248.4214,socle,248.4214,hors domaine,850.1794
+50.0768,-15.315,Basement,308.9204,socle,308.9204,hors domaine,858.2288
+50.3568,-15.315,Basement,322.2993,socle,322.2993,hors domaine,867.2013
+46.4368,-15.595,Sedimentary,6.7539,autres,6.7539,hors domaine,927.4712
+46.7168,-15.595,Sedimentary,42.482,autres,42.482,hors domaine,935.498
+46.9968,-15.595,Unconsolidated,59.7362,autres,59.7362,hors domaine,944.3655
+47.2768,-15.595,Unconsolidated,141.5299,autres,141.5299,hors domaine,954.0502
+47.5568,-15.595,Sedimentary,120.8831,autres,120.8831,hors domaine,964.5274
+47.8368,-15.595,Sedimentary,123.017,autres,123.017,hors domaine,975.7717
+48.1168,-15.595,Basement,282.4023,socle,282.4023,hors domaine,791.4753
+48.3968,-15.595,Basement,223.5466,socle,223.5466,hors domaine,793.6002
+48.6768,-15.595,Basement,224.0219,socle,224.0219,hors domaine,796.8039
+48.9568,-15.595,Basement,246.3817,socle,246.3817,hors domaine,801.0735
+49.2368,-15.595,Basement,312.4207,socle,312.4207,hors domaine,806.392
+49.5168,-15.595,Basement,246.8586,socle,246.8586,hors domaine,812.7389
+50.0768,-15.595,Basement,245.8585,socle,245.8585,hors domaine,828.4191
+50.3568,-15.595,Basement,320.3599,socle,320.3599,hors domaine,837.6965
+45.8768,-15.875,Unconsolidated,19.1367,autres,19.1367,hors domaine,883.5067
+46.1568,-15.875,Sedimentary,6.7632,autres,6.7632,hors domaine,889.9928
+46.4368,-15.875,Sedimentary,19.7834,autres,19.7834,hors domaine,897.3872
+46.7168,-15.875,Sedimentary,28.3891,autres,28.3891,hors domaine,905.6674
+46.9968,-15.875,Sedimentary,41.9256,autres,41.9256,hors domaine,914.8095
+47.2768,-15.875,Basement,93.0536,socle,93.0536,hors domaine,760.5553
+47.5568,-15.875,Sedimentary,122.0165,autres,122.0165,hors domaine,935.5757
+47.8368,-15.875,Basement,71.4992,socle,71.4992,hors domaine,759.3077
+48.1168,-15.875,Basement,218.7817,socle,218.7817,hors domaine,760.3858
+48.3968,-15.875,Basement,220.5509,socle,220.5509,hors domaine,762.5939
+48.6768,-15.875,Basement,244.4013,socle,244.4013,hors domaine,765.9221
+48.9568,-15.875,Basement,242.9922,socle,242.9922,hors domaine,770.3559
+49.2368,-15.875,Basement,311.6069,socle,311.6069,hors domaine,775.8763
+49.5168,-15.875,Basement,246.7192,socle,246.7192,hors domaine,782.4604
+44.4768,-16.155,Unconsolidated,11.5684,autres,11.5684,hors domaine,834.2054
+45.0368,-16.155,Sedimentary,98.4367,autres,98.4367,hors domaine,838.7327
+45.3168,-16.155,Sedimentary,98.6516,autres,98.6516,hors domaine,842.5114
+45.5968,-16.155,Sedimentary,99.2819,autres,99.2819,hors domaine,847.2832
+45.8768,-16.155,Sedimentary,98.653,autres,98.653,hors domaine,853.0316
+46.1568,-16.155,Sedimentary,42.3228,autres,42.3228,hors domaine,859.7369
+46.4368,-16.155,Sedimentary,27.9587,autres,27.9587,hors domaine,867.3768
+46.7168,-16.155,Sedimentary,42.1616,autres,42.1616,hors domaine,875.927
+46.9968,-16.155,Sedimentary,135.4141,autres,135.4141,hors domaine,885.3611
+47.2768,-16.155,Sedimentary,62.1774,autres,62.1774,hors domaine,895.651
+47.5568,-16.155,Sedimentary,10.6929,autres,10.6929,hors domaine,906.7676
+47.8368,-16.155,Basement,96.0063,socle,96.0063,hors domaine,728.1778
+48.1168,-16.155,Basement,223.7808,socle,223.7808,hors domaine,729.3002
+48.3968,-16.155,Basement,241.9592,socle,241.9592,hors domaine,731.5984
+48.6768,-16.155,Basement,224.7823,socle,224.7823,hors domaine,735.0615
+48.9568,-16.155,Basement,251.88,socle,251.88,hors domaine,739.673
+49.2368,-16.155,Basement,321.939,socle,321.939,hors domaine,745.4116
+49.5168,-16.155,Basement,313.0116,socle,313.0116,hors domaine,752.2515
+49.7968,-16.155,Basement,256.6545,socle,256.6545,hors domaine,760.1629
+44.4768,-16.435,Sedimentary,89.4525,autres,89.4525,hors domaine,803.0988
+44.7568,-16.435,Sedimentary,28.9251,autres,28.9251,hors domaine,804.919
+45.0368,-16.435,Sedimentary,28.5008,autres,28.5008,hors domaine,807.7928
+45.3168,-16.435,Sedimentary,29.214,autres,29.214,hors domaine,811.7091
+45.5968,-16.435,Sedimentary,42.5204,autres,42.5204,hors domaine,816.6529
+45.8768,-16.435,Basement,79.4301,socle,79.4301,hors domaine,722.8912
+46.1568,-16.435,Basement,75.1058,socle,75.1058,hors domaine,715.6626
+46.4368,-16.435,Basement,76.4014,socle,76.4014,hors domaine,709.5725
+46.7168,-16.435,Sedimentary,42.8259,autres,42.8259,hors domaine,846.2863
+46.9968,-16.435,Sedimentary,42.8298,autres,42.8298,hors domaine,856.0311
+47.2768,-16.435,Sedimentary,43.6111,autres,43.6111,hors domaine,866.652
+47.5568,-16.435,Basement,69.3806,socle,69.3806,hors domaine,697.1098
+47.8368,-16.435,Basement,94.5714,socle,94.5714,hors domaine,697.0484
+48.1168,-16.435,Basement,220.5933,socle,220.5933,hors domaine,698.2189
+48.3968,-16.435,Basement,220.9017,socle,220.9017,hors domaine,700.6153
+48.6768,-16.435,Basement,369.0407,socle,369.0407,hors domaine,704.2249
+48.9568,-16.435,Basement,347.8088,socle,347.8088,hors domaine,709.0292
+49.2368,-16.435,Basement,308.8632,socle,308.8632,hors domaine,715.0042
+49.5168,-16.435,Basement,312.9843,socle,312.9843,hors domaine,722.1208
+49.7968,-16.435,Basement,315.6941,socle,315.6941,hors domaine,730.3455
+44.4768,-16.715,Unconsolidated,31.0926,autres,31.0926,hors domaine,771.9945
+44.7568,-16.715,Sedimentary,29.2094,autres,29.2094,hors domaine,773.8847
+45.0368,-16.715,Basement,79.5313,socle,79.5313,hors domaine,722.1669
+45.3168,-16.715,Basement,78.1969,socle,78.1969,hors domaine,711.3336
+45.5968,-16.715,Sedimentary,28.4368,autres,28.4368,hors domaine,786.062
+45.8768,-16.715,Sedimentary,28.2652,autres,28.2652,hors domaine,792.2344
+46.1568,-16.715,Sedimentary,28.1191,autres,28.1191,hors domaine,799.4261
+46.4368,-16.715,Sedimentary,28.5632,autres,28.5632,hors domaine,807.6099
+46.7168,-16.715,Sedimentary,6.5415,autres,6.5415,hors domaine,816.756
+46.9968,-16.715,Sedimentary,6.5389,autres,6.5389,hors domaine,826.8324
+47.2768,-16.715,Basement,70.6743,socle,70.6743,hors domaine,667.3348
+47.5568,-16.715,Basement,184.5641,socle,184.5641,hors domaine,665.9836
+47.8368,-16.715,Sedimentary,40.7536,autres,40.7536,hors domaine,862.3017
+48.1168,-16.715,Basement,220.9984,socle,220.9984,hors domaine,667.1426
+48.3968,-16.715,Basement,101.615,socle,101.615,hors domaine,669.6461
+48.6768,-16.715,Basement,250.7668,socle,250.7668,hors domaine,673.4156
+48.9568,-16.715,Sedimentary,198.7039,autres,198.7039,hors domaine,920.4952
+49.2368,-16.715,Basement,306.9232,socle,306.9232,hors domaine,684.662
+49.5168,-16.715,Basement,305.7078,socle,305.7078,hors domaine,692.0786
+44.1968,-16.995,Unconsolidated,18.7346,autres,18.7346,hors domaine,740.0723
+44.4768,-16.995,Sedimentary,28.5096,autres,28.5096,hors domaine,740.8927
+44.7568,-16.995,Sedimentary,29.0173,autres,29.0173,hors domaine,742.8587
+45.0368,-16.995,Basement,77.3902,socle,77.3902,hors domaine,693.4749
+45.3168,-16.995,Basement,49.0166,socle,49.0166,hors domaine,682.2049
+45.5968,-16.995,Sedimentary,28.538,autres,28.538,hors domaine,755.5152
+45.8768,-16.995,Sedimentary,28.6361,autres,28.6361,hors domaine,761.9244
+46.1568,-16.995,Sedimentary,27.8845,autres,27.8845,hors domaine,769.3871
+46.4368,-16.995,Sedimentary,20.7322,autres,20.7322,hors domaine,777.8729
+46.7168,-16.995,Sedimentary,6.5398,autres,6.5398,hors domaine,787.3487
+46.9968,-16.995,Basement,66.742,socle,66.742,hors domaine,639.0269
+47.2768,-16.995,Basement,71.1687,socle,71.1687,hors domaine,636.2732
+47.5568,-16.995,Basement,184.62,socle,184.62,hors domaine,634.8583
+47.8368,-16.995,Basement,184.5675,socle,184.5675,hors domaine,634.791
+48.1168,-16.995,Basement,222.9304,socle,222.9304,hors domaine,636.072
+48.3968,-16.995,Basement,102.8985,socle,102.8985,hors domaine,638.6929
+48.6768,-16.995,Basement,254.1577,socle,254.1577,hors domaine,642.6375
+48.9568,-16.995,Basement,308.9913,socle,308.9913,hors domaine,647.8816
+49.2368,-16.995,Basement,307.5516,socle,307.5516,hors domaine,654.3939
+49.5168,-16.995,Basement,311.1534,socle,311.1534,hors domaine,662.1369
+44.1968,-17.275,Unconsolidated,9.6443,autres,9.6443,hors domaine,708.9389
+44.4768,-17.275,Sedimentary,21.3604,autres,21.3604,hors domaine,709.7938
+44.7568,-17.275,Sedimentary,33.2557,autres,33.2557,hors domaine,711.8422
+45.0368,-17.275,Basement,71.143,socle,71.143,hors domaine,665.0018
+45.3168,-17.275,Basement,69.2427,socle,69.2427,hors domaine,653.2605
+45.5968,-17.275,Sedimentary,32.8738,autres,32.8738,hors domaine,725.0182
+45.8768,-17.275,Sedimentary,33.3773,autres,33.3773,hors domaine,731.6834
+46.1568,-17.275,Sedimentary,32.7157,autres,32.7157,hors domaine,739.4383
+46.4368,-17.275,Sedimentary,29.7546,autres,29.7546,hors domaine,748.2489
+46.7168,-17.275,Basement,70.3361,socle,70.3361,hors domaine,612.3826
+46.9968,-17.275,Basement,71.4675,socle,71.4675,hors domaine,608.1087
+47.2768,-17.275,Basement,27.8395,socle,27.8395,hors domaine,605.2191
+47.5568,-17.275,Basement,186.01,socle,186.01,hors domaine,603.7338
+47.8368,-17.275,Basement,27.5443,socle,27.5443,hors domaine,603.6633
+48.1168,-17.275,Basement,239.913,socle,239.913,hors domaine,605.0079
+48.3968,-17.275,Basement,240.4522,socle,240.4522,hors domaine,607.7582
+48.6768,-17.275,Basement,254.518,socle,254.518,hors domaine,611.8954
+48.9568,-17.275,Basement,319.0464,socle,319.0464,hors domaine,617.3915
+49.2368,-17.275,Basement,305.6729,socle,305.6729,hors domaine,624.2107
+44.1968,-17.555,Unconsolidated,9.6389,autres,9.6389,hors domaine,677.8055
+44.4768,-17.555,Basement,75.8517,socle,75.8517,hors domaine,664.4629
+44.7568,-17.555,Sedimentary,33.5189,autres,33.5189,hors domaine,680.8365
+45.0368,-17.555,Sedimentary,33.42,autres,33.42,hors domaine,684.2089
+45.3168,-17.555,Sedimentary,33.4675,autres,33.4675,hors domaine,688.7973
+45.5968,-17.555,Sedimentary,33.0277,autres,33.0277,hors domaine,694.5776
+45.8768,-17.555,Basement,32.8676,socle,32.8676,hors domaine,603.5318
+46.1568,-17.555,Basement,31.5628,socle,31.5628,hors domaine,594.9123
+46.4368,-17.555,Basement,71.3165,socle,71.3165,hors domaine,587.6208
+46.7168,-17.555,Basement,32.2271,socle,32.2271,hors domaine,581.707
+46.9968,-17.555,Basement,32.6762,socle,32.6762,hors domaine,577.2136
+47.2768,-17.555,Basement,27.834,socle,27.834,hors domaine,574.1737
+47.5568,-17.555,Basement,215.854,socle,215.854,hors domaine,572.6105
+47.8368,-17.555,Basement,52.8572,socle,52.8572,hors domaine,572.5362
+48.1168,-17.555,Basement,242.5459,socle,242.5459,hors domaine,573.9514
+48.3968,-17.555,Unconsolidated,168.3445,autres,168.3445,hors domaine,809.7477
+48.6768,-17.555,Basement,142.6958,socle,142.6958,hors domaine,581.195
+48.9568,-17.555,Basement,311.3436,socle,311.3436,hors domaine,586.9689
+49.2368,-17.555,Basement,294.3424,socle,294.3424,hors domaine,594.1253
+44.1968,-17.835,Basement,33.1247,socle,33.1247,hors domaine,653.5928
+44.4768,-17.835,Sedimentary,29.3494,autres,29.3494,hors domaine,647.6061
+44.7568,-17.835,Sedimentary,33.2068,autres,33.2068,hors domaine,649.843
+45.0368,-17.835,Sedimentary,30.4204,autres,30.4204,hors domaine,653.3693
+45.3168,-17.835,Sedimentary,29.7508,autres,29.7508,hors domaine,658.1645
+45.5968,-17.835,Basement,43.0162,socle,43.0162,hors domaine,584.408
+45.8768,-17.835,Basement,91.3471,socle,91.3471,hors domaine,574.0347
+46.1568,-17.835,Basement,91.1085,socle,91.1085,hors domaine,564.9809
+46.4368,-17.835,Basement,74.4928,socle,74.4928,hors domaine,557.311
+46.7168,-17.835,Basement,32.8482,socle,32.8482,hors domaine,551.0828
+46.9968,-17.835,Basement,32.9349,socle,32.9349,hors domaine,546.3456
+47.2768,-17.835,Basement,33.0456,socle,33.0456,hors domaine,543.1384
+47.5568,-17.835,Basement,215.8675,socle,215.8675,hors domaine,541.4885
+47.8368,-17.835,Basement,206.4734,socle,206.4734,hors domaine,541.4101
+48.1168,-17.835,Basement,244.244,socle,244.244,hors domaine,542.9038
+48.3968,-17.835,Unconsolidated,166.7059,autres,166.7059,hors domaine,783.6561
+48.6768,-17.835,Basement,309.0272,socle,309.0272,hors domaine,550.5431
+48.9568,-17.835,Basement,306.1739,socle,306.1739,hors domaine,556.6248
+49.2368,-17.835,Basement,294.0149,socle,294.0149,hors domaine,564.1536
+44.1968,-18.115,Unconsolidated,9.6267,autres,9.6267,hors domaine,615.5391
+44.4768,-18.115,Basement,33.0941,socle,33.0941,hors domaine,611.3227
+44.7568,-18.115,Sedimentary,30.4582,autres,30.4582,hors domaine,618.8636
+45.0368,-18.115,Sedimentary,33.6461,autres,33.6461,hors domaine,622.559
+45.3168,-18.115,Basement,70.9711,socle,70.9711,hors domaine,567.8144
+45.5968,-18.115,Basement,92.7521,socle,92.7521,hors domaine,555.6216
+45.8768,-18.115,Basement,91.8589,socle,91.8589,hors domaine,544.7193
+46.1568,-18.115,Basement,33.4296,socle,33.4296,hors domaine,535.1864
+46.4368,-18.115,Basement,32.8102,socle,32.8102,hors domaine,527.0971
+46.7168,-18.115,Basement,175.894,socle,175.894,hors domaine,520.5189
+46.9968,-18.115,Basement,32.5658,socle,32.5658,hors domaine,515.5096
+47.2768,-18.115,Basement,178.5785,socle,178.5785,hors domaine,512.1152
+47.5568,-18.115,Basement,34.211,socle,34.211,hors domaine,510.368
+47.8368,-18.115,Basement,189.8819,socle,189.8819,hors domaine,510.2849
+48.1168,-18.115,Basement,250.6435,socle,250.6435,hors domaine,511.8668
+48.3968,-18.115,Basement,246.18,socle,246.18,hors domaine,515.0982
+48.6768,-18.115,Basement,304.8685,socle,304.8685,hors domaine,519.9485
+48.9568,-18.115,Basement,304.9007,socle,304.9007,hors domaine,526.3728
+49.2368,-18.115,Basement,291.2006,socle,291.2006,hors domaine,534.3144
+44.1968,-18.395,Unconsolidated,9.6245,autres,9.6245,hors domaine,584.4061
+44.4768,-18.395,Basement,50.7237,socle,50.7237,hors domaine,585.4256
+44.7568,-18.395,Sedimentary,33.4444,autres,33.4444,hors domaine,587.9005
+45.0368,-18.395,Sedimentary,33.7193,autres,33.7193,hors domaine,591.7825
+45.3168,-18.395,Basement,73.0718,socle,73.0718,hors domaine,539.9167
+45.5968,-18.395,Basement,92.921,socle,92.921,hors domaine,527.1015
+45.8768,-18.395,Basement,91.9179,socle,91.9179,hors domaine,515.6167
+46.1568,-18.395,Basement,33.1777,socle,33.1777,hors domaine,505.5529
+46.4368,-18.395,Basement,32.901,socle,32.901,hors domaine,496.9966
+46.7168,-18.395,Basement,175.8675,socle,175.8675,hors domaine,490.0267
+46.9968,-18.395,Basement,176.0301,socle,176.0301,hors domaine,484.7116
+47.2768,-18.395,Basement,178.6831,socle,178.6831,hors domaine,481.1063
+47.5568,-18.395,Basement,34.1255,socle,34.1255,hors domaine,479.2493
+47.8368,-18.395,Basement,195.6822,socle,195.6822,hors domaine,479.161
+48.1168,-18.395,Basement,260.2029,socle,260.2029,hors domaine,480.8424
+48.3968,-18.395,Basement,144.6325,socle,144.6325,hors domaine,484.2749
+48.6768,-18.395,Basement,304.5731,socle,304.5731,hors domaine,489.4218
+48.9568,-18.395,Basement,304.8512,socle,304.8512,hors domaine,496.2297
+49.2368,-18.395,Basement,293.9286,socle,293.9286,hors domaine,504.6314
+44.4768,-18.675,Basement,33.111,socle,33.111,hors domaine,560.0605
+44.7568,-18.675,Sedimentary,33.3698,autres,33.3698,hors domaine,556.9565
+45.0368,-18.675,Sedimentary,31.0122,autres,31.0122,hors domaine,561.0454
+45.3168,-18.675,Sedimentary,26.222,autres,26.222,hors domaine,566.5931
+45.5968,-18.675,Basement,33.2492,socle,33.2492,hors domaine,498.8934
+45.8768,-18.675,Basement,75.7931,socle,75.7931,hors domaine,486.7651
+46.1568,-18.675,Basement,74.8109,socle,74.8109,hors domaine,476.1108
+46.4368,-18.675,Basement,75.0107,socle,75.0107,hors domaine,467.0314
+46.7168,-18.675,Basement,73.6988,socle,73.6988,hors domaine,459.6204
+46.9968,-18.675,Basement,90.5527,socle,90.5527,hors domaine,453.9595
+47.2768,-18.675,Basement,175.4711,socle,175.4711,hors domaine,450.1148
+47.5568,-18.675,Basement,178.7163,socle,178.7163,hors domaine,448.1329
+47.8368,-18.675,Basement,248.3556,socle,248.3556,hors domaine,448.0386
+48.1168,-18.675,Unconsolidated,139.7642,autres,139.7642,hors domaine,690.0908
+48.3968,-18.675,Basement,315.3379,socle,315.3379,hors domaine,453.494
+48.6768,-18.675,Basement,305.5637,socle,305.5637,hors domaine,458.9767
+48.9568,-18.675,Basement,307.8926,socle,307.8926,hors domaine,466.2167
+44.4768,-18.955,Sedimentary,57.5228,autres,57.5228,hors domaine,523.2888
+44.7568,-18.955,Sedimentary,33.6572,autres,33.6572,hors domaine,526.035
+45.0368,-18.955,Sedimentary,33.7889,autres,33.7889,hors domaine,530.3545
+45.3168,-18.955,Sedimentary,30.7434,autres,30.7434,hors domaine,536.2093
+45.5968,-18.955,Basement,33.2963,socle,33.2963,hors domaine,471.0533
+45.8768,-18.955,Basement,33.0052,socle,33.0052,hors domaine,458.2117
+46.1568,-18.955,Basement,74.9953,socle,74.9953,hors domaine,446.8976
+46.4368,-18.955,Basement,32.712,socle,32.712,hors domaine,437.2294
+46.7168,-18.955,Basement,132.8309,socle,132.8309,hors domaine,429.3184
+46.9968,-18.955,Basement,90.1118,socle,90.1118,hors domaine,423.2633
+47.2768,-18.955,Basement,175.7411,socle,175.7411,hors domaine,419.1444
+47.5568,-18.955,Basement,178.97,socle,178.97,hors domaine,417.0191
+47.8368,-18.955,Basement,250.0082,socle,250.0082,hors domaine,416.918
+48.1168,-18.955,Basement,255.6181,socle,255.6181,hors domaine,418.8424
+48.3968,-18.955,Basement,314.663,socle,314.663,hors domaine,422.7649
+48.6768,-18.955,Basement,253.1279,socle,253.1279,hors domaine,428.6304
+48.9568,-18.955,Basement,312.5144,socle,312.5144,hors domaine,436.3606
+44.4768,-19.235,Unconsolidated,25.1667,autres,25.1667,hors domaine,492.2269
+44.7568,-19.235,Sedimentary,93.057,autres,93.057,hors domaine,495.1401
+45.0368,-19.235,Sedimentary,31.1141,autres,31.1141,hors domaine,499.7184
+45.3168,-19.235,Sedimentary,6.5452,autres,6.5452,hors domaine,505.9167
+45.5968,-19.235,Basement,79.891,socle,79.891,hors domaine,443.6505
+45.8768,-19.235,Basement,32.7901,socle,32.7901,hors domaine,430.0162
+46.1568,-19.235,Basement,71.5919,socle,71.5919,hors domaine,417.9614
+46.4368,-19.235,Basement,102.1003,socle,102.1003,hors domaine,407.6263
+46.7168,-19.235,Basement,136.4672,socle,136.4672,hors domaine,399.1444
+46.9968,-19.235,Basement,90.6994,socle,90.6994,hors domaine,392.6359
+47.2768,-19.235,Basement,175.3991,socle,175.3991,hors domaine,388.2002
+47.5568,-19.235,Basement,178.5992,socle,178.5992,hors domaine,385.9087
+47.8368,-19.235,Basement,71.0928,socle,71.0928,hors domaine,385.7996
+48.1168,-19.235,Basement,288.2794,socle,288.2794,hors domaine,387.8748
+48.3968,-19.235,Basement,288.283,socle,288.283,hors domaine,392.0996
+48.6768,-19.235,Basement,310.4355,socle,310.4355,hors domaine,398.4055
+48.9568,-19.235,Basement,320.9202,socle,320.9202,hors domaine,406.6959
+44.4768,-19.515,Sedimentary,74.708,autres,74.708,hors domaine,461.1747
+44.7568,-19.515,Sedimentary,41.7099,autres,41.7099,hors domaine,464.2771
+45.0368,-19.515,Sedimentary,6.5282,autres,6.5282,hors domaine,469.1478
+45.3168,-19.515,Sedimentary,6.5636,autres,6.5636,hors domaine,475.7325
+45.5968,-19.515,Basement,31.0135,socle,31.0135,hors domaine,416.7712
+45.8768,-19.515,Basement,31.4529,socle,31.4529,hors domaine,402.2537
+46.1568,-19.515,Basement,32.1643,socle,32.1643,hors domaine,389.3641
+46.4368,-19.515,Basement,73.8112,socle,73.8112,hors domaine,378.2688
+46.7168,-19.515,Basement,173.3842,socle,173.3842,hors domaine,369.1297
+46.9968,-19.515,Basement,140.2056,socle,140.2056,hors domaine,362.095
+47.2768,-19.515,Basement,201.0678,socle,201.0678,hors domaine,357.2891
+47.5568,-19.515,Basement,207.1844,socle,207.1844,hors domaine,354.8025
+47.8368,-19.515,Basement,171.7378,socle,171.7378,hors domaine,354.6841
+48.1168,-19.515,Basement,255.9279,socle,255.9279,hors domaine,356.9361
+48.3968,-19.515,Basement,308.4811,socle,308.4811,hors domaine,361.5144
+48.6768,-19.515,Basement,312.2676,socle,312.2676,hors domaine,368.3321
+44.4768,-19.795,Unconsolidated,14.624,autres,14.624,hors domaine,430.1345
+44.7568,-19.795,Sedimentary,41.7177,autres,41.7177,hors domaine,433.4529
+45.0368,-19.795,Sedimentary,31.5236,autres,31.5236,hors domaine,438.6564
+45.3168,-19.795,Sedimentary,6.5669,autres,6.5669,hors domaine,445.6788
+45.5968,-19.795,Basement,30.7751,socle,30.7751,hors domaine,390.5237
+45.8768,-19.795,Basement,31.3644,socle,31.3644,hors domaine,375.0204
+46.1568,-19.795,Basement,32.3589,socle,32.3589,hors domaine,361.186
+46.4368,-19.795,Basement,32.5104,socle,32.5104,hors domaine,349.2188
+46.7168,-19.795,Basement,52.4011,socle,52.4011,hors domaine,339.3166
+46.9968,-19.795,Basement,138.0917,socle,138.0917,hors domaine,331.6644
+47.2768,-19.795,Basement,200.9785,socle,200.9785,hors domaine,326.4204
+47.5568,-19.795,Basement,189.7567,socle,189.7567,hors domaine,323.7018
+47.8368,-19.795,Basement,294.0519,socle,294.0519,hors domaine,323.5722
+48.1168,-19.795,Basement,256.017,socle,256.017,hors domaine,326.0347
+48.3968,-19.795,Basement,259.8851,socle,259.8851,hors domaine,331.0315
+48.6768,-19.795,Basement,313.4252,socle,313.4252,hors domaine,338.4503
+44.4768,-20.075,Unconsolidated,14.7461,autres,14.7461,hors domaine,399.1089
+44.7568,-20.075,Sedimentary,11.4772,autres,11.4772,hors domaine,402.6765
+45.0368,-20.075,Sedimentary,33.9458,autres,33.9458,hors domaine,408.2619
+45.3168,-20.075,Sedimentary,23.1081,autres,23.1081,hors domaine,415.784
+45.5968,-20.075,Sedimentary,6.5269,autres,6.5269,hors domaine,425.1398
+45.8768,-20.075,Basement,72.7947,socle,72.7947,hors domaine,348.4404
+46.1568,-20.075,Basement,31.9174,socle,31.9174,hors domaine,333.5335
+46.4368,-20.075,Basement,66.1377,socle,66.1377,hors domaine,320.5601
+46.7168,-20.075,Basement,52.2016,socle,52.2016,hors domaine,309.7634
+46.9968,-20.075,Basement,53.0828,socle,53.0828,hors domaine,301.3774
+47.2768,-20.075,Basement,61.6954,socle,61.6954,hors domaine,295.6074
+47.5568,-20.075,Basement,130.2918,socle,130.2918,hors domaine,292.6083
+47.8368,-20.075,Basement,178.8074,socle,178.8074,hors domaine,292.4652
+48.1168,-20.075,Basement,302.9344,socle,302.9344,hors domaine,295.1823
+48.3968,-20.075,Basement,338.7015,socle,338.7015,hors domaine,300.6821
+48.6768,-20.075,Basement,323.731,socle,323.731,hors domaine,308.816
+44.4768,-20.355,Unconsolidated,30.8453,autres,30.8453,hors domaine,368.1017
+44.7568,-20.355,Unconsolidated,34.2396,autres,34.2396,hors domaine,371.9595
+45.0368,-20.355,Sedimentary,29.6339,autres,29.6339,hors domaine,377.9877
+45.3168,-20.355,Sedimentary,6.618,autres,6.618,hors domaine,386.0848
+45.5968,-20.355,Sedimentary,6.5364,autres,6.5364,hors domaine,396.1239
+45.8768,-20.355,Basement,73.0951,socle,73.0951,hors domaine,322.6753
+46.1568,-20.355,Basement,32.0498,socle,32.0498,hors domaine,306.5488
+46.4368,-20.355,Basement,70.9794,socle,70.9794,hors domaine,292.4076
+46.7168,-20.355,Basement,51.0792,socle,51.0792,hors domaine,280.5522
+46.9968,-20.355,Basement,51.7088,socle,51.7088,hors domaine,271.2823
+47.2768,-20.355,Basement,180.9998,socle,180.9998,hors domaine,264.8696
+47.5568,-20.355,Basement,174.4356,socle,174.4356,hors domaine,261.5245
+47.8368,-20.355,Basement,178.8043,socle,178.8043,hors domaine,261.3647
+48.1168,-20.355,Basement,302.6318,socle,302.6318,hors domaine,264.396
+48.3968,-20.355,Basement,341.6199,socle,341.6199,hors domaine,270.5111
+44.1968,-20.635,Unconsolidated,16.0326,autres,16.0326,hors domaine,335.3532
+44.4768,-20.635,Unconsolidated,30.3103,autres,30.3103,hors domaine,337.118
+44.7568,-20.635,Sedimentary,6.5382,autres,6.5382,hors domaine,341.3181
+45.0368,-20.635,Sedimentary,6.6059,autres,6.6059,hors domaine,347.8653
+45.3168,-20.635,Sedimentary,6.6992,autres,6.6992,hors domaine,356.6303
+45.5968,-20.635,Sedimentary,6.6216,autres,6.6216,hors domaine,367.4545
+45.8768,-20.635,Basement,31.0906,socle,31.0906,hors domaine,297.9363
+46.1568,-20.635,Basement,71.123,socle,71.123,hors domaine,280.4248
+46.4368,-20.635,Basement,44.451,socle,44.451,hors domaine,264.9228
+46.7168,-20.635,Basement,50.6987,socle,50.6987,hors domaine,251.802
+46.9968,-20.635,Basement,52.3765,socle,52.3765,hors domaine,241.4507
+47.2768,-20.635,Basement,186.1664,socle,186.1664,hors domaine,234.2366
+47.5568,-20.635,Basement,313.1753,socle,313.1753,hors domaine,230.4544
+47.8368,-20.635,Basement,254.3451,socle,254.3451,hors domaine,230.2734
+48.1168,-20.635,Basement,257.4196,socle,257.4196,hors domaine,233.7018
+48.3968,-20.635,Basement,337.1647,socle,337.1647,hors domaine,240.5855
+43.9168,-20.915,Unconsolidated,8.5846,autres,8.5846,hors domaine,305.004
+44.1968,-20.915,Unconsolidated,14.6261,autres,14.6261,hors domaine,304.2243
+44.4768,-20.915,Sedimentary,20.7725,autres,20.7725,hors domaine,306.1648
+44.7568,-20.915,Sedimentary,6.582,autres,6.582,hors domaine,310.7747
+45.0368,-20.915,Sedimentary,25.9932,autres,25.9932,hors domaine,317.9377
+45.3168,-20.915,Sedimentary,26.5528,autres,26.5528,hors domaine,327.4864
+45.5968,-20.915,Sedimentary,27.8252,autres,27.8252,hors domaine,339.2194
+45.8768,-20.915,Basement,71.0907,socle,71.0907,hors domaine,274.5013
+46.1568,-20.915,Basement,69.8068,socle,69.8068,hors domaine,255.4257
+46.4368,-20.915,Basement,70.7485,socle,70.7485,hors domaine,238.3368
+46.7168,-20.915,Basement,50.7886,socle,50.7886,hors domaine,223.6906
+46.9968,-20.915,Basement,52.1388,socle,52.1388,hors domaine,211.994
+47.2768,-20.915,Basement,190.291,socle,190.291,hors domaine,203.7556
+47.5568,-20.915,Basement,311.4959,socle,311.4959,hors domaine,199.4045
+47.8368,-20.915,Basement,308.755,socle,308.755,hors domaine,199.1956
+48.1168,-20.915,Basement,257.7316,socle,257.7316,hors domaine,203.1418
+48.3968,-20.915,Basement,334.3265,socle,334.3265,hors domaine,211.01
+43.9168,-21.195,Unconsolidated,14.6478,autres,14.6478,hors domaine,273.9633
+44.1968,-21.195,Unconsolidated,6.3652,autres,6.3652,hors domaine,273.0966
+44.4768,-21.195,Sedimentary,13.884,autres,13.884,hors domaine,275.2525
+44.7568,-21.195,Sedimentary,21.924,autres,21.924,hors domaine,280.3612
+45.0368,-21.195,Sedimentary,25.4152,autres,25.4152,hors domaine,288.2657
+45.3168,-21.195,Sedimentary,26.3322,autres,26.3322,hors domaine,298.7441
+45.5968,-21.195,Sedimentary,26.6218,autres,26.6218,hors domaine,311.5368
+45.8768,-21.195,Basement,70.3131,socle,70.3131,hors domaine,252.7331
+46.1568,-21.195,Basement,69.6874,socle,69.6874,hors domaine,231.9155
+46.4368,-21.195,Basement,70.2611,socle,70.2611,hors domaine,212.9865
+46.7168,-21.195,Basement,48.1002,socle,48.1002,hors domaine,196.4926
+46.9968,-21.195,Basement,49.7579,socle,49.7579,hors domaine,183.0931
+47.2768,-21.195,Basement,112.4697,socle,112.4697,hors domaine,173.5067
+47.5568,-21.195,Basement,314.9114,socle,314.9114,hors domaine,168.3858
+47.8368,-21.195,Basement,418.0294,socle,418.0294,hors domaine,168.1389
+48.1168,-21.195,Basement,258.3937,socle,258.3937,hors domaine,172.7869
+43.6368,-21.475,Unconsolidated,3.6191,autres,3.6191,hors domaine,247.2836
+43.9168,-21.475,Unconsolidated,25.1495,autres,25.1495,hors domaine,242.9466
+44.1968,-21.475,Sedimentary,6.1833,autres,6.1833,hors domaine,241.9708
+44.4768,-21.475,Sedimentary,20.1616,autres,20.1616,hors domaine,244.3967
+44.7568,-21.475,Sedimentary,22.2991,autres,22.2991,hors domaine,250.1251
+45.0368,-21.475,Sedimentary,26.5884,autres,26.5884,hors domaine,258.9371
+45.3168,-21.475,Sedimentary,6.6103,autres,6.6103,hors domaine,270.5314
+45.5968,-21.475,Basement,71.3869,socle,71.3869,hors domaine,257.0393
+45.8768,-21.475,Basement,70.3285,socle,70.3285,hors domaine,233.0993
+46.1568,-21.475,Basement,69.6896,socle,69.6896,hors domaine,210.3941
+46.4368,-21.475,Basement,70.0765,socle,70.0765,hors domaine,189.3687
+46.7168,-21.475,Basement,47.2799,socle,47.2799,hors domaine,170.645
+46.9968,-21.475,Basement,92.621,socle,92.621,hors domaine,155.0593
+47.2768,-21.475,Basement,188.9578,socle,188.9578,hors domaine,143.6367
+47.5568,-21.475,Basement,312.6129,socle,312.6129,hors domaine,137.4195
+47.8368,-21.475,Basement,433.5266,socle,433.5266,hors domaine,137.1174
+48.1168,-21.475,Basement,256.0502,socle,256.0502,hors domaine,142.7681
+43.3568,-21.755,Unconsolidated,7.8914,autres,7.8914,hors domaine,225.4383
+43.6368,-21.755,Unconsolidated,18.6053,autres,18.6053,hors domaine,216.912
+43.9168,-21.755,Unconsolidated,14.6332,autres,14.6332,hors domaine,211.9644
+44.1968,-21.755,Sedimentary,41.5009,autres,41.5009,hors domaine,210.8476
+44.4768,-21.755,Sedimentary,20.2685,autres,20.2685,hors domaine,213.6216
+44.7568,-21.755,Sedimentary,21.7503,autres,21.7503,hors domaine,220.1395
+45.0368,-21.755,Sedimentary,23.7308,autres,23.7308,hors domaine,230.0833
+45.3168,-21.755,Sedimentary,23.1025,autres,23.1025,hors domaine,243.0327
+45.5968,-21.755,Basement,70.1553,socle,70.1553,hors domaine,241.7551
+45.8768,-21.755,Basement,69.7789,socle,69.7789,hors domaine,216.182
+46.1568,-21.755,Basement,69.7126,socle,69.7126,hors domaine,191.5329
+46.4368,-21.755,Sedimentary,27.221,autres,27.221,hors domaine,316.2963
+46.7168,-21.755,Basement,90.8698,socle,90.8698,hors domaine,146.8627
+46.9968,-21.755,Basement,33.4173,socle,33.4173,hors domaine,128.4613
+47.2768,-21.755,Basement,33.9318,socle,33.9318,hors domaine,114.4428
+47.5568,-21.755,Basement,264.468,socle,264.468,hors domaine,106.5513
+47.8368,-21.755,Basement,267.218,socle,267.218,hors domaine,106.1622
+48.1168,-21.755,Basement,254.5165,socle,254.5165,hors domaine,113.3528
+43.3568,-22.035,Unconsolidated,17.7897,autres,17.7897,hors domaine,196.6092
+43.6368,-22.035,Unconsolidated,9.2677,autres,9.2677,hors domaine,186.7918
+43.9168,-22.035,Unconsolidated,9.3346,autres,9.3346,hors domaine,181.0346
+44.1968,-22.035,Sedimentary,40.659,autres,40.659,hors domaine,179.7283
+44.4768,-22.035,Sedimentary,13.8574,autres,13.8574,hors domaine,182.9683
+44.7568,-22.035,Sedimentary,21.9884,autres,21.9884,hors domaine,190.5227
+45.0368,-22.035,Sedimentary,23.655,autres,23.655,hors domaine,201.9079
+45.3168,-22.035,Sedimentary,23.2023,autres,23.2023,hors domaine,216.5203
+45.5968,-22.035,Basement,69.9203,socle,69.9203,hors domaine,229.695
+45.8768,-22.035,Basement,69.6746,socle,69.6746,hors domaine,202.6628
+46.1568,-22.035,Basement,70.0163,socle,70.0163,hors domaine,176.1884
+46.4368,-22.035,Basement,70.2852,socle,70.2852,hors domaine,150.5667
+46.7168,-22.035,Basement,92.675,socle,92.675,hors domaine,126.3177
+46.9968,-22.035,Basement,179.5003,socle,179.5003,hors domaine,104.4025
+47.2768,-22.035,Basement,247.8381,socle,46.4597,dans le domaine,86.611
+47.5568,-22.035,Basement,258.8895,socle,48.5314,dans le domaine,75.901
+47.8368,-22.035,Basement,390.8781,socle,73.2739,dans le domaine,75.3549
+43.3568,-22.315,Unconsolidated,14.3249,autres,14.3249,hors domaine,168.6018
+43.6368,-22.315,Unconsolidated,9.3185,autres,9.3185,hors domaine,157.0674
+43.9168,-22.315,Sedimentary,9.3579,autres,9.3579,hors domaine,150.1893
+44.1968,-22.315,Sedimentary,13.86,autres,13.86,hors domaine,148.6154
+44.4768,-22.315,Sedimentary,20.2694,autres,20.2694,hors domaine,152.5099
+44.7568,-22.315,Sedimentary,21.8839,autres,21.8839,hors domaine,161.4777
+45.0368,-22.315,Sedimentary,25.8384,autres,25.8384,hors domaine,174.7394
+45.3168,-22.315,Sedimentary,23.0445,autres,23.0445,hors domaine,191.4045
+45.5968,-22.315,Basement,70.2424,socle,70.2424,hors domaine,209.8206
+45.8768,-22.315,Basement,69.8779,socle,69.8779,hors domaine,193.2561
+46.1568,-22.315,Basement,70.679,socle,70.679,hors domaine,165.3426
+46.4368,-22.315,Sedimentary,23.9866,autres,23.9866,hors domaine,278.227
+46.7168,-22.315,Basement,173.4475,socle,173.4475,hors domaine,110.8253
+46.9968,-22.315,Basement,141.1213,socle,26.4546,dans le domaine,85.0651
+47.2768,-22.315,Basement,202.7505,socle,38.0076,dans le domaine,62.0039
+47.5568,-22.315,Basement,260.6363,socle,48.8588,dans le domaine,45.9072
+47.8368,-22.315,Basement,317.4519,socle,59.5095,dans le domaine,45.0004
+43.3568,-22.595,Unconsolidated,14.1643,autres,14.1643,hors domaine,141.9033
+43.6368,-22.595,Unconsolidated,9.3092,autres,9.3092,hors domaine,128.0151
+43.9168,-22.595,Sedimentary,9.3641,autres,9.3641,hors domaine,119.4942
+44.1968,-22.595,Sedimentary,21.0196,autres,21.0196,hors domaine,117.514
+44.4768,-22.595,Sedimentary,14.1501,autres,14.1501,hors domaine,122.3923
+44.7568,-22.595,Sedimentary,22.8145,autres,22.8145,hors domaine,133.3787
+45.0368,-22.595,Sedimentary,26.1112,autres,26.1112,hors domaine,149.1293
+45.3168,-22.595,Sedimentary,26.3838,autres,26.3838,hors domaine,168.2947
+45.5968,-22.595,Basement,70.6774,socle,70.6774,hors domaine,178.8022
+45.8768,-22.595,Basement,70.1101,socle,70.1101,hors domaine,178.3976
+46.1568,-22.595,Basement,89.5715,socle,89.5715,hors domaine,159.9135
+46.4368,-22.595,Basement,90.5375,socle,90.5375,hors domaine,131.2783
+46.7168,-22.595,Sedimentary,96.2648,autres,96.2648,hors domaine,288.563
+46.9968,-22.595,Basement,183.3445,socle,34.3697,dans le domaine,74.2356
+47.2768,-22.595,Basement,206.5639,socle,38.7224,dans le domaine,46.1107
+47.5568,-22.595,Basement,95.0101,socle,17.8106,dans le domaine,19.8165
+47.8368,-22.595,Basement,240.8535,socle,45.1503,dans le domaine,17.6189
+43.6368,-22.875,Unconsolidated,22.8632,autres,22.8632,hors domaine,100.221
+43.9168,-22.875,Sedimentary,9.3631,autres,32.9374,dans le domaine,89.1045
+44.1968,-22.875,Sedimentary,20.5555,autres,72.31,dans le domaine,86.4364
+44.4768,-22.875,Sedimentary,14.1636,autres,49.8246,dans le domaine,92.9471
+44.7568,-22.875,Sedimentary,24.6158,autres,24.6158,hors domaine,106.9736
+45.0368,-22.875,Sedimentary,25.6872,autres,25.6872,hors domaine,126.0063
+45.3168,-22.875,Sedimentary,25.9353,autres,25.9353,hors domaine,148.1064
+45.5968,-22.875,Basement,70.257,socle,70.257,hors domaine,147.8326
+45.8768,-22.875,Basement,69.9652,socle,69.9652,hors domaine,147.3441
+46.1568,-22.875,Basement,89.4752,socle,89.4752,hors domaine,152.3008
+46.4368,-22.875,Basement,91.1778,socle,91.1778,hors domaine,131.9981
+46.7168,-22.875,Basement,175.6188,socle,175.6188,hors domaine,103.6824
+46.9968,-22.875,Basement,180.1664,socle,33.7739,dans le domaine,75.6598
+47.2768,-22.875,Basement,206.6574,socle,38.7399,dans le domaine,48.4417
+47.5568,-22.875,Basement,245.5309,socle,46.0272,dans le domaine,24.8322
+43.6368,-23.155,Unconsolidated,20.4706,autres,72.0113,dans le domaine,75.0954
+43.9168,-23.155,Sedimentary,21.3048,autres,74.9459,dans le domaine,59.4902
+44.1968,-23.155,Sedimentary,13.7009,autres,48.1969,dans le domaine,55.4229
+44.4768,-23.155,Sedimentary,15.6685,autres,55.1185,dans le domaine,65.0935
+44.7568,-23.155,Sedimentary,25.2241,autres,88.7332,dans le domaine,83.8374
+45.0368,-23.155,Sedimentary,26.3992,autres,26.3992,hors domaine,106.9634
+45.3168,-23.155,Sedimentary,25.5665,autres,25.5665,hors domaine,132.2361
+45.5968,-23.155,Basement,70.0409,socle,70.0409,hors domaine,116.9507
+45.8768,-23.155,Basement,69.8981,socle,69.8981,hors domaine,116.3338
+46.1568,-23.155,Basement,90.6105,socle,90.6105,hors domaine,122.5385
+46.4368,-23.155,Basement,175.3586,socle,175.3586,hors domaine,129.0855
+46.7168,-23.155,Basement,182.1562,socle,182.1562,hors domaine,102.7413
+46.9968,-23.155,Basement,192.3511,socle,36.0581,dans le domaine,77.9902
+47.2768,-23.155,Basement,205.4733,socle,38.518,dans le domaine,56.949
+47.5568,-23.155,Basement,212.6915,socle,39.8711,dans le domaine,45.1432
+43.9168,-23.435,Sedimentary,21.2607,autres,74.7907,dans le domaine,32.8217
+44.1968,-23.435,Sedimentary,22.3434,autres,78.5995,dans le domaine,24.7157
+44.4768,-23.435,Sedimentary,22.3566,autres,78.6459,dans le domaine,42.0289
+44.7568,-23.435,Sedimentary,24.3172,autres,85.5429,dans le domaine,67.381
+45.0368,-23.435,Sedimentary,26.4719,autres,93.1227,dans le domaine,94.5691
+45.3168,-23.435,Basement,54.4598,socle,10.209,dans le domaine,95.9444
+45.5968,-23.435,Basement,69.8896,socle,13.1015,dans le domaine,86.2505
+45.8768,-23.435,Basement,69.8911,socle,13.1018,dans le domaine,85.414
+46.1568,-23.435,Basement,90.2109,socle,16.9109,dans le domaine,93.6725
+46.4368,-23.435,Basement,180.5276,socle,180.5276,hors domaine,108.9775
+46.7168,-23.435,Basement,185.1691,socle,34.7118,dans le domaine,93.424
+46.9968,-23.435,Basement,148.1831,socle,27.7784,dans le domaine,65.3007
+47.2768,-23.435,Basement,204.8203,socle,38.3956,dans le domaine,37.827
+47.5568,-23.435,Basement,207.9776,socle,38.9874,dans le domaine,15.1043
+43.9168,-23.715,Sedimentary,21.284,autres,74.8727,dans le domaine,18.4902
+44.1968,-23.715,Unconsolidated,37.9106,autres,133.3616,dans le domaine,8.9731
+44.4768,-23.715,Sedimentary,32.5534,autres,114.5161,dans le domaine,34.964
+44.7568,-23.715,Sedimentary,45.2788,autres,159.2814,dans le domaine,63.1691
+45.0368,-23.715,Basement,59.3619,socle,11.128,dans le domaine,91.0133
+45.3168,-23.715,Basement,59.3305,socle,11.1221,dans le domaine,70.0139
+45.5968,-23.715,Basement,69.6911,socle,13.0643,dans le domaine,56.0318
+45.8768,-23.715,Basement,46.8555,socle,8.7835,dans le domaine,54.7382
+46.1568,-23.715,Basement,91.141,socle,17.0853,dans le domaine,66.8736
+46.4368,-23.715,Basement,175.3527,socle,32.8716,dans le domaine,86.9884
+46.7168,-23.715,Basement,180.1307,socle,33.7673,dans le domaine,94.0154
+46.9968,-23.715,Basement,151.4204,socle,28.3852,dans le domaine,66.2159
+47.2768,-23.715,Basement,274.9056,socle,51.5337,dans le domaine,39.4623
+47.5568,-23.715,Basement,251.2739,socle,47.1037,dans le domaine,18.8971
+43.9168,-23.995,Sedimentary,21.2612,autres,74.7925,dans le domaine,28.5694
+44.1968,-23.995,Sedimentary,23.0233,autres,80.9912,dans le domaine,23.6971
+44.4768,-23.995,Sedimentary,19.2034,autres,67.5536,dans le domaine,43.9027
+44.7568,-23.995,Basement,30.555,socle,30.555,hors domaine,104.4084
+45.0368,-23.995,Basement,59.331,socle,11.1222,dans le domaine,76.8856
+45.3168,-23.995,Basement,59.3453,socle,11.1249,dans le domaine,50.3712
+45.5968,-23.995,Basement,70.1497,socle,13.1502,dans le domaine,27.9052
+45.8768,-23.995,Basement,47.9895,socle,8.9961,dans le domaine,25.2135
+46.1568,-23.995,Basement,91.7012,socle,17.1903,dans le domaine,45.9165
+46.4368,-23.995,Basement,91.2304,socle,17.102,dans le domaine,72.0868
+46.7168,-23.995,Basement,179.8397,socle,33.7127,dans le domaine,94.0056
+46.9968,-23.995,Basement,33.8971,socle,6.3543,dans le domaine,80.2718
+47.2768,-23.995,Basement,276.7541,socle,51.8803,dans le domaine,60.1862
+43.9168,-24.275,Sedimentary,34.0339,autres,119.7242,dans le domaine,55.9415
+44.1968,-24.275,Sedimentary,36.9467,autres,129.9708,dans le domaine,53.6223
+44.4768,-24.275,Sedimentary,31.0265,autres,109.1448,dans le domaine,65.102
+44.7568,-24.275,Basement,51.5624,socle,51.5624,hors domaine,102.2585
+45.0368,-24.275,Basement,70.855,socle,13.2825,dans le domaine,74.0137
+45.3168,-24.275,Basement,70.8734,socle,13.2859,dans le domaine,45.9485
+45.5968,-24.275,Basement,46.9776,socle,8.8064,dans le domaine,18.8826
+45.8768,-24.275,Basement,77.2106,socle,14.4739,dans le domaine,14.6248
+46.1568,-24.275,Basement,91.6424,socle,17.1793,dans le domaine,41.0276
+46.4368,-24.275,Basement,89.3162,socle,16.7432,dans le domaine,69.0267
+46.7168,-24.275,Basement,179.4203,socle,33.6341,dans le domaine,63.4635
+46.9968,-24.275,Basement,151.6133,socle,28.4214,dans le domaine,63.0792
+47.2768,-24.275,Basement,193.3393,socle,36.2433,dans le domaine,74.393
+44.1968,-24.555,Sedimentary,67.1803,autres,236.3264,dans le domaine,84.4267
+44.4768,-24.555,Unconsolidated,92.8207,autres,326.524,dans le domaine,92.1292
+44.7568,-24.555,Basement,109.4431,socle,20.5162,dans le domaine,94.7536
+45.0368,-24.555,Basement,32.9269,socle,6.1725,dans le domaine,68.4082
+45.3168,-24.555,Basement,32.9162,socle,6.1705,dans le domaine,44.5156
+45.5968,-24.555,Basement,47.1039,socle,8.8301,dans le domaine,29.7343
+45.8768,-24.555,Basement,77.0889,socle,14.4511,dans le domaine,37.2445
+46.1568,-24.555,Basement,195.1589,socle,36.5844,dans le domaine,56.5412
+46.4368,-24.555,Basement,89.6523,socle,16.8062,dans le domaine,52.97
+46.7168,-24.555,Basement,189.4744,socle,35.5188,dans le domaine,34.0133
+46.9968,-24.555,Basement,259.3028,socle,48.6088,dans le domaine,33.2923
+44.1968,-24.835,Unconsolidated,39.4706,autres,39.4706,hors domaine,115.4085
+44.4768,-24.835,Sedimentary,51.7102,autres,51.7102,hors domaine,121.1446
+44.7568,-24.835,Basement,88.6621,socle,16.6206,dans le domaine,90.0386
+45.0368,-24.835,Basement,117.163,socle,21.9633,dans le domaine,61.7904
+45.3168,-24.835,Unconsolidated,89.9909,autres,316.5694,dans le domaine,68.2583
+45.5968,-24.835,Basement,144.0776,socle,27.0088,dans le domaine,5.5703
+45.8768,-24.835,Unconsolidated,91.7307,autres,322.6896,dans le domaine,52.7913
+46.1568,-24.835,Unconsolidated,92.3602,autres,324.9041,dans le domaine,65.0911
+46.4368,-24.835,Basement,219.158,socle,41.0833,dans le domaine,38.6186
+46.7168,-24.835,Basement,261.7592,socle,49.0693,dans le domaine,14.9971
+46.9968,-24.835,Basement,261.5483,socle,49.0298,dans le domaine,13.2851
+44.4768,-25.115,Unconsolidated,39.9609,autres,39.9609,hors domaine,130.8515
+44.7568,-25.115,Unconsolidated,33.1374,autres,33.1374,hors domaine,103.1184
+45.0368,-25.115,Unconsolidated,53.8604,autres,189.4697,dans le domaine,75.7082
+45.3168,-25.115,Unconsolidated,55.0023,autres,193.4867,dans le domaine,49.1642
+45.5968,-25.115,Unconsolidated,109.9282,autres,386.7047,dans le domaine,26.2598
+45.8768,-25.115,Unconsolidated,71.2427,autres,250.6171,dans le domaine,23.4333
+46.1568,-25.115,Unconsolidated,70.5525,autres,248.1891,dans le domaine,44.6738
+46.7168,-25.115,Basement,184.0584,socle,34.5035,dans le domaine,7.1019
+45.0368,-25.395,Unconsolidated,53.2392,autres,187.2845,dans le domaine,73.6254
+45.3168,-25.395,Unconsolidated,54.681,autres,192.3564,dans le domaine,45.9753
+45.5968,-25.395,Unconsolidated,92.2152,autres,324.394,dans le domaine,19.7528

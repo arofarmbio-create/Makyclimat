@@ -997,3 +997,24 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   dans les bornes africaines du non consolidé aride). Leur classe ne change pas parce que la correction ne les touche
   pas, pas parce que leur recharge est confirmée. Toliara reste suspecte (puits karstiques : 80 à 195 mm/an).
 - 📌 Suite : piste 2, correction de la recharge par les mesures malgaches (protocole à fixer avant calcul).
+
+### Recharge corrigée par les mesures malgaches, T2L (`validation/recharge_locale.md`)
+- ✅ Protocole fixé avant calcul (09/11/2026), effet du groupe d'aquifère déclaré comme déjà vu. 12 sites retenus
+  (6 socle MGMERL, Sihanamaro, 5 puits GROSoM près de Toliara) ; 8 groupes de sites à moins de 20 km.
+- 📊 Facteurs appris sur les 12 sites : socle ×0,19 ; autres ×3,52 ; unique ×0,80.
+- ❌ **H-L1 non soutenue** : en laissant de côté les groupes de sites, M2 retrouve 2 sites sur 12 (M0 : 1) et l'erreur
+  médiane passe de 0,69 à 0,90 (log₁₀). **H-L2 non soutenue** (M3 : 1 sur 12 ; 0,91 ; même conclusion à 10 et 50 km).
+- 📊 **La validation site par site surestime la performance** : M2 y retrouve 4 sites et divise l'erreur par deux
+  (0,33). L'écart vient des sites voisins (les 5 puits GROSoM forment un seul groupe) : 12 sites ne valent que 8
+  informations indépendantes.
+- 📊 Cause principale : le groupe « autres » du BGS réunit deux nappes de comportement opposé. Sihanamaro (Androy)
+  reçoit moins que T2 ; les puits de Toliara, en partie karstiques, beaucoup plus. Sans Toliara, rien ne permet de la
+  prédire, et réciproquement (Sihanamaro prédit à 449 mm/an pour 27 mesurés).
+- 📊 Exploratoire (calculé après coup, pas un résultat) : sur le socle seul, l'erreur médiane passe d'environ 0,73 à
+  0,43 avec M2 ; la correction du socle va dans le bon sens.
+- 📌 Décision fixée d'avance : T2 reste la valeur centrale ; T2L est publiée comme sensibilité et **figée** (SHA-256
+  dans le rapport) pour la validation prospective sur de nouvelles mesures.
+- 📌 Conclusion de la série H-C6 → H-R2 → H-L1 : le transfert continental se trompe à Madagascar, dans des sens opposés
+  selon la géologie ; des bornes continentales ne le corrigent pas ; une correction locale ne se généralise pas tant
+  que la classification des aquifères ne sépare pas les nappes de comportement différent (karst, sables, socle) et
+  que les sites mesurés ne couvrent pas plusieurs groupes indépendants par classe.

@@ -77,3 +77,5 @@ sites situés dans le domaine sont retrouvés.
 ## 9. Journal des modifications
 
 - 09/11/2026 : version initiale.
+- 09/11/2026 (résultat) : H-L1 et H-L2 non soutenues (`validation/recharge_locale.md`). T2 reste la valeur centrale ;
+  T2L publiée comme sensibilité et figée pour la validation prospective (empreinte dans le rapport).

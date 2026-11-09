@@ -107,7 +107,7 @@ def main() -> None:
     cdir = country_data_dir(args.country)
     tab = RF.build_sites(cdir)
     tab = tab[tab.retenu.fillna(False).astype(bool)].reset_index(drop=True)
-    tab = tab.assign(mes=tab.r_mm, g2=group2(tab.groupe))
+    tab = tab.assign(mes=tab.r_mm, t2=tab.t2_mm, g2=group2(tab.groupe))
     folds_c = clusters(tab.lat, tab.lon)
     folds_s = np.arange(len(tab))
 
