@@ -1,0 +1,1421 @@
+bassin,nom,population,fiabilite,recharge_mm,bilan,classe_bilan,recharge_mm_t2c,bilan_t2c,classe_bilan_t2c,statut
+398,sous-bassin n° 398 (Antsiranana II),212.49,non mesurée,187.06,0.0,faible,187.06,0.0,faible,stable
+442,sous-bassin n° 442 (Antsiranana II),294.741,non mesurée,187.06,0.0,faible,187.06,0.0,faible,stable
+479,sous-bassin n° 479 (Antsiranana II),268.291,non mesurée,187.06,0.0,faible,187.06,0.0,faible,stable
+534,sous-bassin n° 534 (Antsiranana II),221.672,non mesurée,187.06,0.0,faible,187.06,0.0,faible,stable
+570,sous-bassin n° 570 (Antsiranana II),685.843,non mesurée,187.06,0.0,faible,187.06,0.0,faible,stable
+660,sous-bassin n° 660 (Antsiranana II),1149.046,non mesurée,187.06,0.0,faible,187.06,0.0,faible,stable
+973,sous-bassin n° 973 (Antsiranana II),708.916,non mesurée,187.06,0.0,faible,187.06,0.0,faible,stable
+1038,sous-bassin n° 1038 (Antsiranana II),1100.821,non mesurée,187.06,0.002,faible,187.06,0.002,faible,stable
+1104,sous-bassin n° 1104 (Antsiranana I),1941.165,non mesurée,187.06,0.002,faible,187.06,0.002,faible,stable
+1153,sous-bassin n° 1153 (Antsiranana II),409.592,partielle,187.06,0.002,faible,187.06,0.002,faible,stable
+1182,sous-bassin n° 1182 (Antsiranana II),2857.506,non mesurée,187.06,0.001,faible,187.06,0.001,faible,stable
+1191,sous-bassin n° 1191 (Antsiranana I),4789.281,non mesurée,187.06,0.327,modéré,187.06,0.327,modéré,stable
+1192,sous-bassin n° 1192 (Antsiranana I),9386.796,non mesurée,187.06,0.234,modéré,187.06,0.234,modéré,stable
+1193,sous-bassin n° 1193 (Antsiranana I),10251.527,non mesurée,187.06,0.2,modéré,187.06,0.2,modéré,stable
+1212,sous-bassin n° 1212 (Antsiranana I),6864.762,non mesurée,187.06,0.29,modéré,187.06,0.29,modéré,stable
+1213,sous-bassin n° 1213 (Antsiranana I),2132.876,non mesurée,187.06,0.297,modéré,187.06,0.297,modéré,stable
+1214,sous-bassin n° 1214 (Antsiranana I),7853.933,non mesurée,187.06,0.209,modéré,187.06,0.209,modéré,stable
+1218,sous-bassin n° 1218 (Antsiranana II),948.401,non mesurée,187.06,0.001,faible,187.06,0.001,faible,stable
+1236,sous-bassin n° 1236 (Antsiranana I),7750.341,non mesurée,187.06,0.171,modéré,187.06,0.171,modéré,stable
+1237,sous-bassin n° 1237 (Antsiranana I),15377.192,non mesurée,187.06,0.236,modéré,187.06,0.236,modéré,stable
+1251,sous-bassin n° 1251 (Antsiranana II),487.524,non mesurée,187.06,0.001,faible,187.06,0.001,faible,stable
+1256,sous-bassin n° 1256 (Antsiranana I),6081.381,non mesurée,187.06,0.147,modéré,187.06,0.147,modéré,stable
+1277,sous-bassin n° 1277 (Antsiranana I),5304.885,non mesurée,187.06,0.156,modéré,187.06,0.156,modéré,stable
+1297,sous-bassin n° 1297 (Antsiranana I),26987.409,non mesurée,187.06,0.291,modéré,187.06,0.291,modéré,stable
+1311,sous-bassin n° 1311 (Antsiranana II),2965.537,non mesurée,187.06,0.002,faible,187.06,0.002,faible,stable
+1316,sous-bassin n° 1316 (Antsiranana II),24189.666,non mesurée,187.06,0.01,faible,187.06,0.01,faible,stable
+1341,sous-bassin n° 1341 (Antsiranana II),9948.381,non mesurée,187.06,0.002,faible,187.06,0.002,faible,stable
+1345,sous-bassin n° 1345 (Antsiranana I),5492.588,non mesurée,187.06,0.185,modéré,187.06,0.185,modéré,stable
+1364,sous-bassin n° 1364 (Antsiranana II),2713.016,non mesurée,181.032,0.001,faible,181.032,0.001,faible,stable
+1376,sous-bassin n° 1376 (Antsiranana I),27908.055,non mesurée,187.06,0.203,modéré,187.06,0.203,modéré,stable
+1377,sous-bassin n° 1377 (Antsiranana II),1612.898,non mesurée,187.06,0.003,faible,187.06,0.003,faible,stable
+1451,sous-bassin n° 1451 (Antsiranana II),623.88,non mesurée,157.019,0.0,faible,157.019,0.0,faible,stable
+1482,sous-bassin n° 1482 (Antsiranana II),368.851,non mesurée,181.032,0.001,faible,181.032,0.001,faible,stable
+1505,sous-bassin n° 1505 (Antsiranana II),6181.646,non mesurée,181.032,0.0,faible,181.032,0.0,faible,stable
+1643,sous-bassin n° 1643 (Antsiranana II),685.8,non mesurée,126.978,0.0,faible,126.978,0.0,faible,stable
+1645,sous-bassin n° 1645 (Antsiranana II),289.22,non mesurée,126.978,0.001,faible,126.978,0.001,faible,stable
+1796,sous-bassin n° 1796 (Antsiranana II),23725.057,non mesurée,187.06,0.002,faible,187.06,0.002,faible,stable
+1852,sous-bassin n° 1852 (Antsiranana II),450.687,non mesurée,181.032,0.0,faible,181.032,0.0,faible,stable
+1854,sous-bassin n° 1854 (Antsiranana II),347.103,non mesurée,126.978,0.001,faible,126.978,0.001,faible,stable
+1868,sous-bassin n° 1868 (Antsiranana II),470.314,non mesurée,181.032,0.0,faible,181.032,0.0,faible,stable
+1949,sous-bassin n° 1949 (Antsiranana II),288.128,non mesurée,181.032,0.0,faible,181.032,0.0,faible,stable
+1974,sous-bassin n° 1974 (Antsiranana II),213.555,non mesurée,181.032,0.0,faible,181.032,0.0,faible,stable
+1977,sous-bassin n° 1977 (Antsiranana II),458.224,non mesurée,181.032,0.0,faible,181.032,0.0,faible,stable
+1992,sous-bassin n° 1992 (Antsiranana II),758.059,non mesurée,126.978,0.001,faible,126.978,0.001,faible,stable
+2022,sous-bassin n° 2022 (Antsiranana II),773.092,partielle,181.032,0.001,faible,181.032,0.001,faible,stable
+2028,sous-bassin n° 2028 (Antsiranana II),10315.358,non mesurée,187.06,0.002,faible,187.06,0.002,faible,stable
+2098,sous-bassin n° 2098 (Antsiranana II),530.233,partielle,126.978,0.001,faible,126.978,0.001,faible,stable
+2118,sous-bassin n° 2118 (Antsiranana II),1203.932,partielle,181.032,0.0,faible,181.032,0.0,faible,stable
+2213,sous-bassin n° 2213 (Antsiranana II),44452.118,non mesurée,182.606,0.001,faible,182.606,0.001,faible,stable
+2233,sous-bassin n° 2233 (Antsiranana II),1495.968,non mesurée,128.358,0.001,faible,128.358,0.001,faible,stable
+2268,sous-bassin n° 2268 (Antsiranana II),727.641,non mesurée,181.032,0.001,faible,181.032,0.001,faible,stable
+2360,sous-bassin n° 2360 (Antsiranana II),2813.397,partielle,196.944,0.001,faible,196.944,0.001,faible,stable
+2560,sous-bassin n° 2560 (Antsiranana II),8111.871,non mesurée,196.944,0.001,faible,196.944,0.001,faible,stable
+2584,sous-bassin n° 2584 (Vohemar),3301.226,partielle,128.358,0.0,faible,128.358,0.0,faible,stable
+2620,sous-bassin n° 2620 (Vohemar),15949.992,partielle,118.954,0.001,faible,118.954,0.001,faible,stable
+2650,sous-bassin n° 2650 (Antsiranana II),5310.338,partielle,196.944,0.001,faible,196.944,0.001,faible,stable
+2793,sous-bassin n° 2793 (Antsiranana II),11909.1,partielle,196.944,0.001,faible,196.944,0.001,faible,stable
+2972,sous-bassin n° 2972 (Vohemar),8805.863,partielle,71.344,0.001,faible,83.909,0.001,faible,stable
+3024,sous-bassin n° 3024 (Vohemar),3875.959,partielle,148.288,0.001,faible,148.288,0.001,faible,stable
+3091,sous-bassin n° 3091 (Ambilobe),44155.41,partielle,118.954,0.001,faible,118.954,0.001,faible,stable
+3138,sous-bassin n° 3138 (Ambilobe),1382.13,non mesurée,25.507,0.007,faible,25.507,0.007,faible,stable
+3139,sous-bassin n° 3139 (Ambilobe),90406.798,partielle,25.507,0.045,faible,25.507,0.045,faible,stable
+3170,sous-bassin n° 3170 (Ambilobe),3705.724,non mesurée,25.507,0.017,faible,25.507,0.017,faible,stable
+3183,sous-bassin n° 3183 (Ambilobe),1312.627,non mesurée,25.507,0.006,faible,25.507,0.006,faible,stable
+3199,sous-bassin n° 3199 (Ambilobe),3173.429,non mesurée,25.507,0.019,faible,25.507,0.019,faible,stable
+3215,sous-bassin n° 3215 (Ambilobe),14931.477,non mesurée,25.507,0.032,faible,25.507,0.032,faible,stable
+3239,sous-bassin n° 3239 (Ambilobe),5520.128,non mesurée,25.507,0.055,faible,25.507,0.055,faible,stable
+3240,sous-bassin n° 3240 (Vohemar),7601.424,partielle,148.288,0.0,faible,148.288,0.0,faible,stable
+3249,sous-bassin n° 3249 (Ambilobe),600.41,non mesurée,25.507,0.012,faible,25.507,0.012,faible,stable
+3273,sous-bassin n° 3273 (Vohemar),15774.389,non mesurée,204.045,0.0,faible,204.045,0.0,faible,stable
+3278,sous-bassin n° 3278 (Nosy-Be),815.184,non mesurée,307.584,0.001,faible,212.52,0.001,faible,stable
+3283,sous-bassin n° 3283 (Ambilobe),429.904,non mesurée,25.507,0.135,modéré,25.507,0.135,modéré,stable
+3298,sous-bassin n° 3298 (Ambilobe),11592.064,partielle,123.164,0.0,faible,123.164,0.0,faible,stable
+3306,sous-bassin n° 3306 (Nosy-Be),1152.154,partielle,307.584,0.003,faible,212.52,0.004,faible,stable
+3314,sous-bassin n° 3314 (Ambilobe),3780.061,non mesurée,123.164,0.004,faible,123.164,0.004,faible,stable
+3328,sous-bassin n° 3328 (Nosy-Be),634.579,non mesurée,307.584,0.001,faible,212.52,0.001,faible,stable
+3347,sous-bassin n° 3347 (Nosy-Be),858.615,partielle,307.584,0.003,faible,212.52,0.004,faible,stable
+3352,sous-bassin n° 3352 (Ambilobe),41017.444,partielle,123.164,0.007,faible,123.164,0.007,faible,stable
+3356,sous-bassin n° 3356 (Nosy-Be),9705.975,partielle,168.82,0.017,faible,168.82,0.017,faible,stable
+3376,sous-bassin n° 3376 (Nosy-Be),2625.828,partielle,307.584,0.001,faible,212.52,0.002,faible,stable
+3393,sous-bassin n° 3393 (Nosy-Be),310.485,partielle,307.584,0.002,faible,212.52,0.003,faible,stable
+3405,sous-bassin n° 3405 (Nosy-Be),2154.691,partielle,168.82,0.006,faible,168.82,0.006,faible,stable
+3435,sous-bassin n° 3435 (Nosy-Be),4501.99,partielle,168.82,0.007,faible,168.82,0.007,faible,stable
+3470,sous-bassin n° 3470 (Nosy-Be),2915.763,partielle,307.584,0.003,faible,212.52,0.004,faible,stable
+3492,sous-bassin n° 3492 (Ambilobe),2808.332,partielle,123.164,0.002,faible,123.164,0.002,faible,stable
+3505,sous-bassin n° 3505 (Vohemar),5586.193,partielle,204.045,0.001,faible,204.045,0.001,faible,stable
+3526,sous-bassin n° 3526 (Ambanja),1227.986,partielle,307.584,0.002,faible,212.52,0.003,faible,stable
+3534,sous-bassin n° 3534 (Ambanja),689.893,partielle,307.584,0.004,faible,212.52,0.005,faible,stable
+3541,sous-bassin n° 3541 (Nosy-Be),3497.897,partielle,307.584,0.001,faible,212.52,0.002,faible,stable
+3563,sous-bassin n° 3563 (Nosy-Be),6062.682,partielle,168.82,0.013,faible,168.82,0.013,faible,stable
+3574,sous-bassin n° 3574 (Nosy-Be),1345.454,non mesurée,307.584,0.001,faible,212.52,0.002,faible,stable
+3578,sous-bassin n° 3578 (Ambilobe),629.685,partielle,123.164,0.003,faible,123.164,0.003,faible,stable
+3582,sous-bassin n° 3582 (Vohemar),3943.447,partielle,204.045,0.154,modéré,204.045,0.154,modéré,stable
+3590,sous-bassin n° 3590 (Ambanja),319.408,non mesurée,307.584,0.003,faible,212.52,0.004,faible,stable
+3595,sous-bassin n° 3595 (Ambilobe),9079.388,partielle,123.164,0.003,faible,123.164,0.003,faible,stable
+3598,sous-bassin n° 3598 (Vohemar),6213.438,partielle,204.045,0.032,faible,204.045,0.032,faible,stable
+3599,sous-bassin n° 3599 (Vohemar),739.301,partielle,204.045,0.117,modéré,204.045,0.117,modéré,stable
+3602,sous-bassin n° 3602 (Nosy-Be),5857.516,partielle,168.82,0.031,faible,168.82,0.031,faible,stable
+3610,sous-bassin n° 3610 (Vohemar),8536.799,partielle,204.045,0.028,faible,204.045,0.028,faible,stable
+3613,sous-bassin n° 3613 (Vohemar),7159.014,partielle,204.045,0.074,faible,204.045,0.074,faible,stable
+3622,sous-bassin n° 3622 (Ambanja),1246.072,partielle,307.584,0.004,faible,212.52,0.005,faible,stable
+3642,sous-bassin n° 3642 (Ambilobe),1323.396,non mesurée,123.164,0.004,faible,123.164,0.004,faible,stable
+3646,sous-bassin n° 3646 (Nosy-Be),175.064,non mesurée,307.584,0.0,faible,212.52,0.001,faible,stable
+3668,sous-bassin n° 3668 (Nosy-Be),12285.201,partielle,168.82,0.036,faible,168.82,0.036,faible,stable
+3669,sous-bassin n° 3669 (Nosy-Be),704.295,partielle,168.82,0.002,faible,168.82,0.002,faible,stable
+3671,sous-bassin n° 3671 (Nosy-Be),12277.539,partielle,168.82,0.042,faible,168.82,0.042,faible,stable
+3690,sous-bassin n° 3690 (Ambanja),1423.325,partielle,307.584,0.002,faible,212.52,0.003,faible,stable
+3699,sous-bassin n° 3699 (Nosy-Be),12084.533,partielle,307.584,0.03,faible,212.52,0.044,faible,stable
+3701,sous-bassin n° 3701 (Nosy-Be),2454.119,non mesurée,307.584,0.005,faible,212.52,0.008,faible,stable
+3710,sous-bassin n° 3710 (Nosy-Be),17621.078,partielle,307.584,0.07,faible,212.52,0.101,modéré,incertain
+3717,sous-bassin n° 3717 (Nosy-Be),324.068,non mesurée,307.584,0.001,faible,212.52,0.001,faible,stable
+3727,sous-bassin n° 3727 (Ambilobe),40407.127,partielle,204.936,0.001,faible,204.936,0.001,faible,stable
+3783,sous-bassin n° 3783 (Ambanja),1113.608,partielle,307.584,0.001,faible,212.52,0.002,faible,stable
+3796,sous-bassin n° 3796 (Ambanja),1957.709,partielle,204.936,0.002,faible,204.936,0.002,faible,stable
+3819,sous-bassin n° 3819 (Vohemar),23031.844,partielle,258.452,0.001,faible,258.452,0.001,faible,stable
+3835,sous-bassin n° 3835 (Nosy-Be),442.79,non mesurée,307.584,0.002,faible,212.52,0.002,faible,stable
+3851,sous-bassin n° 3851 (Ambilobe),8960.308,non mesurée,204.936,0.001,faible,204.936,0.001,faible,stable
+3857,sous-bassin n° 3857 (Nosy-Be),608.046,non mesurée,307.584,0.002,faible,212.52,0.002,faible,stable
+3861,sous-bassin n° 3861 (Ambanja),818.756,partielle,204.936,0.001,faible,204.936,0.001,faible,stable
+3862,sous-bassin n° 3862 (Ambanja),539.437,non mesurée,204.936,0.001,faible,204.936,0.001,faible,stable
+3903,sous-bassin n° 3903 (Nosy-Be),437.584,non mesurée,307.584,0.001,faible,212.52,0.002,faible,stable
+3908,sous-bassin n° 3908 (Nosy-Be),646.038,non mesurée,307.584,0.002,faible,212.52,0.003,faible,stable
+3925,sous-bassin n° 3925 (Vohemar),12463.656,partielle,260.254,0.001,faible,260.254,0.001,faible,stable
+3944,sous-bassin n° 3944 (Vohemar),8420.348,partielle,257.067,0.001,faible,257.067,0.001,faible,stable
+3977,sous-bassin n° 3977 (Ambanja),295.382,non mesurée,307.584,0.001,faible,212.52,0.001,faible,stable
+3981,sous-bassin n° 3981 (Ambanja),771.182,non mesurée,307.584,0.001,faible,212.52,0.001,faible,stable
+3985,sous-bassin n° 3985 (Ambanja),6995.489,partielle,204.936,0.001,faible,204.936,0.001,faible,stable
+4039,sous-bassin n° 4039 (Ambanja),638.831,partielle,204.936,0.001,faible,204.936,0.001,faible,stable
+4043,sous-bassin n° 4043 (Ambanja),339.933,partielle,168.82,0.001,faible,168.82,0.001,faible,stable
+4061,sous-bassin n° 4061 (Ambanja),24920.91,partielle,307.584,0.011,faible,212.52,0.017,faible,stable
+4080,sous-bassin n° 4080 (Ambanja),2292.727,non mesurée,307.584,0.001,faible,212.52,0.001,faible,stable
+4083,sous-bassin n° 4083 (Ambanja),3330.399,partielle,307.584,0.001,faible,212.52,0.001,faible,stable
+4120,sous-bassin n° 4120 (Ambanja),4225.253,partielle,307.584,0.006,faible,212.52,0.009,faible,stable
+4121,sous-bassin n° 4121 (Ambanja),203.794,non mesurée,307.584,0.002,faible,212.52,0.003,faible,stable
+4136,sous-bassin n° 4136 (Ambanja),722.623,partielle,168.82,0.0,faible,168.82,0.0,faible,stable
+4155,sous-bassin n° 4155 (Ambanja),3761.664,partielle,307.584,0.004,faible,212.52,0.006,faible,stable
+4178,sous-bassin n° 4178 (Ambanja),435.383,partielle,168.82,0.001,faible,168.82,0.001,faible,stable
+4183,sous-bassin n° 4183 (Ambanja),1057.75,non mesurée,307.584,0.002,faible,212.52,0.002,faible,stable
+4184,sous-bassin n° 4184 (Ambanja),4658.019,partielle,307.584,0.003,faible,212.52,0.004,faible,stable
+4221,sous-bassin n° 4221 (Ambanja),435.453,non mesurée,168.82,0.0,faible,168.82,0.0,faible,stable
+4250,sous-bassin n° 4250 (Ambanja),2097.529,partielle,168.82,0.0,faible,168.82,0.0,faible,stable
+4253,sous-bassin n° 4253 (Ambanja),431.827,partielle,168.82,0.0,faible,168.82,0.0,faible,stable
+4281,sous-bassin n° 4281 (Ambanja),56213.822,partielle,307.584,0.008,faible,212.52,0.012,faible,stable
+4288,sous-bassin n° 4288 (Ambanja),1281.818,partielle,307.584,0.001,faible,212.52,0.002,faible,stable
+4306,sous-bassin n° 4306 (Vohemar),35028.07,partielle,260.254,0.0,faible,260.254,0.0,faible,stable
+4309,sous-bassin n° 4309 (Ambanja),571.655,partielle,168.82,0.0,faible,168.82,0.0,faible,stable
+4338,sous-bassin n° 4338 (Vohemar),79197.719,partielle,339.808,0.002,faible,339.808,0.002,faible,stable
+4344,sous-bassin n° 4344 (Ambanja),270.905,partielle,307.584,0.0,faible,212.52,0.001,faible,stable
+4354,sous-bassin n° 4354 (Ambanja),6449.023,partielle,307.584,0.003,faible,212.52,0.005,faible,stable
+4385,sous-bassin n° 4385 (Ambanja),1976.541,partielle,168.82,0.0,faible,168.82,0.0,faible,stable
+4390,sous-bassin n° 4390 (Ambanja),786.918,partielle,307.584,0.002,faible,212.52,0.003,faible,stable
+4407,sous-bassin n° 4407 (Ambanja),186.903,partielle,168.82,0.0,faible,168.82,0.0,faible,stable
+4420,sous-bassin n° 4420 (Ambilobe),1677.644,non mesurée,256.467,0.0,faible,256.467,0.0,faible,stable
+4450,sous-bassin n° 4450 (Ambanja),1420.477,non mesurée,168.82,0.001,faible,168.82,0.001,faible,stable
+4452,sous-bassin n° 4452 (Ambilobe),2855.733,non mesurée,240.986,0.0,faible,240.986,0.0,faible,stable
+4453,sous-bassin n° 4453 (Vohemar),7451.501,partielle,257.067,0.001,faible,257.067,0.001,faible,stable
+4461,sous-bassin n° 4461 (Ambanja),79995.483,partielle,359.052,0.0,faible,359.052,0.0,faible,stable
+4470,sous-bassin n° 4470 (Ambanja),11627.896,partielle,307.584,0.003,faible,212.52,0.004,faible,stable
+4483,sous-bassin n° 4483 (Ambanja),4286.218,non mesurée,197.215,0.002,faible,197.215,0.002,faible,stable
+4493,sous-bassin n° 4493 (Ambanja),632.16,non mesurée,197.476,0.002,faible,197.476,0.002,faible,stable
+4520,sous-bassin n° 4520 (Ambanja),1138.347,partielle,197.215,0.005,faible,197.215,0.005,faible,stable
+4523,sous-bassin n° 4523 (Ambanja),852.466,non mesurée,197.476,0.0,faible,197.476,0.0,faible,stable
+4534,sous-bassin n° 4534 (Ambanja),6521.549,non mesurée,197.476,0.001,faible,197.476,0.001,faible,stable
+4538,sous-bassin n° 4538 (Ambanja),614.304,non mesurée,197.476,0.001,faible,197.476,0.001,faible,stable
+4541,sous-bassin n° 4541 (Ambanja),2610.653,partielle,197.215,0.006,faible,197.215,0.006,faible,stable
+4548,sous-bassin n° 4548 (Ambanja),3139.497,partielle,197.215,0.002,faible,197.215,0.002,faible,stable
+4573,sous-bassin n° 4573 (Sambava),3084.946,partielle,349.671,0.0,faible,349.671,0.0,faible,stable
+4603,sous-bassin n° 4603 (Ambanja),1415.423,non mesurée,197.476,0.001,faible,197.476,0.001,faible,stable
+4629,sous-bassin n° 4629 (Ambanja),1716.846,partielle,197.476,0.0,faible,197.476,0.0,faible,stable
+4651,sous-bassin n° 4651 (Ambanja),1691.39,non mesurée,197.476,0.001,faible,197.476,0.001,faible,stable
+4661,sous-bassin n° 4661 (Ambanja),1411.853,non mesurée,197.476,0.001,faible,197.476,0.001,faible,stable
+4666,sous-bassin n° 4666 (Ambanja),1168.434,partielle,197.476,0.001,faible,197.476,0.001,faible,stable
+4714,sous-bassin n° 4714 (Vohemar),77106.087,partielle,349.671,0.001,faible,349.671,0.001,faible,stable
+4722,sous-bassin n° 4722 (Ambanja),705.813,partielle,200.381,0.001,faible,200.381,0.001,faible,stable
+4759,sous-bassin n° 4759 (Sambava),1332.196,partielle,349.671,0.003,faible,349.671,0.003,faible,stable
+4797,sous-bassin n° 4797 (Ambanja),7801.812,partielle,197.476,0.001,faible,197.476,0.001,faible,stable
+4799,sous-bassin n° 4799 (Analalava),637.995,non mesurée,196.342,0.0,faible,196.342,0.0,faible,stable
+4803,sous-bassin n° 4803 (Sambava),5070.709,partielle,335.298,0.003,faible,335.298,0.003,faible,stable
+4809,sous-bassin n° 4809 (Sambava),74991.758,non mesurée,339.808,0.001,faible,339.808,0.001,faible,stable
+4859,sous-bassin n° 4859 (Analalava),328.15,non mesurée,200.381,0.001,faible,200.381,0.001,faible,stable
+4904,sous-bassin n° 4904 (Analalava),894.647,partielle,196.342,0.0,faible,196.342,0.0,faible,stable
+4912,sous-bassin n° 4912 (Sambava),5009.62,partielle,335.298,0.004,faible,335.298,0.004,faible,stable
+4928,sous-bassin n° 4928 (Sambava),41472.234,partielle,335.298,0.002,faible,335.298,0.002,faible,stable
+4960,sous-bassin n° 4960 (Analalava),1918.003,partielle,200.381,0.001,faible,200.381,0.001,faible,stable
+4964,sous-bassin n° 4964 (Sambava),331.088,partielle,335.298,0.001,faible,335.298,0.001,faible,stable
+5007,sous-bassin n° 5007 (Sambava),93761.119,non mesurée,342.048,0.001,faible,342.048,0.001,faible,stable
+5012,sous-bassin n° 5012 (Sambava),781.742,partielle,335.298,0.001,faible,335.298,0.001,faible,stable
+5024,sous-bassin n° 5024 (Analalava),22416.292,partielle,196.342,0.0,faible,196.342,0.0,faible,stable
+5047,sous-bassin n° 5047 (Sambava),2537.766,partielle,335.298,0.008,faible,335.298,0.008,faible,stable
+5056,sous-bassin n° 5056 (Sambava),71611.615,partielle,335.298,0.003,faible,335.298,0.003,faible,stable
+5090,sous-bassin n° 5090 (Analalava),2387.897,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+5099,sous-bassin n° 5099 (Analalava),5408.575,partielle,196.342,0.002,faible,196.342,0.002,faible,stable
+5101,sous-bassin n° 5101 (Sambava),17838.781,partielle,335.298,0.158,modéré,335.298,0.158,modéré,stable
+5115,sous-bassin n° 5115 (Sambava),4098.093,partielle,335.298,0.18,modéré,335.298,0.18,modéré,stable
+5119,sous-bassin n° 5119 (Analalava),736.694,partielle,200.381,0.001,faible,200.381,0.001,faible,stable
+5132,sous-bassin n° 5132 (Sambava),44778.834,partielle,335.298,0.015,faible,335.298,0.015,faible,stable
+5134,sous-bassin n° 5134 (Sambava),9163.535,partielle,335.298,0.118,modéré,335.298,0.118,modéré,stable
+5137,sous-bassin n° 5137 (Analalava),332.185,non mesurée,200.381,0.001,faible,200.381,0.001,faible,stable
+5144,sous-bassin n° 5144 (Analalava),714.708,partielle,200.381,0.001,faible,200.381,0.001,faible,stable
+5155,sous-bassin n° 5155 (Sambava),38410.203,partielle,335.298,0.006,faible,335.298,0.006,faible,stable
+5159,sous-bassin n° 5159 (Analalava),1004.091,partielle,196.342,0.001,faible,196.342,0.001,faible,stable
+5182,sous-bassin n° 5182 (Analalava),424.599,non mesurée,196.342,0.0,faible,196.342,0.0,faible,stable
+5184,sous-bassin n° 5184 (Sambava),12491.068,partielle,335.298,0.06,faible,335.298,0.06,faible,stable
+5196,sous-bassin n° 5196 (Analalava),605.487,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+5205,sous-bassin n° 5205 (Analalava),526.933,partielle,200.381,0.0,faible,200.381,0.0,faible,stable
+5222,sous-bassin n° 5222 (Analalava),624.566,non mesurée,200.381,0.001,faible,200.381,0.001,faible,stable
+5256,sous-bassin n° 5256 (Analalava),1933.326,non mesurée,26.304,0.004,faible,84.251,0.001,faible,stable
+5259,sous-bassin n° 5259 (Analalava),3411.457,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+5264,sous-bassin n° 5264 (Analalava),715.052,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+5297,sous-bassin n° 5297 (Analalava),882.041,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+5304,sous-bassin n° 5304 (Bealanana),28550.345,non mesurée,261.24,0.001,faible,261.24,0.001,faible,stable
+5312,sous-bassin n° 5312 (Sambava),1218.915,partielle,332.425,0.006,faible,332.425,0.006,faible,stable
+5316,sous-bassin n° 5316 (Sambava),130147.611,partielle,332.425,0.002,faible,332.425,0.002,faible,stable
+5335,sous-bassin n° 5335 (Analalava),817.779,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+5341,sous-bassin n° 5341 (Sambava),2045.493,partielle,332.425,0.002,faible,332.425,0.002,faible,stable
+5372,sous-bassin n° 5372 (Analalava),603.057,partielle,181.542,0.0,faible,181.542,0.0,faible,stable
+5388,sous-bassin n° 5388 (Analalava),531.545,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+5395,sous-bassin n° 5395 (Analalava),2040.323,partielle,181.542,0.002,faible,181.542,0.002,faible,stable
+5398,sous-bassin n° 5398 (Antalaha),19825.643,partielle,332.425,0.001,faible,332.425,0.001,faible,stable
+5463,sous-bassin n° 5463 (Antalaha),3033.384,partielle,322.766,0.001,faible,322.766,0.001,faible,stable
+5465,sous-bassin n° 5465 (Bealanana),17808.572,non mesurée,203.915,0.0,faible,203.915,0.0,faible,stable
+5466,sous-bassin n° 5466 (Bealanana),120842.266,non mesurée,255.306,0.001,faible,255.306,0.001,faible,stable
+5467,sous-bassin n° 5467 (Antalaha),2352.2,partielle,332.425,0.002,faible,332.425,0.002,faible,stable
+5473,sous-bassin n° 5473 (Analalava),38867.689,partielle,26.304,0.002,faible,84.251,0.002,faible,stable
+5484,sous-bassin n° 5484 (Analalava),13750.098,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+5495,sous-bassin n° 5495 (Antalaha),9263.416,partielle,322.766,0.001,faible,322.766,0.001,faible,stable
+5496,sous-bassin n° 5496 (Analalava),709.568,partielle,62.8,0.026,faible,73.699,0.022,faible,stable
+5497,sous-bassin n° 5497 (Andapa),125567.055,partielle,249.154,0.002,faible,249.154,0.002,faible,stable
+5499,sous-bassin n° 5499 (Analalava),1332.109,partielle,62.8,0.142,modéré,73.699,0.121,modéré,stable
+5500,sous-bassin n° 5500 (Analalava),964.32,partielle,62.8,0.153,modéré,73.699,0.13,modéré,stable
+5505,sous-bassin n° 5505 (Analalava),1133.808,partielle,62.8,0.001,faible,73.699,0.001,faible,stable
+5511,sous-bassin n° 5511 (Analalava),674.931,partielle,62.8,0.14,modéré,73.699,0.119,modéré,stable
+5526,sous-bassin n° 5526 (Analalava),873.972,partielle,62.8,0.005,faible,73.699,0.004,faible,stable
+5541,sous-bassin n° 5541 (Antsohihy),81713.024,partielle,90.785,0.005,faible,90.785,0.005,faible,stable
+5555,sous-bassin n° 5555 (Antalaha),2113.624,partielle,322.766,0.002,faible,322.766,0.002,faible,stable
+5573,sous-bassin n° 5573 (Analalava),549.59,partielle,62.8,0.002,faible,73.699,0.002,faible,stable
+5584,sous-bassin n° 5584 (Analalava),756.895,partielle,71.538,0.001,faible,72.595,0.001,faible,stable
+5598,sous-bassin n° 5598 (Antalaha),1866.062,partielle,322.766,0.003,faible,322.766,0.003,faible,stable
+5605,sous-bassin n° 5605 (Analalava),334.856,non mesurée,62.8,0.001,faible,73.699,0.001,faible,stable
+5611,sous-bassin n° 5611 (Antsohihy),31561.56,partielle,90.785,0.001,faible,90.785,0.001,faible,stable
+5651,sous-bassin n° 5651 (Antalaha),5041.612,partielle,322.766,0.001,faible,322.766,0.001,faible,stable
+5678,sous-bassin n° 5678 (Antalaha),1340.419,partielle,322.766,0.005,faible,322.766,0.005,faible,stable
+5682,sous-bassin n° 5682 (Analalava),1544.593,partielle,178.97,0.0,faible,178.97,0.0,faible,stable
+5705,sous-bassin n° 5705 (Antalaha),1275.761,partielle,322.766,0.002,faible,322.766,0.002,faible,stable
+5758,sous-bassin n° 5758 (Andapa),42112.972,non mesurée,248.351,0.0,faible,248.351,0.0,faible,stable
+5772,sous-bassin n° 5772 (Antalaha),3607.636,partielle,322.766,0.005,faible,322.766,0.005,faible,stable
+5777,sous-bassin n° 5777 (Analalava),3967.869,partielle,62.8,0.001,faible,73.699,0.001,faible,stable
+5816,sous-bassin n° 5816 (Analalava),2075.466,partielle,71.538,0.001,faible,72.595,0.001,faible,stable
+5828,sous-bassin n° 5828 (Analalava),4181.324,partielle,63.138,0.001,faible,78.543,0.001,faible,stable
+5829,sous-bassin n° 5829 (Antalaha),69317.055,partielle,319.442,0.001,faible,319.442,0.001,faible,stable
+5830,sous-bassin n° 5830 (Antalaha),40717.032,partielle,258.488,0.076,faible,258.488,0.076,faible,stable
+5848,sous-bassin n° 5848 (Befandriana Nord),48446.755,partielle,150.684,0.001,faible,150.684,0.001,faible,stable
+5862,sous-bassin n° 5862 (Analalava),692.222,partielle,71.538,0.001,faible,72.595,0.001,faible,stable
+5866,sous-bassin n° 5866 (Bealanana),25072.128,non mesurée,226.112,0.001,faible,226.112,0.001,faible,stable
+5892,sous-bassin n° 5892 (Analalava),761.915,partielle,178.97,0.001,faible,178.97,0.001,faible,stable
+5901,sous-bassin n° 5901 (Antalaha),12068.303,partielle,258.488,0.278,modéré,258.488,0.278,modéré,stable
+5912,sous-bassin n° 5912 (Antalaha),9700.772,partielle,258.488,0.226,modéré,258.488,0.226,modéré,stable
+5917,sous-bassin n° 5917 (Analalava),562.672,partielle,71.538,0.001,faible,72.595,0.001,faible,stable
+5933,sous-bassin n° 5933 (Antalaha),23906.745,partielle,258.488,0.105,modéré,258.488,0.105,modéré,stable
+5955,sous-bassin n° 5955 (Analalava),6932.846,partielle,178.97,0.001,faible,178.97,0.001,faible,stable
+5956,sous-bassin n° 5956 (Antalaha),2041.012,partielle,258.488,0.002,faible,258.488,0.002,faible,stable
+5981,sous-bassin n° 5981 (Antalaha),2713.25,partielle,258.488,0.005,faible,258.488,0.005,faible,stable
+5987,sous-bassin n° 5987 (Antsohihy),64202.995,partielle,147.848,0.001,faible,147.848,0.001,faible,stable
+5994,sous-bassin n° 5994 (Bealanana),9179.714,non mesurée,140.87,0.0,faible,140.87,0.0,faible,stable
+6019,sous-bassin n° 6019 (Analalava),703.518,non mesurée,178.97,0.001,faible,178.97,0.001,faible,stable
+6026,sous-bassin n° 6026 (Analalava),1893.887,partielle,71.538,0.001,faible,72.595,0.001,faible,stable
+6043,sous-bassin n° 6043 (Analalava),1716.152,partielle,178.97,0.001,faible,178.97,0.001,faible,stable
+6045,sous-bassin n° 6045 (Antalaha),1921.542,partielle,258.488,0.012,faible,258.488,0.012,faible,stable
+6065,sous-bassin n° 6065 (Antalaha),11267.59,partielle,258.488,0.001,faible,258.488,0.001,faible,stable
+6087,sous-bassin n° 6087 (Bealanana),37338.792,non mesurée,315.465,0.0,faible,315.465,0.0,faible,stable
+6120,sous-bassin n° 6120 (Antalaha),1031.783,partielle,258.488,0.003,faible,258.488,0.003,faible,stable
+6121,sous-bassin n° 6121 (Analalava),4128.95,partielle,71.538,0.001,faible,72.595,0.001,faible,stable
+6137,sous-bassin n° 6137 (Analalava),4719.936,partielle,178.97,0.001,faible,178.97,0.001,faible,stable
+6138,sous-bassin n° 6138 (Befandriana Nord),2710.634,partielle,257.461,0.0,faible,257.461,0.0,faible,stable
+6144,sous-bassin n° 6144 (Analalava),1055.943,partielle,71.538,0.001,faible,72.595,0.001,faible,stable
+6152,sous-bassin n° 6152 (Antalaha),893.713,partielle,258.488,0.003,faible,258.488,0.003,faible,stable
+6153,sous-bassin n° 6153 (Antalaha),2590.456,partielle,258.488,0.001,faible,258.488,0.001,faible,stable
+6187,sous-bassin n° 6187 (Analalava),2076.392,partielle,71.538,0.001,faible,72.595,0.001,faible,stable
+6193,sous-bassin n° 6193 (Antalaha),794.85,partielle,258.488,0.001,faible,258.488,0.001,faible,stable
+6212,sous-bassin n° 6212 (Analalava),2011.428,partielle,71.538,0.002,faible,72.595,0.002,faible,stable
+6224,sous-bassin n° 6224 (Analalava),1706.339,partielle,178.97,0.001,faible,178.97,0.001,faible,stable
+6230,sous-bassin n° 6230 (Befandriana Nord),12049.885,non mesurée,254.308,0.0,faible,254.308,0.0,faible,stable
+6262,sous-bassin n° 6262 (Antalaha),16620.622,partielle,258.488,0.001,faible,258.488,0.001,faible,stable
+6270,sous-bassin n° 6270 (Antalaha),4495.145,non mesurée,322.299,0.001,faible,322.299,0.001,faible,stable
+6273,sous-bassin n° 6273 (Antalaha),3376.712,partielle,322.299,0.005,faible,322.299,0.005,faible,stable
+6293,sous-bassin n° 6293 (Antalaha),2564.885,partielle,322.299,0.003,faible,322.299,0.003,faible,stable
+6334,sous-bassin n° 6334 (Antalaha),9855.528,partielle,322.299,0.0,faible,322.299,0.0,faible,stable
+6341,sous-bassin n° 6341 (Befandriana Nord),43462.48,partielle,151.242,0.002,faible,151.242,0.002,faible,stable
+6390,sous-bassin n° 6390 (Analalava),834.871,partielle,62.489,0.001,faible,72.595,0.0,faible,stable
+6405,sous-bassin n° 6405 (Mahajanga II),1250.242,partielle,131.043,0.0,faible,131.043,0.0,faible,stable
+6407,sous-bassin n° 6407 (Mahajanga II),1137.738,partielle,35.713,0.002,faible,68.255,0.001,faible,stable
+6446,sous-bassin n° 6446 (Analalava),1512.307,non mesurée,62.489,0.002,faible,72.595,0.002,faible,stable
+6473,sous-bassin n° 6473 (Antalaha),1969.506,partielle,322.299,0.001,faible,322.299,0.001,faible,stable
+6491,sous-bassin n° 6491 (Analalava),491.493,partielle,62.489,0.002,faible,72.595,0.001,faible,stable
+6522,sous-bassin n° 6522 (Mahajanga II),557.589,partielle,35.713,0.001,faible,68.255,0.0,faible,stable
+6534,sous-bassin n° 6534 (Maroantsetra),16952.537,non mesurée,248.092,0.0,faible,248.092,0.0,faible,stable
+6577,sous-bassin n° 6577 (Antalaha),2876.117,partielle,322.299,0.001,faible,322.299,0.001,faible,stable
+6606,sous-bassin n° 6606 (Analalava),2879.536,partielle,62.489,0.002,faible,72.595,0.002,faible,stable
+6617,sous-bassin n° 6617 (Mahajanga II),2710.119,partielle,86.762,0.0,faible,101.108,0.0,faible,stable
+6618,sous-bassin n° 6618 (Mahajanga II),5064.612,partielle,42.482,0.001,faible,71.172,0.001,faible,stable
+6651,sous-bassin n° 6651 (Befandriana Nord),82096.103,non mesurée,247.957,0.001,faible,247.957,0.001,faible,stable
+6658,sous-bassin n° 6658 (Maroantsetra),2846.853,non mesurée,248.421,0.002,faible,248.421,0.002,faible,stable
+6659,sous-bassin n° 6659 (Maroantsetra),4745.109,non mesurée,248.421,0.01,faible,248.421,0.01,faible,stable
+6674,sous-bassin n° 6674 (Maroantsetra),6322.497,non mesurée,248.421,0.013,faible,248.421,0.013,faible,stable
+6676,sous-bassin n° 6676 (Antalaha),5894.898,non mesurée,321.33,0.0,faible,321.33,0.0,faible,stable
+6683,sous-bassin n° 6683 (Analalava),20051.49,partielle,62.489,0.001,faible,72.595,0.001,faible,stable
+6686,sous-bassin n° 6686 (Maroantsetra),60389.361,non mesurée,248.421,0.002,faible,248.421,0.002,faible,stable
+6700,sous-bassin n° 6700 (Maroantsetra),10157.548,non mesurée,308.92,0.001,faible,308.92,0.001,faible,stable
+6710,sous-bassin n° 6710 (Maroantsetra),28591.955,non mesurée,248.421,0.059,faible,248.421,0.059,faible,stable
+6711,sous-bassin n° 6711 (Maroantsetra),2918.169,non mesurée,248.421,0.185,modéré,248.421,0.185,modéré,stable
+6714,sous-bassin n° 6714 (Maroantsetra),22905.717,non mesurée,248.421,0.005,faible,248.421,0.005,faible,stable
+6735,sous-bassin n° 6735 (Maroantsetra),1188.611,non mesurée,248.421,0.01,faible,248.421,0.01,faible,stable
+6762,sous-bassin n° 6762 (Port-Berge (Boriziny-Vaovao)),28875.41,partielle,161.932,0.001,faible,161.932,0.001,faible,stable
+6764,sous-bassin n° 6764 (Maroantsetra),30647.92,non mesurée,248.092,0.003,faible,248.092,0.003,faible,stable
+6785,sous-bassin n° 6785 (Befandriana Nord),104122.036,partielle,223.547,0.001,faible,223.547,0.001,faible,stable
+6801,sous-bassin n° 6801 (Port-Berge (Boriziny-Vaovao)),8161.143,partielle,141.53,0.001,faible,141.53,0.001,faible,stable
+6809,sous-bassin n° 6809 (Mahajanga II),375.632,partielle,59.736,0.001,faible,59.736,0.001,faible,stable
+6822,sous-bassin n° 6822 (Mahajanga II),360.011,partielle,6.754,0.009,faible,66.914,0.001,faible,stable
+6829,sous-bassin n° 6829 (Maroantsetra),967.927,non mesurée,248.421,0.002,faible,248.421,0.002,faible,stable
+6830,sous-bassin n° 6830 (Maroantsetra),2738.621,non mesurée,248.421,0.003,faible,248.421,0.003,faible,stable
+6860,sous-bassin n° 6860 (Mahajanga II),1700.139,non mesurée,59.736,0.001,faible,59.736,0.001,faible,stable
+6861,sous-bassin n° 6861 (Port-Berge (Boriziny-Vaovao)),18817.591,partielle,93.054,0.001,faible,93.054,0.001,faible,stable
+6880,sous-bassin n° 6880 (Maroantsetra),1086.302,non mesurée,246.859,0.002,faible,246.859,0.002,faible,stable
+6897,sous-bassin n° 6897 (Mahajanga II),33930.505,partielle,41.926,0.005,faible,71.172,0.003,faible,stable
+6900,sous-bassin n° 6900 (Port-Berge (Boriziny-Vaovao)),69785.421,partielle,120.883,0.003,faible,120.883,0.003,faible,stable
+6905,sous-bassin n° 6905 (Maroantsetra),2286.452,non mesurée,245.858,0.001,faible,245.858,0.001,faible,stable
+6909,sous-bassin n° 6909 (Mahajanga II),961.334,non mesurée,6.754,0.011,faible,66.914,0.001,faible,stable
+6916,sous-bassin n° 6916 (Maroantsetra),1065.454,non mesurée,246.859,0.005,faible,246.859,0.005,faible,stable
+6964,sous-bassin n° 6964 (Maroantsetra),1696.145,non mesurée,246.859,0.005,faible,246.859,0.005,faible,stable
+6973,sous-bassin n° 6973 (Mahajanga II),5094.321,partielle,6.754,0.021,faible,66.914,0.002,faible,stable
+6988,sous-bassin n° 6988 (Maroantsetra),10856.468,non mesurée,246.859,0.003,faible,246.859,0.003,faible,stable
+7014,sous-bassin n° 7014 (Port-Berge (Boriziny-Vaovao)),39952.525,partielle,218.782,0.001,faible,218.782,0.001,faible,stable
+7033,sous-bassin n° 7033 (Maroantsetra),1745.957,non mesurée,246.859,0.009,faible,246.859,0.009,faible,stable
+7062,sous-bassin n° 7062 (Mahajanga II),3133.946,partielle,59.736,0.001,faible,59.736,0.001,faible,stable
+7063,sous-bassin n° 7063 (Maroantsetra),9676.997,non mesurée,246.859,0.001,faible,246.859,0.001,faible,stable
+7068,sous-bassin n° 7068 (Mahajanga II),22941.835,partielle,6.754,0.006,faible,66.914,0.002,faible,stable
+7069,sous-bassin n° 7069 (Mahajanga II),6606.688,partielle,59.736,0.003,faible,59.736,0.002,faible,stable
+7071,sous-bassin n° 7071 (Maroantsetra),3364.159,non mesurée,246.859,0.017,faible,246.859,0.017,faible,stable
+7080,sous-bassin n° 7080 (Mahajanga II),3216.425,partielle,59.736,0.005,faible,59.736,0.005,faible,stable
+7091,sous-bassin n° 7091 (Mahajanga II),466.799,partielle,6.754,0.031,faible,66.914,0.003,faible,stable
+7111,sous-bassin n° 7111 (Antalaha),1814.682,non mesurée,320.36,0.0,faible,320.36,0.0,faible,stable
+7118,sous-bassin n° 7118 (Maroantsetra),1618.359,non mesurée,245.858,0.001,faible,245.858,0.001,faible,stable
+7134,sous-bassin n° 7134 (Mahajanga II),1090.549,partielle,6.754,0.059,faible,66.914,0.006,faible,stable
+7135,sous-bassin n° 7135 (Maroantsetra),3844.065,non mesurée,246.859,0.003,faible,246.859,0.003,faible,stable
+7152,sous-bassin n° 7152 (Maroantsetra),1317.863,partielle,245.858,0.004,faible,245.858,0.004,faible,stable
+7167,sous-bassin n° 7167 (Maroantsetra),3413.778,non mesurée,245.858,0.0,faible,245.858,0.0,faible,stable
+7191,sous-bassin n° 7191 (Antalaha),2144.486,partielle,320.36,0.001,faible,320.36,0.001,faible,stable
+7195,sous-bassin n° 7195 (Befandriana Nord),36350.605,partielle,223.547,0.002,faible,223.547,0.002,faible,stable
+7196,sous-bassin n° 7196 (Maroantsetra),1996.42,non mesurée,246.859,0.003,faible,246.859,0.003,faible,stable
+7198,sous-bassin n° 7198 (Antalaha),3563.525,non mesurée,245.858,0.0,faible,245.858,0.0,faible,stable
+7212,sous-bassin n° 7212 (Mandritsara),37957.342,partielle,224.022,0.001,faible,224.022,0.001,faible,stable
+7218,sous-bassin n° 7218 (Mahajanga I),53875.606,partielle,6.754,2.456,élevé,66.914,0.248,modéré,incertain
+7231,sous-bassin n° 7231 (Maroantsetra),993.924,non mesurée,246.859,0.012,faible,246.859,0.012,faible,stable
+7235,sous-bassin n° 7235 (Mahajanga I),79127.494,non mesurée,6.754,1.664,élevé,66.914,0.168,modéré,incertain
+7245,sous-bassin n° 7245 (Antalaha),3483.21,non mesurée,320.36,0.0,faible,320.36,0.0,faible,stable
+7248,sous-bassin n° 7248 (Maroantsetra),16799.504,non mesurée,246.859,0.001,faible,246.859,0.001,faible,stable
+7252,sous-bassin n° 7252 (Mahajanga I),8449.348,non mesurée,6.754,8.173,élevé,66.914,0.825,élevé,stable
+7256,sous-bassin n° 7256 (Antalaha),1271.832,partielle,320.36,0.005,faible,320.36,0.005,faible,stable
+7258,sous-bassin n° 7258 (Mahajanga I),8769.131,non mesurée,6.754,7.803,élevé,66.914,0.788,élevé,stable
+7259,sous-bassin n° 7259 (Maroantsetra),4973.437,partielle,246.859,0.008,faible,246.859,0.008,faible,stable
+7278,sous-bassin n° 7278 (Mahajanga I),17010.501,non mesurée,6.754,8.012,élevé,66.914,0.809,élevé,stable
+7280,sous-bassin n° 7280 (Maroantsetra),10118.697,non mesurée,312.421,0.0,faible,312.421,0.0,faible,stable
+7328,sous-bassin n° 7328 (Mahajanga I),39625.937,non mesurée,6.754,6.953,élevé,66.914,0.702,élevé,stable
+7329,sous-bassin n° 7329 (Mahajanga I),9354.381,non mesurée,6.754,4.56,élevé,66.914,0.46,élevé,stable
+7339,sous-bassin n° 7339 (Mahajanga I),15126.356,non mesurée,6.754,7.303,élevé,66.914,0.737,élevé,stable
+7340,sous-bassin n° 7340 (Mahajanga I),1444.557,non mesurée,6.754,7.966,élevé,66.914,0.804,élevé,stable
+7341,sous-bassin n° 7341 (Mahajanga I),1651.473,non mesurée,6.754,9.701,élevé,66.914,0.979,élevé,stable
+7346,sous-bassin n° 7346 (Mahajanga I),13506.051,non mesurée,6.754,3.252,élevé,66.914,0.328,modéré,incertain
+7356,sous-bassin n° 7356 (Mitsinjo),1265.977,non mesurée,6.763,0.013,faible,66.914,0.001,faible,stable
+7358,sous-bassin n° 7358 (Mahajanga II),7151.569,partielle,19.783,0.009,faible,66.914,0.003,faible,stable
+7359,sous-bassin n° 7359 (Maroantsetra),1610.159,non mesurée,246.719,0.002,faible,246.719,0.002,faible,stable
+7372,sous-bassin n° 7372 (Maroantsetra),834.341,non mesurée,246.719,0.001,faible,246.719,0.001,faible,stable
+7382,sous-bassin n° 7382 (Maroantsetra),1130.652,non mesurée,246.719,0.004,faible,246.719,0.004,faible,stable
+7395,sous-bassin n° 7395 (Antalaha),3414.266,non mesurée,320.36,0.001,faible,320.36,0.001,faible,stable
+7408,sous-bassin n° 7408 (Port-Berge (Boriziny-Vaovao)),19752.897,partielle,71.499,0.002,faible,85.691,0.001,faible,stable
+7424,sous-bassin n° 7424 (Mampikony),30149.336,partielle,122.016,0.002,faible,122.016,0.002,faible,stable
+7453,sous-bassin n° 7453 (Mitsinjo),10301.168,non mesurée,19.137,0.009,faible,19.137,0.009,faible,stable
+7471,sous-bassin n° 7471 (Mitsinjo),544.338,non mesurée,19.137,0.003,faible,19.137,0.003,faible,stable
+7477,sous-bassin n° 7477 (Mitsinjo),2715.183,partielle,6.763,0.022,faible,66.914,0.002,faible,stable
+7479,sous-bassin n° 7479 (Mahajanga II),1758.298,non mesurée,19.783,0.011,faible,66.914,0.003,faible,stable
+7530,sous-bassin n° 7530 (Port-Berge (Boriziny-Vaovao)),12842.759,partielle,122.016,0.005,faible,122.016,0.005,faible,stable
+7577,sous-bassin n° 7577 (Mitsinjo),800.309,non mesurée,19.137,0.009,faible,19.137,0.009,faible,stable
+7596,sous-bassin n° 7596 (Mahajanga II),523.084,partielle,19.783,0.063,faible,66.914,0.018,faible,stable
+7597,sous-bassin n° 7597 (Marovoay),10775.424,partielle,67.49,0.001,faible,82.113,0.001,faible,stable
+7618,sous-bassin n° 7618 (Mahajanga II),644.977,partielle,19.783,0.061,faible,66.914,0.018,faible,stable
+7620,sous-bassin n° 7620 (Mandritsara),21213.988,partielle,245.392,0.001,faible,245.392,0.001,faible,stable
+7659,sous-bassin n° 7659 (Mahajanga II),1062.873,partielle,19.783,0.026,faible,66.914,0.008,faible,stable
+7681,sous-bassin n° 7681 (Maroantsetra),4213.198,partielle,246.719,0.003,faible,246.719,0.003,faible,stable
+7710,sous-bassin n° 7710 (Mandritsara),92358.539,partielle,242.992,0.002,faible,242.992,0.002,faible,stable
+7714,sous-bassin n° 7714 (Antalaha),3549.024,non mesurée,320.36,0.001,faible,320.36,0.001,faible,stable
+7759,sous-bassin n° 7759 (Mahajanga II),1017.804,partielle,19.783,0.012,faible,66.914,0.004,faible,stable
+7773,sous-bassin n° 7773 (Mitsinjo),1158.203,partielle,6.763,0.017,faible,66.914,0.002,faible,stable
+7797,sous-bassin n° 7797 (Port-Berge (Boriziny-Vaovao)),33576.392,partielle,220.551,0.001,faible,220.551,0.001,faible,stable
+7803,sous-bassin n° 7803 (Mitsinjo),36033.3,partielle,19.137,0.004,faible,19.137,0.004,faible,stable
+7820,sous-bassin n° 7820 (Mitsinjo),848.934,partielle,19.137,0.004,faible,19.137,0.004,faible,stable
+7824,sous-bassin n° 7824 (Mitsinjo),601.075,partielle,19.137,0.005,faible,19.137,0.005,faible,stable
+7835,sous-bassin n° 7835 (Port-Berge (Boriziny-Vaovao)),5672.624,partielle,93.054,0.001,faible,93.054,0.001,faible,stable
+7836,sous-bassin n° 7836 (Mandritsara),65603.927,partielle,246.382,0.001,faible,246.382,0.001,faible,stable
+7848,sous-bassin n° 7848 (Mitsinjo),3797.131,partielle,6.763,0.004,faible,66.914,0.0,faible,stable
+7885,sous-bassin n° 7885 (Mampikony),26785.31,partielle,96.006,0.004,faible,96.006,0.003,faible,stable
+7903,sous-bassin n° 7903 (Antalaha),5528.903,non mesurée,320.36,0.001,faible,320.36,0.001,faible,stable
+7905,sous-bassin n° 7905 (Mitsinjo),1547.225,non mesurée,19.137,0.003,faible,19.137,0.003,faible,stable
+7939,sous-bassin n° 7939 (Maroantsetra),8661.182,non mesurée,246.719,0.0,faible,246.719,0.0,faible,stable
+7974,sous-bassin n° 7974 (Mahajanga II),1185.342,partielle,19.783,0.002,faible,66.914,0.001,faible,stable
+7975,sous-bassin n° 7975 (Marovoay),39311.763,partielle,28.389,0.01,faible,71.172,0.004,faible,stable
+7976,sous-bassin n° 7976 (Mananara-Avaratra),582.922,partielle,246.719,0.002,faible,246.719,0.002,faible,stable
+7988,sous-bassin n° 7988 (Marovoay),5100.878,partielle,27.959,0.016,faible,68.937,0.007,faible,stable
+8049,sous-bassin n° 8049 (Marovoay),3241.457,partielle,27.959,0.008,faible,68.937,0.002,faible,stable
+8071,sous-bassin n° 8071 (Marovoay),2583.067,partielle,27.959,0.004,faible,68.937,0.002,faible,stable
+8077,sous-bassin n° 8077 (Antalaha),2746.479,partielle,245.858,0.001,faible,245.858,0.001,faible,stable
+8086,sous-bassin n° 8086 (Mampikony),27093.028,partielle,122.016,0.003,faible,122.016,0.003,faible,stable
+8111,sous-bassin n° 8111 (Antalaha),4846.523,non mesurée,245.858,0.0,faible,245.858,0.0,faible,stable
+8124,sous-bassin n° 8124 (Mananara-Avaratra),1233.452,non mesurée,246.719,0.001,faible,246.719,0.001,faible,stable
+8154,sous-bassin n° 8154 (Marovoay),3619.565,partielle,23.871,0.005,faible,67.926,0.002,faible,stable
+8156,sous-bassin n° 8156 (Marovoay),18824.903,partielle,27.959,0.004,faible,68.937,0.002,faible,stable
+8172,sous-bassin n° 8172 (Mananara-Avaratra),802.842,partielle,246.719,0.006,faible,246.719,0.006,faible,stable
+8199,sous-bassin n° 8199 (Soalala),1284.007,non mesurée,99.282,0.001,faible,99.282,0.001,faible,stable
+8206,sous-bassin n° 8206 (Mandritsara),7774.844,partielle,241.959,0.0,faible,241.959,0.0,faible,stable
+8265,sous-bassin n° 8265 (Mandritsara),10773.388,partielle,241.959,0.0,faible,241.959,0.0,faible,stable
+8270,sous-bassin n° 8270 (Soalala),501.732,partielle,98.652,0.0,faible,98.652,0.0,faible,stable
+8287,sous-bassin n° 8287 (Mananara-Avaratra),2807.929,non mesurée,246.719,0.001,faible,246.719,0.001,faible,stable
+8295,sous-bassin n° 8295 (Antalaha),2618.072,partielle,245.858,0.002,faible,245.858,0.002,faible,stable
+8311,sous-bassin n° 8311 (Mananara-Avaratra),2341.136,partielle,256.654,0.006,faible,256.654,0.006,faible,stable
+8357,sous-bassin n° 8357 (Marovoay),5039.497,partielle,62.177,0.0,faible,80.638,0.0,faible,stable
+8391,sous-bassin n° 8391 (Mampikony),45822.498,partielle,10.693,0.005,faible,88.282,0.003,faible,stable
+8426,sous-bassin n° 8426 (Mananara-Avaratra),7418.78,partielle,313.012,0.001,faible,313.012,0.001,faible,stable
+8433,sous-bassin n° 8433 (Soalala),1616.227,partielle,98.652,0.001,faible,98.652,0.001,faible,stable
+8456,sous-bassin n° 8456 (Mandritsara),12305.947,partielle,224.782,0.0,faible,224.782,0.0,faible,stable
+8470,sous-bassin n° 8470 (Mitsinjo),2299.931,partielle,99.282,0.0,faible,99.282,0.0,faible,stable
+8517,sous-bassin n° 8517 (Soalala),2073.859,non mesurée,98.967,0.001,faible,98.967,0.001,faible,stable
+8542,sous-bassin n° 8542 (Mitsinjo),963.769,non mesurée,98.653,0.002,faible,98.653,0.002,faible,stable
+8571,sous-bassin n° 8571 (Soalala),4868.621,partielle,98.652,0.001,faible,98.652,0.001,faible,stable
+8572,sous-bassin n° 8572 (Mitsinjo),15632.883,partielle,42.323,0.002,faible,68.937,0.001,faible,stable
+8580,sous-bassin n° 8580 (Marovoay),81232.946,partielle,42.162,0.01,faible,74.267,0.007,faible,stable
+8581,sous-bassin n° 8581 (Mananara-Avaratra),38293.415,non mesurée,313.012,0.001,faible,313.012,0.001,faible,stable
+8585,sous-bassin n° 8585 (Mitsinjo),14175.545,partielle,98.968,0.001,faible,98.967,0.001,faible,stable
+8593,sous-bassin n° 8593 (Mampikony),5685.464,partielle,96.006,0.001,faible,96.006,0.001,faible,stable
+8594,sous-bassin n° 8594 (Mananara-Avaratra),2390.987,non mesurée,256.654,0.004,faible,256.654,0.004,faible,stable
+8604,sous-bassin n° 8604 (Soalala),1068.924,partielle,98.437,0.0,faible,98.437,0.0,faible,stable
+8609,sous-bassin n° 8609 (Soalala),3427.22,partielle,98.652,0.004,faible,98.652,0.004,faible,stable
+8618,sous-bassin n° 8618 (Mitsinjo),23676.449,partielle,42.52,0.001,faible,68.937,0.001,faible,stable
+8619,sous-bassin n° 8619 (Mananara-Avaratra),9268.085,non mesurée,313.012,0.002,faible,313.012,0.002,faible,stable
+8626,sous-bassin n° 8626 (Soalala),3323.175,partielle,98.652,0.001,faible,98.652,0.001,faible,stable
+8636,sous-bassin n° 8636 (Marovoay),65023.305,partielle,42.162,0.004,faible,74.267,0.003,faible,stable
+8641,sous-bassin n° 8641 (Mananara-Avaratra),2851.114,partielle,256.654,0.01,faible,256.654,0.01,faible,stable
+8646,sous-bassin n° 8646 (Mandritsara),20559.045,partielle,321.939,0.0,faible,321.939,0.0,faible,stable
+8654,sous-bassin n° 8654 (Mampikony),77397.889,partielle,43.611,0.005,faible,80.638,0.003,faible,stable
+8661,sous-bassin n° 8661 (Mananara-Avaratra),91354.565,non mesurée,312.984,0.001,faible,312.984,0.001,faible,stable
+8662,sous-bassin n° 8662 (Mananara-Avaratra),2920.081,partielle,256.654,0.071,faible,256.654,0.071,faible,stable
+8663,sous-bassin n° 8663 (Mananara-Avaratra),2078.861,partielle,256.654,0.182,modéré,256.654,0.182,modéré,stable
+8664,sous-bassin n° 8664 (Mananara-Avaratra),2895.937,partielle,256.654,0.126,modéré,256.654,0.126,modéré,stable
+8669,sous-bassin n° 8669 (Mananara-Avaratra),7946.073,partielle,256.654,0.024,faible,256.654,0.024,faible,stable
+8676,sous-bassin n° 8676 (Mananara-Avaratra),2287.911,partielle,256.654,0.019,faible,256.654,0.019,faible,stable
+8678,sous-bassin n° 8678 (Mananara-Avaratra),6510.244,non mesurée,256.654,0.069,faible,256.654,0.069,faible,stable
+8687,sous-bassin n° 8687 (Mananara-Avaratra),1051.86,partielle,256.654,0.006,faible,256.654,0.006,faible,stable
+8699,sous-bassin n° 8699 (Soalala),379.817,partielle,98.437,0.001,faible,98.437,0.001,faible,stable
+8701,sous-bassin n° 8701 (Mananara-Avaratra),1471.068,partielle,256.654,0.005,faible,256.654,0.005,faible,stable
+8720,sous-bassin n° 8720 (Soalala),11187.402,partielle,78.197,0.001,faible,78.197,0.0,faible,stable
+8772,sous-bassin n° 8772 (Mananara-Avaratra),3867.17,non mesurée,256.654,0.002,faible,256.654,0.002,faible,stable
+8784,sous-bassin n° 8784 (Mampikony),1978.736,non mesurée,223.781,0.0,faible,223.781,0.0,faible,stable
+8819,sous-bassin n° 8819 (Besalampy),3863.945,partielle,89.452,0.0,faible,89.452,0.0,faible,stable
+8858,sous-bassin n° 8858 (Mananara-Avaratra),1794.332,non mesurée,256.654,0.003,faible,256.654,0.003,faible,stable
+8874,sous-bassin n° 8874 (Besalampy),2391.411,partielle,28.925,0.001,faible,58.03,0.0,faible,stable
+8877,sous-bassin n° 8877 (Soalala),5981.842,partielle,28.858,0.001,faible,60.943,0.001,faible,stable
+8911,sous-bassin n° 8911 (Mananara-Avaratra),2203.869,partielle,256.654,0.003,faible,256.654,0.003,faible,stable
+8920,sous-bassin n° 8920 (Besalampy),2133.319,partielle,28.925,0.001,faible,58.03,0.001,faible,stable
+8925,sous-bassin n° 8925 (Besalampy),2925.963,non mesurée,28.925,0.002,faible,58.03,0.001,faible,stable
+8930,sous-bassin n° 8930 (Soalala),22735.977,partielle,42.52,0.002,faible,65.056,0.001,faible,stable
+8933,sous-bassin n° 8933 (Mananara-Avaratra),426.167,non mesurée,256.654,0.003,faible,256.654,0.003,faible,stable
+8949,sous-bassin n° 8949 (Besalampy),507.993,non mesurée,89.452,0.0,faible,89.452,0.0,faible,stable
+8950,sous-bassin n° 8950 (Mananara-Avaratra),480.648,partielle,256.654,0.0,faible,256.654,0.0,faible,stable
+8953,sous-bassin n° 8953 (Marovoay),7983.998,partielle,75.106,0.001,faible,75.106,0.001,faible,stable
+8956,sous-bassin n° 8956 (Andilamena),2101.702,partielle,157.582,0.0,faible,157.582,0.0,faible,stable
+8967,sous-bassin n° 8967 (Mananara-Avaratra),579.64,non mesurée,315.694,0.0,faible,315.694,0.0,faible,stable
+8980,sous-bassin n° 8980 (Mananara-Avaratra),1941.642,partielle,315.694,0.0,faible,315.694,0.0,faible,stable
+8986,sous-bassin n° 8986 (Mananara-Avaratra),1335.815,non mesurée,315.694,0.002,faible,315.694,0.002,faible,stable
+9001,sous-bassin n° 9001 (Andilamena),4557.315,partielle,220.998,0.0,faible,220.998,0.0,faible,stable
+9014,sous-bassin n° 9014 (Ambato Boeni),23531.079,partielle,76.401,0.003,faible,76.401,0.002,faible,stable
+9015,sous-bassin n° 9015 (Andilamena),18729.839,partielle,220.902,0.0,faible,220.902,0.0,faible,stable
+9018,sous-bassin n° 9018 (Ambato Boeni),84816.06,partielle,42.828,0.017,faible,74.267,0.01,faible,stable
+9024,sous-bassin n° 9024 (Mananara-Avaratra),1330.295,partielle,315.694,0.0,faible,315.694,0.0,faible,stable
+9035,sous-bassin n° 9035 (Mananara-Avaratra),2910.745,non mesurée,315.694,0.002,faible,315.694,0.002,faible,stable
+9053,sous-bassin n° 9053 (Ambato Boeni),33760.355,partielle,42.83,0.01,faible,74.267,0.006,faible,stable
+9060,sous-bassin n° 9060 (Mananara-Avaratra),796.889,partielle,315.694,0.001,faible,315.694,0.001,faible,stable
+9063,sous-bassin n° 9063 (Ambato Boeni),36367.477,partielle,42.826,0.01,faible,74.267,0.003,faible,stable
+9067,sous-bassin n° 9067 (Tsaratanana),19822.555,partielle,43.611,0.002,faible,80.638,0.002,faible,stable
+9071,sous-bassin n° 9071 (Mananara-Avaratra),1265.007,partielle,315.694,0.002,faible,315.694,0.002,faible,stable
+9076,sous-bassin n° 9076 (Mandritsara),15777.508,partielle,347.809,0.0,faible,347.809,0.0,faible,stable
+9079,sous-bassin n° 9079 (Ambato Boeni),17381.979,partielle,70.674,0.001,faible,85.3,0.001,faible,stable
+9087,sous-bassin n° 9087 (Mandritsara),8077.736,non mesurée,347.809,0.0,faible,347.809,0.0,faible,stable
+9088,sous-bassin n° 9088 (Mananara-Avaratra),814.118,partielle,315.694,0.006,faible,315.694,0.006,faible,stable
+9094,sous-bassin n° 9094 (Ambato Boeni),9425.428,partielle,17.552,0.003,faible,75.256,0.001,faible,stable
+9095,sous-bassin n° 9095 (Tsaratanana),55328.349,partielle,184.564,0.002,faible,184.564,0.001,faible,stable
+9101,sous-bassin n° 9101 (Mananara-Avaratra),1658.39,partielle,315.694,0.001,faible,315.694,0.001,faible,stable
+9104,sous-bassin n° 9104 (Mananara-Avaratra),3615.802,partielle,315.694,0.0,faible,315.694,0.0,faible,stable
+9133,sous-bassin n° 9133 (Andilamena),10372.692,non mesurée,220.998,0.0,faible,220.998,0.0,faible,stable
+9147,sous-bassin n° 9147 (Besalampy),764.438,non mesurée,31.093,0.002,faible,31.093,0.002,faible,stable
+9150,sous-bassin n° 9150 (Besalampy),10430.255,partielle,29.209,0.001,faible,58.08,0.001,faible,stable
+9151,sous-bassin n° 9151 (Andilamena),6367.401,non mesurée,220.902,0.0,faible,220.902,0.0,faible,stable
+9155,sous-bassin n° 9155 (Ambato Boeni),9923.396,partielle,28.192,0.001,faible,67.912,0.0,faible,stable
+9156,sous-bassin n° 9156 (Mananara-Avaratra),26057.089,partielle,312.984,0.0,faible,312.984,0.0,faible,stable
+9174,sous-bassin n° 9174 (Besalampy),6984.307,partielle,29.209,0.002,faible,58.08,0.002,faible,stable
+9175,sous-bassin n° 9175 (Soanierana Ivongo),2409.662,partielle,315.694,0.003,faible,315.694,0.003,faible,stable
+9178,sous-bassin n° 9178 (Andilamena),22185.921,non mesurée,101.615,0.001,faible,102.368,0.001,faible,stable
+9184,sous-bassin n° 9184 (Maevatanana),59200.147,partielle,6.539,0.008,faible,76.244,0.003,faible,stable
+9200,sous-bassin n° 9200 (Besalampy),3356.415,partielle,78.197,0.0,faible,78.197,0.0,faible,stable
+9203,sous-bassin n° 9203 (Soanierana Ivongo),9442.718,non mesurée,305.708,0.002,faible,305.708,0.002,faible,stable
+9217,sous-bassin n° 9217 (Besalampy),3304.441,partielle,31.093,0.005,faible,31.093,0.005,faible,stable
+9225,sous-bassin n° 9225 (Besalampy),1956.226,partielle,31.093,0.005,faible,31.093,0.005,faible,stable
+9256,sous-bassin n° 9256 (Sainte Marie),455.716,partielle,315.694,0.001,faible,315.694,0.001,faible,stable
+9267,sous-bassin n° 9267 (Soanierana Ivongo),10793.079,non mesurée,305.708,0.001,faible,305.708,0.001,faible,stable
+9289,sous-bassin n° 9289 (Sainte Marie),1215.751,partielle,315.694,0.001,faible,315.694,0.001,faible,stable
+9307,sous-bassin n° 9307 (Maevatanana),70941.607,partielle,6.54,0.016,faible,76.244,0.006,faible,stable
+9336,sous-bassin n° 9336 (Sainte Marie),697.464,partielle,315.694,0.001,faible,315.694,0.001,faible,stable
+9339,sous-bassin n° 9339 (Besalampy),3528.644,partielle,29.802,0.001,faible,43.53,0.001,faible,stable
+9340,sous-bassin n° 9340 (Ambato Boeni),1515.799,partielle,27.884,0.001,faible,70.241,0.0,faible,stable
+9371,sous-bassin n° 9371 (Soanierana Ivongo),44369.69,partielle,305.708,0.0,faible,305.708,0.0,faible,stable
+9385,sous-bassin n° 9385 (Besalampy),12021.05,partielle,33.256,0.001,faible,58.08,0.0,faible,stable
+9418,sous-bassin n° 9418 (Sainte Marie),1064.509,partielle,315.694,0.001,faible,315.694,0.001,faible,stable
+9435,sous-bassin n° 9435 (Soanierana Ivongo),1417.054,non mesurée,305.708,0.002,faible,305.708,0.002,faible,stable
+9455,sous-bassin n° 9455 (Sainte Marie),2012.911,partielle,311.153,0.002,faible,311.153,0.002,faible,stable
+9471,sous-bassin n° 9471 (Soanierana Ivongo),20141.773,non mesurée,305.708,0.003,faible,305.708,0.003,faible,stable
+9491,sous-bassin n° 9491 (Sainte Marie),1795.461,partielle,311.153,0.002,faible,311.153,0.002,faible,stable
+9494,sous-bassin n° 9494 (Soanierana Ivongo),4163.686,non mesurée,308.431,0.002,faible,308.431,0.002,faible,stable
+9525,sous-bassin n° 9525 (Soanierana Ivongo),602.335,non mesurée,311.153,0.002,faible,311.153,0.002,faible,stable
+9533,sous-bassin n° 9533 (Soanierana Ivongo),1806.413,non mesurée,311.153,0.004,faible,311.153,0.004,faible,stable
+9540,sous-bassin n° 9540 (Soanierana Ivongo),4219.937,non mesurée,311.153,0.003,faible,311.153,0.003,faible,stable
+9544,sous-bassin n° 9544 (Sainte Marie),1025.703,non mesurée,311.153,0.001,faible,311.153,0.001,faible,stable
+9548,sous-bassin n° 9548 (Soanierana Ivongo),43210.318,partielle,311.153,0.0,faible,311.153,0.0,faible,stable
+9550,sous-bassin n° 9550 (Sainte Marie),1351.455,partielle,311.153,0.001,faible,311.153,0.001,faible,stable
+9554,sous-bassin n° 9554 (Ambato Boeni),820.894,partielle,27.884,0.0,faible,70.241,0.0,faible,stable
+9555,sous-bassin n° 9555 (Soanierana Ivongo),3849.681,non mesurée,311.153,0.137,modéré,311.153,0.137,modéré,stable
+9565,sous-bassin n° 9565 (Maintirano),3183.028,non mesurée,28.51,0.002,faible,55.967,0.001,faible,stable
+9583,sous-bassin n° 9583 (Besalampy),8420.599,partielle,77.39,0.001,faible,77.39,0.001,faible,stable
+9584,sous-bassin n° 9584 (Maevatanana),3265.495,non mesurée,68.956,0.0,faible,81.685,0.0,faible,stable
+9587,sous-bassin n° 9587 (Sainte Marie),561.582,non mesurée,311.153,0.001,faible,311.153,0.001,faible,stable
+9591,sous-bassin n° 9591 (Tsaratanana),11136.887,partielle,184.62,0.0,faible,184.62,0.0,faible,stable
+9592,sous-bassin n° 9592 (Soanierana Ivongo),6888.093,non mesurée,311.153,0.015,faible,311.153,0.015,faible,stable
+9598,sous-bassin n° 9598 (Maintirano),2920.898,partielle,23.623,0.003,faible,37.351,0.002,faible,stable
+9601,sous-bassin n° 9601 (Soanierana Ivongo),2269.819,non mesurée,311.153,0.003,faible,311.153,0.003,faible,stable
+9611,sous-bassin n° 9611 (Sainte Marie),1545.042,non mesurée,311.153,0.002,faible,311.153,0.002,faible,stable
+9615,sous-bassin n° 9615 (Sainte Marie),2537.388,non mesurée,311.153,0.003,faible,311.153,0.003,faible,stable
+9619,sous-bassin n° 9619 (Kandreho),478.34,partielle,28.636,0.0,faible,65.583,0.0,faible,stable
+9630,sous-bassin n° 9630 (Ambato Boeni),1608.207,partielle,26.724,0.0,faible,70.157,0.0,faible,stable
+9638,sous-bassin n° 9638 (Soanierana Ivongo),690.963,non mesurée,311.153,0.005,faible,311.153,0.005,faible,stable
+9644,sous-bassin n° 9644 (Andilamena),52509.321,non mesurée,254.158,0.002,faible,254.158,0.002,faible,stable
+9660,sous-bassin n° 9660 (Sainte Marie),4870.545,non mesurée,311.153,0.012,faible,311.153,0.012,faible,stable
+9664,sous-bassin n° 9664 (Soanierana Ivongo),1018.664,non mesurée,311.153,0.002,faible,311.153,0.002,faible,stable
+9670,sous-bassin n° 9670 (Maevatanana),37623.352,partielle,6.54,0.003,faible,76.244,0.002,faible,stable
+9689,sous-bassin n° 9689 (Sainte Marie),2654.607,non mesurée,311.153,0.01,faible,311.153,0.01,faible,stable
+9698,sous-bassin n° 9698 (Soanierana Ivongo),1007.929,non mesurée,311.153,0.003,faible,311.153,0.003,faible,stable
+9705,sous-bassin n° 9705 (Besalampy),1871.46,partielle,69.243,0.0,faible,69.243,0.0,faible,stable
+9706,sous-bassin n° 9706 (Besalampy),4231.774,partielle,49.017,0.0,faible,65.242,0.0,faible,stable
+9707,sous-bassin n° 9707 (Soanierana Ivongo),541.084,non mesurée,311.153,0.001,faible,311.153,0.001,faible,stable
+9709,sous-bassin n° 9709 (Sainte Marie),3801.716,non mesurée,311.153,0.004,faible,311.153,0.004,faible,stable
+9726,sous-bassin n° 9726 (Maevatanana),13186.721,non mesurée,71.468,0.001,faible,78.27,0.001,faible,stable
+9751,sous-bassin n° 9751 (Soanierana Ivongo),2178.482,non mesurée,311.153,0.003,faible,311.153,0.003,faible,stable
+9757,sous-bassin n° 9757 (Tsaratanana),8523.577,partielle,184.568,0.0,faible,184.568,0.0,faible,stable
+9759,sous-bassin n° 9759 (Sainte Marie),5313.246,non mesurée,311.153,0.012,faible,311.153,0.012,faible,stable
+9796,sous-bassin n° 9796 (Kandreho),604.388,non mesurée,32.716,0.001,faible,70.073,0.0,faible,stable
+9798,sous-bassin n° 9798 (Sainte Marie),1448.902,non mesurée,311.153,0.009,faible,311.153,0.009,faible,stable
+9806,sous-bassin n° 9806 (Maintirano),1707.628,non mesurée,18.735,0.003,faible,18.735,0.003,faible,stable
+9807,sous-bassin n° 9807 (Fenerive Est),56228.129,partielle,311.153,0.001,faible,311.153,0.001,faible,stable
+9828,sous-bassin n° 9828 (Fenerive Est),4776.447,non mesurée,311.153,0.002,faible,311.153,0.002,faible,stable
+9836,sous-bassin n° 9836 (Maintirano),19072.63,partielle,21.36,0.002,faible,55.036,0.001,faible,stable
+9840,sous-bassin n° 9840 (Soalala),1424.995,partielle,33.126,0.0,faible,65.242,0.0,faible,stable
+9846,sous-bassin n° 9846 (Maintirano),1256.729,non mesurée,9.644,0.01,faible,9.644,0.01,faible,stable
+9854,sous-bassin n° 9854 (Maevatanana),10648.205,partielle,32.227,0.003,faible,74.724,0.002,faible,stable
+9857,sous-bassin n° 9857 (Tsaratanana),3016.038,non mesurée,125.237,0.0,faible,158.545,0.0,faible,stable
+9871,sous-bassin n° 9871 (Maevatanana),23672.89,partielle,29.755,0.002,faible,70.073,0.001,faible,stable
+9872,sous-bassin n° 9872 (Tsaratanana),7495.813,partielle,239.913,0.0,faible,239.913,0.0,faible,stable
+9879,sous-bassin n° 9879 (Andilamena),13458.276,partielle,240.452,0.001,faible,240.452,0.001,faible,stable
+9883,sous-bassin n° 9883 (Fenerive Est),7349.563,non mesurée,311.153,0.003,faible,311.153,0.003,faible,stable
+9887,sous-bassin n° 9887 (Fenerive Est),35967.029,non mesurée,305.673,0.004,faible,305.673,0.004,faible,stable
+9891,sous-bassin n° 9891 (Fenerive Est),1244.175,non mesurée,305.673,0.004,faible,305.673,0.004,faible,stable
+9901,sous-bassin n° 9901 (Vavatenina),198072.692,partielle,305.673,0.002,faible,305.673,0.002,faible,stable
+9906,sous-bassin n° 9906 (Maintirano),1124.652,partielle,9.644,0.009,faible,9.644,0.009,faible,stable
+9911,sous-bassin n° 9911 (Tsaratanana),19610.18,partielle,52.857,0.001,faible,94.16,0.001,faible,stable
+9926,sous-bassin n° 9926 (Fenerive Est),2384.766,non mesurée,305.673,0.002,faible,305.673,0.002,faible,stable
+9932,sous-bassin n° 9932 (Kandreho),3137.126,partielle,32.716,0.002,faible,69.359,0.001,faible,stable
+9933,sous-bassin n° 9933 (Maevatanana),4521.701,partielle,51.506,0.001,faible,76.497,0.001,faible,stable
+9936,sous-bassin n° 9936 (Fenerive Est),2154.439,non mesurée,305.673,0.003,faible,305.673,0.003,faible,stable
+9954,sous-bassin n° 9954 (Ambatondrazaka),67343.471,partielle,254.518,0.001,faible,254.518,0.001,faible,stable
+9968,sous-bassin n° 9968 (Fenerive Est),974.834,partielle,305.673,0.002,faible,305.673,0.002,faible,stable
+9970,sous-bassin n° 9970 (Fenerive Est),1502.776,non mesurée,305.673,0.002,faible,305.673,0.002,faible,stable
+9989,sous-bassin n° 9989 (Maintirano),13683.342,partielle,9.639,0.009,faible,9.639,0.009,faible,stable
+9990,sous-bassin n° 9990 (Vavatenina),19800.17,non mesurée,319.046,0.001,faible,319.046,0.001,faible,stable
+9993,sous-bassin n° 9993 (Fenerive Est),9116.062,partielle,305.673,0.002,faible,305.673,0.002,faible,stable
+9998,sous-bassin n° 9998 (Fenerive Est),14763.785,non mesurée,305.673,0.127,modéré,305.673,0.127,modéré,stable
+10003,sous-bassin n° 10003 (Maintirano),2167.45,partielle,33.388,0.0,faible,57.465,0.0,faible,stable
+10004,sous-bassin n° 10004 (Fenerive Est),21220.852,partielle,305.673,0.011,faible,305.673,0.011,faible,stable
+10006,sous-bassin n° 10006 (Maintirano),1359.332,partielle,9.639,0.006,faible,9.639,0.006,faible,stable
+10007,sous-bassin n° 10007 (Fenerive Est),16720.242,partielle,305.673,0.027,faible,305.673,0.027,faible,stable
+10011,sous-bassin n° 10011 (Amparafaravola),86156.022,partielle,240.452,0.004,faible,240.452,0.004,faible,stable
+10020,sous-bassin n° 10020 (Ambatondrazaka),71906.15,partielle,166.706,0.003,faible,166.706,0.003,faible,stable
+10030,sous-bassin n° 10030 (Vavatenina),39853.0,non mesurée,311.344,0.001,faible,311.344,0.001,faible,stable
+10036,sous-bassin n° 10036 (Maevatanana),3747.59,partielle,71.316,0.0,faible,71.316,0.0,faible,stable
+10037,sous-bassin n° 10037 (Tsaratanana),3845.92,partielle,200.932,0.001,faible,200.932,0.0,faible,stable
+10041,sous-bassin n° 10041 (Maevatanana),4005.34,partielle,27.834,0.002,faible,81.848,0.001,faible,stable
+10056,sous-bassin n° 10056 (Fenerive Est),60748.593,partielle,294.342,0.004,faible,294.342,0.004,faible,stable
+10061,sous-bassin n° 10061 (Kandreho),3356.416,partielle,32.868,0.002,faible,64.999,0.001,faible,stable
+10064,sous-bassin n° 10064 (Kandreho),10617.43,partielle,31.563,0.002,faible,69.359,0.001,faible,stable
+10071,sous-bassin n° 10071 (Fenerive Est),4409.676,partielle,294.342,0.002,faible,294.342,0.002,faible,stable
+10079,sous-bassin n° 10079 (Tsaratanana),5172.057,non mesurée,52.857,0.001,faible,90.414,0.001,faible,stable
+10088,sous-bassin n° 10088 (Amparafaravola),81111.132,partielle,239.913,0.002,faible,239.913,0.002,faible,stable
+10092,sous-bassin n° 10092 (Tsaratanana),38374.963,non mesurée,206.473,0.001,faible,206.473,0.001,faible,stable
+10095,sous-bassin n° 10095 (Maevatanana),6682.84,partielle,32.676,0.003,faible,74.724,0.001,faible,stable
+10098,sous-bassin n° 10098 (Fenerive Est),11348.116,non mesurée,294.342,0.004,faible,294.342,0.004,faible,stable
+10102,sous-bassin n° 10102 (Maintirano),5969.343,non mesurée,9.639,0.018,faible,9.639,0.018,faible,stable
+10103,sous-bassin n° 10103 (Ambatomainty),12246.909,partielle,33.028,0.001,faible,64.239,0.001,faible,stable
+10117,sous-bassin n° 10117 (Maintirano),1815.361,non mesurée,75.852,0.0,faible,75.852,0.0,faible,stable
+10123,sous-bassin n° 10123 (Tsaratanana),16990.102,partielle,215.854,0.001,faible,215.854,0.001,faible,stable
+10137,sous-bassin n° 10137 (Toamasina II),13538.318,partielle,294.342,0.002,faible,294.342,0.002,faible,stable
+10139,sous-bassin n° 10139 (Toamasina II),3798.871,non mesurée,294.342,0.006,faible,294.342,0.006,faible,stable
+10146,sous-bassin n° 10146 (Maevatanana),3879.386,partielle,32.676,0.001,faible,74.724,0.0,faible,stable
+10151,sous-bassin n° 10151 (Ambatomainty),8572.14,partielle,33.468,0.001,faible,60.075,0.0,faible,stable
+10161,sous-bassin n° 10161 (Maevatanana),27161.267,non mesurée,32.806,0.005,faible,74.724,0.002,faible,stable
+10175,sous-bassin n° 10175 (Maintirano),2759.288,non mesurée,9.639,0.012,faible,9.639,0.012,faible,stable
+10179,sous-bassin n° 10179 (Toamasina II),13305.403,non mesurée,294.342,0.002,faible,294.342,0.002,faible,stable
+10181,sous-bassin n° 10181 (Maintirano),6745.636,partielle,33.125,0.001,faible,55.618,0.001,faible,stable
+10182,sous-bassin n° 10182 (Toamasina II),90302.071,non mesurée,294.342,0.001,faible,294.342,0.001,faible,stable
+10187,sous-bassin n° 10187 (Ambatomainty),12683.292,partielle,33.028,0.003,faible,63.479,0.002,faible,stable
+10188,sous-bassin n° 10188 (Ambatomainty),8245.095,partielle,43.016,0.002,faible,64.999,0.001,faible,stable
+10189,sous-bassin n° 10189 (Ambatondrazaka),125024.076,partielle,166.706,0.009,faible,166.706,0.009,faible,stable
+10193,sous-bassin n° 10193 (Amparafaravola),196532.076,partielle,244.244,0.002,faible,244.244,0.002,faible,stable
+10194,sous-bassin n° 10194 (Ambatondrazaka),78205.589,partielle,166.706,0.002,faible,166.706,0.002,faible,stable
+10214,sous-bassin n° 10214 (Morafenobe),8576.521,partielle,33.207,0.001,faible,56.994,0.001,faible,stable
+10236,sous-bassin n° 10236 (Maintirano),5815.881,partielle,33.125,0.003,faible,55.618,0.002,faible,stable
+10237,sous-bassin n° 10237 (Ankazobe),10162.595,partielle,32.935,0.001,faible,74.724,0.001,faible,stable
+10275,sous-bassin n° 10275 (Toamasina II),44118.927,non mesurée,294.015,0.002,faible,294.015,0.002,faible,stable
+10296,sous-bassin n° 10296 (Fenoarivobe),38102.197,partielle,33.43,0.001,faible,65.525,0.001,faible,stable
+10316,sous-bassin n° 10316 (Ankazobe),18753.208,non mesurée,33.046,0.001,faible,81.848,0.001,faible,stable
+10324,sous-bassin n° 10324 (Fenoarivobe),29909.106,partielle,74.493,0.001,faible,74.493,0.001,faible,stable
+10330,sous-bassin n° 10330 (Morafenobe),2655.022,partielle,30.42,0.001,faible,60.075,0.0,faible,stable
+10334,sous-bassin n° 10334 (Ambatomainty),4805.426,non mesurée,29.751,0.001,faible,60.075,0.0,faible,stable
+10340,sous-bassin n° 10340 (Toamasina II),2109.433,non mesurée,294.015,0.001,faible,294.015,0.001,faible,stable
+10346,sous-bassin n° 10346 (Toamasina II),9577.802,non mesurée,294.015,0.001,faible,294.015,0.001,faible,stable
+10352,sous-bassin n° 10352 (Maintirano),10639.339,partielle,33.125,0.002,faible,55.618,0.001,faible,stable
+10359,sous-bassin n° 10359 (Morafenobe),4020.576,partielle,31.832,0.001,faible,55.331,0.0,faible,stable
+10362,sous-bassin n° 10362 (Toamasina II),1135.959,non mesurée,294.015,0.003,faible,294.015,0.003,faible,stable
+10367,sous-bassin n° 10367 (Toamasina II),706.909,non mesurée,294.015,0.001,faible,294.015,0.001,faible,stable
+10381,sous-bassin n° 10381 (Morafenobe),2168.817,partielle,29.751,0.002,faible,60.075,0.001,faible,stable
+10384,sous-bassin n° 10384 (Fenoarivobe),2013.648,partielle,91.859,0.001,faible,91.859,0.001,faible,stable
+10387,sous-bassin n° 10387 (Morafenobe),1564.324,partielle,33.646,0.001,faible,58.112,0.001,faible,stable
+10393,sous-bassin n° 10393 (Anjozorobe),18173.976,non mesurée,34.211,0.001,faible,84.695,0.001,faible,stable
+10399,sous-bassin n° 10399 (Toamasina II),2623.951,non mesurée,294.015,0.001,faible,294.015,0.001,faible,stable
+10401,sous-bassin n° 10401 (Ankazobe),21853.679,non mesurée,32.935,0.002,faible,74.724,0.002,faible,stable
+10408,sous-bassin n° 10408 (Morafenobe),2697.882,partielle,33.646,0.001,faible,58.112,0.001,faible,stable
+10411,sous-bassin n° 10411 (Toamasina II),2797.059,non mesurée,291.201,0.001,faible,291.201,0.001,faible,stable
+10418,sous-bassin n° 10418 (Fenoarivobe),17319.817,partielle,91.859,0.001,faible,91.859,0.001,faible,stable
+10426,sous-bassin n° 10426 (Ambatondrazaka),34129.389,non mesurée,246.18,0.001,faible,246.18,0.001,faible,stable
+10429,sous-bassin n° 10429 (Maintirano),10070.178,non mesurée,9.627,0.458,élevé,9.627,0.458,élevé,stable
+10431,sous-bassin n° 10431 (Maintirano),2100.269,partielle,9.627,0.732,élevé,9.627,0.732,élevé,stable
+10432,sous-bassin n° 10432 (Morafenobe),7459.977,partielle,70.971,0.0,faible,70.971,0.0,faible,stable
+10434,sous-bassin n° 10434 (Maintirano),3825.496,partielle,9.627,3.252,élevé,9.627,3.252,élevé,stable
+10440,sous-bassin n° 10440 (Ankazobe),15040.533,non mesurée,175.881,0.0,faible,175.881,0.0,faible,stable
+10444,sous-bassin n° 10444 (Maintirano),5107.773,partielle,9.627,4.08,élevé,9.627,4.08,élevé,stable
+10449,sous-bassin n° 10449 (Toamasina II),4194.517,non mesurée,291.201,0.005,faible,291.201,0.005,faible,stable
+10452,sous-bassin n° 10452 (Toamasina II),142080.407,non mesurée,291.201,0.003,faible,291.201,0.003,faible,stable
+10456,sous-bassin n° 10456 (Maintirano),2926.533,partielle,9.627,0.076,faible,9.627,0.076,faible,stable
+10467,sous-bassin n° 10467 (Toamasina I),7806.686,non mesurée,291.201,0.099,faible,291.201,0.099,faible,stable
+10470,sous-bassin n° 10470 (Toamasina I),17672.72,non mesurée,291.201,0.105,modéré,291.201,0.105,modéré,stable
+10472,sous-bassin n° 10472 (Maintirano),4357.018,partielle,9.627,0.025,faible,9.627,0.025,faible,stable
+10473,sous-bassin n° 10473 (Toamasina I),15328.73,non mesurée,291.201,0.215,modéré,291.201,0.215,modéré,stable
+10476,sous-bassin n° 10476 (Toamasina I),11015.429,non mesurée,291.201,0.25,modéré,291.201,0.25,modéré,stable
+10480,sous-bassin n° 10480 (Manjakandriana),181935.358,non mesurée,248.356,0.003,faible,248.356,0.003,faible,stable
+10481,sous-bassin n° 10481 (Anjozorobe),65756.397,non mesurée,189.882,0.001,faible,189.882,0.001,faible,stable
+10482,sous-bassin n° 10482 (Toamasina I),3262.317,non mesurée,291.201,0.267,modéré,291.201,0.267,modéré,stable
+10484,sous-bassin n° 10484 (Toamasina I),11575.809,non mesurée,291.201,0.218,modéré,291.201,0.218,modéré,stable
+10485,sous-bassin n° 10485 (Toamasina I),16018.789,non mesurée,291.201,0.239,modéré,291.201,0.239,modéré,stable
+10488,sous-bassin n° 10488 (Maintirano),9107.16,non mesurée,9.627,0.003,faible,9.627,0.002,faible,stable
+10490,sous-bassin n° 10490 (Toamasina I),22781.006,non mesurée,291.201,0.231,modéré,291.201,0.231,modéré,stable
+10492,sous-bassin n° 10492 (Fenoarivobe),20005.363,partielle,33.43,0.003,faible,65.525,0.002,faible,stable
+10493,sous-bassin n° 10493 (Toamasina I),2571.491,non mesurée,291.201,0.252,modéré,291.201,0.252,modéré,stable
+10495,sous-bassin n° 10495 (Toamasina I),6961.141,non mesurée,291.201,0.228,modéré,291.201,0.228,modéré,stable
+10497,sous-bassin n° 10497 (Maintirano),6480.502,non mesurée,9.627,0.044,faible,9.627,0.044,faible,stable
+10498,sous-bassin n° 10498 (Toamasina I),5461.733,non mesurée,291.201,0.234,modéré,291.201,0.234,modéré,stable
+10500,sous-bassin n° 10500 (Maintirano),449.552,non mesurée,9.627,0.004,faible,9.627,0.004,faible,stable
+10501,sous-bassin n° 10501 (Toamasina I),4635.249,non mesurée,291.201,0.227,modéré,291.201,0.227,modéré,stable
+10503,sous-bassin n° 10503 (Toamasina I),7001.682,non mesurée,291.201,0.143,modéré,291.201,0.143,modéré,stable
+10505,sous-bassin n° 10505 (Ankazobe),10209.822,non mesurée,32.566,0.003,faible,68.912,0.002,faible,stable
+10506,sous-bassin n° 10506 (Toamasina I),20441.975,non mesurée,291.201,0.247,modéré,291.201,0.247,modéré,stable
+10507,sous-bassin n° 10507 (Toamasina I),2532.526,non mesurée,291.201,0.229,modéré,291.201,0.229,modéré,stable
+10511,sous-bassin n° 10511 (Toamasina I),7282.677,non mesurée,291.201,0.213,modéré,291.201,0.213,modéré,stable
+10512,sous-bassin n° 10512 (Toamasina I),10940.737,non mesurée,291.201,0.23,modéré,291.201,0.23,modéré,stable
+10516,sous-bassin n° 10516 (Toamasina I),76367.128,non mesurée,291.201,0.208,modéré,291.201,0.208,modéré,stable
+10522,sous-bassin n° 10522 (Toamasina I),20734.574,non mesurée,291.201,0.117,modéré,291.201,0.117,modéré,stable
+10538,sous-bassin n° 10538 (Toamasina II),1889.253,non mesurée,291.201,0.009,faible,291.201,0.009,faible,stable
+10546,sous-bassin n° 10546 (Maintirano),6910.635,partielle,9.627,0.002,faible,9.627,0.002,faible,stable
+10549,sous-bassin n° 10549 (Fenoarivobe),9976.35,partielle,91.918,0.002,faible,91.918,0.002,faible,stable
+10550,sous-bassin n° 10550 (Toamasina II),34814.957,non mesurée,291.201,0.007,faible,291.201,0.007,faible,stable
+10557,sous-bassin n° 10557 (Ankazobe),92490.676,non mesurée,176.03,0.002,faible,176.03,0.002,faible,stable
+10562,sous-bassin n° 10562 (Toamasina II),55903.112,non mesurée,293.929,0.0,faible,293.929,0.0,faible,stable
+10566,sous-bassin n° 10566 (Toamasina II),5175.594,non mesurée,293.929,0.001,faible,293.929,0.001,faible,stable
+10572,sous-bassin n° 10572 (Toamasina II),381.601,non mesurée,293.929,0.001,faible,293.929,0.001,faible,stable
+10575,sous-bassin n° 10575 (Maintirano),2188.224,partielle,33.094,0.0,faible,54.004,0.0,faible,stable
+10598,sous-bassin n° 10598 (Ankazobe),8157.052,non mesurée,178.683,0.001,faible,178.683,0.001,faible,stable
+10609,sous-bassin n° 10609 (Fenoarivobe),26004.044,non mesurée,54.094,0.003,faible,70.268,0.002,faible,stable
+10623,sous-bassin n° 10623 (Fenoarivobe),17607.648,non mesurée,73.699,0.001,faible,73.699,0.001,faible,stable
+10624,sous-bassin n° 10624 (Ambohidratrimo),130165.961,non mesurée,178.716,0.004,faible,178.716,0.003,faible,stable
+10642,sous-bassin n° 10642 (Miandrivazo),3320.333,partielle,33.719,0.001,faible,58.112,0.001,faible,stable
+10658,sous-bassin n° 10658 (Maintirano),1701.542,non mesurée,9.624,0.002,faible,9.624,0.002,faible,stable
+10676,sous-bassin n° 10676 (Miandrivazo),990.504,partielle,73.072,0.0,faible,73.072,0.0,faible,stable
+10694,sous-bassin n° 10694 (Toamasina II),5303.615,non mesurée,293.929,0.001,faible,293.929,0.001,faible,stable
+10703,sous-bassin n° 10703 (Toamasina II),1883.641,non mesurée,293.929,0.004,faible,293.929,0.004,faible,stable
+10708,sous-bassin n° 10708 (Brickaville),8424.568,non mesurée,304.573,0.0,faible,304.573,0.0,faible,stable
+10723,sous-bassin n° 10723 (Brickaville),2539.064,non mesurée,293.929,0.0,faible,293.929,0.0,faible,stable
+10734,sous-bassin n° 10734 (Moramanga),55224.647,partielle,250.644,0.001,faible,250.644,0.001,faible,stable
+10737,sous-bassin n° 10737 (Maintirano),3622.787,non mesurée,30.174,0.002,faible,31.814,0.002,faible,stable
+10766,sous-bassin n° 10766 (Miandrivazo),6480.528,partielle,33.719,0.001,faible,58.112,0.001,faible,stable
+10780,sous-bassin n° 10780 (Brickaville),1137.038,non mesurée,293.929,0.0,faible,293.929,0.0,faible,stable
+10790,sous-bassin n° 10790 (Ambohidratrimo),111987.364,non mesurée,175.471,0.005,faible,175.471,0.005,faible,stable
+10805,sous-bassin n° 10805 (Brickaville),739.791,partielle,307.893,0.0,faible,307.893,0.0,faible,stable
+10847,sous-bassin n° 10847 (Brickaville),27741.765,non mesurée,307.893,0.001,faible,307.893,0.001,faible,stable
+10860,sous-bassin n° 10860 (Tsiroanomandidy),11596.729,partielle,83.856,0.002,faible,83.856,0.002,faible,stable
+10868,sous-bassin n° 10868 (Tsiroanomandidy),10492.321,non mesurée,33.249,0.001,faible,59.322,0.001,faible,stable
+10869,sous-bassin n° 10869 (Tsiroanomandidy),74084.67,partielle,75.394,0.007,faible,75.394,0.007,faible,stable
+10875,sous-bassin n° 10875 (Brickaville),423.33,partielle,307.893,0.0,faible,307.893,0.0,faible,stable
+10878,sous-bassin n° 10878 (Ambohidratrimo),122024.705,non mesurée,175.471,0.006,faible,175.471,0.006,faible,stable
+10882,sous-bassin n° 10882 (Tsiroanomandidy),19840.336,partielle,74.811,0.004,faible,74.811,0.003,faible,stable
+10889,sous-bassin n° 10889 (Manjakandriana),61282.482,non mesurée,248.356,0.001,faible,248.356,0.001,faible,stable
+10890,sous-bassin n° 10890 (Brickaville),51000.266,non mesurée,307.893,0.001,faible,307.893,0.001,faible,stable
+10892,sous-bassin n° 10892 (Antsalova),12207.558,partielle,33.111,0.002,faible,50.793,0.001,faible,stable
+10893,sous-bassin n° 10893 (Miandrivazo),5380.607,partielle,26.222,0.0,faible,55.268,0.0,faible,stable
+10894,sous-bassin n° 10894 (Tsiroanomandidy),57553.465,partielle,74.811,0.004,faible,74.811,0.004,faible,stable
+10907,sous-bassin n° 10907 (Antsalova),12368.065,partielle,33.111,0.001,faible,50.793,0.001,faible,stable
+10915,sous-bassin n° 10915 (Brickaville),231.049,partielle,307.893,0.0,faible,307.893,0.0,faible,stable
+10922,sous-bassin n° 10922 (Brickaville),1753.693,partielle,307.893,0.001,faible,307.893,0.001,faible,stable
+10933,sous-bassin n° 10933 (Arivonimamo),212775.041,non mesurée,175.741,0.006,faible,175.741,0.006,faible,stable
+10936,sous-bassin n° 10936 (Brickaville),958.859,partielle,307.893,0.001,faible,307.893,0.001,faible,stable
+10942,sous-bassin n° 10942 (Moramanga),46912.81,non mesurée,314.663,0.001,faible,314.663,0.001,faible,stable
+10943,sous-bassin n° 10943 (Brickaville),58248.299,non mesurée,304.851,0.001,faible,304.851,0.001,faible,stable
+10951,sous-bassin n° 10951 (Antsalova),7729.592,partielle,33.657,0.001,faible,52.273,0.001,faible,stable
+10952,sous-bassin n° 10952 (Arivonimamo),248036.046,partielle,175.741,0.008,faible,175.741,0.008,faible,stable
+10959,sous-bassin n° 10959 (Miarinarivo),96470.899,non mesurée,103.921,0.006,faible,103.921,0.006,faible,stable
+10962,sous-bassin n° 10962 (Antananarivo Atsimondrano),407724.919,non mesurée,178.97,0.063,faible,178.97,0.063,faible,stable
+10963,sous-bassin n° 10963 (Brickaville),1042.97,partielle,312.514,0.001,faible,312.514,0.001,faible,stable
+10978,sous-bassin n° 10978 (Antananarivo Avaradrano),2023277.607,partielle,178.97,0.03,faible,178.97,0.03,faible,stable
+10990,sous-bassin n° 10990 (Moramanga),155021.981,non mesurée,255.618,0.003,faible,255.618,0.003,faible,stable
+11000,sous-bassin n° 11000 (Miarinarivo),41252.326,non mesurée,132.831,0.005,faible,132.831,0.005,faible,stable
+11016,sous-bassin n° 11016 (Brickaville),107954.076,partielle,312.514,0.001,faible,312.514,0.001,faible,stable
+11022,sous-bassin n° 11022 (Miandrivazo),13052.779,partielle,26.222,0.003,faible,55.268,0.002,faible,stable
+11030,sous-bassin n° 11030 (Antsalova),2195.333,non mesurée,57.523,0.001,faible,57.523,0.001,faible,stable
+11035,sous-bassin n° 11035 (Brickaville),6792.784,partielle,312.514,0.001,faible,312.514,0.001,faible,stable
+11041,sous-bassin n° 11041 (Brickaville),169.261,partielle,312.514,0.001,faible,312.514,0.001,faible,stable
+11043,sous-bassin n° 11043 (Brickaville),1394.5,partielle,312.514,0.001,faible,312.514,0.001,faible,stable
+11046,sous-bassin n° 11046 (Tsiroanomandidy),25601.322,partielle,33.296,0.004,faible,59.322,0.002,faible,stable
+11071,sous-bassin n° 11071 (Soavinandriana),228895.275,non mesurée,132.831,0.01,faible,132.831,0.01,faible,stable
+11088,sous-bassin n° 11088 (Moramanga),38792.567,non mesurée,255.618,0.001,faible,255.618,0.001,faible,stable
+11103,sous-bassin n° 11103 (Moramanga),37707.259,non mesurée,250.008,0.002,faible,250.008,0.002,faible,stable
+11106,sous-bassin n° 11106 (Brickaville),657.702,partielle,312.514,0.0,faible,312.514,0.0,faible,stable
+11109,sous-bassin n° 11109 (Antsalova),1949.526,partielle,57.523,0.002,faible,57.523,0.002,faible,stable
+11112,sous-bassin n° 11112 (Antsalova),14553.917,partielle,57.523,0.002,faible,57.523,0.002,faible,stable
+11122,sous-bassin n° 11122 (Andramasina),191288.416,non mesurée,178.599,0.006,faible,178.599,0.006,faible,stable
+11129,sous-bassin n° 11129 (Tsiroanomandidy),98664.614,partielle,74.995,0.01,faible,74.995,0.008,faible,stable
+11151,sous-bassin n° 11151 (Antsalova),796.914,non mesurée,25.167,0.001,faible,25.167,0.001,faible,stable
+11174,sous-bassin n° 11174 (Miandrivazo),21900.854,partielle,33.657,0.001,faible,55.268,0.001,faible,stable
+11175,sous-bassin n° 11175 (Brickaville),750.592,partielle,320.92,0.0,faible,320.92,0.0,faible,stable
+11179,sous-bassin n° 11179 (Antsalova),274.592,non mesurée,25.167,0.001,faible,25.167,0.001,faible,stable
+11193,sous-bassin n° 11193 (Belo Sur Tsiribihina),3696.277,partielle,93.057,0.001,faible,93.057,0.001,faible,stable
+11218,sous-bassin n° 11218 (Belo Sur Tsiribihina),333.373,non mesurée,25.167,0.001,faible,25.167,0.001,faible,stable
+11223,sous-bassin n° 11223 (Vatomandry),7905.813,partielle,320.92,0.001,faible,320.92,0.001,faible,stable
+11226,sous-bassin n° 11226 (Belo Sur Tsiribihina),2624.86,non mesurée,25.167,0.001,faible,25.167,0.001,faible,stable
+11232,sous-bassin n° 11232 (Tsiroanomandidy),88059.453,partielle,71.592,0.006,faible,71.592,0.005,faible,stable
+11247,sous-bassin n° 11247 (Vatomandry),33232.807,partielle,320.92,0.001,faible,320.92,0.001,faible,stable
+11259,sous-bassin n° 11259 (Tsiroanomandidy),16448.967,partielle,33.005,0.005,faible,59.322,0.003,faible,stable
+11264,sous-bassin n° 11264 (Belo Sur Tsiribihina),757.22,partielle,25.167,0.001,faible,25.167,0.001,faible,stable
+11268,sous-bassin n° 11268 (Vatomandry),1688.125,partielle,320.92,0.008,faible,320.92,0.008,faible,stable
+11271,sous-bassin n° 11271 (Vatomandry),643.975,partielle,320.92,0.02,faible,320.92,0.02,faible,stable
+11279,sous-bassin n° 11279 (Vatomandry),3953.634,partielle,320.92,0.099,faible,320.92,0.099,faible,stable
+11282,sous-bassin n° 11282 (Vatomandry),2221.118,partielle,320.92,0.044,faible,320.92,0.044,faible,stable
+11285,sous-bassin n° 11285 (Vatomandry),60965.436,non mesurée,310.436,0.001,faible,310.436,0.001,faible,stable
+11290,sous-bassin n° 11290 (Belo Sur Tsiribihina),582.735,partielle,25.167,0.001,faible,25.167,0.001,faible,stable
+11293,sous-bassin n° 11293 (Vatomandry),2675.32,partielle,320.92,0.101,modéré,320.92,0.101,modéré,stable
+11299,sous-bassin n° 11299 (Vatomandry),6314.604,partielle,320.92,0.063,faible,320.92,0.063,faible,stable
+11316,sous-bassin n° 11316 (Belo Sur Tsiribihina),58.037,partielle,25.167,0.0,faible,25.167,0.0,faible,stable
+11320,sous-bassin n° 11320 (Soavinandriana),110104.014,non mesurée,136.467,0.007,faible,136.467,0.007,faible,stable
+11336,sous-bassin n° 11336 (Faratsiho),204198.11,non mesurée,136.467,0.006,faible,136.467,0.006,faible,stable
+11341,sous-bassin n° 11341 (Tsiroanomandidy),139842.269,partielle,102.1,0.01,faible,102.1,0.008,faible,stable
+11344,sous-bassin n° 11344 (Mandoto),22401.228,non mesurée,32.164,0.003,faible,57.424,0.002,faible,stable
+11348,sous-bassin n° 11348 (Mandoto),75032.414,non mesurée,73.811,0.008,faible,73.811,0.008,faible,stable
+11349,sous-bassin n° 11349 (Betafo),71958.497,non mesurée,173.384,0.003,faible,173.384,0.003,faible,stable
+11350,sous-bassin n° 11350 (Faratsiho),117709.457,non mesurée,140.206,0.007,faible,140.206,0.007,faible,stable
+11360,sous-bassin n° 11360 (Vatomandry),2813.883,non mesurée,320.92,0.007,faible,320.92,0.007,faible,stable
+11362,sous-bassin n° 11362 (Belo Sur Tsiribihina),1565.842,partielle,58.209,0.0,faible,59.455,0.0,faible,stable
+11367,sous-bassin n° 11367 (Mandoto),31297.745,partielle,32.164,0.009,faible,57.424,0.007,faible,stable
+11368,sous-bassin n° 11368 (Vatomandry),42013.61,partielle,312.268,0.002,faible,312.268,0.002,faible,stable
+11385,sous-bassin n° 11385 (Vatomandry),2148.711,non mesurée,312.268,0.002,faible,312.268,0.002,faible,stable
+11390,sous-bassin n° 11390 (Vatomandry),3569.126,partielle,312.268,0.003,faible,312.268,0.003,faible,stable
+11397,sous-bassin n° 11397 (Belo Sur Tsiribihina),85.566,non mesurée,74.708,0.0,faible,74.708,0.0,faible,stable
+11408,sous-bassin n° 11408 (Mandoto),24337.847,partielle,32.164,0.001,faible,57.424,0.001,faible,stable
+11411,sous-bassin n° 11411 (Antanifotsy),220809.853,non mesurée,201.068,0.006,faible,201.068,0.006,faible,stable
+11412,sous-bassin n° 11412 (Ambatolampy),123255.654,non mesurée,207.184,0.01,faible,207.184,0.01,faible,stable
+11413,sous-bassin n° 11413 (Vatomandry),867.308,partielle,312.268,0.001,faible,312.268,0.001,faible,stable
+11419,sous-bassin n° 11419 (Belo Sur Tsiribihina),1316.136,non mesurée,74.708,0.003,faible,74.708,0.003,faible,stable
+11428,sous-bassin n° 11428 (Belo Sur Tsiribihina),165.156,non mesurée,74.708,0.001,faible,74.708,0.001,faible,stable
+11442,sous-bassin n° 11442 (Belo Sur Tsiribihina),49065.876,partielle,41.718,0.008,faible,44.202,0.008,faible,stable
+11445,sous-bassin n° 11445 (Miandrivazo),33729.547,partielle,6.564,0.004,faible,48.501,0.002,faible,stable
+11461,sous-bassin n° 11461 (Vatomandry),2018.007,partielle,312.268,0.003,faible,312.268,0.003,faible,stable
+11462,sous-bassin n° 11462 (Belo Sur Tsiribihina),196.553,non mesurée,74.708,0.003,faible,74.708,0.003,faible,stable
+11467,sous-bassin n° 11467 (Vatomandry),1889.566,partielle,312.268,0.004,faible,312.268,0.004,faible,stable
+11484,sous-bassin n° 11484 (Vatomandry),76892.068,non mesurée,312.268,0.001,faible,312.268,0.001,faible,stable
+11487,sous-bassin n° 11487 (Vatomandry),34080.491,partielle,312.268,0.001,faible,312.268,0.001,faible,stable
+11490,sous-bassin n° 11490 (Vatomandry),538.454,non mesurée,312.268,0.001,faible,312.268,0.001,faible,stable
+11504,sous-bassin n° 11504 (Belo Sur Tsiribihina),746.011,non mesurée,74.708,0.002,faible,74.708,0.002,faible,stable
+11505,sous-bassin n° 11505 (Antsirabe II),213065.538,non mesurée,200.978,0.005,faible,200.978,0.005,faible,stable
+11520,sous-bassin n° 11520 (Belo Sur Tsiribihina),801.708,non mesurée,74.708,0.002,faible,74.708,0.002,faible,stable
+11527,sous-bassin n° 11527 (Belo Sur Tsiribihina),1137.916,non mesurée,14.624,0.047,faible,14.624,0.047,faible,stable
+11532,sous-bassin n° 11532 (Belo Sur Tsiribihina),4220.319,non mesurée,14.624,0.025,faible,14.624,0.025,faible,stable
+11534,sous-bassin n° 11534 (Belo Sur Tsiribihina),20692.778,partielle,31.524,0.003,faible,48.501,0.001,faible,stable
+11537,sous-bassin n° 11537 (Miandrivazo),3578.659,partielle,6.566,0.08,faible,48.501,0.011,faible,stable
+11540,sous-bassin n° 11540 (Belo Sur Tsiribihina),12862.247,partielle,6.528,0.003,faible,48.501,0.001,faible,stable
+11541,sous-bassin n° 11541 (Antanifotsy),203352.444,non mesurée,189.757,0.003,faible,189.757,0.003,faible,stable
+11545,sous-bassin n° 11545 (Belo Sur Tsiribihina),6756.007,partielle,41.71,0.001,faible,44.202,0.001,faible,stable
+11546,sous-bassin n° 11546 (Miandrivazo),36161.85,partielle,6.567,0.016,faible,48.501,0.007,faible,stable
+11547,sous-bassin n° 11547 (Anosibe-An'ala),53651.714,non mesurée,255.928,0.001,faible,255.928,0.001,faible,stable
+11550,sous-bassin n° 11550 (Mahanoro),1479.093,non mesurée,313.425,0.001,faible,313.425,0.001,faible,stable
+11552,sous-bassin n° 11552 (Belo Sur Tsiribihina),6447.587,partielle,41.718,0.002,faible,44.202,0.002,faible,stable
+11559,sous-bassin n° 11559 (Belo Sur Tsiribihina),18928.488,partielle,41.718,0.006,faible,44.202,0.005,faible,stable
+11566,sous-bassin n° 11566 (Marolambo),39515.408,non mesurée,294.052,0.001,faible,294.052,0.001,faible,stable
+11590,sous-bassin n° 11590 (Anosibe-An'ala),51766.827,non mesurée,255.928,0.001,faible,255.928,0.001,faible,stable
+11599,sous-bassin n° 11599 (Miandrivazo),7671.553,partielle,18.671,0.009,faible,51.882,0.002,faible,stable
+11611,sous-bassin n° 11611 (Belo Sur Tsiribihina),576.28,non mesurée,14.624,0.003,faible,14.624,0.003,faible,stable
+11614,sous-bassin n° 11614 (Miandrivazo),5463.641,non mesurée,30.775,0.001,faible,54.004,0.001,faible,stable
+11621,sous-bassin n° 11621 (Marolambo),27201.42,non mesurée,256.017,0.002,faible,256.017,0.002,faible,stable
+11627,sous-bassin n° 11627 (Betafo),312167.758,non mesurée,52.401,0.012,faible,61.239,0.011,faible,stable
+11647,sous-bassin n° 11647 (Belo Sur Tsiribihina),6265.913,partielle,14.624,0.005,faible,14.624,0.005,faible,stable
+11677,sous-bassin n° 11677 (Belo Sur Tsiribihina),12400.02,partielle,14.624,0.012,faible,14.624,0.007,faible,stable
+11683,sous-bassin n° 11683 (Mahanoro),9827.507,non mesurée,313.425,0.123,modéré,313.425,0.123,modéré,stable
+11688,sous-bassin n° 11688 (Mahanoro),5592.745,non mesurée,313.425,0.164,modéré,313.425,0.164,modéré,stable
+11690,sous-bassin n° 11690 (Belo Sur Tsiribihina),3678.457,partielle,33.946,0.001,faible,44.557,0.001,faible,stable
+11691,sous-bassin n° 11691 (Mahanoro),44089.459,partielle,313.425,0.001,faible,313.425,0.001,faible,stable
+11693,sous-bassin n° 11693 (Mandoto),14479.364,partielle,31.862,0.004,faible,55.714,0.002,faible,stable
+11694,sous-bassin n° 11694 (Mahanoro),3822.687,non mesurée,313.425,0.059,faible,313.425,0.059,faible,stable
+11698,sous-bassin n° 11698 (Mahanoro),3383.437,non mesurée,313.425,0.015,faible,313.425,0.015,faible,stable
+11704,sous-bassin n° 11704 (Ambatofinandrahana),5315.833,non mesurée,72.795,0.0,faible,72.795,0.0,faible,stable
+11708,sous-bassin n° 11708 (Mandoto),30262.278,partielle,32.164,0.01,faible,57.424,0.006,faible,stable
+11711,sous-bassin n° 11711 (Mahanoro),3048.393,partielle,318.578,0.002,faible,318.578,0.002,faible,stable
+11715,sous-bassin n° 11715 (Mahanoro),59500.017,non mesurée,259.885,0.001,faible,259.885,0.001,faible,stable
+11726,sous-bassin n° 11726 (Miandrivazo),1840.82,partielle,6.527,0.002,faible,49.76,0.0,faible,stable
+11735,sous-bassin n° 11735 (Morondava),1912.612,non mesurée,14.746,0.014,faible,14.746,0.014,faible,stable
+11745,sous-bassin n° 11745 (Mahanoro),44091.393,partielle,323.731,0.002,faible,323.731,0.002,faible,stable
+11753,sous-bassin n° 11753 (Mahanoro),647.705,partielle,323.731,0.002,faible,323.731,0.002,faible,stable
+11760,sous-bassin n° 11760 (Marolambo),22129.698,non mesurée,302.934,0.001,faible,302.934,0.001,faible,stable
+11761,sous-bassin n° 11761 (Mahanoro),665.253,partielle,323.731,0.021,faible,323.731,0.021,faible,stable
+11764,sous-bassin n° 11764 (Mahanoro),1249.077,partielle,323.731,0.003,faible,323.731,0.003,faible,stable
+11776,sous-bassin n° 11776 (Mahabo),37457.794,partielle,11.477,0.018,faible,39.835,0.007,faible,stable
+11784,sous-bassin n° 11784 (Mahanoro),14251.431,partielle,323.731,0.002,faible,323.731,0.002,faible,stable
+11798,sous-bassin n° 11798 (Mahanoro),2606.419,non mesurée,323.731,0.002,faible,323.731,0.002,faible,stable
+11805,sous-bassin n° 11805 (Betafo),10333.937,partielle,49.028,0.001,faible,60.571,0.001,faible,stable
+11808,sous-bassin n° 11808 (Miandrivazo),9398.204,partielle,6.527,0.054,faible,49.76,0.007,faible,stable
+11809,sous-bassin n° 11809 (Mandoto),9448.651,non mesurée,32.204,0.001,faible,56.214,0.001,faible,stable
+11814,sous-bassin n° 11814 (Marolambo),131049.305,non mesurée,178.807,0.001,faible,178.807,0.001,faible,stable
+11817,sous-bassin n° 11817 (Morondava),2886.004,non mesurée,14.746,0.037,faible,14.746,0.037,faible,stable
+11843,sous-bassin n° 11843 (Morondava),2814.839,partielle,14.746,0.005,faible,14.746,0.005,faible,stable
+11844,sous-bassin n° 11844 (Miandrivazo),5950.964,partielle,23.108,0.004,faible,44.557,0.002,faible,stable
+11851,sous-bassin n° 11851 (Morondava),2839.964,partielle,14.746,0.016,faible,14.746,0.016,faible,stable
+11862,sous-bassin n° 11862 (Mahabo),7744.981,partielle,6.536,0.007,faible,49.76,0.001,faible,stable
+11870,sous-bassin n° 11870 (Mahabo),10714.559,partielle,6.536,0.001,faible,49.76,0.001,faible,stable
+11871,sous-bassin n° 11871 (Mahanoro),1873.545,non mesurée,323.731,0.001,faible,323.731,0.001,faible,stable
+11873,sous-bassin n° 11873 (Antsirabe II),572379.978,non mesurée,138.092,0.02,faible,138.092,0.019,faible,stable
+11876,sous-bassin n° 11876 (Mahabo),15608.9,partielle,30.845,0.003,faible,34.24,0.002,faible,stable
+11886,sous-bassin n° 11886 (Mahabo),22395.535,partielle,34.24,0.021,faible,34.24,0.021,faible,stable
+11916,sous-bassin n° 11916 (Mahanoro),2530.069,partielle,323.731,0.002,faible,323.731,0.002,faible,stable
+11922,sous-bassin n° 11922 (Ambatofinandrahana),4453.94,non mesurée,32.05,0.001,faible,55.004,0.001,faible,stable
+11926,sous-bassin n° 11926 (Morondava),14458.455,non mesurée,30.845,0.016,faible,30.845,0.016,faible,stable
+11929,sous-bassin n° 11929 (Morondava),8626.725,non mesurée,30.845,0.057,faible,30.845,0.057,faible,stable
+11930,sous-bassin n° 11930 (Mahanoro),32732.596,partielle,323.731,0.002,faible,323.731,0.002,faible,stable
+11938,sous-bassin n° 11938 (Morondava),443.32,non mesurée,30.845,0.009,faible,30.845,0.009,faible,stable
+11941,sous-bassin n° 11941 (Morondava),4851.152,non mesurée,30.845,0.043,faible,30.845,0.043,faible,stable
+11946,sous-bassin n° 11946 (Mahanoro),2675.653,non mesurée,323.731,0.003,faible,323.731,0.003,faible,stable
+11949,sous-bassin n° 11949 (Betafo),20294.82,non mesurée,52.202,0.002,faible,60.015,0.002,faible,stable
+11950,sous-bassin n° 11950 (Ambatofinandrahana),74869.738,non mesurée,50.699,0.004,faible,57.438,0.003,faible,stable
+11955,sous-bassin n° 11955 (Betafo),127351.31,non mesurée,53.083,0.012,faible,60.015,0.01,faible,stable
+11961,sous-bassin n° 11961 (Mahanoro),865.744,non mesurée,323.731,0.004,faible,323.731,0.004,faible,stable
+11964,sous-bassin n° 11964 (Mahanoro),74650.349,partielle,338.702,0.002,faible,338.702,0.002,faible,stable
+11966,sous-bassin n° 11966 (Morondava),23211.033,non mesurée,30.845,0.46,élevé,30.845,0.46,élevé,stable
+11968,sous-bassin n° 11968 (Morondava),5140.288,non mesurée,30.845,0.242,modéré,30.845,0.242,modéré,stable
+11969,sous-bassin n° 11969 (Mahanoro),794.781,non mesurée,323.731,0.004,faible,323.731,0.004,faible,stable
+11971,sous-bassin n° 11971 (Morondava),5075.997,non mesurée,30.845,1.118,élevé,30.845,1.118,élevé,stable
+11976,sous-bassin n° 11976 (Morondava),7128.007,non mesurée,30.845,1.618,élevé,30.845,1.618,élevé,stable
+11978,sous-bassin n° 11978 (Mahabo),20617.981,partielle,6.622,0.003,faible,46.356,0.001,faible,stable
+11979,sous-bassin n° 11979 (Fandriana),55457.502,non mesurée,130.292,0.003,faible,130.292,0.003,faible,stable
+11980,sous-bassin n° 11980 (Nosy-Varika),77034.594,non mesurée,340.161,0.001,faible,340.161,0.001,faible,stable
+11981,sous-bassin n° 11981 (Mahanoro),3564.598,non mesurée,332.676,0.002,faible,332.675,0.002,faible,stable
+11982,sous-bassin n° 11982 (Morondava),2397.191,non mesurée,30.845,1.553,élevé,30.845,1.553,élevé,stable
+11983,sous-bassin n° 11983 (Morondava),2785.167,non mesurée,30.845,1.082,élevé,30.845,1.082,élevé,stable
+11986,sous-bassin n° 11986 (Morondava),2407.755,non mesurée,30.845,0.24,modéré,30.845,0.24,modéré,stable
+11989,sous-bassin n° 11989 (Morondava),22433.166,non mesurée,30.845,0.13,modéré,30.845,0.13,modéré,stable
+11991,sous-bassin n° 11991 (Morondava),1755.738,non mesurée,30.845,0.04,faible,30.845,0.04,faible,stable
+11996,sous-bassin n° 11996 (Fandriana),137628.353,non mesurée,181.0,0.006,faible,181.0,0.006,faible,stable
+12007,sous-bassin n° 12007 (Morondava),19335.199,partielle,30.845,0.009,faible,30.845,0.009,faible,stable
+12015,sous-bassin n° 12015 (Ambatofinandrahana),43414.673,non mesurée,51.709,0.012,faible,60.015,0.011,faible,stable
+12018,sous-bassin n° 12018 (Ambatofinandrahana),6712.737,non mesurée,32.05,0.003,faible,55.004,0.002,faible,stable
+12027,sous-bassin n° 12027 (Mahabo),36079.16,partielle,34.24,0.01,faible,34.24,0.005,faible,stable
+12032,sous-bassin n° 12032 (Morondava),583.866,non mesurée,30.845,0.003,faible,30.845,0.003,faible,stable
+12033,sous-bassin n° 12033 (Mahabo),11838.559,partielle,30.845,0.01,faible,30.845,0.004,faible,stable
+12052,sous-bassin n° 12052 (Morondava),2714.698,partielle,16.033,0.007,faible,16.033,0.007,faible,stable
+12053,sous-bassin n° 12053 (Morondava),6350.371,partielle,30.845,0.003,faible,30.845,0.003,faible,stable
+12057,sous-bassin n° 12057 (Ambositra),151255.173,partielle,186.166,0.007,faible,186.166,0.007,faible,stable
+12064,sous-bassin n° 12064 (Morondava),1213.771,partielle,16.033,0.01,faible,16.033,0.01,faible,stable
+12066,sous-bassin n° 12066 (Ambositra),157411.658,non mesurée,52.376,0.006,faible,60.015,0.006,faible,stable
+12069,sous-bassin n° 12069 (Morondava),161.412,partielle,16.033,0.011,faible,16.033,0.011,faible,stable
+12073,sous-bassin n° 12073 (Mahabo),15480.969,partielle,6.699,0.007,faible,44.557,0.001,faible,stable
+12074,sous-bassin n° 12074 (Mahanoro),25414.817,partielle,341.62,0.001,faible,341.62,0.001,faible,stable
+12102,sous-bassin n° 12102 (Mahabo),2331.788,partielle,29.634,0.004,faible,44.557,0.003,faible,stable
+12107,sous-bassin n° 12107 (Morondava),1573.871,partielle,16.033,0.013,faible,16.033,0.013,faible,stable
+12108,sous-bassin n° 12108 (Morondava),347.577,non mesurée,16.033,0.026,faible,16.033,0.026,faible,stable
+12112,sous-bassin n° 12112 (Mahabo),10757.532,partielle,6.606,0.004,faible,41.18,0.001,faible,stable
+12119,sous-bassin n° 12119 (Morondava),1769.385,partielle,16.033,0.011,faible,16.033,0.011,faible,stable
+12158,sous-bassin n° 12158 (Morondava),2116.003,partielle,16.033,0.003,faible,16.033,0.003,faible,stable
+12167,sous-bassin n° 12167 (Nosy-Varika),55724.619,non mesurée,341.62,0.002,faible,341.62,0.002,faible,stable
+12173,sous-bassin n° 12173 (Morondava),11682.161,partielle,25.993,0.001,faible,33.087,0.001,faible,stable
+12187,sous-bassin n° 12187 (Nosy-Varika),98523.821,partielle,257.42,0.001,faible,257.42,0.001,faible,stable
+12203,sous-bassin n° 12203 (Nosy-Varika),27602.888,non mesurée,337.165,0.003,faible,337.165,0.003,faible,stable
+12220,sous-bassin n° 12220 (Mahabo),2183.993,partielle,26.162,0.001,faible,40.24,0.0,faible,stable
+12233,sous-bassin n° 12233 (Morondava),3182.407,partielle,16.033,0.003,faible,16.033,0.003,faible,stable
+12235,sous-bassin n° 12235 (Morondava),350.053,partielle,14.626,0.001,faible,14.626,0.001,faible,stable
+12270,sous-bassin n° 12270 (Mahabo),3321.916,partielle,26.553,0.0,faible,41.18,0.0,faible,stable
+12301,sous-bassin n° 12301 (Morondava),2671.075,non mesurée,8.585,0.02,faible,8.585,0.02,faible,stable
+12304,sous-bassin n° 12304 (Manja),5292.761,partielle,17.328,0.002,faible,32.017,0.001,faible,stable
+12313,sous-bassin n° 12313 (Ambositra),93879.755,non mesurée,313.175,0.002,faible,313.175,0.002,faible,stable
+12324,sous-bassin n° 12324 (Morondava),771.478,partielle,14.626,0.001,faible,14.626,0.001,faible,stable
+12344,sous-bassin n° 12344 (Nosy-Varika),38578.261,partielle,337.165,0.002,faible,337.165,0.002,faible,stable
+12355,sous-bassin n° 12355 (Mananjary),21198.241,partielle,334.326,0.001,faible,334.326,0.001,faible,stable
+12357,sous-bassin n° 12357 (Mahabo),5314.095,partielle,6.582,0.002,faible,36.754,0.001,faible,stable
+12358,sous-bassin n° 12358 (Nosy-Varika),60368.531,partielle,257.732,0.001,faible,257.732,0.001,faible,stable
+12370,sous-bassin n° 12370 (Mahabo),9654.43,partielle,14.253,0.005,faible,35.793,0.002,faible,stable
+12382,sous-bassin n° 12382 (Mananjary),594.617,non mesurée,334.326,0.002,faible,334.326,0.002,faible,stable
+12386,sous-bassin n° 12386 (Manja),6190.561,partielle,13.884,0.003,faible,30.946,0.002,faible,stable
+12401,sous-bassin n° 12401 (Ikalamavony),19793.343,partielle,70.748,0.001,faible,70.748,0.001,faible,stable
+12413,sous-bassin n° 12413 (Ambatofinandrahana),29883.832,non mesurée,51.464,0.004,faible,57.438,0.004,faible,stable
+12416,sous-bassin n° 12416 (Ambatofinandrahana),32708.831,non mesurée,71.123,0.001,faible,71.123,0.001,faible,stable
+12419,sous-bassin n° 12419 (Ambatofinandrahana),6232.591,non mesurée,31.091,0.001,faible,47.466,0.001,faible,stable
+12422,sous-bassin n° 12422 (Mananjary),7300.739,non mesurée,334.326,0.001,faible,334.326,0.001,faible,stable
+12425,sous-bassin n° 12425 (Ifanadiana),64705.671,non mesurée,311.496,0.001,faible,311.496,0.001,faible,stable
+12433,sous-bassin n° 12433 (Manandriana),95540.507,non mesurée,52.139,0.012,faible,57.438,0.011,faible,stable
+12438,sous-bassin n° 12438 (Mananjary),7402.039,partielle,334.326,0.001,faible,334.326,0.001,faible,stable
+12443,sous-bassin n° 12443 (Isandra),141132.355,non mesurée,49.758,0.014,faible,53.98,0.013,faible,stable
+12452,sous-bassin n° 12452 (Manja),28921.496,partielle,17.394,0.011,faible,30.946,0.008,faible,stable
+12464,sous-bassin n° 12464 (Ikalamavony),23449.64,non mesurée,48.1,0.016,faible,53.98,0.015,faible,stable
+12465,sous-bassin n° 12465 (Ikalamavony),15000.521,non mesurée,50.789,0.001,faible,57.438,0.001,faible,stable
+12466,sous-bassin n° 12466 (Ambohimahasoa),193704.87,non mesurée,112.47,0.008,faible,112.47,0.008,faible,stable
+12469,sous-bassin n° 12469 (Ifanadiana),11569.604,non mesurée,314.911,0.001,faible,314.911,0.001,faible,stable
+12473,sous-bassin n° 12473 (Manja),2493.068,partielle,14.648,0.004,faible,14.648,0.004,faible,stable
+12478,sous-bassin n° 12478 (Mahabo),7328.896,partielle,25.415,0.002,faible,39.299,0.001,faible,stable
+12479,sous-bassin n° 12479 (Ifanadiana),25754.777,non mesurée,308.755,0.001,faible,308.755,0.001,faible,stable
+12498,sous-bassin n° 12498 (Mananjary),1399.019,partielle,334.326,0.001,faible,334.326,0.001,faible,stable
+12501,sous-bassin n° 12501 (Ifanadiana),23614.225,non mesurée,311.496,0.001,faible,311.496,0.001,faible,stable
+12511,sous-bassin n° 12511 (Beroroha),6602.737,partielle,26.622,0.002,faible,43.957,0.001,faible,stable
+12514,sous-bassin n° 12514 (Mananjary),16888.219,partielle,258.394,0.001,faible,258.394,0.001,faible,stable
+12533,sous-bassin n° 12533 (Mananjary),4368.533,partielle,258.394,0.001,faible,258.394,0.001,faible,stable
+12544,sous-bassin n° 12544 (Manja),4151.771,partielle,14.648,0.002,faible,14.648,0.002,faible,stable
+12554,sous-bassin n° 12554 (Ikalamavony),1103.645,partielle,70.313,0.0,faible,70.313,0.0,faible,stable
+12558,sous-bassin n° 12558 (Mananjary),24811.757,partielle,258.394,0.001,faible,258.394,0.001,faible,stable
+12564,sous-bassin n° 12564 (Mananjary),2379.119,non mesurée,258.394,0.032,faible,258.394,0.032,faible,stable
+12565,sous-bassin n° 12565 (Manja),4262.568,partielle,14.648,0.005,faible,14.648,0.005,faible,stable
+12567,sous-bassin n° 12567 (Mananjary),73136.277,partielle,308.755,0.001,faible,308.755,0.001,faible,stable
+12570,sous-bassin n° 12570 (Mananjary),7900.296,non mesurée,258.394,0.038,faible,258.394,0.038,faible,stable
+12576,sous-bassin n° 12576 (Mananjary),897.466,non mesurée,258.394,0.098,faible,258.394,0.098,faible,stable
+12579,sous-bassin n° 12579 (Mananjary),845.142,non mesurée,258.394,0.129,modéré,258.394,0.129,modéré,stable
+12583,sous-bassin n° 12583 (Mananjary),2797.81,non mesurée,258.394,0.067,faible,258.394,0.067,faible,stable
+12587,sous-bassin n° 12587 (Mananjary),4466.73,non mesurée,258.394,0.075,faible,258.394,0.075,faible,stable
+12590,sous-bassin n° 12590 (Mananjary),24721.4,partielle,258.394,0.004,faible,258.394,0.004,faible,stable
+12599,sous-bassin n° 12599 (Manja),1937.899,partielle,6.183,0.008,faible,30.946,0.002,faible,stable
+12601,sous-bassin n° 12601 (Ifanadiana),61419.793,non mesurée,314.911,0.001,faible,314.911,0.001,faible,stable
+12602,sous-bassin n° 12602 (Mananjary),2015.22,non mesurée,258.394,0.008,faible,258.394,0.008,faible,stable
+12633,sous-bassin n° 12633 (Manja),3781.74,non mesurée,3.619,0.03,faible,4.331,0.025,faible,stable
+12680,sous-bassin n° 12680 (Morombe),11273.739,non mesurée,3.619,0.208,modéré,4.331,0.174,modéré,stable
+12687,sous-bassin n° 12687 (Mananjary),3999.319,partielle,258.394,0.001,faible,258.394,0.001,faible,stable
+12690,sous-bassin n° 12690 (Vohibato),610091.407,non mesurée,92.621,0.016,faible,92.621,0.015,faible,stable
+12701,sous-bassin n° 12701 (Mananjary),771.493,non mesurée,258.394,0.001,faible,258.394,0.001,faible,stable
+12703,sous-bassin n° 12703 (Manja),31655.702,partielle,25.15,0.005,faible,25.15,0.005,faible,stable
+12713,sous-bassin n° 12713 (Ikalamavony),61880.957,non mesurée,48.1,0.003,faible,53.98,0.003,faible,stable
+12721,sous-bassin n° 12721 (Morombe),6581.205,non mesurée,3.619,0.062,faible,4.331,0.052,faible,stable
+12754,sous-bassin n° 12754 (Ikalamavony),13475.072,partielle,69.69,0.0,faible,69.69,0.0,faible,stable
+12755,sous-bassin n° 12755 (Mananjary),1361.397,partielle,256.05,0.0,faible,256.05,0.0,faible,stable
+12758,sous-bassin n° 12758 (Beroroha),8140.921,partielle,71.387,0.001,faible,71.387,0.001,faible,stable
+12759,sous-bassin n° 12759 (Ikalamavony),2803.995,non mesurée,70.321,0.0,faible,70.321,0.0,faible,stable
+12763,sous-bassin n° 12763 (Mananjary),8978.195,partielle,256.05,0.001,faible,256.05,0.001,faible,stable
+12775,sous-bassin n° 12775 (Morombe),80946.675,partielle,14.633,0.044,faible,14.633,0.043,faible,stable
+12801,sous-bassin n° 12801 (Beroroha),4737.873,partielle,22.299,0.002,faible,34.832,0.001,faible,stable
+12812,sous-bassin n° 12812 (Morombe),26769.878,partielle,3.619,0.114,modéré,4.331,0.104,modéré,stable
+12820,sous-bassin n° 12820 (Ambalavao),303527.428,non mesurée,92.621,0.006,faible,92.621,0.005,faible,stable
+12826,sous-bassin n° 12826 (Mananjary),124.801,non mesurée,256.05,0.0,faible,256.05,0.0,faible,stable
+12846,sous-bassin n° 12846 (Mananjary),1960.006,partielle,256.05,0.0,faible,256.05,0.0,faible,stable
+12849,sous-bassin n° 12849 (Morombe),33476.531,partielle,18.605,0.078,faible,18.605,0.076,faible,stable
+12857,sous-bassin n° 12857 (Beroroha),8320.257,partielle,69.779,0.0,faible,69.779,0.0,faible,stable
+12863,sous-bassin n° 12863 (Mananjary),127.718,non mesurée,256.05,0.0,faible,256.05,0.0,faible,stable
+12869,sous-bassin n° 12869 (Mananjary),3952.238,partielle,256.05,0.001,faible,256.05,0.001,faible,stable
+12898,sous-bassin n° 12898 (Morombe),5461.278,partielle,18.605,0.01,faible,18.605,0.01,faible,stable
+12906,sous-bassin n° 12906 (Morombe),7027.751,partielle,18.605,0.003,faible,18.605,0.003,faible,stable
+12907,sous-bassin n° 12907 (Ifanadiana),143654.124,non mesurée,312.613,0.001,faible,312.613,0.001,faible,stable
+12912,sous-bassin n° 12912 (Beroroha),16318.823,partielle,23.731,0.005,faible,38.076,0.003,faible,stable
+12913,sous-bassin n° 12913 (Beroroha),7384.293,partielle,23.102,0.001,faible,39.299,0.001,faible,stable
+12934,sous-bassin n° 12934 (Beroroha),10243.155,partielle,23.102,0.003,faible,38.688,0.001,faible,stable
+12935,sous-bassin n° 12935 (Mananjary),695.581,partielle,254.516,0.001,faible,254.516,0.001,faible,stable
+12941,sous-bassin n° 12941 (Beroroha),3356.406,partielle,25.16,0.001,faible,38.688,0.001,faible,stable
+12944,sous-bassin n° 12944 (Beroroha),10704.414,partielle,23.731,0.005,faible,38.076,0.003,faible,stable
+12957,sous-bassin n° 12957 (Morombe),3933.163,non mesurée,7.891,0.969,élevé,7.891,0.969,élevé,stable
+12958,sous-bassin n° 12958 (Morombe),2514.544,partielle,7.891,0.11,modéré,7.891,0.11,modéré,stable
+12964,sous-bassin n° 12964 (Beroroha),9945.885,partielle,22.144,0.002,faible,33.982,0.001,faible,stable
+12965,sous-bassin n° 12965 (Ikongo),129948.805,partielle,264.468,0.002,faible,264.468,0.002,faible,stable
+12972,sous-bassin n° 12972 (Ikalamavony),7434.018,partielle,69.713,0.0,faible,69.713,0.0,faible,stable
+12975,sous-bassin n° 12975 (Morombe),4820.76,non mesurée,7.891,4.011,élevé,7.891,4.01,élevé,stable
+12982,sous-bassin n° 12982 (Manja),4864.519,partielle,20.956,0.001,faible,31.967,0.001,faible,stable
+12993,sous-bassin n° 12993 (Ambalavao),2315.414,partielle,69.894,0.001,faible,69.895,0.001,faible,stable
+12994,sous-bassin n° 12994 (Ambalavao),12395.412,partielle,48.467,0.002,faible,59.07,0.001,faible,stable
+13007,sous-bassin n° 13007 (Morombe),5825.836,non mesurée,7.891,0.091,faible,7.891,0.091,faible,stable
+13008,sous-bassin n° 13008 (Manakara Atsimo),125113.897,partielle,267.218,0.002,faible,267.218,0.002,faible,stable
+13020,sous-bassin n° 13020 (Manakara Atsimo),311.414,partielle,254.516,0.002,faible,254.516,0.002,faible,stable
+13022,sous-bassin n° 13022 (Ankazoabo),30172.098,partielle,23.731,0.002,faible,38.404,0.001,faible,stable
+13031,sous-bassin n° 13031 (Ihosy),8585.983,partielle,69.675,0.0,faible,69.675,0.0,faible,stable
+13037,sous-bassin n° 13037 (Ankazoabo),5449.358,partielle,20.268,0.001,faible,20.268,0.001,faible,stable
+13043,sous-bassin n° 13043 (Ihosy),16183.772,partielle,70.285,0.002,faible,70.285,0.002,faible,stable
+13046,sous-bassin n° 13046 (Ihosy),110733.08,partielle,70.679,0.003,faible,70.679,0.003,faible,stable
+13055,sous-bassin n° 13055 (Manakara Atsimo),611.762,partielle,254.516,0.0,faible,254.516,0.0,faible,stable
+13077,sous-bassin n° 13077 (Manja),17845.0,partielle,30.884,0.002,faible,36.224,0.002,faible,stable
+13096,sous-bassin n° 13096 (Ankazoabo),14610.484,partielle,21.02,0.002,faible,21.02,0.002,faible,stable
+13111,sous-bassin n° 13111 (Ambalavao),55525.052,non mesurée,92.675,0.002,faible,92.675,0.002,faible,stable
+13116,sous-bassin n° 13116 (Morombe),1644.997,non mesurée,17.79,0.006,faible,17.79,0.006,faible,stable
+13119,sous-bassin n° 13119 (Morombe),39436.643,partielle,9.335,0.009,faible,9.335,0.009,faible,stable
+13136,sous-bassin n° 13136 (Manakara Atsimo),5052.588,non mesurée,254.516,0.001,faible,254.516,0.001,faible,stable
+13175,sous-bassin n° 13175 (Ankazoabo),5449.801,partielle,21.988,0.002,faible,33.132,0.002,faible,stable
+13198,sous-bassin n° 13198 (Manakara Atsimo),299.825,non mesurée,390.878,0.001,faible,390.878,0.001,faible,stable
+13204,sous-bassin n° 13204 (Morombe),35010.703,partielle,9.318,0.027,faible,9.318,0.027,faible,stable
+13205,sous-bassin n° 13205 (Manakara Atsimo),1568.458,non mesurée,390.878,0.001,faible,390.878,0.001,faible,stable
+13215,sous-bassin n° 13215 (Manakara Atsimo),85691.826,partielle,390.878,0.002,faible,390.878,0.002,faible,stable
+13218,sous-bassin n° 13218 (Toliary-II),20315.838,partielle,9.314,0.006,faible,9.314,0.006,faible,stable
+13232,sous-bassin n° 13232 (Ihosy),4033.697,non mesurée,70.081,0.001,faible,70.081,0.001,faible,stable
+13238,sous-bassin n° 13238 (Ankazoabo),1022.131,partielle,13.858,0.002,faible,13.859,0.002,faible,stable
+13245,sous-bassin n° 13245 (Manakara Atsimo),1754.311,non mesurée,390.878,0.001,faible,390.878,0.001,faible,stable
+13254,sous-bassin n° 13254 (Ankazoabo),24341.288,partielle,20.269,0.006,faible,20.269,0.006,faible,stable
+13256,sous-bassin n° 13256 (Morombe),4383.957,partielle,17.79,0.006,faible,17.79,0.006,faible,stable
+13265,sous-bassin n° 13265 (Manakara Atsimo),5057.694,non mesurée,390.878,0.01,faible,390.878,0.01,faible,stable
+13270,sous-bassin n° 13270 (Manakara Atsimo),9475.182,non mesurée,390.878,0.012,faible,390.878,0.012,faible,stable
+13273,sous-bassin n° 13273 (Manakara Atsimo),3713.093,non mesurée,390.878,0.048,faible,390.878,0.048,faible,stable
+13281,sous-bassin n° 13281 (Manakara Atsimo),4482.293,non mesurée,390.878,0.047,faible,390.878,0.047,faible,stable
+13282,sous-bassin n° 13282 (Manakara Atsimo),1713.255,non mesurée,390.878,0.018,faible,390.878,0.018,faible,stable
+13299,sous-bassin n° 13299 (Morombe),1311.606,partielle,17.79,0.002,faible,17.79,0.002,faible,stable
+13308,sous-bassin n° 13308 (Morombe),432.829,non mesurée,14.325,0.072,faible,14.325,0.072,faible,stable
+13326,sous-bassin n° 13326 (Manakara Atsimo),1321.358,non mesurée,317.452,0.005,faible,317.452,0.005,faible,stable
+13355,sous-bassin n° 13355 (Ikongo),71360.999,partielle,247.838,0.001,faible,247.838,0.001,faible,stable
+13356,sous-bassin n° 13356 (Manakara Atsimo),45945.09,partielle,390.878,0.002,faible,390.878,0.002,faible,stable
+13395,sous-bassin n° 13395 (Manakara Atsimo),1068.488,partielle,317.452,0.001,faible,317.452,0.001,faible,stable
+13402,sous-bassin n° 13402 (Manakara Atsimo),4191.908,partielle,317.452,0.001,faible,317.452,0.001,faible,stable
+13408,sous-bassin n° 13408 (Vondrozo),89294.522,partielle,202.75,0.002,faible,202.75,0.002,faible,stable
+13412,sous-bassin n° 13412 (Ankazoabo),13294.509,partielle,20.269,0.005,faible,20.269,0.004,faible,stable
+13420,sous-bassin n° 13420 (Ikongo),193513.78,partielle,260.636,0.002,faible,260.636,0.002,faible,stable
+13426,sous-bassin n° 13426 (Morombe),1618.961,non mesurée,14.325,0.015,faible,14.325,0.015,faible,stable
+13443,sous-bassin n° 13443 (Manakara Atsimo),1301.726,non mesurée,317.452,0.001,faible,317.452,0.001,faible,stable
+13463,sous-bassin n° 13463 (Vohipeno),5913.158,partielle,317.452,0.001,faible,317.452,0.001,faible,stable
+13482,sous-bassin n° 13482 (Vohipeno),2595.372,non mesurée,317.452,0.002,faible,317.452,0.002,faible,stable
+13502,sous-bassin n° 13502 (Ihosy),12431.762,partielle,23.987,0.002,faible,50.364,0.001,faible,stable
+13503,sous-bassin n° 13503 (Vohipeno),96592.256,partielle,317.452,0.004,faible,317.452,0.004,faible,stable
+13510,sous-bassin n° 13510 (Ihosy),23694.815,partielle,70.679,0.001,faible,70.679,0.001,faible,stable
+13511,sous-bassin n° 13511 (Vohipeno),4745.475,partielle,317.452,0.003,faible,317.452,0.003,faible,stable
+13521,sous-bassin n° 13521 (Toliary-II),1442.011,partielle,14.325,0.002,faible,14.325,0.002,faible,stable
+13529,sous-bassin n° 13529 (Ivohibe),36087.478,non mesurée,157.284,0.001,faible,157.284,0.001,faible,stable
+13533,sous-bassin n° 13533 (Vohipeno),1807.167,partielle,240.854,0.003,faible,240.854,0.003,faible,stable
+13545,sous-bassin n° 13545 (Farafangana),737.891,partielle,240.854,0.001,faible,240.854,0.001,faible,stable
+13562,sous-bassin n° 13562 (Toliary-II),391.416,partielle,14.164,0.002,faible,14.164,0.002,faible,stable
+13568,sous-bassin n° 13568 (Ihosy),22160.893,non mesurée,70.11,0.001,faible,70.11,0.001,faible,stable
+13572,sous-bassin n° 13572 (Farafangana),524.441,partielle,240.854,0.001,faible,240.854,0.001,faible,stable
+13607,sous-bassin n° 13607 (Farafangana),10803.796,partielle,240.854,0.002,faible,240.854,0.002,faible,stable
+13617,sous-bassin n° 13617 (Farafangana),1469.398,partielle,240.854,0.003,faible,240.854,0.003,faible,stable
+13618,sous-bassin n° 13618 (Toliary-II),657.839,partielle,14.164,0.002,faible,14.164,0.002,faible,stable
+13640,sous-bassin n° 13640 (Farafangana),6980.57,partielle,240.854,0.004,faible,240.854,0.004,faible,stable
+13646,sous-bassin n° 13646 (Farafangana),2460.932,partielle,240.854,0.004,faible,240.854,0.004,faible,stable
+13650,sous-bassin n° 13650 (Sakaraha),19497.852,partielle,22.814,0.004,faible,34.087,0.002,faible,stable
+13664,sous-bassin n° 13664 (Farafangana),257379.245,mesurée,95.01,0.005,faible,95.01,0.005,faible,stable
+13668,sous-bassin n° 13668 (Ivohibe),29951.717,partielle,183.344,0.001,faible,183.344,0.001,faible,stable
+13669,sous-bassin n° 13669 (Farafangana),1269.913,non mesurée,240.854,0.005,faible,240.854,0.005,faible,stable
+13671,sous-bassin n° 13671 (Vondrozo),84056.699,partielle,206.564,0.001,faible,206.564,0.001,faible,stable
+13674,sous-bassin n° 13674 (Ihosy),9426.406,partielle,70.677,0.001,faible,70.677,0.001,faible,stable
+13687,sous-bassin n° 13687 (Toliary-II),507.574,partielle,14.164,0.003,faible,14.164,0.003,faible,stable
+13695,sous-bassin n° 13695 (Ihosy),29494.302,partielle,96.265,0.001,faible,96.265,0.001,faible,stable
+13700,sous-bassin n° 13700 (Farafangana),20076.251,partielle,240.854,0.006,faible,240.854,0.006,faible,stable
+13705,sous-bassin n° 13705 (Sakaraha),16084.799,partielle,14.15,0.004,faible,14.15,0.004,faible,stable
+13706,sous-bassin n° 13706 (Ihosy),8939.474,partielle,26.384,0.004,faible,40.449,0.003,faible,stable
+13720,sous-bassin n° 13720 (Farafangana),6698.689,partielle,240.854,0.043,faible,240.854,0.043,faible,stable
+13723,sous-bassin n° 13723 (Farafangana),2881.103,non mesurée,240.854,0.239,modéré,240.854,0.239,modéré,stable
+13724,sous-bassin n° 13724 (Farafangana),2185.818,non mesurée,240.854,0.251,modéré,240.854,0.251,modéré,stable
+13727,sous-bassin n° 13727 (Farafangana),9871.344,non mesurée,240.854,0.184,modéré,240.854,0.184,modéré,stable
+13730,sous-bassin n° 13730 (Farafangana),110854.281,partielle,245.531,0.003,faible,245.531,0.003,faible,stable
+13732,sous-bassin n° 13732 (Toliary-II),524.21,partielle,22.863,0.001,faible,22.863,0.001,faible,stable
+13733,sous-bassin n° 13733 (Toliary-II),40119.715,mesurée,9.309,0.013,faible,9.309,0.013,faible,stable
+13734,sous-bassin n° 13734 (Farafangana),1154.123,non mesurée,240.854,0.063,faible,240.854,0.063,faible,stable
+13753,sous-bassin n° 13753 (Sakaraha),53495.916,partielle,14.164,0.015,faible,14.164,0.012,faible,stable
+13769,sous-bassin n° 13769 (Toliary-II),19595.823,partielle,22.863,0.018,faible,22.863,0.018,faible,stable
+13770,sous-bassin n° 13770 (Farafangana),2708.821,non mesurée,245.531,0.006,faible,245.531,0.006,faible,stable
+13779,sous-bassin n° 13779 (Ihosy),32459.124,partielle,70.677,0.0,faible,70.677,0.0,faible,stable
+13786,sous-bassin n° 13786 (Toliary-II),1442.394,partielle,22.863,0.003,faible,22.863,0.003,faible,stable
+13791,sous-bassin n° 13791 (Farafangana),1284.362,partielle,245.531,0.002,faible,245.531,0.002,faible,stable
+13796,sous-bassin n° 13796 (Iakora),12749.379,non mesurée,182.156,0.0,faible,182.156,0.0,faible,stable
+13797,sous-bassin n° 13797 (Ivohibe),3843.483,partielle,180.166,0.001,faible,180.166,0.001,faible,stable
+13803,sous-bassin n° 13803 (Farafangana),753.499,partielle,245.531,0.003,faible,245.531,0.003,faible,stable
+13812,sous-bassin n° 13812 (Sakaraha),24095.584,partielle,20.556,0.006,faible,20.556,0.006,faible,stable
+13815,sous-bassin n° 13815 (Toliary-II),1727.417,partielle,22.863,0.024,faible,22.863,0.024,faible,stable
+13820,sous-bassin n° 13820 (Midongy-Atsimo),69694.091,partielle,151.42,0.001,faible,151.42,0.001,faible,stable
+13821,sous-bassin n° 13821 (Farafangana),1319.541,partielle,245.531,0.001,faible,245.531,0.001,faible,stable
+13825,sous-bassin n° 13825 (Toliary-II),965.237,partielle,22.863,0.051,faible,22.863,0.051,faible,stable
+13828,sous-bassin n° 13828 (Toliary-II),8755.803,partielle,22.863,0.019,faible,22.863,0.019,faible,stable
+13847,sous-bassin n° 13847 (Toliary-II),2393.796,partielle,22.863,0.016,faible,22.863,0.016,faible,stable
+13871,sous-bassin n° 13871 (Toliary-II),6062.565,partielle,22.863,0.021,faible,22.863,0.021,faible,stable
+13873,sous-bassin n° 13873 (Toliary-II),1072.75,partielle,20.471,0.105,modéré,20.471,0.105,modéré,stable
+13874,sous-bassin n° 13874 (Sakaraha),16992.038,partielle,13.701,0.012,faible,13.701,0.012,faible,stable
+13887,sous-bassin n° 13887 (Farafangana),3217.684,partielle,212.692,0.001,faible,212.692,0.001,faible,stable
+13889,sous-bassin n° 13889 (Toliary-II),1911.088,partielle,20.471,0.084,faible,20.471,0.084,faible,stable
+13892,sous-bassin n° 13892 (Toliary-II),3303.311,partielle,22.863,0.006,faible,22.863,0.006,faible,stable
+13893,sous-bassin n° 13893 (Farafangana),1856.558,partielle,212.692,0.001,faible,212.692,0.001,faible,stable
+13899,sous-bassin n° 13899 (Toliary-II),537.796,partielle,20.471,0.069,faible,20.471,0.069,faible,stable
+13903,sous-bassin n° 13903 (Toliary-II),1410.453,partielle,20.471,0.068,faible,20.471,0.068,faible,stable
+13914,sous-bassin n° 13914 (Betroka),16911.443,partielle,69.965,0.002,faible,69.965,0.002,faible,stable
+13925,sous-bassin n° 13925 (Toliary-II),2099.561,partielle,20.471,0.011,faible,20.471,0.011,faible,stable
+13928,sous-bassin n° 13928 (Ihosy),2376.321,partielle,25.687,0.001,faible,40.449,0.0,faible,stable
+13931,sous-bassin n° 13931 (Farafangana),12716.854,partielle,212.692,0.003,faible,212.692,0.003,faible,stable
+13940,sous-bassin n° 13940 (Betroka),42564.033,mesurée,90.211,0.003,faible,90.211,0.003,faible,stable
+13943,sous-bassin n° 13943 (Toliary-II),5652.281,partielle,20.471,0.051,faible,20.471,0.051,faible,stable
+13947,sous-bassin n° 13947 (Toliary-II),2405.478,partielle,20.471,0.149,modéré,20.471,0.149,modéré,stable
+13948,sous-bassin n° 13948 (Betroka),21074.644,partielle,69.965,0.002,faible,69.965,0.002,faible,stable
+13957,sous-bassin n° 13957 (Vangaindrano),22737.066,partielle,205.473,0.0,faible,205.473,0.0,faible,stable
+13962,sous-bassin n° 13962 (Toliary-II),2951.26,partielle,20.471,0.011,faible,20.471,0.011,faible,stable
+13980,sous-bassin n° 13980 (Iakora),1963.085,non mesurée,182.156,0.0,faible,182.156,0.0,faible,stable
+13983,sous-bassin n° 13983 (Farafangana),106061.452,partielle,212.692,0.004,faible,212.692,0.004,faible,stable
+13995,sous-bassin n° 13995 (Toliary-II),9669.105,non mesurée,13.701,0.003,faible,13.701,0.003,faible,stable
+13998,sous-bassin n° 13998 (Vangaindrano),926.491,non mesurée,212.692,0.005,faible,212.692,0.005,faible,stable
+14001,sous-bassin n° 14001 (Toliary-II),893.053,partielle,20.471,0.008,faible,20.471,0.008,faible,stable
+14008,sous-bassin n° 14008 (Toliary-II),12812.737,partielle,21.261,0.003,faible,21.261,0.003,faible,stable
+14010,sous-bassin n° 14010 (Toliary-II),4950.864,partielle,20.471,0.045,faible,20.471,0.045,faible,stable
+14034,sous-bassin n° 14034 (Toliary-II),8649.285,partielle,20.471,0.045,faible,20.471,0.045,faible,stable
+14041,sous-bassin n° 14041 (Toliary-I),8056.717,non mesurée,20.471,0.385,modéré,20.471,0.385,modéré,stable
+14042,sous-bassin n° 14042 (Vangaindrano),799.992,non mesurée,207.978,0.002,faible,207.978,0.002,faible,stable
+14048,sous-bassin n° 14048 (Iakora),4828.316,non mesurée,185.169,0.0,faible,185.169,0.0,faible,stable
+14049,sous-bassin n° 14049 (Vangaindrano),15027.968,non mesurée,207.978,0.005,faible,207.978,0.005,faible,stable
+14056,sous-bassin n° 14056 (Toliary-I),6924.678,non mesurée,20.471,0.372,modéré,20.471,0.372,modéré,stable
+14058,sous-bassin n° 14058 (Vangaindrano),177496.386,mesurée,207.978,0.005,faible,207.978,0.005,faible,stable
+14060,sous-bassin n° 14060 (Toliary-II),45966.37,partielle,20.471,0.548,élevé,20.471,0.548,élevé,stable
+14061,sous-bassin n° 14061 (Vangaindrano),2405.965,non mesurée,207.978,0.006,faible,207.978,0.006,faible,stable
+14067,sous-bassin n° 14067 (Toliary-I),47676.639,non mesurée,20.471,2.802,élevé,20.471,2.803,élevé,stable
+14068,sous-bassin n° 14068 (Toliary-I),2670.35,non mesurée,20.471,3.99,élevé,20.471,3.99,élevé,stable
+14069,sous-bassin n° 14069 (Toliary-I),7977.244,non mesurée,20.471,3.574,élevé,20.471,3.574,élevé,stable
+14070,sous-bassin n° 14070 (Toliary-I),5312.966,non mesurée,20.471,3.424,élevé,20.471,3.424,élevé,stable
+14075,sous-bassin n° 14075 (Toliary-I),9954.635,non mesurée,20.471,3.724,élevé,20.471,3.724,élevé,stable
+14076,sous-bassin n° 14076 (Toliary-I),25391.309,non mesurée,20.471,3.449,élevé,20.471,3.449,élevé,stable
+14079,sous-bassin n° 14079 (Toliary-I),12461.45,non mesurée,20.471,3.229,élevé,20.471,3.23,élevé,stable
+14082,sous-bassin n° 14082 (Toliary-I),10697.843,non mesurée,20.471,2.376,élevé,20.471,2.376,élevé,stable
+14083,sous-bassin n° 14083 (Toliary-I),5385.607,non mesurée,20.471,2.754,élevé,20.471,2.754,élevé,stable
+14084,sous-bassin n° 14084 (Benenitra),3670.547,partielle,25.812,0.001,faible,38.106,0.001,faible,stable
+14087,sous-bassin n° 14087 (Toliary-I),14944.198,non mesurée,21.261,2.4,élevé,21.261,2.4,élevé,stable
+14088,sous-bassin n° 14088 (Toliary-II),5734.519,partielle,21.261,2.101,élevé,21.261,2.101,élevé,stable
+14090,sous-bassin n° 14090 (Toliary-I),5215.742,non mesurée,21.261,0.859,élevé,21.261,0.859,élevé,stable
+14098,sous-bassin n° 14098 (Toliary-II),78031.552,partielle,20.471,0.932,élevé,20.471,0.932,élevé,stable
+14103,sous-bassin n° 14103 (Vangaindrano),3004.899,non mesurée,207.978,0.006,faible,207.978,0.006,faible,stable
+14107,sous-bassin n° 14107 (Betroka),6985.222,partielle,69.891,0.001,faible,69.891,0.001,faible,stable
+14109,sous-bassin n° 14109 (Toliary-II),5335.24,partielle,21.261,0.023,faible,21.261,0.023,faible,stable
+14115,sous-bassin n° 14115 (Toliary-II),8806.658,partielle,21.261,0.059,faible,21.261,0.059,faible,stable
+14121,sous-bassin n° 14121 (Betroka),41816.062,mesurée,69.894,0.002,faible,69.895,0.002,faible,stable
+14130,sous-bassin n° 14130 (Betroka),19919.26,partielle,69.691,0.002,faible,69.691,0.002,faible,stable
+14141,sous-bassin n° 14141 (Benenitra),5483.408,partielle,26.472,0.001,faible,41.68,0.001,faible,stable
+14143,sous-bassin n° 14143 (Toliary-II),4180.299,partielle,21.261,0.028,faible,21.261,0.028,faible,stable
+14144,sous-bassin n° 14144 (Toliary-II),14412.788,partielle,21.261,0.006,faible,21.261,0.006,faible,stable
+14148,sous-bassin n° 14148 (Vangaindrano),7238.0,partielle,207.978,0.004,faible,207.978,0.004,faible,stable
+14151,sous-bassin n° 14151 (Benenitra),4743.792,partielle,59.33,0.001,faible,59.33,0.001,faible,stable
+14160,sous-bassin n° 14160 (Betroka),6181.631,partielle,54.46,0.001,faible,54.46,0.001,faible,stable
+14163,sous-bassin n° 14163 (Iakora),13210.181,non mesurée,180.131,0.0,faible,180.131,0.0,faible,stable
+14174,sous-bassin n° 14174 (Betroka),11606.979,partielle,69.891,0.001,faible,69.891,0.001,faible,stable
+14177,sous-bassin n° 14177 (Betioky Atsimo),21013.557,partielle,22.343,0.004,faible,22.343,0.004,faible,stable
+14184,sous-bassin n° 14184 (Benenitra),9589.804,partielle,26.472,0.004,faible,41.68,0.003,faible,stable
+14189,sous-bassin n° 14189 (Betioky Atsimo),66061.77,mesurée,22.357,0.006,faible,22.357,0.005,faible,stable
+14190,sous-bassin n° 14190 (Vangaindrano),4607.047,non mesurée,207.978,0.01,faible,207.978,0.01,faible,stable
+14202,sous-bassin n° 14202 (Betioky Atsimo),78069.359,mesurée,22.343,0.014,faible,22.343,0.014,faible,stable
+14203,sous-bassin n° 14203 (Betroka),11242.038,partielle,91.141,0.001,faible,91.141,0.001,faible,stable
+14206,sous-bassin n° 14206 (Benenitra),47852.743,mesurée,59.345,0.003,faible,59.345,0.003,faible,stable
+14217,sous-bassin n° 14217 (Toliary-II),289.81,partielle,21.261,0.306,modéré,21.261,0.306,modéré,stable
+14218,sous-bassin n° 14218 (Betioky Atsimo),9646.361,partielle,24.317,0.008,faible,34.532,0.008,faible,stable
+14219,sous-bassin n° 14219 (Vangaindrano),2617.836,non mesurée,207.978,0.012,faible,207.978,0.012,faible,stable
+14221,sous-bassin n° 14221 (Toliary-II),892.212,non mesurée,21.261,0.175,modéré,21.261,0.175,modéré,stable
+14224,sous-bassin n° 14224 (Toliary-II),1440.49,partielle,21.261,0.008,faible,21.261,0.008,faible,stable
+14229,sous-bassin n° 14229 (Toliary-II),19683.421,partielle,21.261,0.013,faible,21.261,0.013,faible,stable
+14230,sous-bassin n° 14230 (Betioky Atsimo),40144.797,partielle,32.553,0.012,faible,32.553,0.012,faible,stable
+14245,sous-bassin n° 14245 (Toliary-II),445.227,partielle,21.284,0.003,faible,21.284,0.003,faible,stable
+14249,sous-bassin n° 14249 (Toliary-II),342.03,partielle,21.284,0.007,faible,21.284,0.007,faible,stable
+14255,sous-bassin n° 14255 (Toliary-II),1255.705,partielle,21.284,0.004,faible,21.284,0.004,faible,stable
+14268,sous-bassin n° 14268 (Betioky Atsimo),87747.478,mesurée,24.317,0.01,faible,34.532,0.009,faible,stable
+14269,sous-bassin n° 14269 (Vangaindrano),65653.202,partielle,207.978,0.002,faible,207.978,0.002,faible,stable
+14276,sous-bassin n° 14276 (Toliary-II),244.275,partielle,21.284,0.0,faible,21.284,0.0,faible,stable
+14278,sous-bassin n° 14278 (Toliary-II),775.441,non mesurée,21.284,0.022,faible,21.284,0.022,faible,stable
+14292,sous-bassin n° 14292 (Vangaindrano),6720.297,partielle,251.274,0.006,faible,251.274,0.006,faible,stable
+14294,sous-bassin n° 14294 (Toliary-II),1015.144,non mesurée,21.284,0.053,faible,21.284,0.053,faible,stable
+14303,sous-bassin n° 14303 (Betioky Atsimo),40174.494,mesurée,45.279,0.005,faible,45.279,0.005,faible,stable
+14310,sous-bassin n° 14310 (Betroka),32064.218,mesurée,47.423,0.002,faible,53.524,0.002,faible,stable
+14315,sous-bassin n° 14315 (Betroka),8900.222,partielle,91.141,0.0,faible,91.141,0.0,faible,stable
+14323,sous-bassin n° 14323 (Toliary-II),1346.199,non mesurée,21.284,0.011,faible,21.284,0.011,faible,stable
+14328,sous-bassin n° 14328 (Vangaindrano),2031.49,partielle,251.274,0.003,faible,251.274,0.003,faible,stable
+14331,sous-bassin n° 14331 (Vangaindrano),3831.046,partielle,251.274,0.002,faible,251.274,0.002,faible,stable
+14336,sous-bassin n° 14336 (Vangaindrano),56112.918,partielle,251.274,0.001,faible,251.274,0.001,faible,stable
+14344,sous-bassin n° 14344 (Befotaka),10503.787,non mesurée,180.131,0.0,faible,180.131,0.0,faible,stable
+14355,sous-bassin n° 14355 (Vangaindrano),1178.667,partielle,251.274,0.002,faible,251.274,0.002,faible,stable
+14377,sous-bassin n° 14377 (Toliary-II),817.924,non mesurée,21.284,0.005,faible,21.284,0.005,faible,stable
+14393,sous-bassin n° 14393 (Toliary-II),2875.774,partielle,21.284,0.004,faible,21.284,0.004,faible,stable
+14395,sous-bassin n° 14395 (Befotaka),12834.186,non mesurée,179.84,0.001,faible,179.84,0.001,faible,stable
+14396,sous-bassin n° 14396 (Vangaindrano),27187.39,partielle,251.274,0.002,faible,251.274,0.002,faible,stable
+14411,sous-bassin n° 14411 (Toliary-II),169.439,partielle,21.284,0.021,faible,21.284,0.021,faible,stable
+14443,sous-bassin n° 14443 (Vangaindrano),518.279,partielle,251.274,0.0,faible,251.274,0.0,faible,stable
+14473,sous-bassin n° 14473 (Vangaindrano),2741.17,non mesurée,251.274,0.001,faible,251.274,0.001,faible,stable
+14481,sous-bassin n° 14481 (Betioky Atsimo),21355.661,partielle,23.023,0.003,faible,23.023,0.003,faible,stable
+14493,sous-bassin n° 14493 (Toliary-II),4424.666,partielle,22.142,0.001,faible,22.142,0.001,faible,stable
+14494,sous-bassin n° 14494 (Befotaka),16099.524,non mesurée,276.754,0.0,faible,276.754,0.0,faible,stable
+14501,sous-bassin n° 14501 (Toliary-II),570.452,non mesurée,21.261,0.007,faible,21.261,0.007,faible,stable
+14541,sous-bassin n° 14541 (Vangaindrano),533.019,partielle,276.754,0.003,faible,276.754,0.003,faible,stable
+14546,sous-bassin n° 14546 (Toliary-II),1570.049,partielle,21.261,0.001,faible,21.261,0.001,faible,stable
+14547,sous-bassin n° 14547 (Vangaindrano),4797.948,partielle,276.754,0.0,faible,276.754,0.0,faible,stable
+14550,sous-bassin n° 14550 (Toliary-II),593.477,non mesurée,34.034,0.001,faible,34.034,0.001,faible,stable
+14570,sous-bassin n° 14570 (Toliary-II),1090.499,non mesurée,21.261,0.018,faible,21.261,0.018,faible,stable
+14581,sous-bassin n° 14581 (Vangaindrano),778.048,partielle,276.754,0.0,faible,276.754,0.0,faible,stable
+14584,sous-bassin n° 14584 (Amboasary-Atsimo),22543.734,non mesurée,179.42,0.001,faible,179.42,0.001,faible,stable
+14604,sous-bassin n° 14604 (Amboasary-Atsimo),16888.344,partielle,91.701,0.001,faible,91.701,0.001,faible,stable
+14612,sous-bassin n° 14612 (Amboasary-Atsimo),22728.342,partielle,179.42,0.001,faible,179.42,0.001,faible,stable
+14615,sous-bassin n° 14615 (Taolagnaro),7915.0,partielle,193.339,0.0,faible,193.339,0.0,faible,stable
+14620,sous-bassin n° 14620 (Amboasary-Atsimo),610.324,partielle,89.316,0.001,faible,89.316,0.001,faible,stable
+14637,sous-bassin n° 14637 (Bekily),113138.349,mesurée,59.345,0.005,faible,59.345,0.005,faible,stable
+14642,sous-bassin n° 14642 (Ampanihy Ouest),4500.223,non mesurée,34.034,0.01,faible,34.034,0.01,faible,stable
+14646,sous-bassin n° 14646 (Amboasary-Atsimo),17721.169,mesurée,91.642,0.002,faible,91.642,0.002,faible,stable
+14665,sous-bassin n° 14665 (Taolagnaro),84886.829,non mesurée,259.303,0.001,faible,259.303,0.001,faible,stable
+14678,sous-bassin n° 14678 (Taolagnaro),6072.31,partielle,193.339,0.002,faible,193.339,0.002,faible,stable
+14687,sous-bassin n° 14687 (Taolagnaro),2772.679,partielle,193.339,0.001,faible,193.339,0.001,faible,stable
+14695,sous-bassin n° 14695 (Ampanihy Ouest),93029.624,mesurée,31.026,0.01,faible,37.369,0.009,faible,stable
+14716,sous-bassin n° 14716 (Amboasary-Atsimo),40904.887,mesurée,77.211,0.003,faible,77.211,0.003,faible,stable
+14726,sous-bassin n° 14726 (Taolagnaro),854.776,partielle,193.339,0.001,faible,193.339,0.001,faible,stable
+14732,sous-bassin n° 14732 (Bekily),95410.779,mesurée,70.873,0.005,faible,70.873,0.005,faible,stable
+14736,sous-bassin n° 14736 (Ampanihy Ouest),8016.255,non mesurée,34.034,0.013,faible,34.034,0.013,faible,stable
+14773,sous-bassin n° 14773 (Amboasary-Atsimo),8840.291,partielle,91.642,0.001,faible,91.642,0.001,faible,stable
+14778,sous-bassin n° 14778 (Taolagnaro),1554.577,partielle,193.339,0.001,faible,193.339,0.001,faible,stable
+14800,sous-bassin n° 14800 (Ampanihy Ouest),2787.181,partielle,34.034,0.006,faible,34.034,0.006,faible,stable
+14813,sous-bassin n° 14813 (Ampanihy Ouest),26399.068,mesurée,31.026,0.007,faible,34.164,0.007,faible,stable
+14821,sous-bassin n° 14821 (Ampanihy Ouest),115240.04,mesurée,59.331,0.004,faible,59.331,0.004,faible,stable
+14829,sous-bassin n° 14829 (Taolagnaro),1969.658,partielle,226.321,0.001,faible,226.321,0.001,faible,stable
+14841,sous-bassin n° 14841 (Ampanihy Ouest),1997.603,non mesurée,34.034,0.007,faible,34.034,0.007,faible,stable
+14842,sous-bassin n° 14842 (Ampanihy Ouest),3448.238,partielle,36.947,0.002,faible,36.947,0.002,faible,stable
+14845,sous-bassin n° 14845 (Amboasary-Atsimo),11018.144,partielle,195.159,0.001,faible,195.159,0.001,faible,stable
+14853,sous-bassin n° 14853 (Amboasary-Atsimo),15509.955,partielle,84.426,0.002,faible,84.426,0.002,faible,stable
+14863,sous-bassin n° 14863 (Ampanihy Ouest),270.879,non mesurée,34.034,0.16,modéré,34.034,0.16,modéré,stable
+14872,sous-bassin n° 14872 (Bekily),60497.204,mesurée,70.855,0.006,faible,70.855,0.005,faible,stable
+14881,sous-bassin n° 14881 (Ampanihy Ouest),341.853,partielle,67.18,0.001,faible,67.18,0.001,faible,stable
+14882,sous-bassin n° 14882 (Taolagnaro),927.345,partielle,259.303,0.0,faible,259.303,0.0,faible,stable
+14893,sous-bassin n° 14893 (Ampanihy Ouest),7334.675,partielle,50.607,0.0,faible,50.607,0.0,faible,stable
+14919,sous-bassin n° 14919 (Antanimora Atsimo),23155.704,partielle,77.089,0.002,faible,77.089,0.002,faible,stable
+14920,sous-bassin n° 14920 (Taolagnaro),12626.572,partielle,259.303,0.001,faible,259.303,0.001,faible,stable
+14921,sous-bassin n° 14921 (Ampanihy Ouest),2126.376,non mesurée,67.18,0.01,faible,67.18,0.01,faible,stable
+14942,sous-bassin n° 14942 (Ampanihy Ouest),1808.716,partielle,67.18,0.028,faible,67.18,0.028,faible,stable
+14951,sous-bassin n° 14951 (Ampanihy Ouest),989.748,non mesurée,39.471,0.005,faible,39.471,0.005,faible,stable
+14958,sous-bassin n° 14958 (Bekily),60413.99,mesurée,32.927,0.006,faible,51.589,0.005,faible,stable
+14961,sous-bassin n° 14961 (Taolagnaro),18923.394,partielle,261.548,0.001,faible,261.548,0.001,faible,stable
+14979,sous-bassin n° 14979 (Antanimora Atsimo),38257.374,mesurée,47.104,0.002,faible,58.27,0.002,faible,stable
+14991,sous-bassin n° 14991 (Ampanihy Ouest),814.824,partielle,39.471,0.011,faible,39.471,0.011,faible,stable
+15000,sous-bassin n° 15000 (Bekily),38298.758,mesurée,47.104,0.006,faible,58.27,0.005,faible,stable
+15007,sous-bassin n° 15007 (Ampanihy Ouest),2298.166,mesurée,39.471,0.022,faible,39.471,0.022,faible,stable
+15010,sous-bassin n° 15010 (Taolagnaro),2676.83,partielle,261.548,0.002,faible,261.548,0.002,faible,stable
+15028,sous-bassin n° 15028 (Ampanihy Ouest),437.623,non mesurée,39.471,0.011,faible,39.471,0.011,faible,stable
+15036,sous-bassin n° 15036 (Ampanihy Ouest),27554.162,partielle,92.821,0.001,faible,92.821,0.001,faible,stable
+15040,sous-bassin n° 15040 (Ampanihy Ouest),763.709,non mesurée,39.471,0.01,faible,39.471,0.01,faible,stable
+15046,sous-bassin n° 15046 (Taolagnaro),1686.585,partielle,261.548,0.001,faible,261.548,0.001,faible,stable
+15049,sous-bassin n° 15049 (Ampanihy Ouest),231.081,partielle,39.471,0.01,faible,39.471,0.01,faible,stable
+15052,sous-bassin n° 15052 (Ampanihy Ouest),1211.735,partielle,53.326,0.0,faible,53.325,0.0,faible,stable
+15057,sous-bassin n° 15057 (Taolagnaro),17461.619,partielle,261.759,0.001,faible,261.759,0.001,faible,stable
+15063,sous-bassin n° 15063 (Taolagnaro),1225.118,non mesurée,261.548,0.002,faible,261.548,0.002,faible,stable
+15064,sous-bassin n° 15064 (Ampanihy Ouest),194.822,non mesurée,39.471,0.003,faible,39.471,0.003,faible,stable
+15065,sous-bassin n° 15065 (Ambovombe-Androy),20717.18,partielle,92.36,0.001,faible,92.36,0.001,faible,stable
+15076,sous-bassin n° 15076 (Ampanihy Ouest),429.8,non mesurée,39.471,0.007,faible,39.471,0.007,faible,stable
+15080,sous-bassin n° 15080 (Ampanihy Ouest),216.894,partielle,39.471,0.009,faible,39.471,0.009,faible,stable
+15085,sous-bassin n° 15085 (Taolagnaro),2684.868,partielle,261.548,0.001,faible,261.548,0.001,faible,stable
+15108,sous-bassin n° 15108 (Ampanihy Ouest),74344.533,mesurée,109.443,0.003,faible,109.443,0.003,faible,stable
+15110,sous-bassin n° 15110 (Taolagnaro),753.198,partielle,261.548,0.0,faible,261.548,0.0,faible,stable
+15126,sous-bassin n° 15126 (Ambovombe-Androy),128050.814,mesurée,70.552,0.004,faible,70.552,0.004,faible,stable
+15130,sous-bassin n° 15130 (Taolagnaro),4773.189,partielle,261.548,0.002,faible,261.548,0.002,faible,stable
+15133,sous-bassin n° 15133 (Taolagnaro),1023.448,partielle,261.548,0.001,faible,261.548,0.001,faible,stable
+15166,sous-bassin n° 15166 (Taolagnaro),14554.203,partielle,261.548,0.04,faible,261.548,0.04,faible,stable
+15170,sous-bassin n° 15170 (Ampanihy Ouest),1701.628,non mesurée,39.471,0.007,faible,39.471,0.007,faible,stable
+15171,sous-bassin n° 15171 (Ampanihy Ouest),1908.027,partielle,39.471,0.004,faible,39.471,0.004,faible,stable
+15176,sous-bassin n° 15176 (Amboasary-Atsimo),32612.044,mesurée,92.36,0.001,faible,92.36,0.001,faible,stable
+15177,sous-bassin n° 15177 (Taolagnaro),13415.813,partielle,261.548,0.003,faible,261.548,0.003,faible,stable
+15180,sous-bassin n° 15180 (Ampanihy Ouest),781.264,non mesurée,39.471,0.045,faible,39.471,0.045,faible,stable
+15182,sous-bassin n° 15182 (Taolagnaro),17103.699,partielle,261.548,0.148,modéré,261.548,0.148,modéré,stable
+15191,sous-bassin n° 15191 (Taolagnaro),10580.73,partielle,261.548,0.367,modéré,261.548,0.367,modéré,stable
+15193,sous-bassin n° 15193 (Taolagnaro),5048.51,partielle,261.548,0.34,modéré,261.548,0.34,modéré,stable
+15194,sous-bassin n° 15194 (Taolagnaro),4776.855,partielle,261.548,0.246,modéré,261.548,0.246,modéré,stable
+15199,sous-bassin n° 15199 (Ampanihy Ouest),8672.083,partielle,39.471,0.002,faible,39.471,0.002,faible,stable
+15201,sous-bassin n° 15201 (Ampanihy Ouest),16399.868,partielle,88.662,0.002,faible,88.662,0.002,faible,stable
+15202,sous-bassin n° 15202 (Taolagnaro),7155.49,partielle,261.548,0.107,modéré,261.548,0.107,modéré,stable
+15203,sous-bassin n° 15203 (Taolagnaro),34493.173,partielle,261.548,0.059,faible,261.548,0.059,faible,stable
+15208,sous-bassin n° 15208 (Taolagnaro),6548.797,partielle,261.548,0.161,modéré,261.548,0.161,modéré,stable
+15216,sous-bassin n° 15216 (Taolagnaro),88691.399,partielle,261.548,0.003,faible,261.548,0.003,faible,stable
+15218,sous-bassin n° 15218 (Taolagnaro),2222.414,partielle,184.058,0.016,faible,184.058,0.016,faible,stable
+15228,sous-bassin n° 15228 (Ampanihy Ouest),1045.962,non mesurée,39.471,0.009,faible,39.471,0.009,faible,stable
+15238,sous-bassin n° 15238 (Antanimora Atsimo),59196.815,mesurée,89.991,0.003,faible,89.991,0.003,faible,stable
+15242,sous-bassin n° 15242 (Ampanihy Ouest),3309.309,partielle,39.471,0.006,faible,39.471,0.006,faible,stable
+15262,sous-bassin n° 15262 (Ampanihy Ouest),1656.406,non mesurée,39.471,0.006,faible,39.471,0.006,faible,stable
+15285,sous-bassin n° 15285 (Ampanihy Ouest),353.18,non mesurée,39.471,0.004,faible,39.471,0.004,faible,stable
+15292,sous-bassin n° 15292 (Taolagnaro),1020.484,partielle,184.058,0.002,faible,184.058,0.002,faible,stable
+15324,sous-bassin n° 15324 (Ampanihy Ouest),856.244,non mesurée,39.471,0.004,faible,39.471,0.004,faible,stable
+15334,sous-bassin n° 15334 (Ampanihy Ouest),1262.873,partielle,39.471,0.012,faible,39.471,0.012,faible,stable
+15351,sous-bassin n° 15351 (Taolagnaro),1314.366,partielle,184.058,0.012,faible,184.058,0.012,faible,stable
+15355,sous-bassin n° 15355 (Taolagnaro),7342.461,partielle,184.058,0.006,faible,184.058,0.006,faible,stable
+15369,sous-bassin n° 15369 (Beloha),11163.536,partielle,33.137,0.004,faible,33.137,0.004,faible,stable
+15370,sous-bassin n° 15370 (Taolagnaro),475.929,partielle,184.058,0.006,faible,184.058,0.006,faible,stable
+15372,sous-bassin n° 15372 (Ampanihy Ouest),1950.122,partielle,39.961,0.015,faible,39.961,0.015,faible,stable
+15386,sous-bassin n° 15386 (Taolagnaro),1224.554,non mesurée,184.058,0.007,faible,184.058,0.007,faible,stable
+15394,sous-bassin n° 15394 (Taolagnaro),14310.637,partielle,184.058,0.003,faible,184.058,0.003,faible,stable
+15397,sous-bassin n° 15397 (Taolagnaro),1140.853,partielle,184.058,0.006,faible,184.058,0.006,faible,stable
+15401,sous-bassin n° 15401 (Ampanihy Ouest),3561.049,non mesurée,39.961,0.005,faible,39.961,0.005,faible,stable
+15406,sous-bassin n° 15406 (Taolagnaro),1005.628,partielle,184.058,0.005,faible,184.058,0.005,faible,stable
+15417,sous-bassin n° 15417 (Taolagnaro),23936.065,partielle,184.058,0.001,faible,184.058,0.001,faible,stable
+15419,sous-bassin n° 15419 (Amboasary-Atsimo),452.888,partielle,184.058,0.005,faible,184.058,0.005,faible,stable
+15428,sous-bassin n° 15428 (Ampanihy Ouest),9876.536,partielle,39.961,0.003,faible,39.961,0.003,faible,stable
+15432,sous-bassin n° 15432 (Amboasary-Atsimo),188.064,partielle,184.058,0.001,faible,184.058,0.001,faible,stable
+15452,sous-bassin n° 15452 (Amboasary-Atsimo),51150.147,partielle,70.552,0.005,faible,70.552,0.005,faible,stable
+15466,sous-bassin n° 15466 (Amboasary-Atsimo),573.639,partielle,70.552,0.003,faible,70.552,0.003,faible,stable
+15468,sous-bassin n° 15468 (Amboasary-Atsimo),188.711,partielle,70.552,0.015,faible,70.552,0.015,faible,stable
+15471,sous-bassin n° 15471 (Amboasary-Atsimo),244.83,partielle,70.552,0.004,faible,70.552,0.004,faible,stable
+15479,sous-bassin n° 15479 (Taolagnaro),937.311,partielle,184.058,0.004,faible,184.058,0.004,faible,stable
+15481,sous-bassin n° 15481 (Taolagnaro),2311.904,partielle,184.058,0.005,faible,184.058,0.005,faible,stable
+15482,sous-bassin n° 15482 (Taolagnaro),958.033,non mesurée,184.058,0.006,faible,184.058,0.006,faible,stable
+15483,sous-bassin n° 15483 (Taolagnaro),2310.714,partielle,184.058,0.012,faible,184.058,0.012,faible,stable
+15486,sous-bassin n° 15486 (Taolagnaro),1240.966,partielle,184.058,0.009,faible,184.058,0.009,faible,stable
+15495,sous-bassin n° 15495 (Amboasary-Atsimo),1615.576,partielle,70.552,0.011,faible,70.552,0.011,faible,stable
+15496,sous-bassin n° 15496 (Amboasary-Atsimo),439.636,partielle,70.552,0.007,faible,70.552,0.007,faible,stable
+15497,sous-bassin n° 15497 (Amboasary-Atsimo),295.261,partielle,70.552,0.008,faible,70.552,0.008,faible,stable
+15513,sous-bassin n° 15513 (Taolagnaro),1150.111,non mesurée,184.058,0.005,faible,184.058,0.005,faible,stable
+15522,sous-bassin n° 15522 (Amboasary-Atsimo),2167.405,partielle,70.552,0.012,faible,70.552,0.012,faible,stable
+15539,sous-bassin n° 15539 (Amboasary-Atsimo),2066.639,partielle,70.552,0.014,faible,70.552,0.014,faible,stable
+15550,sous-bassin n° 15550 (Ampanihy Ouest),11306.784,partielle,39.961,0.002,faible,39.961,0.002,faible,stable
+15553,sous-bassin n° 15553 (Ambovombe-Androy),1928.508,partielle,70.552,0.089,faible,70.552,0.089,faible,stable
+15554,sous-bassin n° 15554 (Amboasary-Atsimo),574.091,partielle,70.552,0.005,faible,70.552,0.005,faible,stable
+15567,sous-bassin n° 15567 (Ampanihy Ouest),1218.12,non mesurée,39.961,0.006,faible,39.961,0.006,faible,stable
+15568,sous-bassin n° 15568 (Ambovombe-Androy),3146.913,partielle,70.552,0.031,faible,70.552,0.031,faible,stable
+15577,sous-bassin n° 15577 (Ambovombe-Androy),1857.706,partielle,70.552,0.02,faible,70.552,0.02,faible,stable
+15588,sous-bassin n° 15588 (Ambovombe-Androy),2728.872,partielle,70.552,0.018,faible,70.552,0.018,faible,stable
+15597,sous-bassin n° 15597 (Ambovombe-Androy),611.515,partielle,70.552,0.009,faible,70.552,0.009,faible,stable
+15606,sous-bassin n° 15606 (Ampanihy Ouest),3037.708,non mesurée,39.961,0.005,faible,39.961,0.005,faible,stable
+15607,sous-bassin n° 15607 (Ambovombe-Androy),5628.957,partielle,70.552,0.023,faible,70.552,0.023,faible,stable
+15616,sous-bassin n° 15616 (Antanimora Atsimo),16367.969,partielle,55.002,0.002,faible,55.002,0.002,faible,stable
+15617,sous-bassin n° 15617 (Ambovombe-Androy),51.76,partielle,70.552,0.001,faible,70.552,0.001,faible,stable
+15623,sous-bassin n° 15623 (Ambovombe-Androy),535.373,partielle,70.552,0.006,faible,70.552,0.006,faible,stable
+15630,sous-bassin n° 15630 (Ambovombe-Androy),1625.358,partielle,70.552,0.006,faible,70.552,0.006,faible,stable
+15646,sous-bassin n° 15646 (Beloha),24725.832,partielle,55.002,0.002,faible,55.002,0.002,faible,stable
+15647,sous-bassin n° 15647 (Ambovombe-Androy),179.853,partielle,70.552,0.006,faible,70.552,0.006,faible,stable
+15655,sous-bassin n° 15655 (Ambovombe-Androy),339.431,partielle,70.552,0.007,faible,70.552,0.007,faible,stable
+15661,sous-bassin n° 15661 (Beloha),26618.173,partielle,53.86,0.007,faible,53.86,0.007,faible,stable
+15662,sous-bassin n° 15662 (Ambovombe-Androy),1464.309,partielle,70.552,0.008,faible,70.552,0.008,faible,stable
+15663,sous-bassin n° 15663 (Ambovombe-Androy),378.389,partielle,70.552,0.01,faible,70.552,0.01,faible,stable
+15678,sous-bassin n° 15678 (Ambovombe-Androy),1039.047,partielle,70.552,0.024,faible,70.552,0.024,faible,stable
+15700,sous-bassin n° 15700 (Ambovombe-Androy),1561.616,partielle,70.552,0.017,faible,70.552,0.017,faible,stable
+15709,sous-bassin n° 15709 (Ambovombe-Androy),1020.685,partielle,70.552,0.006,faible,70.552,0.006,faible,stable
+15718,sous-bassin n° 15718 (Beloha),9363.493,partielle,54.681,0.003,faible,54.681,0.003,faible,stable
+15727,sous-bassin n° 15727 (Ampanihy Ouest),3385.371,partielle,39.961,0.008,faible,39.961,0.008,faible,stable
+15730,sous-bassin n° 15730 (Ambovombe-Androy),2716.917,partielle,70.898,0.012,faible,70.898,0.012,faible,stable
+15741,sous-bassin n° 15741 (Ambovombe-Androy),472.323,partielle,70.552,0.011,faible,70.552,0.011,faible,stable
+15753,sous-bassin n° 15753 (Ambovombe-Androy),546.954,partielle,71.243,0.006,faible,71.243,0.006,faible,stable
+15763,sous-bassin n° 15763 (Beloha),3024.69,partielle,39.961,0.005,faible,39.961,0.005,faible,stable
+15764,sous-bassin n° 15764 (Beloha),4506.297,partielle,33.137,0.007,faible,33.137,0.007,faible,stable
+15767,sous-bassin n° 15767 (Ambovombe-Androy),1220.974,partielle,71.243,0.035,faible,71.243,0.035,faible,stable
+15778,sous-bassin n° 15778 (Ambovombe-Androy),3978.964,partielle,71.243,0.022,faible,71.243,0.022,faible,stable
+15785,sous-bassin n° 15785 (Beloha),1270.113,partielle,33.137,0.01,faible,33.137,0.01,faible,stable
+15789,sous-bassin n° 15789 (Ambovombe-Androy),1680.068,partielle,71.243,0.014,faible,71.243,0.014,faible,stable
+15807,sous-bassin n° 15807 (Ambovombe-Androy),911.299,partielle,71.243,0.02,faible,71.243,0.02,faible,stable
+15808,sous-bassin n° 15808 (Ambovombe-Androy),1609.008,partielle,71.243,0.024,faible,71.243,0.024,faible,stable
+15815,sous-bassin n° 15815 (Ambovombe-Androy),378.593,partielle,71.243,0.004,faible,71.243,0.004,faible,stable
+15823,sous-bassin n° 15823 (Ambovombe-Androy),1064.986,partielle,71.243,0.01,faible,71.243,0.01,faible,stable
+15831,sous-bassin n° 15831 (Ambovombe-Androy),1323.097,partielle,71.243,0.008,faible,71.243,0.008,faible,stable
+15837,sous-bassin n° 15837 (Ambovombe-Androy),346.294,partielle,71.243,0.024,faible,71.243,0.024,faible,stable
+15842,sous-bassin n° 15842 (Ambovombe-Androy),99395.526,partielle,71.243,0.008,faible,71.243,0.008,faible,stable
+15843,sous-bassin n° 15843 (Ambovombe-Androy),987.601,partielle,71.243,0.015,faible,71.243,0.015,faible,stable
+15848,sous-bassin n° 15848 (Ambovombe-Androy),1290.267,partielle,71.243,0.01,faible,71.243,0.01,faible,stable
+15859,sous-bassin n° 15859 (Beloha),24998.131,partielle,53.549,0.003,faible,53.55,0.003,faible,stable
+15860,sous-bassin n° 15860 (Ambovombe-Androy),1068.202,partielle,71.243,0.011,faible,71.243,0.011,faible,stable
+15867,sous-bassin n° 15867 (Ambovombe-Androy),1239.357,partielle,71.243,0.01,faible,71.243,0.01,faible,stable
+15873,sous-bassin n° 15873 (Ambovombe-Androy),305.361,partielle,92.215,0.006,faible,92.215,0.006,faible,stable
+15884,sous-bassin n° 15884 (Tsihombe),73936.255,partielle,92.215,0.004,faible,92.215,0.004,faible,stable
+15885,sous-bassin n° 15885 (Ambovombe-Androy),1257.304,partielle,92.215,0.007,faible,92.215,0.007,faible,stable
+15890,sous-bassin n° 15890 (Ambovombe-Androy),380.24,partielle,92.215,0.017,faible,92.215,0.017,faible,stable
+15896,sous-bassin n° 15896 (Ambovombe-Androy),296.08,partielle,92.215,0.003,faible,92.215,0.003,faible,stable
+15901,sous-bassin n° 15901 (Ambovombe-Androy),861.619,partielle,92.215,0.008,faible,92.215,0.008,faible,stable
+15905,sous-bassin n° 15905 (Beloha),1237.688,partielle,53.239,0.007,faible,53.239,0.007,faible,stable
+15906,sous-bassin n° 15906 (Ambovombe-Androy),1511.578,partielle,92.215,0.009,faible,92.215,0.009,faible,stable
+15910,sous-bassin n° 15910 (Beloha),5139.87,partielle,53.239,0.003,faible,53.239,0.003,faible,stable
+15916,sous-bassin n° 15916 (Tsihombe),1158.978,partielle,92.215,0.008,faible,92.215,0.008,faible,stable
+15921,sous-bassin n° 15921 (Tsihombe),278.498,partielle,92.215,0.002,faible,92.215,0.002,faible,stable
+15926,sous-bassin n° 15926 (Tsihombe),596.186,partielle,92.215,0.061,faible,92.215,0.061,faible,stable
+15930,sous-bassin n° 15930 (Tsihombe),521.104,partielle,92.215,0.016,faible,92.215,0.016,faible,stable
+15935,sous-bassin n° 15935 (Tsihombe),706.114,partielle,92.215,0.008,faible,92.215,0.008,faible,stable
+15939,sous-bassin n° 15939 (Tsihombe),768.717,partielle,92.215,0.006,faible,92.215,0.006,faible,stable
+15955,sous-bassin n° 15955 (Beloha),1203.915,partielle,53.239,0.011,faible,53.239,0.011,faible,stable
+15956,sous-bassin n° 15956 (Tsihombe),523.18,partielle,92.215,0.006,faible,92.215,0.006,faible,stable
+15961,sous-bassin n° 15961 (Tsihombe),10885.555,partielle,92.215,0.006,faible,92.215,0.006,faible,stable
+15972,sous-bassin n° 15972 (Beloha),1438.658,partielle,53.239,0.012,faible,53.239,0.012,faible,stable
+15987,sous-bassin n° 15987 (Beloha),2233.253,partielle,53.239,0.006,faible,53.239,0.006,faible,stable
+15989,sous-bassin n° 15989 (Tsihombe),542.43,partielle,92.215,0.004,faible,92.215,0.004,faible,stable
+16004,sous-bassin n° 16004 (Beloha),1096.01,partielle,53.239,0.007,faible,53.239,0.007,faible,stable
+16006,sous-bassin n° 16006 (Tsihombe),2525.174,partielle,92.215,0.007,faible,92.215,0.007,faible,stable
+16018,sous-bassin n° 16018 (Beloha),3599.066,partielle,53.239,0.012,faible,53.239,0.012,faible,stable
+16027,sous-bassin n° 16027 (Tsihombe),1229.56,partielle,92.215,0.006,faible,92.215,0.006,faible,stable
+16031,sous-bassin n° 16031 (Tsihombe),839.97,partielle,92.215,0.013,faible,92.215,0.013,faible,stable
+16041,sous-bassin n° 16041 (Tsihombe),2675.572,partielle,92.215,0.008,faible,92.215,0.008,faible,stable
+16047,sous-bassin n° 16047 (Tsihombe),1542.202,partielle,92.215,0.01,faible,92.215,0.01,faible,stable
+16051,sous-bassin n° 16051 (Tsihombe),1165.171,partielle,54.681,0.007,faible,54.681,0.007,faible,stable
+16052,sous-bassin n° 16052 (Tsihombe),846.522,partielle,92.215,0.01,faible,92.215,0.01,faible,stable
+16055,sous-bassin n° 16055 (Tsihombe),3233.048,partielle,92.215,0.012,faible,92.215,0.012,faible,stable
+16061,sous-bassin n° 16061 (Tsihombe),1360.749,partielle,53.96,0.002,faible,53.96,0.002,faible,stable
+16062,sous-bassin n° 16062 (Tsihombe),1063.738,partielle,92.215,0.016,faible,92.215,0.016,faible,stable
+16066,sous-bassin n° 16066 (Tsihombe),706.295,partielle,92.215,0.009,faible,92.215,0.009,faible,stable
+16067,sous-bassin n° 16067 (Tsihombe),3711.291,partielle,92.215,0.013,faible,92.215,0.013,faible,stable
+16081,sous-bassin n° 16081 (Tsihombe),2372.799,partielle,92.215,0.013,faible,92.215,0.013,faible,stable
+16087,sous-bassin n° 16087 (Tsihombe),16650.107,partielle,54.681,0.003,faible,54.681,0.003,faible,stable
+16105,sous-bassin n° 16105 (Tsihombe),3317.899,partielle,54.681,0.007,faible,54.681,0.007,faible,stable
+16108,sous-bassin n° 16108 (Tsihombe),4314.576,partielle,73.448,0.009,faible,73.448,0.009,faible,stable
+16113,sous-bassin n° 16113 (Tsihombe),2339.857,partielle,92.215,0.01,faible,92.215,0.01,faible,stable
+16122,sous-bassin n° 16122 (Tsihombe),1207.714,partielle,54.681,0.006,faible,54.681,0.006,faible,stable
+16127,sous-bassin n° 16127 (Tsihombe),1143.292,partielle,54.681,0.005,faible,54.681,0.005,faible,stable
+16139,sous-bassin n° 16139 (Tsihombe),512.227,partielle,54.681,0.002,faible,54.681,0.002,faible,stable

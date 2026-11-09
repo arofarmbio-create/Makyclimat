@@ -41,6 +41,15 @@ def basin_balance(prelev_mm, recharge_mm, area_km2) -> float:
     return float(np.sum(p[ok] * a[ok]) / den) if den > 0 else float("nan")
 
 
+def t2c_at(lon, lat) -> np.ndarray:
+    """Recharge corrigée T2c de la maille la plus proche (même rattachement que nappes_ressource.py)."""
+    from sklearn.neighbors import BallTree
+    rt = pd.read_csv(ROOT / "inputs" / "hydrogeologie" / "recharge_t2c.csv")
+    j = BallTree(np.radians(np.c_[rt.lat, rt.lon]), metric="haversine").query(
+        np.radians(np.c_[np.asarray(lat), np.asarray(lon)]), k=1, return_distance=False)[:, 0]
+    return rt.T2c_mmpa.to_numpy()[j]
+
+
 def pivot(path, inds) -> pd.DataFrame:
     d = pd.read_csv(path, dtype={"pcode": str})
     d = d[d.indicateur.isin(inds)]
@@ -118,6 +127,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
     ap.add_argument("--niveau", choices=["bassin", "sous-bassin"], default="bassin")
+    ap.add_argument("--recharge", choices=["t2", "t2c"], default="t2",
+                    help="t2c : recharge corrigée (validation/controle_recharge.md), pour la fourchette T2 / T2c")
     args = ap.parse_args()
     cdir = country_data_dir(args.country)
     key = "basin" if args.niveau == "bassin" else "subbasin"
@@ -135,6 +146,8 @@ def main() -> None:
     fk = fk.rename(columns={"niveau_statique_m": "niveau_m", "niveau_statique_erreur_attendue_m": "erreur_m",
                             "niveau_statique_extrapolation": "extrapolation", "recharge_mm_an": "r_mm", "stock_mm": "v_mm",
                             "renouvellement_ans": "tau_ans"})
+    if args.recharge == "t2c":
+        fk["r_mm"] = t2c_at(fk.lon, fk.lat)
     import etude_seam as S
     fac, _ = NR.commune_factor(units, S.load_communes(cdir / "seam_raw"))
     pop_seam = fk["pop"] * fk.adm3.map(fac).fillna(1.0)
@@ -150,6 +163,11 @@ def main() -> None:
         dist = fk.groupby("basin").adm2.agg(lambda s: s.mode().iloc[0])
         names = {int(sb): f"sous-bassin n° {sb} ({dn.get(d, d)})" for sb, d in dist.items()}
     t = aggregate(fk, wb, names)
+    if args.recharge == "t2c":
+        sfx = "bassins" if key == "basin" else "sousbassins"
+        t.round(3).to_csv(cdir / "external" / f"nappes_{sfx}_t2c.csv", index=False)
+        print(f"Atlas T2c : {len(t)} unités ; bilan élevé {int((t.classe_bilan == 'élevé').sum())}")
+        return
     if key == "basin":
         (ROOT / "validation" / "atlas_bassins.md").write_text(report(t), encoding="utf-8")
         t.round(3).to_csv(cdir / "external" / "nappes_bassins.csv", index=False)

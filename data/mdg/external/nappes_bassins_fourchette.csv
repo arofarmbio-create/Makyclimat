@@ -1,0 +1,109 @@
+bassin,nom,population,fiabilite,recharge_mm,bilan,classe_bilan,recharge_mm_t2c,bilan_t2c,classe_bilan_t2c,statut
+1,Bassin de Boanamary,4780950.65,partielle,178.599,0.005,faible,178.599,0.004,faible,stable
+2,Bassin de Antongo Vaovao,2051286.047,partielle,70.155,0.004,faible,70.155,0.004,faible,stable
+3,Bassin de Belo Sur Tsiribihina,3361215.018,partielle,102.1,0.006,faible,102.1,0.005,faible,stable
+4,Bassin de Saint Augustin,742922.288,mesurée,32.553,0.002,faible,37.911,0.002,faible,stable
+5,Bassin de Mahadrodroka,911423.205,partielle,220.551,0.001,faible,220.551,0.001,faible,stable
+6,Bassin de Matsakabanja,249421.6,partielle,33.43,0.001,faible,68.937,0.001,faible,stable
+7,Bassin de Ambodiharina,1537418.209,non mesurée,207.184,0.002,faible,207.184,0.002,faible,stable
+8,Bassin de Vangaindrano,461520.034,partielle,180.131,0.001,faible,180.131,0.001,faible,stable
+9,Bassin de Berano,468170.072,mesurée,77.211,0.001,faible,77.211,0.001,faible,stable
+10,Bassin de Aboalimena,256615.584,partielle,33.789,0.002,faible,62.423,0.002,faible,stable
+11,Bassin de Ampasina Maningory,1065939.004,partielle,243.395,0.002,faible,243.395,0.002,faible,stable
+12,Bassin de Analalava,489205.783,partielle,181.542,0.001,faible,181.542,0.001,faible,stable
+13,Bassin de Marolinta,444630.165,mesurée,70.15,0.004,faible,70.15,0.004,faible,stable
+14,Bassin de Besalampy,48080.299,partielle,69.243,0.001,faible,69.243,0.0,faible,stable
+15,Bassin de Andranovao,48325.423,partielle,33.125,0.001,faible,57.553,0.001,faible,stable
+16,Bassin de Anketa,161297.314,partielle,20.471,0.006,faible,20.471,0.005,faible,stable
+17,Bassin de Andovoranto,307074.569,non mesurée,307.893,0.001,faible,307.893,0.001,faible,stable
+18,Bassin de Mananjary,403613.259,partielle,311.496,0.001,faible,311.496,0.001,faible,stable
+19,Bassin de Morondava,101329.117,mesurée,30.845,0.004,faible,34.24,0.002,faible,stable
+20,Bassin de Androka,270894.976,mesurée,51.562,0.004,faible,51.562,0.004,faible,stable
+21,Bassin de Antaritarika,358788.377,mesurée,71.243,0.004,faible,71.243,0.004,faible,stable
+22,Bassin de Maroantsetra,99699.767,non mesurée,257.461,0.0,faible,257.461,0.0,faible,stable
+23,Bassin de Antsaravibe,150687.65,partielle,71.575,0.001,faible,82.671,0.001,faible,stable
+24,Bassin de Bemanevika,210225.111,partielle,342.048,0.001,faible,342.048,0.001,faible,stable
+25,Bassin de Mahajamba Usine,117703.026,partielle,62.177,0.002,faible,88.282,0.001,faible,stable
+26,Bassin de Onjatsy,450761.557,partielle,260.636,0.002,faible,260.636,0.002,faible,stable
+27,Bassin de Belo Sur Mer,35553.453,partielle,21.924,0.002,faible,36.754,0.001,faible,stable
+28,Bassin de Soahany,32305.215,partielle,33.37,0.001,faible,52.273,0.001,faible,stable
+29,Bassin de Bemokotra Sud,29812.22,partielle,21.36,0.001,faible,55.036,0.001,faible,stable
+30,Bassin de Farafangana,361512.194,mesurée,206.564,0.003,faible,206.564,0.003,faible,stable
+31,Bassin de Antanifotsy,88366.707,partielle,305.708,0.0,faible,305.708,0.0,faible,stable
+32,Bassin de Efoetse,27943.853,partielle,23.023,0.002,faible,23.023,0.002,faible,stable
+33,Bassin de Antalaha Ambonivohitra,111430.027,non mesurée,319.442,0.001,faible,319.442,0.001,faible,stable
+34,Bassin de Amboditandroroho,95208.095,non mesurée,293.929,0.001,faible,293.929,0.001,faible,stable
+35,Bassin de Cu Morombe,79908.623,mesurée,9.335,0.013,faible,9.335,0.013,faible,stable
+36,Bassin de Ambohimena,136209.305,partielle,307.584,0.001,faible,212.52,0.001,faible,stable
+37,Bassin de Vohimasina Nord,255062.702,partielle,267.218,0.002,faible,267.218,0.002,faible,stable
+38,Bassin de Mananara Avaratra,111913.61,non mesurée,312.984,0.001,faible,312.984,0.001,faible,stable
+39,Bassin de Ampasimbe Onibe,103607.474,non mesurée,294.342,0.001,faible,294.342,0.001,faible,stable
+40,Bassin de Soalala,27604.598,partielle,42.52,0.002,faible,65.583,0.001,faible,stable
+41,Bassin de Farahalana,255714.667,partielle,332.425,0.002,faible,332.425,0.002,faible,stable
+42,Bassin de Manantenina,90959.139,non mesurée,259.303,0.001,faible,259.303,0.001,faible,stable
+43,Bassin de Marofoty,68471.341,mesurée,22.863,0.014,faible,22.863,0.014,faible,stable
+44,Bassin de Namorona,143654.124,non mesurée,312.613,0.001,faible,312.613,0.001,faible,stable
+45,Bassin de Befandefa,24699.795,partielle,9.318,0.006,faible,9.318,0.006,faible,stable
+46,Bassin de Fanambana,47491.726,partielle,260.254,0.0,faible,260.254,0.0,faible,stable
+47,Bassin de Maintinandry,102979.045,partielle,310.436,0.001,faible,310.436,0.001,faible,stable
+48,Bassin de Fanivelona,126126.71,non mesurée,257.42,0.002,faible,257.42,0.002,faible,stable
+49,Bassin de Masomeloka,155249.54,non mesurée,338.702,0.002,faible,338.702,0.002,faible,stable
+50,Bassin de Rantabe,26918.201,non mesurée,246.859,0.0,faible,246.859,0.0,faible,stable
+51,Bassin de Itampolo,10782.913,partielle,36.947,0.001,faible,36.947,0.001,faible,stable
+52,Bassin de Andranopasy,31655.702,partielle,25.15,0.005,faible,25.15,0.005,faible,stable
+53,Bassin de Ambolobozo,27824.867,partielle,196.342,0.0,faible,196.342,0.0,faible,stable
+54,Bassin de Soanierana Ivongo,43210.318,partielle,311.153,0.0,faible,311.153,0.0,faible,stable
+55,Bassin de Betanatanana,9098.859,partielle,9.627,0.001,faible,9.627,0.001,faible,stable
+56,Bassin de Manambondro,83300.308,partielle,251.274,0.001,faible,251.274,0.001,faible,stable
+57,Bassin de Ampisikinana,15949.992,partielle,118.954,0.001,faible,118.954,0.001,faible,stable
+58,Bassin de Ambohipaky,11187.402,partielle,78.197,0.001,faible,78.197,0.0,faible,stable
+59,Bassin de Ambohitsara Est,81566.772,partielle,257.732,0.001,faible,257.732,0.001,faible,stable
+60,Bassin de Anjiabe Ambony,43215.459,partielle,204.936,0.001,faible,204.936,0.001,faible,stable
+61,Bassin de Niarovana Caroline,76892.068,non mesurée,312.268,0.001,faible,312.268,0.001,faible,stable
+62,Bassin de Ambohipaky,6361.659,partielle,29.214,0.001,faible,60.943,0.001,faible,stable
+63,Bassin de Andranopasy,28921.496,partielle,17.394,0.011,faible,30.946,0.008,faible,stable
+64,Bassin de Nosibe,15774.389,non mesurée,204.045,0.0,faible,204.045,0.0,faible,stable
+65,Bassin de Ankarongana,44452.118,non mesurée,182.606,0.001,faible,182.606,0.001,faible,stable
+66,Bassin de Antanambe,26057.089,partielle,312.984,0.0,faible,312.984,0.0,faible,stable
+67,Bassin de Sandravinany,20897.471,partielle,276.754,0.0,faible,276.754,0.0,faible,stable
+68,Bassin de Maintirano,13464.178,non mesurée,9.627,0.004,faible,9.627,0.002,faible,stable
+69,Bassin de Belo Sur Mer,6190.561,partielle,13.884,0.003,faible,30.946,0.002,faible,stable
+70,Bassin de Mananara Avaratra,38293.415,non mesurée,313.012,0.001,faible,313.012,0.001,faible,stable
+71,Bassin de Bemanonga,15608.9,partielle,30.845,0.003,faible,34.24,0.002,faible,stable
+72,Bassin de Masianaka,65653.202,partielle,207.978,0.002,faible,207.978,0.002,faible,stable
+73,Bassin de Maintirano,10639.339,partielle,33.125,0.002,faible,55.618,0.001,faible,stable
+74,Bassin de Tambohorano,13683.342,partielle,9.639,0.009,faible,9.639,0.009,faible,stable
+75,Bassin de Mahajamba Usine,33930.505,partielle,41.926,0.005,faible,71.172,0.003,faible,stable
+76,Bassin de Tanambao Daoud,77106.087,partielle,349.671,0.001,faible,349.671,0.001,faible,stable
+77,Bassin de Tranovaho,24998.131,partielle,53.549,0.003,faible,53.55,0.003,faible,stable
+78,Bassin de Ampasimbe Manantsatrana,56228.129,partielle,311.153,0.001,faible,311.153,0.001,faible,stable
+79,Bassin de Farafangana,110854.281,partielle,245.531,0.003,faible,245.531,0.003,faible,stable
+80,Bassin de Andranofotsy,60389.361,non mesurée,248.421,0.002,faible,248.421,0.002,faible,stable
+81,Bassin de Vohemar,23031.844,partielle,258.452,0.001,faible,258.452,0.001,faible,stable
+82,Bassin de Mahadrodroka,20051.49,partielle,62.489,0.001,faible,72.595,0.001,faible,stable
+83,Bassin de Ankirihiry,142080.407,non mesurée,291.201,0.003,faible,291.201,0.003,faible,stable
+84,Bassin de Boanamary,39311.763,partielle,28.389,0.01,faible,71.172,0.004,faible,stable
+85,Bassin de Betsako,22941.835,partielle,6.754,0.006,faible,66.914,0.002,faible,stable
+86,Bassin de Soanierana,88691.399,partielle,261.548,0.003,faible,261.548,0.003,faible,stable
+87,Bassin de Mahabo Mananivo,106061.452,partielle,212.692,0.004,faible,212.692,0.004,faible,stable
+88,Bassin de Masoarivo,14553.917,partielle,57.523,0.002,faible,57.523,0.002,faible,stable
+89,Bassin de Belo Sur Mer,5292.761,partielle,17.328,0.002,faible,32.017,0.001,faible,stable
+90,Bassin de Ambalabe,9855.528,partielle,322.299,0.0,faible,322.299,0.0,faible,stable
+91,Bassin de Marofandilia,37457.794,partielle,11.477,0.018,faible,39.835,0.007,faible,stable
+92,Bassin de Boanamary,18824.903,partielle,27.959,0.004,faible,68.937,0.002,faible,stable
+93,Bassin de Fanambana,79197.719,partielle,339.808,0.002,faible,339.808,0.002,faible,stable
+94,Bassin de Niarovana Caroline,34080.491,partielle,312.268,0.001,faible,312.268,0.001,faible,stable
+95,Bassin de Ampisikinana,8805.863,partielle,71.344,0.001,faible,83.909,0.001,faible,stable
+96,Bassin de Andranopasy,1937.899,partielle,6.183,0.008,faible,30.946,0.002,faible,stable
+97,Bassin de Anosiala,85691.826,partielle,390.878,0.002,faible,390.878,0.002,faible,stable
+98,Bassin de Belo Sur Mer,2116.003,partielle,16.033,0.003,faible,16.033,0.003,faible,stable
+99,Bassin de Bebaboky Sud,3183.028,non mesurée,28.51,0.002,faible,55.967,0.001,faible,stable
+100,Bassin de Tanandava Sud,23936.065,partielle,184.058,0.001,faible,184.058,0.001,faible,stable
+101,Bassin de Betanty (Faux Cap),16650.107,partielle,54.681,0.003,faible,54.681,0.003,faible,stable
+102,Bassin de Mahadrodroka,8161.143,partielle,141.53,0.001,faible,141.53,0.001,faible,stable
+103,Bassin de Antsakoamalinika,12400.02,partielle,14.624,0.012,faible,14.624,0.007,faible,stable
+104,Bassin de Anandrivola,8661.182,non mesurée,246.719,0.0,faible,246.719,0.0,faible,stable
+105,Bassin de Ankasakasa Tsibiray,2925.963,non mesurée,28.925,0.002,faible,58.03,0.001,faible,stable
+106,Bassin de Ankofabe,9676.997,non mesurée,246.859,0.001,faible,246.859,0.001,faible,stable
+107,Bassin de Mahanoro,44089.459,partielle,313.425,0.001,faible,313.425,0.001,faible,stable
+108,Bassin de Ankisatra,3622.787,non mesurée,30.174,0.002,faible,31.814,0.002,faible,stable

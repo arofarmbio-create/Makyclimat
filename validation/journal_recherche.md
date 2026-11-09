@@ -984,3 +984,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   et les sous-bassins dont la classe change sont marqués « incertains ». Piste ouverte pour la thèse : une
   correction propre à Madagascar, appuyée sur les mesures locales (fluctuation de nappe, puits karstiques), avec une
   validation croisée par site.
+
+### Atlas avec la fourchette de recharge T2 / T2c (`validation/atlas_fourchette_recharge.md`)
+- ✅ Décision appliquée telle que fixée avant le calcul (protocole du contrôle de recharge, section 5) : T2 reste la
+  valeur centrale ; unité « incertaine » si sa classe de bilan change avec T2c. L'atlas T2 se reproduit à l'identique.
+- 📊 Grands bassins : 108 sur 108 restent en bilan faible avec les deux recharges.
+- 📊 Sous-bassins : **4 incertains sur 1 420**. Sur les 36 en bilan élevé, 33 le restent avec T2c ; 3 passent en
+  modéré, tous à Mahajanga I (n° 7346, 7218, 7235). Un sous-bassin passe de faible à modéré.
+- 📊 Mahajanga I : recharge 7 → 67 mm/an, bilan divisé par 10 (9,7 → 1,0 au plus fort), mais 8 sous-bassins restent
+  au-dessus du seuil « élevé » : la pression de Mahajanga résiste à la correction.
+- ❌ **« Stable » ne veut pas dire « robuste »** : à Toliara, Morombe, Maintirano et Morondava, T2c = T2 (8 à 31 mm/an,
+  dans les bornes africaines du non consolidé aride). Leur classe ne change pas parce que la correction ne les touche
+  pas, pas parce que leur recharge est confirmée. Toliara reste suspecte (puits karstiques : 80 à 195 mm/an).
+- 📌 Suite : piste 2, correction de la recharge par les mesures malgaches (protocole à fixer avant calcul).
