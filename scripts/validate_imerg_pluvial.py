@@ -52,14 +52,21 @@ def load(country):
     th = pd.read_csv(country_data_dir(country) / "flood_thresholds.csv", dtype={"pcode": str})
     units = read_units(country)
     lv = units[(units.level == 4) & units.adm3.isin(set(th.pcode))]
-    z0 = np.load(files[0])
-    iy = np.abs(lv.lat.to_numpy()[:, None] - z0["lat"][None]).argmin(1)
-    ix = np.abs(lv.lon.to_numpy()[:, None] - z0["lon"][None]).argmin(1)
-    cells = sorted(set(zip(iy, ix)))
+    zs = [np.load(f) for f in files]
+    # Les saisons n'ont pas toutes la même emprise (périmètre élargi puis réduit) : on garde la zone commune à toutes et on
+    # retrouve chaque maille par ses coordonnées dans chaque fichier (correction du 09/11/2026).
+    la0, la1 = max(z["lat"].min() for z in zs) - 0.05, min(z["lat"].max() for z in zs) + 0.05
+    lo0, lo1 = max(z["lon"].min() for z in zs) - 0.05, min(z["lon"].max() for z in zs) + 0.05
+    lv = lv[lv.lat.between(la0, la1) & lv.lon.between(lo0, lo1)]
+    ref = min(zs, key=lambda z: z["lat"].size * z["lon"].size)
+    iy = np.abs(lv.lat.to_numpy()[:, None] - ref["lat"][None]).argmin(1)
+    ix = np.abs(lv.lon.to_numpy()[:, None] - ref["lon"][None]).argmin(1)
+    cells = sorted(set(zip(np.round(ref["lat"][iy], 3), np.round(ref["lon"][ix], 3))))
     seasons = []
-    for f in files:
-        z = np.load(f)
-        P = z["pluie"].astype("float32")[:, [c[0] for c in cells], [c[1] for c in cells]]
+    for z in zs:
+        jy = [int(np.abs(z["lat"] - c[0]).argmin()) for c in cells]
+        jx = [int(np.abs(z["lon"] - c[1]).argmin()) for c in cells]
+        P = z["pluie"].astype("float32")[:, jy, jx]
         start = dt.date.fromisoformat(str(z["start"]))
         days = [start + dt.timedelta(days=k) for k in range(P.shape[0] // 48)]
         seasons.append({"season": start.year, "days": days, **{h: daily_max(P, h) for h in DURATIONS}})

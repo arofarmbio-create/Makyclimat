@@ -55,3 +55,6 @@ Limites connues :
   nombre d'événements du périmètre, mais les unités de rééchantillonnage ne sont que 11 saisons et le protocole note
   « peu d'événements » (2 événements indépendants pour le ruissellement SCS-CN). H1 est donc **déclarée exploratoire
   dès maintenant** ; le rapport publiera d'abord le nombre d'événements et de jours d'événement par saison.
+- 09/11/2026 (après un échec de lecture, avant tout résultat) : les saisons IMERG n'ont pas la même emprise (2014-2015 :
+  48 × 27 mailles ; 2024-2025 : 28 × 19). Le calcul porte sur la **zone commune à toutes les saisons** (fokontany du
+  périmètre situés dans cette zone), chaque maille étant retrouvée par ses coordonnées dans chaque fichier.
