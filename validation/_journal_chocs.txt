@@ -1,23 +1,58 @@
 rapport R50/R34 = exp(-1.144 + 0.0045 x vent), écart-type résiduel 0.29 (log), n = 5180
 rapport R64/R34 = exp(-1.717 + 0.0047 x vent), écart-type résiduel 0.26 (log), n = 3220
+trajectoire introuvable geralda-1994
+trajectoire introuvable eline-2000
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.07.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.07.tif.gz
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.05.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.05.tif.gz
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.10.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.10.tif.gz
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.11.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.11.tif.gz
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.08.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.08.tif.gz
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.09.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.09.tif.gz
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.06.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.06.tif.gz
+  nouvelle tentative (2) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.09.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.09.tif.gz
+  nouvelle tentative (2) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.05.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.05.tif.gz
+  nouvelle tentative (2) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.07.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.07.tif.gz
+  nouvelle tentative (2) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.08.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.08.tif.gz
+  nouvelle tentative (2) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.06.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2017/chirps-v2.0.2017.03.06.tif.gz
 enawo-2017: 17465 fokontany, vent>=34: 17404, >=64: 1236, pluie=oui
 batsirai-2022: 11429 fokontany, vent>=34: 10251, >=64: 974, pluie=oui
 emnati-2022: 10528 fokontany, vent>=34: 9784, >=64: 781, pluie=oui
 belna-2019: 11149 fokontany, vent>=34: 740, >=64: 78, pluie=oui
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2024/chirps-v2.0.2024.03.28.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2024/chirps-v2.0.2024.03.28.tif.gz
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2024/chirps-v2.0.2024.03.24.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2024/chirps-v2.0.2024.03.24.tif.gz
+  nouvelle tentative (1) pour https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2024/chirps-v2.0.2024.03.25.tif.gz: 429 Client Error: Too Many Requests for url: https://data.chc.ucsb.edu/products/CHIRPS/v2.0/africa_daily/tifs/p05/2024/chirps-v2.0.2024.03.25.tif.gz
 gamane-2024: 4468 fokontany, vent>=34: 476, >=64: 14, pluie=oui
 jude-2025: 7671 fokontany, vent>=34: 3115, >=64: 0, pluie=oui
 ava-2018: 12625 fokontany, vent>=34: 9817, >=64: 543, pluie=oui
 freddy-2023: 11368 fokontany, vent>=34: 5804, >=64: 343, pluie=oui
 alvaro-2024: 8299 fokontany, vent>=34: 911, >=64: 1, pluie=oui
 gezani-2026: 12108 fokontany, vent>=34: 4239, >=64: 414, pluie=oui
-       evenement       nom  fokontany_concernes  pop_vent_34kt  pop_vent_50kt  pop_vent_64kt  fokontany_vent_64kt rayons_manquants  positions_R50_R64_estimees
-0     enawo-2017     Enawo                17465       24862785        4869717        1596686                 1236             4/21                           3
-1  batsirai-2022  Batsirai                11429       15399449        4036651        1313911                  974             2/20                           1
-2    emnati-2022    Emnati                10528       13408179        4565392        1031105                  781             0/18                           2
-3     belna-2019     Belna                11149         993963         198037          81711                   78             0/18                           2
-4    gamane-2024    Gamane                 4468         770819         112124          21835                   14             2/10                           0
-5      jude-2025      Jude                 7671        3280897        1408373              0                    0             5/24                          18
-6       ava-2018       Ava                12625       15284623        8269596         911625                  543             0/28                           0
-7    freddy-2023    Freddy                11368        6982979        2651530         434130                  343             2/36                           6
-8    alvaro-2024    Alvaro                 8299        1393398         211950           3339                    1             2/12                           0
-9    gezani-2026    Gezani                12108        7717716        1672089         751355                  414             0/32                          56
+hudah-2000: 4592 fokontany, vent>=34: 1950, >=64: 0, pluie=oui
+gafilo-2004: 16173 fokontany, vent>=34: 13151, >=64: 2970, pluie=oui
+elita-2004: 13754 fokontany, vent>=34: 9208, >=64: 109, pluie=oui
+hubert-2010: 13360 fokontany, vent>=34: 474, >=64: 0, pluie=oui
+giovanna-2012: 13607 fokontany, vent>=34: 10729, >=64: 1703, pluie=oui
+haruna-2013: 5020 fokontany, vent>=34: 3392, >=64: 1112, pluie=oui
+diane-2020: 8796 fokontany, vent>=34: 0, >=64: 0, pluie=oui
+ana-2022: 8362 fokontany, vent>=34: 882, >=64: 0, pluie=oui
+fytia-2026: 9613 fokontany, vent>=34: 5642, >=64: 116, pluie=oui
+        evenement  fokontany_concernes  pop_vent_34kt  pop_vent_50kt  pop_vent_64kt  fokontany_vent_64kt rayons_manquants  positions_R50_R64_estimees
+0      enawo-2017                17465       24862785        4869717        1596686                 1236             4/21                           3
+1   batsirai-2022                11429       15399449        4036651        1313911                  974             2/20                           1
+2     emnati-2022                10528       13408179        4565392        1031105                  781             0/18                           2
+3      belna-2019                11149         993963         198037          81711                   78             0/18                           2
+4     gamane-2024                 4468         770819         112124          21835                   14             2/10                           0
+5       jude-2025                 7671        3280897        1408373              0                    0             5/24                          18
+6        ava-2018                12625       15284623        8269596         911625                  543             0/28                           0
+7     freddy-2023                11368        6982979        2651530         434130                  343             2/36                           6
+8     alvaro-2024                 8299        1393398         211950           3339                    1             2/12                           0
+9     gezani-2026                12108        7717716        1672089         751355                  414             0/32                          56
+10     hudah-2000                 4592        2344682              0              0                    0            15/15                           0
+11    gafilo-2004                16173       19226909        5103261        3820677                 2970             1/22                          15
+12     elita-2004                13754       13708213        1415843         176377                  109            11/31                           4
+13    hubert-2010                13360         479237          13565              0                    0              1/4                           1
+14  giovanna-2012                13607       16549829        9238628        3609980                 1703             0/26                          10
+15    haruna-2013                 5020        3725434        2413242        1009684                 1112             1/21                           1
+16     diane-2020                 8796              0              0              0                    0              0/1                           0
+17       ana-2022                 8362        1417821              0              0                    0              1/4                           0
+18     fytia-2026                 9613        9888417         498120         132193                  116             0/12                          12
