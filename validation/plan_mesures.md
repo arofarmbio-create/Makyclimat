@@ -32,6 +32,14 @@ encore robuste. L'analyse de puissance en donne les causes, chiffrées :
 - **Socle hors de l'Androy et de l'Anosy**, et socle en climat humide (Hautes Terres, Est) : aucun site aujourd'hui.
 - **Transect côte-intérieur** pour le chlorure de la pluie : le dépôt varie surtout avec la distance à la mer.
 
+## 3 bis. Classer les sites par leur coupe de forage (ajout du 09/11/2026)
+
+Les cartes mondiales ne suffisent pas à classer un site ponctuel : la GLiM range les sables de l'Androy et les puits de
+Toliara dans la même classe, et contredit le BGS pour un site sur douze (`journal_recherche.md`, GLiM vectorielle).
+Chaque nouveau site doit avoir sa **coupe lithologique** (rapport de forage). Objectif : au moins 4 groupes
+indépendants dans chacune des classes sables et alluvions, socle métamorphique, granites, et calcaires (aujourd'hui :
+3, 3, 1 et 0).
+
 ## 4. Combien de sites pour un test prospectif des cartes figées
 
 Pour montrer qu'une carte retrouve au moins 60 % des sites (borne basse de l'intervalle au-dessus de 60 %, puissance

@@ -1179,3 +1179,8 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   sous protocole, avec analyse de puissance.
 - ⚠️ Licence : aucune licence écrite pour les polygones (« ©CCGM-CGMW 2015 » seulement) ; aucune géométrie dans le
   dépôt ; seules des surfaces agrégées sont publiées, avec citation.
+- 📊 Comptage du 09/11/2026 (sans test) : les 12 sites de fluctuation selon la GLiM : sables et alluvions (su) 7 sites,
+  3 groupes indépendants (Sihanamaro, Mahavelo, GROSoM) ; métamorphique (mt) 3 sites, 3 groupes ; granites (pa) 1 ;
+  volcanique (va) 1. **La GLiM range Sihanamaro et Toliara dans la même classe** : elle ne lève pas la confusion qui a
+  fait échouer T2L. BGS et GLiM se contredisent pour Mahavelo (socle contre sables). Aucun test de la correction locale
+  par classe GLiM avant de nouveaux sites ; classer les futurs sites par leur **coupe de forage**.
