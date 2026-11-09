@@ -342,7 +342,9 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     rd.update(readers or {})
     out_dir = country_docs_dir(country) / "soilwater"
     out_dir.mkdir(parents=True, exist_ok=True)
-    land = np.isfinite(np.asarray(ms["arr"][-1, 0], dtype="float32"))
+    # Masque terrestre indépendant d'un mois de pluie particulier (relecture Codex, 09/11/2026) : une maille est terrestre si
+    # elle a une pluie dans au moins un mois ; une lacune d'un mois est alors détectée par la garde ci-dessous.
+    land = np.isfinite(np.asarray(ms["arr"], dtype="float32")).any(axis=(0, 1))
     props = static_props(grid, rd, grid_dir(country) / "soilprops.npz")
     et0 = et0_grid(grid, land, rd, grid_dir(country) / "et0_cache.json", max_et0_batches) if props is not None else None
     rain = rain_series(grid, cfg, country, rd["chirps"]) if props is not None else None
@@ -359,8 +361,9 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     n_nan = int(np.isnan(Pv).sum())
     if n_nan:   # audit Codex (09/11/2026) : une pluie manquante ne doit jamais devenir zéro (faux signal de sécheresse)
         STATUS["rain_missing_cells"] = n_nan
+        STATUS["bilan_frais"] = False      # signal pour l'aval (build_groundwater) : sorties précédentes non à jour
         write_json(status_path, STATUS)
-        print(f"Bilan hydrique non publié : {n_nan} valeurs de pluie manquantes sur les mailles valides (voir status.json)")
+        print(f"::warning::Bilan hydrique non publié : {n_nan} valeurs de pluie manquantes sur les mailles valides (voir status.json)")
         return None
     Pc = Pv.astype("float64")
     pet = np.stack([et0[m][valid] for m in range(12)]).astype("float64")
@@ -424,9 +427,10 @@ def main(country="mdg", readers=None, max_et0_batches=150):
             g.insert(0, "mois", ym)
             recs.append(g)
         from common import DATA_DIR
-        vd = DATA_DIR.parent / "validation"
-        vd.mkdir(exist_ok=True)
-        pd.concat(recs).round(2).to_csv(vd / "spi_regions.csv", index=False)
+        if country != "demo":           # le pays de démonstration (tests) n'écrit jamais dans validation/
+            vd = DATA_DIR.parent / "validation"
+            vd.mkdir(exist_ok=True)
+            pd.concat(recs).round(2).to_csv(vd / "spi_regions.csv", index=False)
     except Exception as ex:  # noqa: BLE001
         print("historique SPI non écrit :", ex)
     rows = []
@@ -463,6 +467,8 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     write_json(out_dir / "series.json", {"months": labels[-n36:], "month_numbers": [int(l[5:]) for l in labels[-n36:]], "u": U})
     STATUS["summary"] = {"dernier_mois": labels[-1], "cellules_calculées": int(valid.sum()), "zones": len(U),
                          "stock_relatif_moyen_pct": round(float(np.nanmean(100 * rel[last])), 1)}
+    STATUS["bilan_frais"] = True
+    STATUS.pop("rain_missing_cells", None)
     write_json(status_path, STATUS)
     print("Bilan hydrique OK :", STATUS["summary"])
     return {"rel": rel, "sm_z": sm_z, "rz": rz, "X": X, "ext": ext, "labels": labels, "valid": valid, "props": props, "series": U}

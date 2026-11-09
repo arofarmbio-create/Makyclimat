@@ -27,6 +27,9 @@ VERIF_SEASONS = (2003, 2018)      # saisons vérifiées (DesInventar jusqu'en 20
 # événement documenté ; les autres mois déjà téléchargés servent de témoins. Échantillon enrichi en événements.
 PORTEE_ANNEES = (2010, 2012, 2013, 2017, 2019, 2020, 2022, 2023)
 PORTEE_MOIS = (12, 1, 2, 3)
+# Verrou (relecture Codex, 09/11/2026) : aucun score n'est calculé ni publié tant que le critère principal n'est pas
+# décidé et que l'analyse de puissance n'est pas faite (protocole, section 9). Passer à True seulement après.
+CRITERE_DECIDE = False
 MIN_SEASONS = 15
 RETURN_PERIODS = (2, 5)
 Q_MIN = (5.0, 20.0, 50.0)         # référence puis sensibilité
@@ -241,7 +244,12 @@ def main() -> None:
     args = ap.parse_args()
     rng = np.random.default_rng(20261029)
     files = load_months(country_data_dir(args.country) / "reforecast")
-    expected = {f"glofas_v4_{y}_{m:02d}.npz" for y in PORTEE_ANNEES for m in PORTEE_MOIS}
+    if not CRITERE_DECIDE:
+        print("::notice::R-21 verrouillé : critère principal et analyse de puissance en attente (protocole, section 9).")
+        return
+    # Seuls les mois des saisons vérifiables (impacts DesInventar jusqu'en 2019) sont exigés ; les autres servent aux seuils.
+    expected = {f"glofas_v4_{y}_{m:02d}.npz" for y in PORTEE_ANNEES for m in PORTEE_MOIS
+                if VERIF_SEASONS[0] <= (y if m >= 11 else y - 1) <= VERIF_SEASONS[1]}
     missing = sorted(expected - {f.name for f in files})
     if missing:                                    # jamais de scores publiés sur une portée incomplète
         print(f"::warning::Portée réduite incomplète ({len(missing)} mois manquants, ex. {missing[:3]}) : rien n'est publié.")

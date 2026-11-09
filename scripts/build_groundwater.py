@@ -39,12 +39,13 @@ Usage : python scripts/build_groundwater.py --country mdg
 from __future__ import annotations
 
 import argparse
+import json
 import datetime as dt
 
 import numpy as np
 import pandas as pd
 
-from common import country_data_dir, read_units
+from common import country_docs_dir, country_data_dir, read_units
 
 SRC = ("MakyClimat : classement multicritère (productivité d'aquifère réelle BGS Africa Groundwater Atlas 30 %, "
        "niveau statique d'eau réel MGMERL inversé 20 % (~30 % du pays couvert), recharge CHIRPS/ET0 25 %, proximité du "
@@ -107,6 +108,11 @@ def main() -> None:
         soilwater = pd.read_csv(ext / "soilwater.csv")
     except FileNotFoundError as exc:
         print(f"Potentiel eau : fichier source manquant ({exc}) — lancer build_hydro.py et build_soilwater.py d'abord.")
+        return
+    st = country_docs_dir(args.country) / "soilwater" / "status.json"
+    if st.exists() and json.loads(st.read_text(encoding="utf-8")).get("bilan_frais") is False:
+        print("Potentiel eau : bilan hydrique refusé (pluie manquante, voir soilwater/status.json) — potentiel non recalculé "
+              "sur des sorties anciennes.")
         return
     geology = pd.read_csv(ext / "geology.csv") if (ext / "geology.csv").exists() else None
     watertable = pd.read_csv(ext / "watertable.csv") if (ext / "watertable.csv").exists() else None

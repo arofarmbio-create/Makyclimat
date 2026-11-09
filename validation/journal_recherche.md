@@ -1219,3 +1219,11 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 🔧 **Bilan hydrique** : les pluies manquantes n'étaient plus mises à zéro silencieusement ; le bilan refuse désormais de
   publier s'il en manque. Mesure préalable : **aucune** valeur manquante sur les 535 mois (1981-11 à 2026-05) et les
   21 617 mailles terrestres : défaut latent, sans effet sur les indicateurs publiés jusqu'ici.
+- 🔧 **Relecture Codex des correctifs P0 (2e version)** : (1) R-21 — la garde n'exigeait pas les bons mois : 13 des
+  32 mois requis tombaient hors des saisons vérifiables (impacts jusqu'en 2019) ; garde restreinte à ces saisons, calcul
+  et publication verrouillés (`CRITERE_DECIDE = False`) et lancement trimestriel retiré jusqu'à la décision et à
+  l'analyse de puissance. (2) Bilan hydrique — le masque terrestre venait d'un seul mois de pluie, si bien qu'une lacune
+  dans ce mois retirait la maille au lieu de bloquer : masque pris sur l'ensemble des mois ; le refus est signalé à l'aval
+  (`bilan_frais: false`), et le potentiel des nappes n'est plus recalculé sur des sorties anciennes. Test ajouté (lacune
+  dans le dernier mois → refus). Effet de bord corrigé : le pays de démonstration des tests écrasait
+  `validation/spi_regions.csv`.

@@ -382,7 +382,7 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 <nav>{nav}</nav></div></header>
 <main>{errs}
 <div class="lead"><div class="q">{esc(th.get("question_en_cours", ""))}</div><div class="t">{esc(th.get("titre", ""))}</div></div>
-<section id="equipe"><h2>Répartition du travail</h2><div class="lanes">{equipe}</div></section>
+<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div class="lanes">{equipe}</div></section>
 <section id="protocole"><h2>Avancement par rapport au protocole doctoral et au prompt maître</h2>{proto}</section>
 <section id="objectifs" class="cols"><div><h2>Objectifs</h2><div class="card">{objs}</div></div>
 <div><h2>Blocages</h2><div class="card pad"><table class="t"><tr><th>Blocage</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc_}</table></div></div></section>

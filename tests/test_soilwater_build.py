@@ -50,8 +50,32 @@ def test_build():
     assert len(u0["sm"]) == 36 and len(u0["n"]) == 12
     st = json.loads((d / "status.json").read_text())
     assert all(v["ok"] for v in st["steps"].values()), st
+    assert st["bilan_frais"] is True and "rain_missing_cells" not in st
     assert (country_data_dir("demo") / "external" / "soilwater.csv").exists()
     print("test_soilwater_build OK", st["summary"])
+
+
+
+def test_refus_pluie_manquante(monkeypatch):
+    """Relecture Codex : une lacune de pluie, même dans le dernier mois (qui définissait l'ancien masque terrestre),
+    refuse la publication et le signale à l'aval par bilan_frais = False."""
+    vraie = B.rain_series
+
+    def rain_trouee(grid, cfg, country, reader):
+        P, labels = vraie(grid, cfg, country, reader)
+        P = P.copy()
+        iy, ix = np.argwhere(np.isfinite(P[-1]))[0]
+        P[-1, iy, ix] = np.nan                 # une seule maille terrestre, dernier mois
+        return P, labels
+
+    monkeypatch.setattr(B, "rain_series", rain_trouee)
+    lecteurs = {"soil": lambda v, l, g: np.full((g["h"], g["w"]), 300.0),
+                "landcover": lambda g: np.full((len(C.LC_CLASSES), g["h"], g["w"]), 1 / len(C.LC_CLASSES), "float32"),
+                "et0": lambda lons, lats, c, mb: {f"{lo:.2f},{la:.2f}": [80] * 12 for lo, la in zip(lons, lats)},
+                "chirps": lambda y, m, cfg: np.nan_to_num(load_grid(grid_dir("demo") / "clim_monthly.npz")["clim"][m - 1])}
+    assert B.main("demo", readers=lecteurs, max_et0_batches=1) is None
+    st = json.loads((country_docs_dir("demo") / "soilwater" / "status.json").read_text(encoding="utf-8"))
+    assert st["bilan_frais"] is False and st["rain_missing_cells"] >= 1, st
 
 
 if __name__ == "__main__":
