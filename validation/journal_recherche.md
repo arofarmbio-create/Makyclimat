@@ -1117,3 +1117,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   il faut d'abord **réduire la dispersion** (classer les roches plus finement) et **l'incertitude de mesure** (essais de
   pompage pour le rendement spécifique), pas seulement ajouter des sites ; (3) **règle de méthode désormais appliquée** :
   calculer la puissance avant de fixer une hypothèse ; sous 50 %, le test est déclaré exploratoire dès le départ.
+
+### Combinaison des preuves sur la recharge (`validation/combinaison_preuves.md`)
+- ✅ Règles fixées avant le calcul (`protocole_combinaison_preuves.md`) ; **synthèse rétrospective** déclarée (lignes déjà
+  vues). Lignes : L1 fluctuation de nappe (8 groupes), L2 puits à sec (120 blocs), L3 chlorure par blocs (36, après coup).
+- 📊 **Q1, T2 surestime dans le Grand Sud** : L1 z = +1,76 ; L3 z = +5,23 (scénarios bas et central), +0,53 (haut).
+  Combinée : +5,48 (bas, central), +1,23 (haut). Sans le chlorure : +1,76, indice.
+- 📊 **Q2, T2L plus juste que T2** : L1 z = −0,20 ; L2 z = +1,88 ; L3 z = +3,94 (bas), +2,56 (central), −3,28 (haut).
+  Combinée : +3,37 (bas), +2,74 (central), +0,10 (haut, avec contradiction forte). Sans le chlorure : +1,77, indice.
+- 📌 **Le verdict dépend entièrement du dépôt de chlorure** : « établi » pour Q1 et Q2 si le dépôt est bas ou central,
+  « indice » ou « non établi » s'il est haut. Aucun verdict global tant que MERRA-2 n'a pas désigné le scénario.
+  Sans le chlorure, les deux questions restent au rang d'**indice concordant**.
+- ⚠️ Réserves : L2 et L3 partagent la région et les forages ; le chlorure venu des roches (Cl/Na 0,96) abaisse la
+  recharge par chlorure et favorise Q1 ; L1 a servi à construire T2L.
