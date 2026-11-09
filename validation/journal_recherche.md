@@ -1142,3 +1142,17 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   juste) « non établi ». **Le désaccord entre MERRA-2 et les mesures de terrain devient la question centrale** : valider
   MERRA-2 aux sites mesurés (Kwale, Afrique du Sud) avant de lui donner le dernier mot ; à terme, mesurer le chlorure de
   la pluie dans le Sud.
+
+### H-N7, maillon A : océan avant la saison → pluies extrêmes (`validation/hn7_maillon_a.md`, `puissance_hn7.md`)
+- ✅ Analyse de puissance avant calcul : protocole d'origine (binaire, 9 tests) à 10-17 % pour ρ = 0,3. Améliorations
+  simulées puis adoptées avant calcul (décision du porteur du projet) : pluie du mois le plus fort et **un seul test
+  principal**, ONI de juillet-septembre × Atsimo-Andrefana (47 % pour ρ = 0,3, 74 % pour ρ = 0,4).
+- ❌ **Test principal non retenu** : ρ = −0,24, p = 0,113 (45 saisons). Sans valeur de prévision : MSSS en validation
+  croisée −0,00, chronologique +0,05.
+- 📊 Sens cohérent avec la littérature (El Niño → saisons moins pluvieuses dans le Sud-Ouest). Exploratoire : sur les
+  trois régions, l'ONI et le DMI donnent tous une corrélation négative avec la pluie maximale (−0,12 à −0,29) ; aucune
+  combinaison retenue après correction ; la définition binaire d'origine ne montre rien.
+- 📌 Lecture : un lien modéré, de sens attendu, que 45 saisons ne permettent pas d'établir (puissance d'environ 35 % pour
+  ρ = 0,24). Le maillon A n'est ni confirmé ni réfuté ; la prévision des saisons rechargeantes par l'océan n'est pas
+  utilisable en l'état. Le maillon B (pluies extrêmes → remontées des nappes) reste à tester, sur des séries plus
+  nombreuses.

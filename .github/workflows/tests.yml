@@ -95,6 +95,7 @@ jobs:
           python tests/test_depot_chlorure_merra2.py
           python tests/test_analyse_puissance.py
           python tests/test_combinaison_preuves.py
+          python tests/test_hn7_maillon_a.py
           python tests/test_nappes_mgmerl.py
           python tests/test_relief_e1.py
           python tests/test_mct_era5.py
