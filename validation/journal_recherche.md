@@ -1198,3 +1198,14 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   roches (Cl/Na 0,96) irait dans le même sens (recharge par chlorure encore plus forte). **Les deux méthodes de terrain
   divergent** : fluctuation de nappe (T2 trop forte, mais Sy incertain d'un facteur 3 à 5) contre chlorure (T2
   plausible). Seule une mesure du chlorure de la pluie dans le Sud tranchera.
+
+### Intensité des pluies IMERG contre cumul, R-23 (`validation/intensite_imerg.md`)
+- 🔧 Échec de lecture corrigé : emprises différentes selon les saisons ; calcul sur la zone commune (406 mailles).
+- 📊 11 saisons, 43 jours d'événement (3 événements de `evenements.csv`, 13 dates DesInventar). **Aucune durée ne
+  distingue les jours d'événement** : AUC de 0,38 à 0,48 (sous 0,5). Détection : 0 événement sur 6 pour 1, 3, 6 et 72 h ;
+  2 sur 6 pour 24 h.
+- ❌ **H1 contredite** (exploratoire, déclarée avant calcul) : l'intensité sur 3 h fait moins bien que le cumul sur 72 h
+  (différence [−0,28 ; −0,01]) ; mais **ni l'une ni l'autre n'a de compétence**.
+- 📌 Lecture : à 0,1° et sur un périmètre de 406 mailles, la part des mailles au-dessus du seuil ne repère pas des
+  inondations pluviales locales et déclarées à ± 1 jour. Piste : un score local (maille du district touché) plutôt
+  qu'une part du périmètre ; à décider sous protocole. Résultat négatif publiable, comme prévu.
