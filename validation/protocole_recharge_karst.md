@@ -74,3 +74,7 @@ avec la citation de Wan et al. (2024).
 ## 9. Journal des modifications
 
 - 09/11/2026 : version initiale.
+- 09/11/2026 (après le calcul) : **erreur du protocole relevée, non corrigée après coup.** La section 5 affirmait que
+  T2 place 0 des 5 puits GROSoM dans son intervalle. C'est faux : l'intervalle de 80 % de T2 (11 à 195 mm/an) les
+  contient déjà tous les 5. H-K2 ne pouvait donc pas départager T2 et T2K. Les règles restent inchangées ; la décision
+  d'application est soumise au porteur du projet (voir `validation/recharge_karst.md` et le journal).

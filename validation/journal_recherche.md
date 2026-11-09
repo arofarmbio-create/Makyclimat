@@ -1018,3 +1018,22 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   selon la géologie ; des bornes continentales ne le corrigent pas ; une correction locale ne se généralise pas tant
   que la classification des aquifères ne sépare pas les nappes de comportement différent (karst, sables, socle) et
   que les sites mesurés ne couvrent pas plusieurs groupes indépendants par classe.
+
+### Recharge du karst, T2K (`validation/recharge_karst.md`)
+- ✅ Protocole fixé avant calcul et avant réception de la grille (09/11/2026). Part karstique f : grille à 0,5° de Wan,
+  Döll et Müller Schmied (2024), CC BY 4.0. R/P du karst hors Madagascar, f ≥ 0,3 : aride 0,072 (47 mailles),
+  humide 0,289 (32).
+- ✅ Emprise plausible : 261 mailles sur 650 avec f > 0, 129 avec f ≥ 0,3, surtout dans la bande sédimentaire de l'Ouest
+  (Mahafaly, Bemaraha, plateau de Mahajanga) ; Toliara f = 0,79 ; Ankarana seulement 0,06 à 0,5°.
+- 📊 Formellement, **H-K1 soutenue** (3 sur 8, comme T2) et **H-K2 soutenue** (5 sur 5).
+- ❌ **Mais H-K2 ne départage rien** : T2 place déjà les 5 puits dans son intervalle (11 à 195 mm/an). Le protocole
+  affirmait à tort « T2 : 0 sur 5 » ; l'erreur est notée dans le protocole, sans changer la règle. Les valeurs
+  centrales restent loin des mesures : puits GROSoM 80 à 195 mesurés, T2 38, T2K 43 ; maille de Toliara 20 → 30.
+  **Aucune amélioration démontrée** à l'endroit qui motivait la correction.
+- 📊 Effet fort ailleurs, non contrôlé par des mesures : Ouest humide 33 → 133 mm/an (médiane), Mahajanga 7 → 178
+  (carte BGS : 124), recharge médiane des mailles karstiques 63 → 163.
+- 📌 Décision : la règle fixée d'avance dit « T2K remplace T2 », mais la preuve est nulle (H-K1 sans gain, H-K2 non
+  discriminante). **Application soumise au porteur du projet** avant tout recalcul de l'atlas. Carte T2K figée
+  (SHA-256 dans le rapport) pour le test prospectif.
+- 📌 Leçon de méthode : avant de fixer une hypothèse, vérifier sur les données déjà vues que la référence (ici T2)
+  échoue bien au test ; sinon le test ne départage rien.
