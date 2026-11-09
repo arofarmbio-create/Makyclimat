@@ -1,0 +1,56 @@
+duree_h,jours,jours_evenement,auc,auc_ic_bas,auc_ic_haut,table,seuil,episodes,episodes_evenement_perimetre,episodes_sans_correspondance,evenement,part_max,detecte
+1,1994.0,43.0,0.3984778229411274,0.33470240513528887,0.5966051198824686,auc,,,,,,,
+3,1994.0,43.0,0.40392523810091424,0.3407869037874465,0.5792957229510616,auc,,,,,,,
+6,1994.0,43.0,0.3834884912924797,0.35302609963578946,0.4636832829808661,auc,,,,,,,
+24,1994.0,43.0,0.42068468167785156,0.4011350345713022,0.47821049279548256,auc,,,,,,,
+72,1994.0,43.0,0.478454698246576,0.4304834195975229,0.6358400187734907,auc,,,,,,,
+1,,,,,,episodes,au moins 1,104.0,5.0,68.0,,,
+1,,,,,,episodes,5 %,21.0,0.0,13.0,,,
+1,,,,,,episodes,10 %,6.0,0.0,4.0,,,
+1,,,,,,episodes,25 %,0.0,0.0,0.0,,,
+3,,,,,,episodes,au moins 1,106.0,8.0,69.0,,,
+3,,,,,,episodes,5 %,19.0,0.0,13.0,,,
+3,,,,,,episodes,10 %,4.0,0.0,3.0,,,
+3,,,,,,episodes,25 %,0.0,0.0,0.0,,,
+6,,,,,,episodes,au moins 1,111.0,5.0,77.0,,,
+6,,,,,,episodes,5 %,28.0,0.0,16.0,,,
+6,,,,,,episodes,10 %,8.0,0.0,5.0,,,
+6,,,,,,episodes,25 %,1.0,0.0,0.0,,,
+24,,,,,,episodes,au moins 1,98.0,5.0,67.0,,,
+24,,,,,,episodes,5 %,26.0,1.0,13.0,,,
+24,,,,,,episodes,10 %,13.0,1.0,5.0,,,
+24,,,,,,episodes,25 %,5.0,1.0,1.0,,,
+72,,,,,,episodes,au moins 1,83.0,4.0,55.0,,,
+72,,,,,,episodes,5 %,31.0,2.0,14.0,,,
+72,,,,,,episodes,10 %,16.0,0.0,7.0,,,
+72,,,,,,episodes,25 %,5.0,0.0,2.0,,,
+1,,,,,,detection,,,,,batsirai-2022,0.0049261083743842365,False
+1,,,,,,detection,,,,,ana-2022,0.0024630541871921183,False
+1,,,,,,detection,,,,,desinventar-2015-02-07,0.0,False
+1,,,,,,detection,,,,,desinventar-2015-03-10,0.0,False
+1,,,,,,detection,,,,,desinventar-2017-03-15,0.007389162561576354,False
+1,,,,,,detection,,,,,desinventar-2017-03-16,0.007389162561576354,False
+3,,,,,,detection,,,,,batsirai-2022,0.024630541871921183,False
+3,,,,,,detection,,,,,ana-2022,0.024630541871921183,False
+3,,,,,,detection,,,,,desinventar-2015-02-07,0.0,False
+3,,,,,,detection,,,,,desinventar-2015-03-10,0.0,False
+3,,,,,,detection,,,,,desinventar-2017-03-15,0.0049261083743842365,False
+3,,,,,,detection,,,,,desinventar-2017-03-16,0.0049261083743842365,False
+6,,,,,,detection,,,,,batsirai-2022,0.012315270935960592,False
+6,,,,,,detection,,,,,ana-2022,0.012315270935960592,False
+6,,,,,,detection,,,,,desinventar-2015-02-07,0.0,False
+6,,,,,,detection,,,,,desinventar-2015-03-10,0.0,False
+6,,,,,,detection,,,,,desinventar-2017-03-15,0.0024630541871921183,False
+6,,,,,,detection,,,,,desinventar-2017-03-16,0.0024630541871921183,False
+24,,,,,,detection,,,,,batsirai-2022,0.27832512315270935,True
+24,,,,,,detection,,,,,ana-2022,0.27832512315270935,True
+24,,,,,,detection,,,,,desinventar-2015-02-07,0.0,False
+24,,,,,,detection,,,,,desinventar-2015-03-10,0.012315270935960592,False
+24,,,,,,detection,,,,,desinventar-2017-03-15,0.0049261083743842365,False
+24,,,,,,detection,,,,,desinventar-2017-03-16,0.0,False
+72,,,,,,detection,,,,,batsirai-2022,0.05665024630541872,False
+72,,,,,,detection,,,,,ana-2022,0.05665024630541872,False
+72,,,,,,detection,,,,,desinventar-2015-02-07,0.04433497536945813,False
+72,,,,,,detection,,,,,desinventar-2015-03-10,0.022167487684729065,False
+72,,,,,,detection,,,,,desinventar-2017-03-15,0.007389162561576354,False
+72,,,,,,detection,,,,,desinventar-2017-03-16,0.007389162561576354,False
