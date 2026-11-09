@@ -503,3 +503,80 @@ plus proche (1 098 à 10 km, 261 à 200 km) ; bas trop faible près de la côte,
   et WebFetch.
 - **Conclusion** : droits « ©CCGM-CGMW 2015 » sans licence ouverte ; aucune géométrie dans le dépôt. Des surfaces
   agrégées citant Hartmann et Moosdorf (2012) et la CCGM (2015) paraissent acceptables, mais ce n'est pas confirmé.
+
+## 09/11/2026 : NEX-GDDP-CMIP6 (E6), modèles, licences, accès ; workflow préparé, rien téléchargé
+
+*Préparation de la section 9 de `validation/protocole_cmip6.md`. Aucune donnée NASA téléchargée (une autre tâche NASA
+tourne) : seulement la documentation, la liste des fichiers et des métadonnées, une requête à la fois, 30 s d'écart.*
+
+### 1. Jeu et version
+
+- **NEX-GDDP-CMIP6 v2.0** (Tech Note v2 du 31/05/2025, doi:10.7917/OFSG3345), version la plus récente : tous les
+  fichiers du serveur THREDDS sont en `_v2.0.nc` (catalogue lu pour ACCESS-CM2/historical/pr : 0 fichier hors v2.0).
+  La v2 a recalculé tasmax et tasmin (donc tas) en entier et corrigé quelques valeurs aberrantes de pr (Tech Note v2,
+  section 4.3).
+- Liste des fichiers : `index_v2.0_md5.txt` du compartiment AWS (115 246 fichiers v2.0, lu le 09/11). Grille
+  0,25° régulière (1 440 x 600, 60° S - 90° N), journalier, un fichier par modèle, scénario, variable et année.
+
+### 2. Modèles (historical 1950-2014, ssp126, ssp245, ssp585 2015-2100 ; pr, tas, tasmax)
+
+**35 dossiers de modèles, 28 complets** (toutes les années pour les 4 expériences et les 3 variables). Un membre par
+modèle, imposé par la NASA : r1i1p1f1 pour la plupart ; r1i1p1f2 (CNRM-CM6-1, CNRM-ESM2-1, GISS-E2-1-G, MIROC-ES2L,
+UKESM1-0-LL), r1i1p1f3 (HadGEM3-GC31-LL), r3i1p1f1 (FGOALS-g3). Détail (membre, grille d'origine gn/gr/gr1,
+licence) : `data/mdg/cmip6_modeles.json`.
+
+Hors ensemble, pour données incomplètes (non pour licence) : CESM2 (r4i1p1f1, pas de tasmax), CESM2-WACCM (pas de
+tasmax ni de ssp126), CMCC-CM2-SR5 (ni tas ni tasmax : sorties retirées par le CMCC, Tech Note v2, annexe I), GFDL-CM4
+et GFDL-CM4_gr2 (pas de ssp126), HadGEM3-GC31-MM (pas de ssp245), IITM-ESM (pas de tasmax, année 2100 absente).
+CESM2, GFDL-CM4 et HadGEM3-GC31-MM restent utilisables pour la pluie seule si le protocole l'admet un jour (décision
+non prise ici).
+
+### 3. Licences : trois sources qui ne concordent pas
+
+| Source | Ce qu'elle dit |
+|---|---|
+| Registre AWS (`awslabs/open-data-registry`, `datasets/nex-gddp-cmip6.yaml`, champ License) et Tech Note v1 (note du 20/09/2022) | CC-BY-SA 4.0 à l'origine ; **CC0 pour tout le jeu depuis septembre 2022** |
+| Tech Note v2, section 7 « Terms of Use » | renvoie aux conditions CMIP6 et à l'attribut global `cmip6_license` de chaque fichier |
+| Licence CMIP6 du modèle (`WCRP-CMIP/CMIP6_CVs`, `CMIP6_source_id.json`, champ `license_info`, CV 6.2.60.0) | **CC BY 4.0** pour les 33 autres modèles sources (34 sources, GFDL-CM4 en deux grilles), **CC0 1.0** pour GISS-E2-1-G |
+| Attribut `cmip6_license` lu (OPeNDAP `.das`, métadonnées seulement, 6 fichiers) | historique 2014 : « CC-BY 4.0 » (ACCESS-CM2), « CC0 1.0 » (GISS-E2-1-G) ; **ssp585 tasmax 2050 : « CC-BY-SA 4.0 »** pour les 4 modèles lus (ACCESS-CM2, GISS-E2-1-G, UKESM1-0-LL, EC-Earth3) |
+
+Règle retenue, la plus prudente : agrégats historiques sous CC BY 4.0 (CC0 pour GISS), **agrégats SSP sous CC BY-SA
+4.0** (partage à l'identique : la release et toute figure ou table qui les adapte gardent CC BY-SA 4.0 et citent
+NEX-GDDP-CMIP6 et chaque groupe de modélisation). Aucune de ces licences n'interdit de publier des résultats dérivés
+dans un dépôt public avec citation : **0 modèle exclu pour licence ; 28 gardés.** Le script relit `cmip6_license` dans
+chaque réponse, la consigne dans `<modele>_<scenario>_meta.json` et s'arrête sur toute licence autre que CC0, CC BY,
+CC BY-SA. **Non vérifié** : l'attribut des fichiers SSP des 24 autres modèles (le sera fichier par fichier au calcul).
+
+### 4. Accès retenu : NCSS du THREDDS de la NCCS, sans compte
+
+- Catalogue `https://ds.nccs.nasa.gov/thredds/catalog/AMES/NEX/GDDP-CMIP6/<modele>/<scenario>/<membre>/<var>/catalog.xml` :
+  services OpenDAP (`/thredds/dodsC/`), HTTPServer (`/thredds/fileServer/`), **NetcdfSubset (`/thredds/ncss/grid/`)**,
+  WMS. Lus sans compte (catalogue, `dataset.xml` NCSS, 6 `.das` : réponses 200).
+- Nom de fichier : `<var>_day_<modele>_<scenario>_<membre>_<grille>_<annee>_v2.0.nc` (ex.
+  `pr_day_ACCESS-CM2_historical_r1i1p1f1_gn_2014_v2.0.nc`). Requête retenue (forme donnée par la page NCCS) :
+  `…/ncss/grid/AMES/NEX/GDDP-CMIP6/<chemin>/<fichier>?var=pr&north=-11.5&south=-26.0&west=43.0&east=51.0&horizStride=1&temporal=all&accept=netcdf3&addLatLon=true`
+  (environ 58 x 32 mailles x 365 jours, 2 à 3 Mo).
+- AWS S3 `s3://nex-gddp-cmip6/NEX-GDDP-CMIP6/<modele>/<scenario>/<membre>/<var>/…` : accès anonyme (liste lue sans
+  compte), mais fichiers mondiaux entiers d'environ **219 Mo** par variable et par année (découpage interne : un jour x
+  globe entier), soit plus de 200 Go par modèle : écarté. Les deux versions anciennes (`.nc`, `_v1.1.nc`) y sont encore.
+- Volume par modèle : 102 requêtes pour l'historique 1981-2014 (évaluation et référence 1995-2014), 258 par SSP.
+
+### 5. Préparé (rien lancé)
+
+- `scripts/build_cmip6_nexgddp.py` : NCSS par fichier annuel, mois selon le calendrier du modèle (standard,
+  365 jours, 360 jours ; fichier incomplet refusé), pr x 86 400 sommé (mm/mois), tas et tasmax - 273,15 moyennés
+  (°C), moyenne régionale par `build_teleconnections.region_series` (réutilisée telle quelle), CSV long
+  `modele, scenario, region, annee, mois, variable, valeur` (region = code adm1, 24 régions) ; reprise sur les années
+  déjà écrites ; `--probe` (un modèle, une année, une variable). 3 essais au plus espacés de 30 s, 2 s entre fichiers.
+- `tests/test_build_cmip6_nexgddp.py` : 21 contrôles sur données simulées (calendriers, unités, agrégation,
+  moyenne pondérée, lecture netCDF-3, licence refusée, URL, essais), **0 échec** ; ajouté à `tests.yml`.
+- `.github/workflows/build-cmip6-nexgddp.yml` (workflow 30) : manuel seulement (modele, scenario ou « tous », probe),
+  `max-parallel: 1` et `concurrency: nasa-nexgddp`, 340 min par scénario, publication dans la release
+  « cmip6-nexgddp » même après un arrêt (reprise au lancement suivant), **aucun secret**.
+- `.gitignore` : `data/*/cmip6_nexgddp/`. `data/mdg/cmip6_modeles.json` : versionnable (liste, membres, licences,
+  sources).
+
+Suite, quand la file NASA est libre : commit, `gh workflow run build-cmip6-nexgddp.yml -f modele=ACCESS-CM2 -f
+probe=true` (vérifier forme, calendrier, licence recopiée par NCSS, ordre de grandeur), puis `-f probe=false -f
+scenario=tous`, puis les 27 autres modèles un à la fois. **Non vérifié** : la réponse NCSS réelle (format netCDF-3,
+présence de `cmip6_license`, durée d'une requête), que seule la sonde dira.

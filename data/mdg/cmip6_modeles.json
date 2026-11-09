@@ -1,0 +1,711 @@
+{
+ "genere": "2026-11-09",
+ "auteur": "agent de téléchargement",
+ "jeu": "NEX-GDDP-CMIP6 v2.0 (NASA NEX / NCCS), doi:10.7917/OFSG3345 ; Tech Note v2 du 31/05/2025",
+ "sources": {
+  "liste_fichiers": "https://nex-gddp-cmip6.s3.us-west-2.amazonaws.com/index_v2.0_md5.txt (115 246 fichiers v2.0, lu le 09/11/2026)",
+  "tech_note_v2": "https://nex-gddp-cmip6.s3.us-west-2.amazonaws.com/NEX-GDDP-CMIP6-v2-Tech_Note.pdf (section 7 « Terms of Use », annexe I)",
+  "tech_note_v1": "https://nex-gddp-cmip6.s3.us-west-2.amazonaws.com/NEX-GDDP-CMIP6-Tech_Note.pdf (note du 20/09/2022 : licence CC0 globale)",
+  "registre_aws": "https://github.com/awslabs/open-data-registry/blob/main/datasets/nex-gddp-cmip6.yaml (champ License : CC0 globale depuis septembre 2022)",
+  "licences_cmip6": "https://raw.githubusercontent.com/WCRP-CMIP/CMIP6_CVs/master/CMIP6_source_id.json",
+  "attribut_fichier": "attribut global cmip6_license, lu par OPeNDAP .das sur ds.nccs.nasa.gov (6 fichiers, 4 modèles)"
+ },
+ "licence_synthese": "Trois déclarations ne concordent pas. (1) Registre AWS et Tech Note v1 : CC0 globale depuis septembre 2022. (2) Tech Note v2, section 7 : renvoie à l'attribut cmip6_license de chaque fichier. (3) Attribut lu : historique = licence CMIP6 actuelle du modèle (CC-BY 4.0, CC0 1.0 pour GISS) ; SSP585 tasmax 2050 = CC-BY-SA 4.0 pour les 4 modèles lus. Règle retenue (la plus prudente) : agrégats historiques sous CC BY 4.0 avec citation ; agrégats SSP publiés sous CC BY-SA 4.0. Aucune licence n'interdit la publication de résultats dérivés avec citation : aucun modèle exclu pour licence. Le script relit cmip6_license dans chaque réponse et s'arrête sur toute licence hors CC0 / CC BY / CC BY-SA.",
+ "n_modeles_dossiers": 35,
+ "n_complets": 28,
+ "modeles": [
+  {
+   "modele": "ACCESS-CM2",
+   "source_id_cmip6": "ACCESS-CM2",
+   "institution": [
+    "CSIRO-ARCCSS"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.ACCESS-CM2.license_info",
+   "licence_fichiers_nexgddp_lue": {
+    "historical/pr/2014": "CC-BY 4.0",
+    "ssp585/tasmax/2050": "CC-BY-SA 4.0"
+   },
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "ACCESS-ESM1-5",
+   "source_id_cmip6": "ACCESS-ESM1-5",
+   "institution": [
+    "CSIRO"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.ACCESS-ESM1-5.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "BCC-CSM2-MR",
+   "source_id_cmip6": "BCC-CSM2-MR",
+   "institution": [
+    "BCC"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.BCC-CSM2-MR.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "CanESM5",
+   "source_id_cmip6": "CanESM5",
+   "institution": [
+    "CCCma"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.CanESM5.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "CESM2",
+   "source_id_cmip6": "CESM2",
+   "institution": [
+    "NCAR"
+   ],
+   "membre": "r4i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": false,
+   "manques": [
+    "historical/tasmax absent",
+    "ssp126/tasmax absent",
+    "ssp245/tasmax absent",
+    "ssp585/tasmax absent"
+   ],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.CESM2.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "hors ensemble (scénarios ou variables incomplets)",
+   "motif": "historical/tasmax absent; ssp126/tasmax absent; ssp245/tasmax absent; ssp585/tasmax absent"
+  },
+  {
+   "modele": "CESM2-WACCM",
+   "source_id_cmip6": "CESM2-WACCM",
+   "institution": [
+    "NCAR"
+   ],
+   "membre": "r3i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": false,
+   "manques": [
+    "historical/tasmax absent",
+    "ssp126/pr absent",
+    "ssp126/tas absent",
+    "ssp126/tasmax absent",
+    "ssp245/tasmax absent",
+    "ssp585/tasmax absent"
+   ],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.CESM2-WACCM.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "hors ensemble (scénarios ou variables incomplets)",
+   "motif": "historical/tasmax absent; ssp126/pr absent; ssp126/tas absent; ssp126/tasmax absent ; …"
+  },
+  {
+   "modele": "CMCC-CM2-SR5",
+   "source_id_cmip6": "CMCC-CM2-SR5",
+   "institution": [
+    "CMCC"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": false,
+   "manques": [
+    "historical/tas absent",
+    "historical/tasmax absent",
+    "ssp126/tas absent",
+    "ssp126/tasmax absent",
+    "ssp245/tas absent",
+    "ssp245/tasmax absent",
+    "ssp585/tas absent",
+    "ssp585/tasmax absent"
+   ],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.CMCC-CM2-SR5.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "hors ensemble (scénarios ou variables incomplets)",
+   "motif": "historical/tas absent; historical/tasmax absent; ssp126/tas absent; ssp126/tasmax absent ; …"
+  },
+  {
+   "modele": "CMCC-ESM2",
+   "source_id_cmip6": "CMCC-ESM2",
+   "institution": [
+    "CMCC"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.CMCC-ESM2.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "CNRM-CM6-1",
+   "source_id_cmip6": "CNRM-CM6-1",
+   "institution": [
+    "CNRM-CERFACS"
+   ],
+   "membre": "r1i1p1f2",
+   "grille_source": "gr",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.CNRM-CM6-1.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "CNRM-ESM2-1",
+   "source_id_cmip6": "CNRM-ESM2-1",
+   "institution": [
+    "CNRM-CERFACS"
+   ],
+   "membre": "r1i1p1f2",
+   "grille_source": "gr",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.CNRM-ESM2-1.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "EC-Earth3",
+   "source_id_cmip6": "EC-Earth3",
+   "institution": [
+    "EC-Earth-Consortium"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.EC-Earth3.license_info",
+   "licence_fichiers_nexgddp_lue": {
+    "ssp585/tasmax/2050": "CC-BY-SA 4.0"
+   },
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "EC-Earth3-Veg-LR",
+   "source_id_cmip6": "EC-Earth3-Veg-LR",
+   "institution": [
+    "EC-Earth-Consortium"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.EC-Earth3-Veg-LR.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "FGOALS-g3",
+   "source_id_cmip6": "FGOALS-g3",
+   "institution": [
+    "CAS"
+   ],
+   "membre": "r3i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.FGOALS-g3.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "GFDL-CM4",
+   "source_id_cmip6": "GFDL-CM4",
+   "institution": [
+    "NOAA-GFDL"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr1",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": false,
+   "manques": [
+    "ssp126/pr absent",
+    "ssp126/tas absent",
+    "ssp126/tasmax absent"
+   ],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.GFDL-CM4.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "hors ensemble (scénarios ou variables incomplets)",
+   "motif": "ssp126/pr absent; ssp126/tas absent; ssp126/tasmax absent"
+  },
+  {
+   "modele": "GFDL-CM4_gr2",
+   "source_id_cmip6": "GFDL-CM4",
+   "institution": [
+    "NOAA-GFDL"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr2",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": false,
+   "manques": [
+    "ssp126/pr absent",
+    "ssp126/tas absent",
+    "ssp126/tasmax absent"
+   ],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.GFDL-CM4.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "hors ensemble (scénarios ou variables incomplets)",
+   "motif": "ssp126/pr absent; ssp126/tas absent; ssp126/tasmax absent"
+  },
+  {
+   "modele": "GFDL-ESM4",
+   "source_id_cmip6": "GFDL-ESM4",
+   "institution": [
+    "NOAA-GFDL"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr1",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.GFDL-ESM4.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "GISS-E2-1-G",
+   "source_id_cmip6": "GISS-E2-1-G",
+   "institution": [
+    "NASA-GISS"
+   ],
+   "membre": "r1i1p1f2",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC0 1.0",
+   "licence_modele_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.GISS-E2-1-G.license_info",
+   "licence_fichiers_nexgddp_lue": {
+    "historical/pr/2014": "CC0 1.0",
+    "ssp585/tasmax/2050": "CC-BY-SA 4.0"
+   },
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "HadGEM3-GC31-LL",
+   "source_id_cmip6": "HadGEM3-GC31-LL",
+   "institution": [
+    "MOHC",
+    "NERC"
+   ],
+   "membre": "r1i1p1f3",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.HadGEM3-GC31-LL.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "HadGEM3-GC31-MM",
+   "source_id_cmip6": "HadGEM3-GC31-MM",
+   "institution": [
+    "MOHC"
+   ],
+   "membre": "r1i1p1f3",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": false,
+   "manques": [
+    "ssp245/pr absent",
+    "ssp245/tas absent",
+    "ssp245/tasmax absent"
+   ],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.HadGEM3-GC31-MM.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "hors ensemble (scénarios ou variables incomplets)",
+   "motif": "ssp245/pr absent; ssp245/tas absent; ssp245/tasmax absent"
+  },
+  {
+   "modele": "IITM-ESM",
+   "source_id_cmip6": "IITM-ESM",
+   "institution": [
+    "CCCR-IITM"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": false,
+   "manques": [
+    "historical/tasmax absent",
+    "ssp126/pr : 1 année(s) manquante(s) (2100-2100)",
+    "ssp126/tas : 1 année(s) manquante(s) (2100-2100)",
+    "ssp126/tasmax absent",
+    "ssp245/pr : 1 année(s) manquante(s) (2100-2100)",
+    "ssp245/tas : 1 année(s) manquante(s) (2100-2100)",
+    "ssp245/tasmax absent",
+    "ssp585/pr : 1 année(s) manquante(s) (2100-2100)",
+    "ssp585/tas : 1 année(s) manquante(s) (2100-2100)",
+    "ssp585/tasmax absent"
+   ],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.IITM-ESM.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "hors ensemble (scénarios ou variables incomplets)",
+   "motif": "historical/tasmax absent; ssp126/pr : 1 année(s) manquante(s) (2100-2100); ssp126/tas : 1 année(s) manquante(s) (2100-2100); ssp126/tasmax absent ; …"
+  },
+  {
+   "modele": "INM-CM4-8",
+   "source_id_cmip6": "INM-CM4-8",
+   "institution": [
+    "INM"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr1",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.INM-CM4-8.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "INM-CM5-0",
+   "source_id_cmip6": "INM-CM5-0",
+   "institution": [
+    "INM"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr1",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.INM-CM5-0.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "IPSL-CM6A-LR",
+   "source_id_cmip6": "IPSL-CM6A-LR",
+   "institution": [
+    "IPSL"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.IPSL-CM6A-LR.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "KACE-1-0-G",
+   "source_id_cmip6": "KACE-1-0-G",
+   "institution": [
+    "NIMS-KMA"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.KACE-1-0-G.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "KIOST-ESM",
+   "source_id_cmip6": "KIOST-ESM",
+   "institution": [
+    "KIOST"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gr1",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.KIOST-ESM.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "MIROC-ES2L",
+   "source_id_cmip6": "MIROC-ES2L",
+   "institution": [
+    "MIROC"
+   ],
+   "membre": "r1i1p1f2",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.MIROC-ES2L.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "MIROC6",
+   "source_id_cmip6": "MIROC6",
+   "institution": [
+    "MIROC"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.MIROC6.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "MPI-ESM1-2-HR",
+   "source_id_cmip6": "MPI-ESM1-2-HR",
+   "institution": [
+    "MPI-M",
+    "DWD",
+    "DKRZ"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.MPI-ESM1-2-HR.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "MPI-ESM1-2-LR",
+   "source_id_cmip6": "MPI-ESM1-2-LR",
+   "institution": [
+    "MPI-M",
+    "AWI",
+    "DKRZ",
+    "DWD"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.MPI-ESM1-2-LR.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "MRI-ESM2-0",
+   "source_id_cmip6": "MRI-ESM2-0",
+   "institution": [
+    "MRI"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.MRI-ESM2-0.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "NESM3",
+   "source_id_cmip6": "NESM3",
+   "institution": [
+    "NUIST"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.NESM3.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "NorESM2-LM",
+   "source_id_cmip6": "NorESM2-LM",
+   "institution": [
+    "NCC"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.NorESM2-LM.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "NorESM2-MM",
+   "source_id_cmip6": "NorESM2-MM",
+   "institution": [
+    "NCC"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.NorESM2-MM.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "TaiESM1",
+   "source_id_cmip6": "TaiESM1",
+   "institution": [
+    "AS-RCEC"
+   ],
+   "membre": "r1i1p1f1",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.TaiESM1.license_info",
+   "licence_fichiers_nexgddp_lue": {},
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  },
+  {
+   "modele": "UKESM1-0-LL",
+   "source_id_cmip6": "UKESM1-0-LL",
+   "institution": [
+    "MOHC",
+    "NERC",
+    "NIMS-KMA",
+    "NIWA"
+   ],
+   "membre": "r1i1p1f2",
+   "grille_source": "gn",
+   "grille_nexgddp": "0,25° régulière (1440 x 600, 60° S - 90° N)",
+   "complet_hist_ssp126_ssp245_ssp585_pr_tas_tasmax": true,
+   "manques": [],
+   "licence_modele_cmip6": "CC BY 4.0",
+   "licence_modele_url": "https://creativecommons.org/licenses/by/4.0/",
+   "source_licence_modele": "WCRP-CMIP/CMIP6_CVs, CMIP6_source_id.json (CV 6.2.60.0, source_id modifié le 18/04/2025), champ source_id.UKESM1-0-LL.license_info",
+   "licence_fichiers_nexgddp_lue": {
+    "ssp585/tasmax/2050": "CC-BY-SA 4.0"
+   },
+   "statut": "à garder",
+   "motif": "licence compatible (publication des dérivés avec citation) ; fichiers SSP à traiter comme CC BY-SA 4.0 (partage à l'identique)"
+  }
+ ]
+}

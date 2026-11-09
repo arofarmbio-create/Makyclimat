@@ -58,3 +58,6 @@ data/*/chlorure_pluie_raw/
 
 # Dépôt de chlorure (MERRA-2, littérature) : données brutes téléchargées, jamais dans git
 data/*/depot_chlorure_raw/
+
+# Projections NEX-GDDP-CMIP6 agrégées (E6) : publiées en release « cmip6-nexgddp », jamais dans git
+data/*/cmip6_nexgddp/

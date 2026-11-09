@@ -1,0 +1,83 @@
+name: "30 - Projections NEX-GDDP-CMIP6 par région (E6, protocole_cmip6.md)"
+
+# NEX-GDDP-CMIP6 v2.0 (NASA NEX / NCCS) : sous-ensemble NCSS de l'emprise de Madagascar (43-51° E, 26-11,5° S), un
+# fichier par variable et par année, sans compte. Agrégats mensuels par région publiés dans la release
+# « cmip6-nexgddp » (jamais dans git). Une requête à la fois, 3 essais au plus espacés de 30 s.
+# Données figées : lancement manuel seulement ; « probe » vérifie d'abord l'accès et le format sur un fichier.
+# Une seule exécution à la fois (concurrency) et un scénario à la fois (max-parallel 1) : règle « une tâche NASA à la fois ».
+on:
+  workflow_dispatch:
+    inputs:
+      modele:
+        description: "modèle (data/mdg/cmip6_modeles.json, statut « à garder »), ex. ACCESS-CM2"
+        default: "ACCESS-CM2"
+      scenario:
+        description: "historical, ssp126, ssp245, ssp585 ou tous (les quatre, l'un après l'autre)"
+        default: "historical"
+      probe:
+        description: "true = un fichier seulement (pr 2014, historical) pour tester l'accès"
+        default: "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nasa-nexgddp
+  cancel-in-progress: false
+
+env:
+  TAG: cmip6-nexgddp
+
+jobs:
+  scenarios:
+    runs-on: ubuntu-latest
+    outputs:
+      liste: ${{ steps.l.outputs.liste }}
+    steps:
+      - id: l
+        run: |
+          case "${{ github.event.inputs.scenario }}" in
+            tous) echo 'liste=["historical","ssp126","ssp245","ssp585"]' >> "$GITHUB_OUTPUT" ;;
+            historical|ssp126|ssp245|ssp585) echo 'liste=["${{ github.event.inputs.scenario }}"]' >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::scénario inconnu : ${{ github.event.inputs.scenario }}"; exit 1 ;;
+          esac
+
+  nexgddp:
+    needs: scenarios
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      max-parallel: 1
+      fail-fast: true
+      matrix:
+        scenario: ${{ fromJSON(needs.scenarios.outputs.liste) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas requests scipy
+      - name: Sonde (un fichier)
+        if: github.event.inputs.probe == 'true'
+        run: python scripts/build_cmip6_nexgddp.py --probe --modele "${{ github.event.inputs.modele }}" --annee 2014 --variable pr
+      - name: Reprendre les agrégats déjà publiés
+        if: github.event.inputs.probe != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Projections NEX-GDDP-CMIP6 par région (Madagascar)" \
+            --notes "Agrégats mensuels par région (adm1) de NEX-GDDP-CMIP6 v2.0 (NASA NEX, doi:10.7917/OFSG3345), pr en mm/mois, tas et tasmax en °C. Licences par modèle et sources : data/mdg/cmip6_modeles.json. Agrégats historiques : CC BY 4.0 (CC0 pour GISS-E2-1-G) ; agrégats SSP : CC BY-SA 4.0 (attribut cmip6_license des fichiers SSP). Citer NEX-GDDP-CMIP6 et chaque groupe de modélisation CMIP6. scripts/build_cmip6_nexgddp.py, validation/protocole_cmip6.md." || true
+          mkdir -p data/mdg/cmip6_nexgddp
+          gh release download "$TAG" --pattern "${{ github.event.inputs.modele }}_${{ matrix.scenario }}*" --dir data/mdg/cmip6_nexgddp || true
+      - name: Lire et agréger (reprise sur les années déjà publiées)
+        if: github.event.inputs.probe != 'true'
+        timeout-minutes: 320
+        run: python scripts/build_cmip6_nexgddp.py --modele "${{ github.event.inputs.modele }}" --scenario "${{ matrix.scenario }}"
+      - name: Publier dans la release (même après un échec ou un arrêt, pour reprendre ensuite)
+        if: always() && github.event.inputs.probe != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for f in data/mdg/cmip6_nexgddp/${{ github.event.inputs.modele }}_${{ matrix.scenario }}.csv                    data/mdg/cmip6_nexgddp/${{ github.event.inputs.modele }}_${{ matrix.scenario }}_meta.json; do
+            if [ -f "$f" ]; then gh release upload "$TAG" "$f" --clobber; fi
+          done

@@ -92,3 +92,8 @@ valeurs uniques.
 ## 10. Journal des modifications
 
 - 09/11/2026 : version initiale.
+- 09/11/2026 (avant tout téléchargement) : NEX-GDDP-CMIP6 v2.0, **28 modèles** ont historical, SSP1-2.6, SSP2-4.5 et
+  SSP5-8.5 pour pr, tas et tasmax (7 incomplets écartés : CESM2, CESM2-WACCM, CMCC-CM2-SR5, GFDL-CM4, GFDL-CM4_gr2,
+  HadGEM3-GC31-MM, IITM-ESM). Licences discordantes selon les sources (CC0 pour le jeu ; CC BY 4.0 pour les modèles ;
+  CC BY-SA 4.0 lu dans les fichiers SSP) : **règle la plus prudente**, agrégats SSP publiés sous CC BY-SA 4.0 avec
+  citation. Accès : NCSS du serveur THREDDS de la NCCS, sans compte. Liste : `data/mdg/cmip6_modeles.json`.
