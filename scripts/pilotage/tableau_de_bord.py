@@ -83,6 +83,123 @@ def hypotheses() -> list[tuple[str, str, str]]:
     return list(out.values())
 
 
+def etudes() -> list[dict]:
+    """Études du journal de recherche : titre, date, puces (texte complet), verdicts d'hypothèses."""
+    p = ROOT / "validation" / "journal_recherche.md"
+    out, date, cur, puce = [], "", None, None
+    if not p.exists():
+        return out
+    for line in p.read_text(encoding="utf-8").splitlines():
+        if line.startswith("## "):
+            date, cur = line[3:].strip(), None
+            continue
+        m = SECTION.match(line)
+        if m:
+            cur = {"titre": m.group(1).strip(), "court": re.sub(r"\s*\(`.*?`\)", "", m.group(1)).strip(),
+                   "date": date, "puces": [], "verdicts": []}
+            out.append(cur)
+            continue
+        if cur is None:
+            continue
+        if line.startswith("- "):
+            puce = line[2:].strip()
+            cur["puces"].append(puce)
+        elif line.startswith("  ") and cur["puces"]:
+            cur["puces"][-1] += " " + line.strip()
+        for h, v in VERDICT.findall(line):
+            cur["verdicts"].append((h, v))
+    for e in out:
+        e["verdicts"] = list(dict(e["verdicts"]).items())
+    return out
+
+
+def inline(t: str) -> str:
+    """Markdown en ligne minimal : **gras** et `code`, le reste échappé."""
+    t = esc(t)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
+    return re.sub(r"`(.+?)`", r"<code>\1</code>", t)
+
+
+def md_html(texte: str) -> str:
+    """Rendu minimal d'un fichier Markdown (titres, puces, tableaux, paragraphes)."""
+    out, table = [], []
+
+    def flush():
+        if table:
+            rows = [r for r in table if not re.match(r"^\|[\s\-:|]+\|$", r)]
+            out.append("<table>" + "".join("<tr>" + "".join(f"<td>{inline(c.strip())}</td>" for c in r.strip("|").split("|")) + "</tr>"
+                                            for r in rows) + "</table>")
+            table.clear()
+    for line in texte.splitlines():
+        if line.startswith("|"):
+            table.append(line.strip())
+            continue
+        flush()
+        if line.startswith("#"):
+            out.append(f"<h4>{inline(line.lstrip('#').strip())}</h4>")
+        elif line.lstrip().startswith(("- ", "* ")) or re.match(r"^\s*\d+\.\s", line):
+            out.append(f"<div class='li'>• {inline(re.sub(r'^\s*([-*]|\d+\.)\s', '', line))}</div>")
+        elif line.strip():
+            out.append(f"<p>{inline(line.strip())}</p>")
+    flush()
+    return "".join(out)
+
+
+def bibliographie(suivi: dict) -> str:
+    html_ = ""
+    for b in suivi.get("bibliographie") or []:
+        p = ROOT / b.get("fichier", "")
+        if not p.exists():
+            continue
+        t = p.read_text(encoding="utf-8")
+        if b.get("section"):
+            i = t.find(b["section"])
+            j = t.find("\n## ", i + 3)
+            t = t[i:j if j > 0 else None] if i >= 0 else ""
+        html_ += f'<details><summary>{esc(b.get("titre"))} <span class="mut">· {esc(b.get("fichier"))}</span></summary><div class="md">{md_html(t)}</div></details>'
+    return html_
+
+
+EMO = {"✅": "ok", "❌": "ko", "📊": "run", "📌": "todo", "🔧": "warn", "⚠️": "warn"}
+
+
+def puce_html(p: str) -> str:
+    c = next((v for k, v in EMO.items() if p.startswith(k)), "")
+    return f'<div class="li {c}">{inline(p)}</div>'
+
+
+def bloc_code(r: dict, liste: list[dict], regles: list[dict], details: dict) -> str:
+    code = r.get("code", "")
+    mine = [e for e in liste if any(code in g.get("codes", []) and re.search(g.get("motif", "^$"), e["titre"]) for g in regles)]
+    ok = sum(p.startswith("✅") for e in mine for p in e["puces"])
+    ko = sum(p.startswith("❌") for e in mine for p in e["puces"])
+    verd = [v for e in mine for _, v in e["verdicts"]]
+    sout = sum(v in ("soutenue", "robuste") for v in verd)
+    rob = sum(v == "robuste" for v in verd)
+    nons = sum(v in ("non soutenue", "non confirmée") for v in verd)
+    resume = (f'<span class="mut small">{len(mine)} études · ✅ {ok} · ❌ {ko} · hypothèses : {sout} soutenues '
+              f'(dont {rob} robustes), {nons} non soutenues</span>')
+    corps = f'<p><b>Où on en est :</b> {inline(r.get("ou", ""))}</p>'
+    if r.get("manque"):
+        corps += f'<p><b>Ce qui manque :</b> {inline(r["manque"])}</p>'
+    d = details.get(code) or {}
+    if d.get("ameliorer"):
+        corps += "<h4>Ce qu'on peut améliorer, et avec quoi</h4><table><tr><th>Quoi</th><th>Avec quoi</th></tr>" + "".join(
+            f"<tr><td>{inline(a.get('quoi', ''))}</td><td>{inline(a.get('avec', ''))}</td></tr>" for a in d["ameliorer"]) + "</table>"
+    if d.get("comparaison"):
+        corps += "<h4>Nous et les autres travaux</h4><table><tr><th>Ce que nous faisons</th><th>Ce que d'autres ont fait</th><th>Référence</th></tr>" + "".join(
+            f"<tr><td>{inline(a.get('nous', ''))}</td><td>{inline(a.get('autres', ''))}</td><td class='mut'>{inline(a.get('ref', ''))}</td></tr>"
+            for a in d["comparaison"]) + "</table>"
+    if mine:
+        corps += "<h4>Études (journal de recherche, plus récentes en haut)</h4>"
+        for e in mine[::-1]:
+            vb = " ".join(f'<span class="code">{esc(h)}</span> {badge(v)}' for h, v in e["verdicts"])
+            corps += (f'<details class="sub"><summary>{esc(e["court"])} <span class="mut">· {esc(e["date"])}</span> {vb}</summary>'
+                      + "".join(puce_html(p) for p in e["puces"]) + "</details>")
+    return (f'<details class="mod"><summary><span class="code">{esc(code)}</span> {esc(r.get("nom"))} {badge(r.get("statut", ""))} '
+            f'{resume}</summary><div class="in">{corps}</div></details>')
+
+
 def famille(h: str) -> str:
     for k in sorted(FAMILLE, key=len, reverse=True):
         if h.startswith(k):
@@ -208,11 +325,16 @@ def page() -> str:
     commits = "".join(f"<li>{esc(l)}</li>" for l in run(["git", "log", "-8", "--format=%ad · %s", "--date=format:%d/%m %H:%M"]).splitlines())
     errs = "".join(f'<p class="kot">{esc(x["erreur"])}</p>' for x in (obj, suivi, glo) if x.get("erreur"))
 
-    proto = ""
-    for cle, titre in (("modules", "Modules M0 à M7 (protocole §6)"), ("experiences", "Expériences E1 à E7 (protocole §10)"),
-                       ("hypotheses", "Hypothèses H1 à H6 (protocole §5)"), ("livrables", "Livrables L1 à L6 (prompt maître §15)")):
+    proto, liste = "", etudes()
+    regles, details = suivi.get("regles") or [], suivi.get("details") or {}
+    for cle, titre in (("modules", "Modules M0 à M7 (protocole §6)"), ("experiences", "Expériences E1 à E7 (protocole §10)")):
         rows = suivi.get(cle) or []
-        proto += f'<details open><summary>{titre}</summary>{jauge(rows)}{table_suivi(rows, cle in ("modules", "experiences"))}</details>'
+        proto += (f'<details open><summary>{titre}</summary>{jauge(rows)}'
+                  + "".join(bloc_code(r, liste, regles, details) for r in rows) + "</details>")
+    for cle, titre in (("hypotheses", "Hypothèses H1 à H6 (protocole §5)"), ("livrables", "Livrables L1 à L6 (prompt maître §15)")):
+        rows = suivi.get(cle) or []
+        proto += f'<details><summary>{titre}</summary>{jauge(rows)}{table_suivi(rows, False)}</details>'
+    biblio = bibliographie(suivi)
 
     return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="refresh" content="{PERIODE_S}">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Pilotage MakyClimat</title><style>
@@ -236,6 +358,11 @@ table{{width:100%;border-collapse:collapse;font-size:13px}} th{{text-align:left;
 td,th{{padding:5px 6px;border-top:1px solid var(--line);vertical-align:top}} td.code{{font-family:Consolas,monospace;color:var(--acc);white-space:nowrap}}
 .two{{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-bottom:14px}}
 .wide{{margin-bottom:14px}} details{{margin-bottom:8px}}
+details.mod{{border:1px solid var(--line);background:#0c1728;padding:6px 10px;margin:6px 0}} details.mod>summary{{font:14px "Segoe UI",sans-serif;text-transform:none;letter-spacing:0;color:var(--fg)}}
+details.sub{{border-top:1px solid var(--line);padding:4px 0;margin:0}} details.sub>summary{{font:13px "Segoe UI",sans-serif;text-transform:none;letter-spacing:0;color:var(--fg)}}
+.in{{padding:4px 0 6px 10px}} h4{{font:600 12px Consolas,monospace;color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin:10px 0 4px}}
+.li{{padding:3px 0 3px 8px;font-size:13px}} .li.ok{{color:#bdf7de}} .li.ko{{color:#ffc2c9}} .li.warn{{color:#ffe7b3}}
+span.code,code{{font-family:Consolas,monospace;color:var(--acc)}} .md p{{margin:4px 0}} .md td{{font-size:12px}}
 </style></head><body>
 <div class="head"><h1>MakyClimat · pilotage de la thèse</h1>
 <div class="mut">{esc(th.get("titre", ""))}</div>
@@ -247,7 +374,21 @@ td,th{{padding:5px 6px;border-top:1px solid var(--line);vertical-align:top}} td.
 <div class="box"><h2>Blocages</h2><table><tr><th>Quoi</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc}</table></div></div>
 <div class="two"><div class="box"><h2>Hypothèses testées (plus récentes en haut)</h2><table><tr><th></th><th>Verdict</th><th>Étude</th><th>Famille</th></tr>{hyp}</table></div>
 <div class="box"><h2>Glossaire : T2, T2L, T2K…</h2><table>{gl}</table></div></div>
+<div class="box wide"><h2>Bibliographie et sources</h2>{biblio or "<p class=mut>aucun fichier</p>"}</div>
 <div class="box wide"><h2>Dernières actions (git)</h2><ul>{commits}</ul></div>
+<script>
+(function(){{
+  var K="pilotage_ouverts", S="pilotage_defilement";
+  function cle(d){{var s=d.querySelector("summary");return s?s.textContent.trim().slice(0,90):"";}}
+  var ouverts={{}}; try{{ouverts=JSON.parse(localStorage.getItem(K)||"{{}}");}}catch(e){{}}
+  document.querySelectorAll("details").forEach(function(d){{
+    var k=cle(d); if(k in ouverts) d.open=ouverts[k];
+    d.addEventListener("toggle",function(){{ouverts[k]=d.open;try{{localStorage.setItem(K,JSON.stringify(ouverts));}}catch(e){{}}}});
+  }});
+  try{{var y=+sessionStorage.getItem(S);if(y)window.scrollTo(0,y);}}catch(e){{}}
+  window.addEventListener("beforeunload",function(){{try{{sessionStorage.setItem(S,String(window.scrollY));}}catch(e){{}}}});
+}})();
+</script>
 </body></html>"""
 
 
