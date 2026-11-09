@@ -38,6 +38,19 @@ PGRM si disponible), carte des failles.
 Pour les centres JIRAMA et les adductions : source de chaque captage (rivière ou forage), volumes produits et
 distribués, taux de desserte réel, pour estimer la part de la consommation prélevée dans la nappe.
 
+### Mise à jour du 09/11/2026 : ce que les tests de la recharge demandent en plus
+
+Les tests de la recharge (`methodologie_these.md`, section 7.1) et l'analyse de puissance (`analyse_puissance.md`)
+précisent les besoins ; le détail est dans `plan_mesures.md` :
+- **Séries de niveaux** : au moins 2 ans suffisent pour la recharge par fluctuation, à condition d'avoir **4 à 6 groupes
+  de sites indépendants (distants de plus de 20 km) par type de roche** : socle, sables et alluvions, calcaires.
+- **Chimie de l'eau** : chlorure, sodium et **brome** si mesuré (le rapport Cl/Br distingue le chlorure de la pluie de
+  celui des roches), conductivité, nitrate, avec les dates.
+- **Profondeur des crépines** et **forages captant deux niveaux au même endroit** : pour tester une recharge des nappes
+  profondes plus lente que celle des nappes peu profondes.
+- **Essais de pompage longs avec piézomètre d'observation** : pour le coefficient d'emmagasinement (rendement
+  spécifique) ; les essais sur un seul forage donnent surtout la transmissivité.
+
 ## 3. Zones prioritaires (d'après l'atlas)
 
 | Priorité | Bassin versant | Population | Relevés MGMERL | Fokontany en extrapolation | Pourquoi |
@@ -48,6 +61,10 @@ distribués, taux de desserte réel, pour estimer la part de la consommation pr�
 | 4 | n° 7 Ambodiharina (Mangoro, Alaotra) | 1,5 million | 0 | 87 % | aucune mesure |
 | 5 | n° 11 Ampasina Maningory, n° 5 Mahadrodroka, n° 12 Analalava (Est, Nord-Ouest) | 2,5 millions | 5 | 32 à 43 % | Est humide et Nord-Ouest |
 | 6 | Villes côtières de l'Ouest : Toliara, Mahajanga, Morondava, Maintirano | — | variable | — | pression la plus forte à l'échelle fine ; recharge mal connue |
+
+Ajout du 09/11/2026, d'après les échecs des tests de la recharge : zones calcaires hors de Toliara (nord du plateau
+Mahafaly, Bemaraha, Namoroka) ; sables et alluvions de la côte Ouest (Morombe, Morondava) ; socle hors de l'Androy et
+de l'Anosy.
 
 Régions sans aucun niveau statique mesuré : Itasy, Vakinankaratra, Haute Matsiatra, Alaotra-Mangoro, Atsinanana,
 Sofia, Diana, Melaky, Bongolava, Ihorombe.
