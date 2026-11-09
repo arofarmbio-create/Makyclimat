@@ -439,3 +439,67 @@ plus proche (1 098 à 10 km, 261 à 200 km) ; bas trop faible près de la côte,
 | `scripts/depot_chlorure_merra2.py`, `tests/test_depot_chlorure_merra2.py` | nouveaux, non commités |
 | `.github/workflows/build-depot-chlorure-merra2.yml` | nouveau, non commité |
 | `.gitignore` | deux lignes ajoutées, non commité |
+
+## 09/11/2026 (après-midi) : GLiM vectorielle, fin du téléchargement, découpe Madagascar, licence
+
+### 1. Téléchargement
+
+- Reprise du fichier partiel (241 713 152 octets) par `curl -L -C - --ssl-no-revoke --retry 3 --retry-delay 30`, un
+  seul téléchargement à la fois. Dropbox a accepté la reprise à chaque fois (`code=206`, `type=application/binary`).
+  Deux coupures : `curl: (56) Recv failure: Connection was reset` (à 279,6 Mo, 12 h 56) et `curl: (56) schannel:
+  server closed abruptly (missing close_notify)` (vers 998 Mo) ; `--retry` ne relance pas sur l'erreur 56, d'où une
+  boucle de reprise (30 s de pause, 40 essais au plus ; 2 utilisés). Débit de 70 à 200 ko/s.
+- **Fichier complet à 14 h 09 : 1 138 691 332 octets (taille annoncée exacte)**, signatures `PK\x03\x04` et fin de
+  répertoire central présentes ; `zipfile.testzip()` : aucun CRC faux, 47 entrées (`LiMW_GIS 2015.gdb/...`).
+  Journal : `data/mdg/nappes_mondiales/glim_vecteur_telechargement.log` (ignoré).
+
+### 2. Inspection et découpe
+
+- Sous Git Bash, le chemin `/vsizip/...` est réécrit par MSYS (échec : « does not exist in the file system ») ;
+  solution : `MSYS_NO_PATHCONV=1` et chemin absolu avec le dossier interne :
+  `/vsizip/C:/Users/user/Makyclimat/data/mdg/nappes_mondiales/glim_vecteur_raw/LiMW_GIS_2015.gdb.zip/LiMW_GIS 2015.gdb`.
+- `scripts/glim_vecteur_inspect.py` : une couche `GLiM_export` (MultiPolygon), **1 235 259 polygones**, projection
+  World Eckert IV (ESRI:54012), champs `IDENTITY_`, `Litho`, `xx`, `Shape_Length`, `Shape_Area`.
+- `scripts/glim_vecteur_mdg.py ... GLiM_export glim_vecteur_mdg.gpkg glim_vecteur_surfaces.json` (emprise 43-51 E,
+  26-11,5 S ; surfaces en Albers équivalente centrée sur Madagascar) : **2 243 polygones** (2 239 `MDG`, 4 `AFR`),
+  **592 833 km²** au total.
+
+| Classe (xx) | km² | % |
+|---|---|---|
+| mt (métamorphiques) | 238 889 | 40,30 |
+| pa (plutoniques acides) | 81 596 | 13,76 |
+| ss (silicoclastiques) | 81 462 | 13,74 |
+| su (sédiments meubles) | 76 262 | 12,86 |
+| sm (sédimentaires mixtes) | 67 753 | 11,43 |
+| vb (volcaniques basiques) | 32 907 | 5,55 |
+| va (volcaniques acides) | 5 542 | 0,93 |
+| pb (plutoniques basiques) | 4 527 | 0,76 |
+| **sc (carbonates)** | **2 092** | **0,35** |
+| pi (plutoniques intermédiaires) | 1 024 | 0,17 |
+| wb (eau) | 761 | 0,13 |
+| nd (non défini) | 18 | 0,00 |
+
+- **Carbonates.** `sc` ne contient qu'une sous-classe, `scpumt` (carbonates purs associés aux métamorphiques, c'est-à-
+  dire marbres et cipolins du socle) : 2 091,8 km², 65 polygones, surtout entre 45 et 47 E et 20 et 22 S. **Les
+  karsts sédimentaires connus ne sont pas en `sc`** : des points tests à Bemaraha (44,75 E ; 18,8 S), Ankarana
+  (49,1 ; 12,9), Namoroka (45,35 ; 16,4), plateau Mahafaly (43,9 ; 24,0) et Toliara (43,75 ; 23,4) tombent tous en
+  `smmx` (sédimentaire mixte). La carte source de la GLiM pour Madagascar a donc regroupé les calcaires
+  sédimentaires avec d'autres roches : **`sc` ne peut pas servir de masque karstique**, et la GLiM ne permet pas de
+  contrôler les mailles fkarst de Wan et al. 2024. Elle confirme seulement que la côte est (Mananara-Masoala) n'a pas
+  de carbonates cartographiés hors marbres du socle (à vérifier maille par maille si utile).
+- Sorties : `data/mdg/nappes_mondiales/glim_vecteur_surfaces.json` (agrégats, versionnable sous réserve de la
+  licence ci-dessous) ; `glim_vecteur_mdg.gpkg` (géométries, ignoré par `*.gpkg`) ; `glim_vecteur.json` mis à jour.
+
+### 3. Licence des polygones
+
+- **Vérifié** : la page de l'Université de Hambourg n'indique ni licence ni conditions (seulement « © 2026 University
+  of Hamburg. All rights reserved » pour le site) ; la fiche CCGM du produit (https://ccgm.org/en/wp-json/wp/v2/product/863)
+  donne le lien Dropbox et « ©CCGM-CGMW 2015 », crédite Moosdorf et Hartmann, sans licence ni conditions d'usage ;
+  PANGAEA (doi:10.1594/PANGAEA.788537) : CC BY 3.0 pour la seule grille à 0,5°. Pour un autre produit SIG de la CCGM
+  (carte géologique du monde au 1/35 M, https://ccgm.org/en/?p=588), un contrat de licence signé est exigé avant
+  l'envoi du lien : rien de tel pour la carte lithologique, diffusée par lien public.
+- **Non vérifié** : page CSDMS (accès refusé à l'outil de lecture), mention de données dans l'article de 2012, texte
+  du contrat de licence générique de la CCGM. Recherche Firecrawl impossible (crédits épuisés) ; faite avec WebSearch
+  et WebFetch.
+- **Conclusion** : droits « ©CCGM-CGMW 2015 » sans licence ouverte ; aucune géométrie dans le dépôt. Des surfaces
+  agrégées citant Hartmann et Moosdorf (2012) et la CCGM (2015) paraissent acceptables, mais ce n'est pas confirmé.

@@ -1,0 +1,161 @@
+{
+ "n_polygones": 2243,
+ "surface_totale_km2": 592833.4,
+ "niveau1": {
+  "mt": {
+   "km2": 238889.3,
+   "pct": 40.3
+  },
+  "pa": {
+   "km2": 81596.4,
+   "pct": 13.76
+  },
+  "ss": {
+   "km2": 81462.2,
+   "pct": 13.74
+  },
+  "su": {
+   "km2": 76262.2,
+   "pct": 12.86
+  },
+  "sm": {
+   "km2": 67753.2,
+   "pct": 11.43
+  },
+  "vb": {
+   "km2": 32906.5,
+   "pct": 5.55
+  },
+  "va": {
+   "km2": 5542.0,
+   "pct": 0.93
+  },
+  "pb": {
+   "km2": 4526.6,
+   "pct": 0.76
+  },
+  "sc": {
+   "km2": 2091.8,
+   "pct": 0.35
+  },
+  "pi": {
+   "km2": 1024.4,
+   "pct": 0.17
+  },
+  "wb": {
+   "km2": 761.1,
+   "pct": 0.13
+  },
+  "nd": {
+   "km2": 17.8,
+   "pct": 0.0
+  }
+ },
+ "sc_detail_litho": {
+  "scpumt": {
+   "km2": 2091.8,
+   "pct_du_total": 0.35,
+   "polygones": 65
+  }
+ },
+ "litho_toutes": {
+  "mt____": {
+   "km2": 153914.2,
+   "polygones": 226
+  },
+  "ssmx__": {
+   "km2": 81462.2,
+   "polygones": 152
+  },
+  "pa____": {
+   "km2": 77084.2,
+   "polygones": 557
+  },
+  "smmx__": {
+   "km2": 67753.2,
+   "polygones": 305
+  },
+  "mtpu__": {
+   "km2": 64664.6,
+   "polygones": 53
+  },
+  "vb____": {
+   "km2": 32906.5,
+   "polygones": 188
+  },
+  "suad__": {
+   "km2": 27142.4,
+   "polygones": 177
+  },
+  "supu__": {
+   "km2": 26197.5,
+   "polygones": 35
+  },
+  "mtam__": {
+   "km2": 20310.4,
+   "polygones": 31
+  },
+  "sula__": {
+   "km2": 13183.0,
+   "polygones": 12
+  },
+  "va____": {
+   "km2": 5542.0,
+   "polygones": 120
+  },
+  "pa__mt": {
+   "km2": 4512.2,
+   "polygones": 4
+  },
+  "pb____": {
+   "km2": 4499.3,
+   "polygones": 165
+  },
+  "suds__": {
+   "km2": 4278.6,
+   "polygones": 60
+  },
+  "suss__": {
+   "km2": 3231.7,
+   "polygones": 31
+  },
+  "scpumt": {
+   "km2": 2091.8,
+   "polygones": 65
+  },
+  "suor__": {
+   "km2": 1364.8,
+   "polygones": 8
+  },
+  "pi____": {
+   "km2": 1024.4,
+   "polygones": 30
+  },
+  "sumx__": {
+   "km2": 864.2,
+   "polygones": 8
+  },
+  "wb____": {
+   "km2": 761.1,
+   "polygones": 11
+  },
+  "pb__mt": {
+   "km2": 27.3,
+   "polygones": 2
+  },
+  "nd____": {
+   "km2": 17.8,
+   "polygones": 3
+  }
+ },
+ "champs": [
+  "IDENTITY_",
+  "Litho",
+  "xx",
+  "Shape_Length",
+  "Shape_Area",
+  "surface_km2"
+ ],
+ "crs_source": "PROJCS[\"World_Eckert_IV\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Eckert_IV\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"ESRI\",\"54012\"]]",
+ "calcule_le": "2026-11-09"
+}

@@ -1,15 +1,171 @@
 {
- "statut": "téléchargement en cours (09/11/2026) : découpe et surfaces non encore calculées",
+ "statut": "calculé le 09/11/2026 (après-midi) : téléchargement complet (1 138 691 332 octets, zip valide, CRC vérifiés), découpe et surfaces faites",
  "url_page_source": "https://www.geo.uni-hamburg.de/en/geologie/forschung/aquatische-geochemie/glim.html",
  "url_fichier": "https://www.dropbox.com/s/9vuowtebp9f1iud/LiMW_GIS%202015.gdb.zip?dl=1",
  "fichier": "LiMW_GIS_2015.gdb.zip (géodatabase ESRI, 1 138 691 332 octets annoncés par le serveur)",
  "version": "LiMW_GIS 2015 : version SIG de la Lithological Map of the World (CCGM 2015), fondée sur GLiM v1.1 selon CSDMS (https://csdms.colorado.edu/wiki/Alldata:GLiM) ; ni v1.0 ni v1.2 au sens strict",
  "citation": "Hartmann J., Moosdorf N. (2012). The new global lithological map database GLiM: A representation of rock properties at the Earth surface. Geochemistry, Geophysics, Geosystems 13, Q12004, doi:10.1029/2012GC004370",
- "licence": "non indiquée sur la page de l'Université de Hambourg ni sur le lien Dropbox ; CC BY 3.0 vérifiée seulement pour la version grillée 0,5° (PANGAEA, doi:10.1594/PANGAEA.788537). À confirmer avant toute redistribution de polygones.",
+ "licence": "non indiquée pour les polygones (vérifié le 09/11/2026 : page de Hambourg, fiche CCGM du produit 863 « ©CCGM-CGMW 2015 », sans licence ni conditions). CC BY 3.0 vérifiée seulement pour la grille 0,5° (PANGAEA, doi:10.1594/PANGAEA.788537). La CCGM soumet un autre produit SIG (carte géologique du monde au 1/35 M) à un contrat de licence signé : pas d’équivalent trouvé pour la carte lithologique. Ne pas redistribuer de géométries ; seules des surfaces agrégées, citant la source, figurent ici.",
  "republication": "à confirmer (géométries) ; surfaces agrégées citant la source : a priori sans difficulté",
- "emprise": [43.0, -26.0, 51.0, -11.5],
- "telecharge_le": null,
- "n_polygones_madagascar": null,
- "surfaces_niveau1": null,
- "calcul": "scripts/glim_vecteur_mdg.py (surfaces en projection d'Albers équivalente centrée sur Madagascar)"
+ "emprise": [
+  43.0,
+  -26.0,
+  51.0,
+  -11.5
+ ],
+ "telecharge_le": "2026-11-09",
+ "n_polygones_madagascar": 2243,
+ "surfaces_niveau1": {
+  "mt": {
+   "km2": 238889.3,
+   "pct": 40.3
+  },
+  "pa": {
+   "km2": 81596.4,
+   "pct": 13.76
+  },
+  "ss": {
+   "km2": 81462.2,
+   "pct": 13.74
+  },
+  "su": {
+   "km2": 76262.2,
+   "pct": 12.86
+  },
+  "sm": {
+   "km2": 67753.2,
+   "pct": 11.43
+  },
+  "vb": {
+   "km2": 32906.5,
+   "pct": 5.55
+  },
+  "va": {
+   "km2": 5542.0,
+   "pct": 0.93
+  },
+  "pb": {
+   "km2": 4526.6,
+   "pct": 0.76
+  },
+  "sc": {
+   "km2": 2091.8,
+   "pct": 0.35
+  },
+  "pi": {
+   "km2": 1024.4,
+   "pct": 0.17
+  },
+  "wb": {
+   "km2": 761.1,
+   "pct": 0.13
+  },
+  "nd": {
+   "km2": 17.8,
+   "pct": 0.0
+  }
+ },
+ "calcul": "scripts/glim_vecteur_mdg.py (surfaces en projection d'Albers équivalente centrée sur Madagascar)",
+ "couche": "GLiM_export (MultiPolygon, 1 235 259 polygones, Eckert IV ESRI:54012, champs IDENTITY_, Litho, xx)",
+ "n_polygones_note": "2 239 polygones MDG et 4 AFR dans l’emprise ; aucun polygone comorien lu",
+ "surface_totale_km2": 592833.4,
+ "sc_detail_litho": {
+  "scpumt": {
+   "km2": 2091.8,
+   "pct_du_total": 0.35,
+   "polygones": 65
+  }
+ },
+ "litho_toutes": {
+  "mt____": {
+   "km2": 153914.2,
+   "polygones": 226
+  },
+  "ssmx__": {
+   "km2": 81462.2,
+   "polygones": 152
+  },
+  "pa____": {
+   "km2": 77084.2,
+   "polygones": 557
+  },
+  "smmx__": {
+   "km2": 67753.2,
+   "polygones": 305
+  },
+  "mtpu__": {
+   "km2": 64664.6,
+   "polygones": 53
+  },
+  "vb____": {
+   "km2": 32906.5,
+   "polygones": 188
+  },
+  "suad__": {
+   "km2": 27142.4,
+   "polygones": 177
+  },
+  "supu__": {
+   "km2": 26197.5,
+   "polygones": 35
+  },
+  "mtam__": {
+   "km2": 20310.4,
+   "polygones": 31
+  },
+  "sula__": {
+   "km2": 13183.0,
+   "polygones": 12
+  },
+  "va____": {
+   "km2": 5542.0,
+   "polygones": 120
+  },
+  "pa__mt": {
+   "km2": 4512.2,
+   "polygones": 4
+  },
+  "pb____": {
+   "km2": 4499.3,
+   "polygones": 165
+  },
+  "suds__": {
+   "km2": 4278.6,
+   "polygones": 60
+  },
+  "suss__": {
+   "km2": 3231.7,
+   "polygones": 31
+  },
+  "scpumt": {
+   "km2": 2091.8,
+   "polygones": 65
+  },
+  "suor__": {
+   "km2": 1364.8,
+   "polygones": 8
+  },
+  "pi____": {
+   "km2": 1024.4,
+   "polygones": 30
+  },
+  "sumx__": {
+   "km2": 864.2,
+   "polygones": 8
+  },
+  "wb____": {
+   "km2": 761.1,
+   "polygones": 11
+  },
+  "pb__mt": {
+   "km2": 27.3,
+   "polygones": 2
+  },
+  "nd____": {
+   "km2": 17.8,
+   "polygones": 3
+  }
+ },
+ "remarque_karst": "La classe sc (carbonates) ne contient que scpumt (carbonates purs avec métamorphiques : marbres du socle, 2 091,8 km², 65 polygones, surtout 45-47 E / 20-22 S). Les karsts sédimentaires connus (Bemaraha, Ankarana, Namoroka, plateau Mahafaly, Toliara : points testés) tombent tous dans smmx (sédimentaire mixte, sm). La GLiM sous-estime donc les carbonates à Madagascar : sc ne peut pas servir de masque karstique.",
+ "sorties": "glim_vecteur_surfaces.json (versionnable, agrégats) ; glim_vecteur_mdg.gpkg (ignoré, géométries)"
 }

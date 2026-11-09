@@ -1166,3 +1166,16 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   de chances d'être retenu ; les régions « non prévisibles » ne prouvent pas l'absence de lien.
 - 📌 Rédaction : E1, H-N1, R-02 et R-25 passent de « non soutenue » à « non établi, puissance insuffisante » ; THMS
   reste un résultat négatif ; R-01 (AUC 0,84, 21 cyclones) n'est pas concerné.
+
+### GLiM vectorielle à Madagascar (`data/mdg/nappes_mondiales/glim_vecteur_surfaces.json`)
+- ✅ Téléchargement complet (1 138 691 332 octets, zip valide) ; 2 243 polygones à Madagascar. Surfaces : métamorphique
+  (mt) 40,3 %, plutonique acide (pa) 13,8 %, silicoclastique (ss) 13,7 %, non consolidé (su) 12,9 %, sédimentaire
+  mixte (sm) 11,4 %, volcanique basique (vb) 5,6 %, carbonates (sc) 0,35 %.
+- ❌ **La GLiM ne délimite pas le karst malgache** : la classe carbonatée (2 092 km²) ne contient que des marbres du
+  socle ; les cinq karsts testés (Bemaraha, Ankarana, Namoroka, Mahafaly, Toliara) tombent en sédimentaire mixte. Elle
+  ne peut ni servir de masque karstique ni contrôler la grille fkarst de Wan et al.
+- 📌 Ce qu'elle peut apporter : séparer les sables et alluvions (su), les grès (ss) et le sédimentaire mixte (sm),
+  que le BGS réunit, c'est-à-dire la confusion qui a fait échouer T2L (sables de l'Androy contre Toliara). À tester
+  sous protocole, avec analyse de puissance.
+- ⚠️ Licence : aucune licence écrite pour les polygones (« ©CCGM-CGMW 2015 » seulement) ; aucune géométrie dans le
+  dépôt ; seules des surfaces agrégées sont publiées, avec citation.
