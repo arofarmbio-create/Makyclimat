@@ -51,18 +51,18 @@ def verdict(Z: float, lignes: list[tuple[float, int]]) -> str:
 
 
 def scenario_merra2() -> str | None:
-    """Scénario le plus proche du dépôt MERRA-2, si le fichier existe (sinon None)."""
-    p = ROOT / "data" / "mdg" / "depot_chlorure_merra2_mailles.csv"
+    """Scénario le plus proche du dépôt MERRA-2 sur les mailles terrestres (médiane de la classe de distance à la côte
+    qui contient la distance médiane des blocs), si la synthèse MERRA-2 existe ; sinon None."""
+    p = ROOT / "data" / "mdg" / "depot_chlorure.json"
     if not p.exists():
         return None
-    import recharge_chlorure as RC
-    m = pd.read_csv(p)
-    col = next((c for c in m.columns if "chlorure" in c.lower() and "mg" in c.lower()), None)
-    terre = m[m[[c for c in m.columns if "terre" in c.lower()][0]].astype(bool)] if any("terre" in c.lower() for c in m.columns) else m
-    if col is None or terre.empty:
+    cl = (json.loads(p.read_text(encoding="utf-8")).get("merra2") or {}).get("par_classe_distance_chlorure_mg_m2_an")
+    if not cl:
         return None
+    import recharge_chlorure as RC
     d_med = float(pd.read_csv(ROOT / "validation" / "recharge_chlorure_blocs_zones.csv").dist_km.median())
-    cible = float(terre[col].median())
+    classe = "moins de 30 km" if d_med < 30 else ("30 à 100 km" if d_med <= 100 else "plus de 100 km")
+    cible = float(cl[classe]["mediane"])
     ecarts = {s: abs(np.log10(RC.depot([500.0], [d_med], RC.SCENARIOS[s])[0] / cible)) for s in SCENARIOS}
     return min(ecarts, key=ecarts.get)
 

@@ -1130,3 +1130,15 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   Sans le chlorure, les deux questions restent au rang d'**indice concordant**.
 - ⚠️ Réserves : L2 et L3 partagent la région et les forages ; le chlorure venu des roches (Cl/Na 0,96) abaisse la
   recharge par chlorure et favorise Q1 ; L1 a servi à construire T2L.
+
+### Dépôt de chlorure MERRA-2 (workflow 29, `data/mdg/depot_chlorure.json`)
+- ✅ MERRA-2 M2TMNXADG (sel de mer : dépôt sec, humide, lessivage, sédimentation), 2001-2020, 39 mailles terrestres du
+  Grand Sud ; chlorure = 0,55 × sel de mer (Millero et al. 2008).
+- 📊 Dépôt de chlorure médian : 11 707 mg/m²/an à moins de 30 km de la côte, 5 786 entre 30 et 100 km, 3 520 au-delà.
+- ⚠️ **Hors de toutes les valeurs de terrain** : 2 à 13 fois les mesures de Kwale (côte du Kenya) et de l'intérieur
+  sud-africain, 3 fois le scénario haut ; la sédimentation pèse environ la moitié. Pris à la lettre, il donnerait une
+  recharge par chlorure d'environ 60 mm/an, proche de T2.
+- 📌 Combinaison des preuves, règle appliquée : scénario **haut** retenu → Q1 (T2 surestime) « indice », Q2 (T2L plus
+  juste) « non établi ». **Le désaccord entre MERRA-2 et les mesures de terrain devient la question centrale** : valider
+  MERRA-2 aux sites mesurés (Kwale, Afrique du Sud) avant de lui donner le dernier mot ; à terme, mesurer le chlorure de
+  la pluie dans le Sud.

@@ -55,3 +55,10 @@ autre zone) est ajoutée avec les mêmes règles, sans modifier les lignes exist
 ## 7. Journal des modifications
 
 - 09/11/2026 : version initiale.
+- 09/11/2026 (après MERRA-2) : la règle désigne le scénario **haut** (MERRA-2, mailles terrestres à 30-100 km :
+  médiane 5 786 mg/m²/an de chlorure ; scénario haut à 97 km : environ 1 980). Verdicts appliqués tels quels : Q1
+  « indice », Q2 « non établi ». **Réserve déclarée** : MERRA-2 dépasse toutes les mesures de terrain connues (côte du
+  Kenya 2 435 à 3 334 ; intérieur sud-africain 260) d'un facteur 2 à 13, et même le scénario haut d'un facteur 3 ; la
+  moitié de son dépôt vient de la sédimentation des grosses particules, et les mailles côtières contiennent de la mer.
+  La règle supposait MERRA-2 crédible : sa validation sur des sites mesurés (Kwale, Afrique du Sud) devient nécessaire
+  avant de lui donner le dernier mot. Les verdicts ne sont pas modifiés.

@@ -3,7 +3,7 @@
  "date": "2026-11-09",
  "auteur": "agent de téléchargement",
  "merra2": {
-  "statut": "NON CALCULÉ le 09/11/2026 : l'OPeNDAP de la NASA exige un compte Earthdata (redirection 302 vers /login/urs, testé une fois) ; les identifiants du projet n'existent que comme secrets GitHub (EARTHDATA_USER / EARTHDATA_PASSWORD), absents de ce poste ; lancer le workflow 29 (fichier non commité) puis `python scripts/depot_chlorure_merra2.py --part synthese`.",
+  "statut": "calculé",
   "collection": "tavgM_2d_adg_Nx (M2TMNXADG v5.12.4, « Aerosol Diagnostics (extended) », moyennes mensuelles, 0,625° x 0,5°), doi:10.5067/RZIK2TV7PP38 ; CMR C1276812865-GES_DISC",
   "correction": "Les dépôts de sel de mer ne sont PAS dans tavgM_2d_aer_Nx (M2TMNXAER) : la spécification les range dans la collection adg (p. 25-26) ; aer ne porte que masses et épaisseurs optiques (p. 29).",
   "variables": {
@@ -29,7 +29,419 @@
    "statut": "valeur de référence connue, article non relu le 09/11/2026"
   },
   "licence": "données NASA GES DISC sans restriction d'usage ; citer GMAO (2015), MERRA-2 tavgM_2d_adg_Nx, doi:10.5067/RZIK2TV7PP38",
-  "limites_attendues": "maille de 55 x 50 km : le gradient des 10 premiers km n'est pas résolu ; le dépôt de sel de mer de MERRA-2 n'a pas été validé à Madagascar"
+  "limites_attendues": "maille de 55 x 50 km : le gradient des 10 premiers km n'est pas résolu ; le dépôt de sel de mer de MERRA-2 n'a pas été validé à Madagascar",
+  "par_classe_distance_chlorure_mg_m2_an": {
+   "moins de 30 km": {
+    "n_mailles": 10,
+    "mediane": 11707.0,
+    "min": 5795.0,
+    "max": 30463.0
+   },
+   "30 à 100 km": {
+    "n_mailles": 15,
+    "mediane": 5786.0,
+    "min": 3274.0,
+    "max": 19772.0
+   },
+   "plus de 100 km": {
+    "n_mailles": 14,
+    "mediane": 3520.0,
+    "min": 2362.0,
+    "max": 10778.0
+   }
+  },
+  "mailles_terre": [
+   {
+    "lon": 45.625,
+    "lat": -25.5,
+    "distance_cote_km": 1.7,
+    "chlorure_mg_m2_an": 12800.0,
+    "sel_mer_DP_mg_m2_an": 2046.9,
+    "sel_mer_WT_mg_m2_an": 8519.9,
+    "sel_mer_SV_mg_m2_an": 1286.3,
+    "sel_mer_SD_mg_m2_an": 11419.6
+   },
+   {
+    "lon": 44.375,
+    "lat": -25.0,
+    "distance_cote_km": 17.0,
+    "chlorure_mg_m2_an": 8451.3,
+    "sel_mer_DP_mg_m2_an": 1908.0,
+    "sel_mer_WT_mg_m2_an": 5466.3,
+    "sel_mer_SV_mg_m2_an": 806.4,
+    "sel_mer_SD_mg_m2_an": 7185.2
+   },
+   {
+    "lon": 45.0,
+    "lat": -25.0,
+    "distance_cote_km": 41.5,
+    "chlorure_mg_m2_an": 7348.0,
+    "sel_mer_DP_mg_m2_an": 1336.9,
+    "sel_mer_WT_mg_m2_an": 5410.1,
+    "sel_mer_SV_mg_m2_an": 739.6,
+    "sel_mer_SD_mg_m2_an": 5873.4
+   },
+   {
+    "lon": 45.625,
+    "lat": -25.0,
+    "distance_cote_km": 46.8,
+    "chlorure_mg_m2_an": 8905.1,
+    "sel_mer_DP_mg_m2_an": 1297.9,
+    "sel_mer_WT_mg_m2_an": 7393.1,
+    "sel_mer_SV_mg_m2_an": 865.9,
+    "sel_mer_SD_mg_m2_an": 6634.0
+   },
+   {
+    "lon": 46.25,
+    "lat": -25.0,
+    "distance_cote_km": 21.0,
+    "chlorure_mg_m2_an": 10614.1,
+    "sel_mer_DP_mg_m2_an": 1556.7,
+    "sel_mer_WT_mg_m2_an": 7759.6,
+    "sel_mer_SV_mg_m2_an": 1273.3,
+    "sel_mer_SD_mg_m2_an": 8708.7
+   },
+   {
+    "lon": 46.875,
+    "lat": -25.0,
+    "distance_cote_km": 7.1,
+    "chlorure_mg_m2_an": 21703.3,
+    "sel_mer_DP_mg_m2_an": 2418.0,
+    "sel_mer_WT_mg_m2_an": 19634.2,
+    "sel_mer_SV_mg_m2_an": 2654.5,
+    "sel_mer_SD_mg_m2_an": 14753.8
+   },
+   {
+    "lon": 44.375,
+    "lat": -24.5,
+    "distance_cote_km": 48.1,
+    "chlorure_mg_m2_an": 5548.7,
+    "sel_mer_DP_mg_m2_an": 1195.5,
+    "sel_mer_WT_mg_m2_an": 3917.1,
+    "sel_mer_SV_mg_m2_an": 571.2,
+    "sel_mer_SD_mg_m2_an": 4404.8
+   },
+   {
+    "lon": 45.0,
+    "lat": -24.5,
+    "distance_cote_km": 93.1,
+    "chlorure_mg_m2_an": 5025.2,
+    "sel_mer_DP_mg_m2_an": 969.5,
+    "sel_mer_WT_mg_m2_an": 3816.2,
+    "sel_mer_SV_mg_m2_an": 498.5,
+    "sel_mer_SD_mg_m2_an": 3852.6
+   },
+   {
+    "lon": 45.625,
+    "lat": -24.5,
+    "distance_cote_km": 95.8,
+    "chlorure_mg_m2_an": 5785.5,
+    "sel_mer_DP_mg_m2_an": 878.7,
+    "sel_mer_WT_mg_m2_an": 5320.9,
+    "sel_mer_SV_mg_m2_an": 560.5,
+    "sel_mer_SD_mg_m2_an": 3759.1
+   },
+   {
+    "lon": 46.25,
+    "lat": -24.5,
+    "distance_cote_km": 74.9,
+    "chlorure_mg_m2_an": 5063.2,
+    "sel_mer_DP_mg_m2_an": 782.4,
+    "sel_mer_WT_mg_m2_an": 3652.3,
+    "sel_mer_SV_mg_m2_an": 559.9,
+    "sel_mer_SD_mg_m2_an": 4211.1
+   },
+   {
+    "lon": 46.875,
+    "lat": -24.5,
+    "distance_cote_km": 40.6,
+    "chlorure_mg_m2_an": 16041.6,
+    "sel_mer_DP_mg_m2_an": 1353.4,
+    "sel_mer_WT_mg_m2_an": 17439.5,
+    "sel_mer_SV_mg_m2_an": 1933.2,
+    "sel_mer_SD_mg_m2_an": 8440.4
+   },
+   {
+    "lon": 43.75,
+    "lat": -24.0,
+    "distance_cote_km": 8.3,
+    "chlorure_mg_m2_an": 6082.7,
+    "sel_mer_DP_mg_m2_an": 1521.5,
+    "sel_mer_WT_mg_m2_an": 2784.3,
+    "sel_mer_SV_mg_m2_an": 661.5,
+    "sel_mer_SD_mg_m2_an": 6092.1
+   },
+   {
+    "lon": 44.375,
+    "lat": -24.0,
+    "distance_cote_km": 71.8,
+    "chlorure_mg_m2_an": 3932.9,
+    "sel_mer_DP_mg_m2_an": 967.0,
+    "sel_mer_WT_mg_m2_an": 2485.4,
+    "sel_mer_SV_mg_m2_an": 487.0,
+    "sel_mer_SD_mg_m2_an": 3211.4
+   },
+   {
+    "lon": 45.0,
+    "lat": -24.0,
+    "distance_cote_km": 129.3,
+    "chlorure_mg_m2_an": 3556.4,
+    "sel_mer_DP_mg_m2_an": 777.2,
+    "sel_mer_WT_mg_m2_an": 2639.1,
+    "sel_mer_SV_mg_m2_an": 434.5,
+    "sel_mer_SD_mg_m2_an": 2615.5
+   },
+   {
+    "lon": 45.625,
+    "lat": -24.0,
+    "distance_cote_km": 146.4,
+    "chlorure_mg_m2_an": 4317.6,
+    "sel_mer_DP_mg_m2_an": 637.0,
+    "sel_mer_WT_mg_m2_an": 4356.0,
+    "sel_mer_SV_mg_m2_an": 463.5,
+    "sel_mer_SD_mg_m2_an": 2393.6
+   },
+   {
+    "lon": 46.25,
+    "lat": -24.0,
+    "distance_cote_km": 113.3,
+    "chlorure_mg_m2_an": 3854.1,
+    "sel_mer_DP_mg_m2_an": 507.2,
+    "sel_mer_WT_mg_m2_an": 3658.1,
+    "sel_mer_SV_mg_m2_an": 446.8,
+    "sel_mer_SD_mg_m2_an": 2395.3
+   },
+   {
+    "lon": 46.875,
+    "lat": -24.0,
+    "distance_cote_km": 54.6,
+    "chlorure_mg_m2_an": 16761.7,
+    "sel_mer_DP_mg_m2_an": 774.7,
+    "sel_mer_WT_mg_m2_an": 22438.0,
+    "sel_mer_SV_mg_m2_an": 1399.9,
+    "sel_mer_SD_mg_m2_an": 5863.2
+   },
+   {
+    "lon": 47.5,
+    "lat": -24.0,
+    "distance_cote_km": 0.6,
+    "chlorure_mg_m2_an": 26469.6,
+    "sel_mer_DP_mg_m2_an": 1923.8,
+    "sel_mer_WT_mg_m2_an": 30346.9,
+    "sel_mer_SV_mg_m2_an": 3459.2,
+    "sel_mer_SD_mg_m2_an": 12396.7
+   },
+   {
+    "lon": 43.75,
+    "lat": -23.5,
+    "distance_cote_km": 0.3,
+    "chlorure_mg_m2_an": 5794.9,
+    "sel_mer_DP_mg_m2_an": 1447.4,
+    "sel_mer_WT_mg_m2_an": 2608.6,
+    "sel_mer_SV_mg_m2_an": 760.2,
+    "sel_mer_SD_mg_m2_an": 5720.0
+   },
+   {
+    "lon": 44.375,
+    "lat": -23.5,
+    "distance_cote_km": 62.8,
+    "chlorure_mg_m2_an": 3383.7,
+    "sel_mer_DP_mg_m2_an": 836.5,
+    "sel_mer_WT_mg_m2_an": 2119.4,
+    "sel_mer_SV_mg_m2_an": 504.5,
+    "sel_mer_SD_mg_m2_an": 2691.7
+   },
+   {
+    "lon": 45.0,
+    "lat": -23.5,
+    "distance_cote_km": 126.6,
+    "chlorure_mg_m2_an": 2688.1,
+    "sel_mer_DP_mg_m2_an": 657.4,
+    "sel_mer_WT_mg_m2_an": 1930.6,
+    "sel_mer_SV_mg_m2_an": 372.7,
+    "sel_mer_SD_mg_m2_an": 1926.7
+   },
+   {
+    "lon": 45.625,
+    "lat": -23.5,
+    "distance_cote_km": 190.4,
+    "chlorure_mg_m2_an": 2578.0,
+    "sel_mer_DP_mg_m2_an": 498.4,
+    "sel_mer_WT_mg_m2_an": 2248.2,
+    "sel_mer_SV_mg_m2_an": 370.4,
+    "sel_mer_SD_mg_m2_an": 1570.2
+   },
+   {
+    "lon": 46.25,
+    "lat": -23.5,
+    "distance_cote_km": 135.7,
+    "chlorure_mg_m2_an": 3715.7,
+    "sel_mer_DP_mg_m2_an": 381.8,
+    "sel_mer_WT_mg_m2_an": 4010.7,
+    "sel_mer_SV_mg_m2_an": 444.2,
+    "sel_mer_SD_mg_m2_an": 1919.1
+   },
+   {
+    "lon": 46.875,
+    "lat": -23.5,
+    "distance_cote_km": 72.3,
+    "chlorure_mg_m2_an": 16169.9,
+    "sel_mer_DP_mg_m2_an": 595.1,
+    "sel_mer_WT_mg_m2_an": 22253.9,
+    "sel_mer_SV_mg_m2_an": 1387.2,
+    "sel_mer_SD_mg_m2_an": 5163.6
+   },
+   {
+    "lon": 47.5,
+    "lat": -23.5,
+    "distance_cote_km": 12.1,
+    "chlorure_mg_m2_an": 30463.1,
+    "sel_mer_DP_mg_m2_an": 2123.1,
+    "sel_mer_WT_mg_m2_an": 33490.1,
+    "sel_mer_SV_mg_m2_an": 4901.8,
+    "sel_mer_SD_mg_m2_an": 14872.4
+   },
+   {
+    "lon": 43.75,
+    "lat": -23.0,
+    "distance_cote_km": 19.0,
+    "chlorure_mg_m2_an": 5855.3,
+    "sel_mer_DP_mg_m2_an": 1388.8,
+    "sel_mer_WT_mg_m2_an": 3326.6,
+    "sel_mer_SV_mg_m2_an": 813.6,
+    "sel_mer_SD_mg_m2_an": 5117.1
+   },
+   {
+    "lon": 44.375,
+    "lat": -23.0,
+    "distance_cote_km": 80.6,
+    "chlorure_mg_m2_an": 3273.7,
+    "sel_mer_DP_mg_m2_an": 697.5,
+    "sel_mer_WT_mg_m2_an": 2333.1,
+    "sel_mer_SV_mg_m2_an": 510.2,
+    "sel_mer_SD_mg_m2_an": 2411.4
+   },
+   {
+    "lon": 45.0,
+    "lat": -23.0,
+    "distance_cote_km": 136.7,
+    "chlorure_mg_m2_an": 3254.1,
+    "sel_mer_DP_mg_m2_an": 560.9,
+    "sel_mer_WT_mg_m2_an": 3095.4,
+    "sel_mer_SV_mg_m2_an": 458.4,
+    "sel_mer_SD_mg_m2_an": 1801.8
+   },
+   {
+    "lon": 45.625,
+    "lat": -23.0,
+    "distance_cote_km": 197.5,
+    "chlorure_mg_m2_an": 2362.1,
+    "sel_mer_DP_mg_m2_an": 441.2,
+    "sel_mer_WT_mg_m2_an": 2083.3,
+    "sel_mer_SV_mg_m2_an": 362.5,
+    "sel_mer_SD_mg_m2_an": 1407.7
+   },
+   {
+    "lon": 46.25,
+    "lat": -23.0,
+    "distance_cote_km": 150.8,
+    "chlorure_mg_m2_an": 5343.6,
+    "sel_mer_DP_mg_m2_an": 348.2,
+    "sel_mer_WT_mg_m2_an": 6776.3,
+    "sel_mer_SV_mg_m2_an": 524.7,
+    "sel_mer_SD_mg_m2_an": 2066.4
+   },
+   {
+    "lon": 46.875,
+    "lat": -23.0,
+    "distance_cote_km": 91.8,
+    "chlorure_mg_m2_an": 15378.8,
+    "sel_mer_DP_mg_m2_an": 578.6,
+    "sel_mer_WT_mg_m2_an": 20982.3,
+    "sel_mer_SV_mg_m2_an": 1498.3,
+    "sel_mer_SD_mg_m2_an": 4902.2
+   },
+   {
+    "lon": 47.5,
+    "lat": -23.0,
+    "distance_cote_km": 29.4,
+    "chlorure_mg_m2_an": 23675.2,
+    "sel_mer_DP_mg_m2_an": 1655.9,
+    "sel_mer_WT_mg_m2_an": 26726.0,
+    "sel_mer_SV_mg_m2_an": 3462.9,
+    "sel_mer_SD_mg_m2_an": 11201.1
+   },
+   {
+    "lon": 43.75,
+    "lat": -22.5,
+    "distance_cote_km": 47.5,
+    "chlorure_mg_m2_an": 5513.2,
+    "sel_mer_DP_mg_m2_an": 1090.9,
+    "sel_mer_WT_mg_m2_an": 4135.0,
+    "sel_mer_SV_mg_m2_an": 822.2,
+    "sel_mer_SD_mg_m2_an": 3975.9
+   },
+   {
+    "lon": 44.375,
+    "lat": -22.5,
+    "distance_cote_km": 103.3,
+    "chlorure_mg_m2_an": 3484.0,
+    "sel_mer_DP_mg_m2_an": 638.9,
+    "sel_mer_WT_mg_m2_an": 3010.9,
+    "sel_mer_SV_mg_m2_an": 547.0,
+    "sel_mer_SD_mg_m2_an": 2137.7
+   },
+   {
+    "lon": 45.0,
+    "lat": -22.5,
+    "distance_cote_km": 158.8,
+    "chlorure_mg_m2_an": 2897.7,
+    "sel_mer_DP_mg_m2_an": 544.7,
+    "sel_mer_WT_mg_m2_an": 2637.4,
+    "sel_mer_SV_mg_m2_an": 464.2,
+    "sel_mer_SD_mg_m2_an": 1622.1
+   },
+   {
+    "lon": 45.625,
+    "lat": -22.5,
+    "distance_cote_km": 218.6,
+    "chlorure_mg_m2_an": 2982.5,
+    "sel_mer_DP_mg_m2_an": 460.1,
+    "sel_mer_WT_mg_m2_an": 2979.2,
+    "sel_mer_SV_mg_m2_an": 425.2,
+    "sel_mer_SD_mg_m2_an": 1558.3
+   },
+   {
+    "lon": 46.25,
+    "lat": -22.5,
+    "distance_cote_km": 166.9,
+    "chlorure_mg_m2_an": 3776.4,
+    "sel_mer_DP_mg_m2_an": 430.5,
+    "sel_mer_WT_mg_m2_an": 3763.6,
+    "sel_mer_SV_mg_m2_an": 497.1,
+    "sel_mer_SD_mg_m2_an": 2175.1
+   },
+   {
+    "lon": 46.875,
+    "lat": -22.5,
+    "distance_cote_km": 104.1,
+    "chlorure_mg_m2_an": 10777.5,
+    "sel_mer_DP_mg_m2_an": 528.2,
+    "sel_mer_WT_mg_m2_an": 13916.5,
+    "sel_mer_SV_mg_m2_an": 1165.7,
+    "sel_mer_SD_mg_m2_an": 3985.0
+   },
+   {
+    "lon": 47.5,
+    "lat": -22.5,
+    "distance_cote_km": 40.5,
+    "chlorure_mg_m2_an": 19771.6,
+    "sel_mer_DP_mg_m2_an": 1202.5,
+    "sel_mer_WT_mg_m2_an": 23536.2,
+    "sel_mer_SV_mg_m2_an": 2519.8,
+    "sel_mer_SD_mg_m2_an": 8689.9
+   }
+  ]
  },
  "scenarios_protocole_P500mm": {
   "formule": "D = P x Cl_p(d) x (1 + s), Cl_p(d) = Cl_i + (Cl_c - Cl_i) x exp(-d / L), P = 500 mm",

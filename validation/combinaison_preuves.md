@@ -2,7 +2,7 @@
 
 Généré le 2026-11-09 par `scripts/combinaison_preuves.py`, selon `validation/protocole_combinaison_preuves.md` (fixé avant le calcul). **Synthèse rétrospective** : toutes les lignes avaient déjà été vues ; elle résume, elle ne prouve pas à nouveau.
 
-Scénario de dépôt de chlorure retenu : **aucun (MERRA-2 pas encore disponible)**.
+Scénario de dépôt de chlorure retenu : **haut**.
 
 ## Scores par ligne (z unilatéral ; positif = dans le sens de la question)
 
@@ -20,7 +20,7 @@ Scénario de dépôt de chlorure retenu : **aucun (MERRA-2 pas encore disponible
 |---|---|---|---|---|
 | bas | +5.48 | établi | +3.37 | établi |
 | central | +5.48 | établi | +2.74 | établi |
-| haut | +1.23 | indice | +0.10 | non établi (contradiction forte d'une ligne) |
+| haut (retenu) | +1.23 | indice | +0.10 | non établi (contradiction forte d'une ligne) |
 | sans le chlorure | +1.76 | indice | +1.77 | indice |
 
 Règle (fixée avant le calcul) : « établi » si Z ≥ 1,96 dans le scénario retenu et aucune ligne à z ≤ −1,96 ; « indice » si 1,0 ≤ Z < 1,96 ; « non établi » sinon. Sans scénario retenu, aucun verdict global n'est prononcé.
