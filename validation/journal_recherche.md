@@ -1054,3 +1054,21 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   Indice favorable à T2L, pas une preuve ; à confronter au bilan de chlorure (en pause). T2 reste la valeur centrale.
 - ❌ Limites : puits signalés seulement ; causes d'assèchement multiples ; 2024-2025 ; zone ZH10 absente ; mailles
   grossières (nombreux ex aequo).
+
+### Recharge par bilan de chlorure, Grand Sud (`validation/recharge_chlorure.md`, `recharge_chlorure_blocs.md`)
+- ✅ Dépôt de chlorure de la pluie fixé avant lecture des chlorures (3 scénarios : Kwale, Kenya ; Van Wyk et al. 2011,
+  Afrique du Sud ; valeurs vérifiées sur les sources primaires). 559 forages BushProof avec chlorure, 538 après filtres.
+- ❌ **Le découpage fixé d'avance a échoué** : le lien simple à 20 km enchaîne les forages denses en 2 zones ; aucun
+  test d'ordre possible. H-Cl1, H-Cl2 non soutenues faute de puissance ; H-Cl3 (karst) infaisable ; H-Cl4 sur un seul
+  site. Leçon : avec un réseau dense, le lien simple fait une chaîne ; fixer des blocs ou un lien complet.
+- 📊 Robuste dans les trois scénarios malgré tout : **T2 surestime** la recharge (biais +0,45 à +1,44 en log₁₀).
+- 📊 **Analyse après coup, exploratoire** (blocs de 20 km, 36 zones, 530 forages ; aucune décision) :
+  - recharge par chlorure médiane 4, 8 et 48 mm/an selon le scénario bas, central, haut ;
+  - T2 surestime d'un facteur 6 à 11 (scénarios bas et central) et n'a pas de biais dans le haut ;
+  - **T2L réduit l'écart d'au moins 30 % dans les scénarios bas et central** (1,16 → 0,62 ; 0,87 → 0,49), mais pas dans
+    le haut (0,34 → 0,88), où T2L sous-estime ;
+  - **les deux cartes ordonnent les zones à l'envers** (Spearman de −0,22 à −0,33), comme T2 pour les puits à sec.
+- 📌 Lecture : le verdict entre T2 et T2L dépend du dépôt de chlorure de la pluie, **inconnu à Madagascar**. Mesurer
+  le chlorure de la pluie dans le Sud (quelques collecteurs sur une saison) départagerait les deux. Aucune des deux
+  cartes ne reproduit la répartition spatiale de la recharge : cohérent avec une recharge épisodique et en partie
+  venue de loin (AVSF 2016 ; Taylor et al. 2013), que des cartes fondées sur le climat moyen local ne voient pas.

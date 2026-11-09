@@ -93,6 +93,7 @@ def main() -> None:
     from scipy.stats import spearmanr
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
+    ap.add_argument("--blocs", action="store_true", help="analyse après coup : zones = blocs de 20 km (exploratoire)")
     args = ap.parse_args()
     cdir = country_data_dir(args.country)
     fs = glob.glob(str(cdir / "bushproof_raw" / "recuperation" / "*Forages*.csv"))
@@ -105,7 +106,12 @@ def main() -> None:
     f["dist_km"] = distance_cote(f.lat, f.lon, coast_zip)
     f, decompte = filtre(f)
     f = f.reset_index(drop=True)
-    f["zone"] = zones(f.lat, f.lon)
+    f = f.copy()
+    if args.blocs:
+        import puits_a_sec as PS
+        f["zone"] = PS.blocs(f.lat, f.lon)
+    else:
+        f["zone"] = zones(f.lat, f.lon)
     z = f.groupby("zone").agg(n=("cl", "size"), cl=("cl", "median"), lat=("lat", "mean"), lon=("lon", "mean")).reset_index()
     z = z[z.n >= MIN_ZONE].reset_index(drop=True)
     z["dist_km"] = distance_cote(z.lat, z.lon, coast_zip)
@@ -161,7 +167,7 @@ def main() -> None:
          "## Sélection", "", "| Étape | Forages |", "|---|---|"]
     for k, v in decompte.items():
         L.append(f"| {k} | {v} |")
-    L += [f"| zones de validation (lien simple à {ZONE_KM:.0f} km, au moins {MIN_ZONE} forages) | {len(z)} zones, {int(z.n.sum())} forages |", "",
+    L += [f"| zones de validation ({'blocs de 20 km' if args.blocs else f'lien simple à {ZONE_KM:.0f} km'}, au moins {MIN_ZONE} forages) | {len(z)} zones, {int(z.n.sum())} forages |", "",
           f"Distance médiane des zones à la côte : {z.dist_km.median():.0f} km ; chlorure médian des zones : {z.cl.median():.0f} mg/L "
           f"(de {z.cl.min():.0f} à {z.cl.max():.0f}).", "",
           "## Recharge par chlorure et accord avec les cartes figées", "",
@@ -194,9 +200,13 @@ def main() -> None:
           "recharge de long terme (décennies) contre années récentes pour la fluctuation ; recharge concentrée mal vue ; base "
           "compilée de qualité hétérogène ; dépôt de chlorure non mesuré à Madagascar (sources kényane et sud-africaine) ; "
           "longueur de décroissance L choisie.", ""]
-    (ROOT / "validation" / "recharge_chlorure.md").write_text("\n".join(L) + "\n", encoding="utf-8")
+    sfx = "_blocs" if args.blocs else ""
+    if args.blocs:
+        L[2:2] = ["**Analyse après coup, exploratoire** : zones = blocs de 20 km, décidé après l'échec du découpage fixé "
+                  "d'avance (2 zones seulement). Elle ne change aucune décision.", ""]
+    (ROOT / "validation" / f"recharge_chlorure{sfx}.md").write_text("\n".join(L) + "\n", encoding="utf-8")
     z.assign(lat=z.lat.round(1), lon=z.lon.round(1)).drop(columns=["zone"]).round(3).to_csv(
-        ROOT / "validation" / "recharge_chlorure_zones.csv", index=False)
+        ROOT / "validation" / f"recharge_chlorure{sfx}_zones.csv", index=False)
     print(json.dumps({"H1": h1, "H2": h2, "sans_objet": sans_objet, "H4": h4, "zones": len(z)}, ensure_ascii=False))
 
 

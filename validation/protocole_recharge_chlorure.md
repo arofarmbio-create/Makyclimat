@@ -105,3 +105,9 @@ une confirmation du nouveau modèle.
   - **Contrôle préalable (leçon du test karst)** : avant de juger H-Cl2, on publie l'écart médian de T2 ; si T2 est
     déjà à moins d'un facteur 1,5 de la recharge par chlorure dans les trois scénarios, H-Cl2 est déclarée sans
     objet (rien à améliorer), et non soutenue.
+- 09/11/2026 (après le calcul) : **échec du découpage en zones fixé d'avance.** Le lien simple à 20 km enchaîne les
+  forages denses du Sud : 537 forages forment 2 zones seulement ; aucun test d'ordre possible ; H-Cl1, H-Cl2 non
+  soutenues faute de puissance ; H-Cl4 évaluée sur 1 seul site (Andaboly). Résultat robuste malgré tout : T2 surestime
+  dans les trois scénarios (biais +0,45 à +1,44 en log₁₀). **Analyse complémentaire déclarée APRÈS COUP (exploratoire,
+  ne change aucune décision)** : zones = blocs carrés de 20 km (même découpage que `protocole_puits_a_sec.md`), au
+  moins 3 forages par bloc ; mêmes scénarios, filtres et hypothèses ; publiée séparément.
