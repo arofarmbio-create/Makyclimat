@@ -235,3 +235,16 @@ body.mapfull .crumbs { right: 250px; }
 .pstick { gap: 6px; }
 .ptab { padding: 6px 4px; }
 .note.small { font-size: 11px; opacity: .8; margin: -2px 0 6px 24px; }
+
+/* Pages Nappes et Preuves (recherche.js) */
+.rbadge { display:inline-block; border-radius:999px; padding:1px 8px; font-size:12px; font-weight:600; margin:1px 0; }
+.rbadge.rok { background:#e3f3ea; color:#11603f; } .rbadge.rko { background:#fde7e9; color:#a3212a; }
+.rbadge.rpart { background:#fff1d6; color:#8a5a00; } .rbadge.ratt { background:var(--chip); color:var(--muted); }
+@media (prefers-color-scheme: dark) {
+  .rbadge.rok { background:#173b29; color:#7fe0b0; } .rbadge.rko { background:#3f1d20; color:#ffaab0; }
+  .rbadge.rpart { background:#3a2e12; color:#f3c66b; }
+}
+.rbox { border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); padding:10px 14px; margin:10px 0 16px; }
+.rbox ul { margin:6px 0; padding-left:18px; } .rbox li { margin:4px 0; }
+details.rmod { border:1px solid var(--line); border-radius:8px; padding:6px 10px; margin:6px 0; background:var(--panel); }
+details.rmod summary { cursor:pointer; } details.rmod ul { padding-left:18px; } details.rmod li { margin:6px 0; }

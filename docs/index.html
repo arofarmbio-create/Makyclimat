@@ -20,6 +20,7 @@
     <button role="tab" data-tab="catalogue" aria-selected="false">Indicateurs et ODD</button>
     <button role="tab" data-tab="sources" aria-selected="false">Sources</button>
     <button role="tab" data-tab="method" aria-selected="false">Méthode</button>
+    <button role="tab" data-tab="nappes" aria-selected="false">Nappes</button>
     <button role="tab" data-tab="trust" aria-selected="false">Fiabilité</button>
     <button role="tab" data-tab="help" aria-selected="false" id="helptab">? Aide</button>
   </nav>
@@ -206,6 +207,8 @@
 
 <section id="tab-method" class="tab"><div class="page" id="methodtext"></div></section>
 
+<section id="tab-nappes" class="tab"><div class="page" id="nappestext"><p class="note">Chargement…</p></div></section>
+
 <section id="tab-trust" class="tab"><div class="page trust">
   <h2>Fiabilité : ce qui est vérifié, ce qui ne l'est pas</h2>
   <p>Chaque indicateur porte un niveau de preuve. Aucune donnée simulée n'est présentée comme réelle. Les validations comparent nos résultats à des événements passés documentés (rapports OCHA, IFRC, Copernicus EMS, presse).</p>
@@ -230,6 +233,7 @@
       <tr><td>Éboulements</td><td><span class="lvl l4">Non validé</span></td><td>Seuil mondial de pluie et pente (littérature).</td><td>Pas encore comparé à des événements malgaches.</td></tr>
       <tr><td>Santé liée au climat (choléra, paludisme, peste)</td><td><span class="lvl l4">Non validé</span></td><td>Liens climatiques de la littérature.</td><td>Aucune série de cas locale utilisée pour l'instant.</td></tr>
     </tbody></table></div>
+  <div id="preuvestext"></div>
   <h3>Ce que ces niveaux ne disent pas</h3>
   <ul>
     <li>L'<b>exposition</b> (qui et quoi est dans la zone d'un danger) n'est pas un <b>dégât</b>, ni un <b>besoin humanitaire</b> : ceux-ci relèvent des évaluations de terrain et du cadre JIAF d'OCHA.</li>
@@ -298,5 +302,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="logic.js"></script>
 <script src="app.js"></script>
+<script src="recherche.js"></script>
 </body>
 </html>

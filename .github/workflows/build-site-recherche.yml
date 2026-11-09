@@ -1,0 +1,41 @@
+name: "31 - Pages Nappes et Preuves du site (recherche.json)"
+
+# Reconstruit docs/data/mdg/recherche.json à chaque nouveau résultat de recherche (registre, rapports de validation,
+# cartes de recharge) et chaque lundi. Aucun téléchargement.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "validation/**"
+      - "inputs/hydrogeologie/**"
+      - "data/mdg/external/nappes_*.csv"
+      - "scripts/build_site_recherche.py"
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: site-recherche
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Construire recherche.json
+        run: cd scripts && python build_site_recherche.py --country mdg
+      - name: Publier
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add docs/data/mdg/recherche.json
+          git diff --cached --quiet || (git commit -m "Pages Nappes et Preuves : données de recherche à jour" && git pull --rebase --autostash origin main && git push)
