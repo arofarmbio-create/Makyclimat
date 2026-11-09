@@ -51,3 +51,24 @@ un test prospectif figé.
 2. Chercher les publications issues du post-doctorat METIS-IPSL et de GROSoM (Carrière et al.).
 3. Recherche systématique (Scopus ou Web of Science) : « groundwater recharge » ET (transfer OU upscaling) ET
    (Africa OU data-scarce) ; « preregistration » ET (hydrology OU hydrogeology).
+
+## Mise à jour du 09/11/2026 : WOKAM et Wan et al. 2024
+
+- **Texte intégral de Wan et al. 2024 non lu** : la page de l'éditeur renvoie une erreur 403 aux outils automatiques.
+  Lu : le résumé, le résumé EGU 2023 (Wan et Döll, EGU23-15656) et le jeu de données figshare 23592666 (CC BY 4.0).
+  Selon le résumé EGU 2023, 818 mailles de 0,5° mesurées, dont 75 en karst ; R/P de 2 à 66 % dans le karst ; hors
+  karst, la part simulée dépasse rarement 25 %. Chiffres de la version publiée à vérifier sur le PDF.
+- **Le projet utilise déjà ce jeu de données** (`data/mdg/analogues/recharge_mondiale/figshare_23592666/`,
+  821 mailles, colonne `fkarst` = part karstique de la maille d'après WOKAM).
+- **Exploratoire** (calculé après coup ; ce n'est pas un résultat) : R/P médian en climat aride = 0,032 sans karst
+  (195 mailles), 0,072 si le karst couvre au moins 30 % de la maille (47 mailles) ; quantile à 90 % : 0,114 contre
+  0,305. Pour Toliara (P = 452 mm), cela donnerait une médiane d'environ 33 mm/an et un quantile à 90 % d'environ
+  138 mm/an, à rapprocher des 80 à 195 mm/an mesurés aux puits GROSoM. → **Hypothèse à fixer dans un protocole avant
+  tout test.**
+- **Licence WOKAM** (Chen et al. 2017, BGR, IAH, KIT, UNESCO) : métadonnées BGR « pas de restriction d'accès » ;
+  conditions générales de la BGR (https://www.bgr.bund.de/AGB_en, page non lisible par les outils automatiques) ;
+  citation obligatoire : « Datenquelle: WHYMAP WOKAM, (C) BGR Berlin, IAH Reading, KIT Karlsruhe, UNESCO Paris
+  2017 ». **Republication de données dérivées dans un dépôt public : non vérifiée** ; à lire dans les conditions de
+  la BGR avant de publier autre chose que des chiffres agrégés.
+- Alternative sous licence vérifiée : la grille mondiale de part karstique `fkarst` à 0,5° publiée avec Wan et al.
+  (figshare 23592666, **CC BY 4.0**), plus grossière que WOKAM.
