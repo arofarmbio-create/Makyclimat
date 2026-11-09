@@ -46,3 +46,9 @@ data/*/e1/e1_tc.npz
 data/*/nappes_mondiales/grosom/
 data/*/analogues/
 data/*/unesco_puits_raw/
+
+# Base BushProof / DDC « Contribution à l'hydrogéologie du Sud de Madagascar » (2023) : libre d'utilisation, vente et appropriation interdites ; données brutes jamais dans git
+data/*/bushproof_raw/
+data/*/bushproof_inventaire_cl_scelle.json
+.claude/settings.local.json
+/pilotage/
