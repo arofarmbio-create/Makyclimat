@@ -42,3 +42,12 @@ entre les deux découpages est une indication, pas une mesure de flux.
 ## 7. Journal des modifications
 
 - 04/11/2026 : version initiale.
+- 09/11/2026 (après le premier calcul : H-B1 et H-B2 soutenues, 2,6 % ; plat 5,0 %, pente 1,1 % ; **avant** le test
+  ci-dessous) : **test de sensibilité H-B2-L**. La profondeur prise au fokontany le plus proche fait des marches de
+  quelques mètres aux limites des fokontany ; en plaine, elles peuvent suffire à faire changer une maille de bassin.
+  On refait le calcul avec une profondeur lissée : moyenne des 8 fokontany les plus proches, pondérée par l'inverse
+  du carré de la distance. Règle fixée maintenant : **H-B2 est robuste** si, avec la profondeur lissée, le taux en
+  zone plate reste au moins deux fois celui en pente ; sinon, H-B2 est déclarée dépendante de la méthode et ne sera
+  pas présentée comme un résultat. H-B1 est relue de la même façon. Ajouts au rapport, sans nouvelle hypothèse :
+  ventilation par région (région du fokontany le plus proche), par taille de bassin (grands bassins nommés et petits
+  bassins), et noms des bassins (`basins.geojson`).
