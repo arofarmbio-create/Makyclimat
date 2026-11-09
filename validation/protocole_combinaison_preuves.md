@@ -62,3 +62,12 @@ autre zone) est ajoutée avec les mêmes règles, sans modifier les lignes exist
   moitié de son dépôt vient de la sédimentation des grosses particules, et les mailles côtières contiennent de la mer.
   La règle supposait MERRA-2 crédible : sa validation sur des sites mesurés (Kwale, Afrique du Sud) devient nécessaire
   avant de lui donner le dernier mot. Les verdicts ne sont pas modifiés.
+- 09/11/2026 (avant la validation de MERRA-2) : **validation de MERRA-2 aux sites mesurés**, même collection et mêmes
+  variables, 2011-2020 (120 mois). Sites : Kwale, Kenya, station MWC (39,378 E ; 4,462 S ; dépôt humide mesuré
+  3 334 mg/m²/an, Ferrer, Folch et Thomas 2019) ; intérieur semi-aride sud-africain, stations de Van Wyk et al. (2011)
+  Kuruman (23,43 E ; 27,45 S), Stella (24,86 E ; 26,55 S) et Alldays (29,10 E ; 22,67 S), dépôt total de l'intérieur
+  260 mg/m²/an (p. 153-154). Comparaison : Kwale, dépôt humide MERRA-2 (humide + lessivage) ; intérieur, dépôt total
+  MERRA-2 (médiane des trois stations). **Règle** : MERRA-2 est jugé crédible s'il est à moins d'un facteur 2 des deux
+  références ; sinon, un facteur de correction f = moyenne géométrique des rapports mesuré / MERRA-2 aux deux sites est
+  appliqué aux mailles du Grand Sud, et le scénario est choisi à nouveau avec le dépôt corrigé. Les verdicts de la
+  combinaison sont alors recalculés avec ce scénario ; les deux versions (brute et corrigée) sont publiées.

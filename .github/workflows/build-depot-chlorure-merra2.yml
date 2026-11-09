@@ -9,6 +9,9 @@ on:
       sonde:
         description: "true = vérifier seulement les noms de variables et le format"
         default: "true"
+      validation:
+        description: "true = dépôt MERRA-2 aux sites mesurés (Kwale, Afrique du Sud), 2011-2020"
+        default: "false"
 
 permissions:
   contents: write
@@ -28,15 +31,17 @@ jobs:
           EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
           EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
         run: |
-          if [ "${{ github.event.inputs.sonde }}" = "true" ]; then
+          if [ "${{ github.event.inputs.validation }}" = "true" ]; then
+            python scripts/depot_chlorure_merra2.py --part validation
+          elif [ "${{ github.event.inputs.sonde }}" = "true" ]; then
             python scripts/depot_chlorure_merra2.py --probe
           else
             python scripts/depot_chlorure_merra2.py --part merra2
           fi
       - name: Publier
-        if: github.event.inputs.sonde != 'true'
+        if: github.event.inputs.sonde != 'true' || github.event.inputs.validation == 'true'
         run: |
           git config user.name "makyclimat-bot"
           git config user.email "makyclimat-bot@users.noreply.github.com"
-          git add data/mdg/depot_chlorure_merra2_mailles.csv
+          git add data/mdg/depot_chlorure_merra2_mailles.csv data/mdg/depot_chlorure_merra2_validation.csv 2>/dev/null || true
           git diff --cached --quiet || (git commit -m "Dépôt de sel de mer MERRA-2 2001-2020 par maille (Grand Sud)" && git pull --rebase --autostash origin main && git push)

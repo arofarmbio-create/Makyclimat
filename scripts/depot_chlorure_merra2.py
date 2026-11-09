@@ -151,6 +151,51 @@ def part_merra2(probe: bool) -> None:
     print(f"{MAILLES.name} : {len(df)} mailles, {n} mois sur 240")
 
 
+POINTS = {"Kwale MWC (Kenya)": (39.3776, -4.462), "Kuruman (Afrique du Sud)": (23.43, -27.45),
+          "Stella (Afrique du Sud)": (24.86, -26.55), "Alldays (Afrique du Sud)": (29.10, -22.67)}
+VALIDATION = DATA / "depot_chlorure_merra2_validation.csv"
+
+
+def indices_point(lon: float, lat: float) -> tuple[int, int]:
+    """Indices (i, j) de la maille MERRA-2 qui contient le point."""
+    return int(round((lon + 180) / 0.625)), int(round((lat + 90) / 0.5))
+
+
+def part_validation() -> None:
+    """Validation : dépôt de sel de mer MERRA-2 aux sites mesurés, 2011-2020 (protocole_combinaison_preuves.md)."""
+    import os
+
+    import requests
+    tok = requests.post("https://urs.earthdata.nasa.gov/api/users/find_or_create_token",
+                        auth=(os.environ["EARTHDATA_USER"], os.environ["EARTHDATA_PASSWORD"]), timeout=60)
+    tok.raise_for_status()
+    s = requests.Session()
+    s.headers["Authorization"] = f"Bearer {tok.json()['access_token']}"
+    rows = []
+    for nom, (lon, lat) in POINTS.items():
+        i, j = indices_point(lon, lat)
+        sub = f"[0][{j}:{j}][{i}:{i}]"
+        parts, n = {k: 0.0 for k in ("DP", "WT", "SV", "SD")}, 0
+        for y in range(2011, 2021):
+            for m in range(1, 13):
+                g = granule_id(s, y, m)
+                text = fetch(s, OPENDAP + g + ".dap.csv?dap4.ce=" + ";".join(f"/{v}{sub}" for v in VARS)) if g else None
+                time.sleep(1.0)
+                if text is None:
+                    continue
+                for v in VARS:
+                    parts[v[2:4]] += float(parse_csv(text, v, (1, 1))[0, 0])
+                n += 1
+        f = lambda a: a / max(n, 1) * SEC_AN * 1e6 * CL_SEL
+        rows.append({"site": nom, "lon": lon, "lat": lat, "maille_lon": -180 + 0.625 * i, "maille_lat": -90 + 0.5 * j, "mois": n,
+                     "chlorure_total_mg_m2_an": round(f(sum(parts.values())), 1),
+                     "chlorure_humide_mg_m2_an": round(f(parts["WT"] + parts["SV"]), 1),
+                     **{f"chlorure_{k}_mg_m2_an": round(f(a), 1) for k, a in parts.items()}})
+        print(f"{nom} : {n} mois", flush=True)
+    pd.DataFrame(rows).to_csv(VALIDATION, index=False)
+    print(pd.DataFrame(rows).to_string())
+
+
 def cl_pluie(d_km, cl_c, cl_i, L):
     return cl_i + (cl_c - cl_i) * np.exp(-np.asarray(d_km, float) / L)
 
@@ -210,11 +255,13 @@ def part_synthese() -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--part", choices=["merra2", "synthese"], default="merra2")
+    ap.add_argument("--part", choices=["merra2", "synthese", "validation"], default="merra2")
     ap.add_argument("--probe", action="store_true")
     a = ap.parse_args()
     if a.part == "merra2":
         part_merra2(a.probe)
+    elif a.part == "validation":
+        part_validation()
     else:
         part_synthese()
         print(json.dumps(table_scenarios(), ensure_ascii=False))
