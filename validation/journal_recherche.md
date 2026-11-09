@@ -1039,3 +1039,18 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   échoue bien au test ; sinon le test ne départage rien.
 - 📌 Décision du porteur du projet (09/11/2026) : **option A**, T2K reste une sensibilité figée ; T2 reste la valeur
   centrale ; pas de recalcul de l'atlas.
+
+### Puits à sec et recharge, test secondaire de T2, T2L et T2K (`validation/puits_a_sec.md`)
+- ✅ Protocole fixé avant calcul (09/11/2026) ; cartes T2L et T2K figées, empreintes vérifiées conformes. 87 puits à sec
+  (UNESCO 2024-2025, sans panne mécanique) contre 1 452 forages BushProof, 120 blocs de 20 km. Chlorure non lu.
+- ❌ **H-P1 non soutenue** (sélection principale) : T2L − T2 = +0,111 d'AUC, intervalle −0,004 à +0,227 (manque de
+  peu) ; T2K − T2 = +0,027 (−0,008 à +0,060).
+- 📊 **T2 sépare à l'envers** : AUC 0,450 (0,359 à 0,536) ; les puits à sec sont plutôt là où T2 prédit plus de
+  recharge (médiane 59 contre 55 mm/an). **T2L va dans le bon sens** : AUC 0,561 ; médiane 21 mm/an chez les puits à
+  sec contre 52 chez la référence.
+- 📊 Sensibilité (tous les puits « à sec », 310) : T2L − T2 = +0,138 (+0,051 à +0,221), gain atteint ; T2K sans gain.
+- 📌 Lecture : sur des données indépendantes et récentes, la correction locale T2L (qui avait échoué en validation
+  croisée, H-L1) va dans le bon sens et T2 dans le mauvais, mais le gain n'est pas établi selon la règle principale.
+  Indice favorable à T2L, pas une preuve ; à confronter au bilan de chlorure (en pause). T2 reste la valeur centrale.
+- ❌ Limites : puits signalés seulement ; causes d'assèchement multiples ; 2024-2025 ; zone ZH10 absente ; mailles
+  grossières (nombreux ex aequo).
