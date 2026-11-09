@@ -1,0 +1,5 @@
+site,lon,lat,maille_lon,maille_lat,mois,chlorure_total_mg_m2_an,chlorure_humide_mg_m2_an,chlorure_DP_mg_m2_an,chlorure_WT_mg_m2_an,chlorure_SV_mg_m2_an,chlorure_SD_mg_m2_an
+Kwale MWC (Kenya),39.3776,-4.462,39.375,-4.5,120,18175.2,11042.6,1305.9,9441.9,1600.7,5826.8
+Kuruman (Afrique du Sud),23.43,-27.45,23.125,-27.5,120,419.2,166.6,103.6,140.6,26.0,149.0
+Stella (Afrique du Sud),24.86,-26.55,25.0,-26.5,120,451.8,206.7,99.2,167.7,39.0,145.9
+Alldays (Afrique du Sud),29.1,-22.67,29.375,-22.5,120,1291.4,434.0,304.8,379.5,54.5,552.7
