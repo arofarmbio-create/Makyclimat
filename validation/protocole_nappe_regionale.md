@@ -89,3 +89,13 @@ avec leur charge, leur profondeur et leur chimie, et relier ce cadre aux échecs
 ## 9. Journal des modifications
 
 - 09/11/2026 : version initiale.
+- 09/11/2026 (avant le calcul, demande du porteur du projet) : **la géologie reste le guide.** Ce qui vaut dans le
+  socle fracturé du Grand Sud ne vaut pas forcément dans les bassins sédimentaires (Morondava, Mahajanga) ni sur la
+  côte : les résultats seront publiés **par type d'aquifère** et ne seront pas généralisés hors du domaine testé.
+  Trois autres origines du chlorure, à ne pas confondre avec un trajet dans la nappe régionale, sont déclarées comme
+  explications concurrentes : (1) **l'intrusion d'eau de mer** près de la côte (forages à moins de 5 km déjà exclus ;
+  la corrélation partielle à distance à la côte fixée sert de contrôle) ; (2) **les eaux fossiles**, anciennes et
+  piégées, qui ne sont pas une intrusion actuelle ; (3) **les ions venus des sols et des roches** (dissolution,
+  évaporites, sédiments marins anciens). Contrôle prévu, descriptif : rapport Cl/Na (proche de 1,17 en masse pour l'eau
+  de mer et les embruns ; nettement plus bas si le sodium vient des roches) et part du chlorure dans la minéralisation,
+  par type d'aquifère.
