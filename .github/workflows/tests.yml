@@ -92,6 +92,7 @@ jobs:
           python tests/test_puits_a_sec.py
           python tests/test_recharge_chlorure.py
           python tests/test_nappe_regionale.py
+          python tests/test_depot_chlorure_merra2.py
           python tests/test_nappes_mgmerl.py
           python tests/test_relief_e1.py
           python tests/test_mct_era5.py

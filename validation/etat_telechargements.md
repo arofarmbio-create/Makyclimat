@@ -371,3 +371,71 @@ Pistes notées dans `data/mdg/chlorure_pluie.json` :
 | `data/mdg/chlorure_pluie.json` | versionnable (valeurs agrégées, références, licences, statut de vérification) |
 | `scripts/chlorure_pluie_kwale.py` | nouveau, non commité |
 | `.gitignore` | deux lignes ajoutées, non commité |
+
+## 09/11/2026 : dépôt atmosphérique de chlorure (MERRA-2, littérature), pour situer les trois scénarios
+
+But : une estimation du dépôt de chlorure (mg/m²/an) dans le Grand Sud (lon 43 à 47,5 ; lat −25,7 à −22,5)
+indépendante des choix de `validation/protocole_recharge_chlorure.md`. Résultat : **MERRA-2 non calculé** (compte
+Earthdata absent de ce poste) ; script, tests et workflow prêts ; aucune mesure malgache trouvée.
+
+### 1. MERRA-2 : collection et variables vérifiées, téléchargement bloqué
+
+- **Spécification lue** (Bosilovich, Lucchesi et Suarez 2016, GMAO Office Note No. 9 v1.1, PDF téléchargé) : les
+  dépôts de sel de mer sont dans **tavg1_2d_adg_Nx / tavgM_2d_adg_Nx (M2TMNXADG, « Aerosol Diagnostics (extended) »)**,
+  p. 25-26, et **non dans aer_Nx (M2TMNXAER)**, qui ne porte que masses et épaisseurs optiques (p. 29). Variables, en
+  kg m⁻² s⁻¹, 5 classes de taille chacune : SSDP001-005 (dépôt sec), SSWT001-005 (dépôt humide), SSSV001-005
+  (lessivage convectif), SSSD001-005 (sédimentation). DOI M2TMNXADG : 10.5067/RZIK2TV7PP38 (tableau 6.2, p. 59).
+  CMR : collection C1276812865-GES_DISC, granules `MERRA2_x00.tavgM_2d_adg_Nx.AAAAMM.nc4`.
+- **Accès** : l'ancien OPeNDAP (goldsmr4) répond **410** ; l'OPeNDAP cloud (opendap.earthdata.nasa.gov) répond **302
+  vers /login/urs** (un essai chacun). Les scripts du projet lisent `EARTHDATA_USER` / `EARTHDATA_PASSWORD`, qui
+  n'existent que comme **secrets GitHub** : absents de l'environnement local (vérifié sans afficher de valeur), pas de
+  `.netrc`. Lancer un workflow avec un nouveau script supposerait un commit et un push, exclus ici.
+- **Prêt à lancer** : `scripts/depot_chlorure_merra2.py` (sous-ensemble DAP4 de 10 × 10 mailles, 240 mois 2001-2020,
+  une requête par mois pour les 20 variables, 3 essais au plus espacés de 30 s, jeton Bearer comme MOD13C2 ;
+  chlorure = 0,55 × sel de mer, Millero et al. 2008 : 19,352 / 35,165 g/kg) ; `tests/test_depot_chlorure_merra2.py`
+  (8 contrôles, 0 échec) ; `.github/workflows/build-depot-chlorure-merra2.yml` (workflow 29, sonde d'abord).
+  Suite : commit, `gh workflow run build-depot-chlorure-merra2.yml -f sonde=true` (vérifier le format CSV), puis
+  `-f sonde=false`, puis en local `python scripts/depot_chlorure_merra2.py --part synthese` (distance à la côte,
+  classes, mise à jour de `data/mdg/depot_chlorure.json`). File NASA : après les tâches déjà en attente.
+- Déjà calculé : sur la grille MERRA-2, **39 mailles** de l'emprise ont leur centre sur terre (Natural Earth 10 m) :
+  10 à moins de 30 km de la côte, 15 entre 30 et 100 km, 14 au-delà (jusqu'à 219 km).
+
+### 2. Scénarios du protocole à P = 500 mm (D = P × Cl_p(d) × (1 + s), mg/m²/an)
+
+| Scénario | 10 km | 30 km | 100 km | 200 km |
+|---|---|---|---|---|
+| bas | 426 | 187 | 150 | 150 |
+| central | 1 098 | 690 | 302 | 261 |
+| haut | 3 736 | 3 195 | 1 964 | 1 197 |
+
+### 3. Littérature locale
+
+- **Carrière et al. 2023**, Hydrogeology Journal 31:2337-2346 (accès libre) : **vérifié sur la source**. Aucune chimie
+  de la pluie ; chlorure seulement en rapport Cl/Br des nappes (fig. S4, matériel supplémentaire non téléchargé) ; le
+  suivi de la pluie « has not been carried out until now due to the access difficulties of the area » (p. 2345) ;
+  pluie d'environ 400 mm près de la côte (p. 2338).
+- **Rabemanana et al. 2005**, J. Hydrol. 310:143-156 : **non vérifié**. Notice Infoscience EPFL 116948 sans PDF,
+  notice HAL bioemco-00396172 sans fichier, résumé retiré par l'éditeur (OpenAlex, Semantic Scholar).
+- **Fareze et al. 2016** (Mahafaly, hal-01476517) et **Carrière 2024** (HDR, tel-04791954, CC BY-NC) : résumés lus
+  par l'API HAL (recharge d'environ 60 mm/an par le tritium pour Fareze ; pas de chlorure de la pluie) ; PDF bloqués
+  par la protection anti-robots de HAL (y compris via WebFetch). **Non vérifié** au-delà des résumés.
+- **Rahobisoa 2006** (mémoire, Université d'Antananarivo, Morondava, hors zone) : serveur injoignable, 3 essais.
+- Recherche web (WebSearch) indisponible (limite atteinte) ; recherches faites par les API OpenAlex, Crossref, HAL et
+  Semantic Scholar (un refus 429, réussite au second essai).
+
+### 4. Comparaison (sans conclusion sur la recharge)
+
+Aucune valeur MERRA-2 pour l'instant. Avec la littérature déjà vérifiée (Kwale transposé à 500 mm : 900 à 1 200
+mg/m²/an à 3-15 km sans dépôt sec ; intérieur sud-africain de Van Wyk : 260 mg/m²/an), le **scénario central** est le
+plus proche (1 098 à 10 km, 261 à 200 km) ; bas trop faible près de la côte, haut 4 à 5 fois trop fort à l'intérieur.
+**Comparaison circulaire** : ces sources ont servi à fixer les scénarios ; seul MERRA-2 donnera un contrôle indépendant.
+
+### Fichiers produits ou modifiés
+
+| Fichier | Statut git |
+|---|---|
+| `data/mdg/depot_chlorure_raw/` (PDF de Carrière et al. 2023 et son texte) | ignoré (`data/*/depot_chlorure_raw/`, vérifié par `git check-ignore`) |
+| `data/mdg/depot_chlorure.json` | versionnable (valeurs agrégées, références, licences, statut de vérification) |
+| `scripts/depot_chlorure_merra2.py`, `tests/test_depot_chlorure_merra2.py` | nouveaux, non commités |
+| `.github/workflows/build-depot-chlorure-merra2.yml` | nouveau, non commité |
+| `.gitignore` | deux lignes ajoutées, non commité |

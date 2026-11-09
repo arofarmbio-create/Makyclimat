@@ -1,0 +1,42 @@
+name: "29 - Dépôt de chlorure MERRA-2 (sel de mer, Grand Sud)"
+
+# MERRA-2 M2TMNXADG (NASA GMAO, OPeNDAP cloud, compte Earthdata) : 20 variables de dépôt de sel de mer, 240 mois
+# 2001-2020, sous-ensemble de 10 x 10 mailles, une requête à la fois, 3 essais au plus espacés de 30 s.
+# Données figées : lancement manuel ; « sonde » vérifie d'abord les noms de variables et le format CSV.
+on:
+  workflow_dispatch:
+    inputs:
+      sonde:
+        description: "true = vérifier seulement les noms de variables et le format"
+        default: "true"
+
+permissions:
+  contents: write
+
+jobs:
+  merra2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pandas requests
+      - name: MERRA-2 sel de mer
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+        run: |
+          if [ "${{ github.event.inputs.sonde }}" = "true" ]; then
+            python scripts/depot_chlorure_merra2.py --probe
+          else
+            python scripts/depot_chlorure_merra2.py --part merra2
+          fi
+      - name: Publier
+        if: github.event.inputs.sonde != 'true'
+        run: |
+          git config user.name "makyclimat-bot"
+          git config user.email "makyclimat-bot@users.noreply.github.com"
+          git add data/mdg/depot_chlorure_merra2_mailles.csv
+          git diff --cached --quiet || (git commit -m "Dépôt de sel de mer MERRA-2 2001-2020 par maille (Grand Sud)" && git pull --rebase --autostash origin main && git push)

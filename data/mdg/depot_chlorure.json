@@ -1,0 +1,101 @@
+{
+ "objet": "Dépôt atmosphérique de chlorure (mg/m²/an) dans le Grand Sud (lon 43 à 47,5 ; lat -25,7 à -22,5), estimé indépendamment des choix du protocole, pour situer les scénarios bas, central et haut de validation/protocole_recharge_chlorure.md. Valeurs agrégées seulement ; aucun chlorure de nappe consulté.",
+ "date": "2026-11-09",
+ "auteur": "agent de téléchargement",
+ "merra2": {
+  "statut": "NON CALCULÉ le 09/11/2026 : l'OPeNDAP de la NASA exige un compte Earthdata (redirection 302 vers /login/urs, testé une fois) ; les identifiants du projet n'existent que comme secrets GitHub (EARTHDATA_USER / EARTHDATA_PASSWORD), absents de ce poste ; lancer le workflow 29 (fichier non commité) puis `python scripts/depot_chlorure_merra2.py --part synthese`.",
+  "collection": "tavgM_2d_adg_Nx (M2TMNXADG v5.12.4, « Aerosol Diagnostics (extended) », moyennes mensuelles, 0,625° x 0,5°), doi:10.5067/RZIK2TV7PP38 ; CMR C1276812865-GES_DISC",
+  "correction": "Les dépôts de sel de mer ne sont PAS dans tavgM_2d_aer_Nx (M2TMNXAER) : la spécification les range dans la collection adg (p. 25-26) ; aer ne porte que masses et épaisseurs optiques (p. 29).",
+  "variables": {
+   "SSDP001-005": "Sea Salt Dry Deposition Bin 001-005",
+   "SSWT001-005": "Sea Salt Wet Deposition Bin 001-005",
+   "SSSV001-005": "Sea Salt Convective Scavenging Bin 001-005",
+   "SSSD001-005": "Sea Salt Sedimentation Bin 001-005",
+   "unite": "kg m-2 s-1"
+  },
+  "source_variables": "Bosilovich M. G., Lucchesi R., Suarez M. (2016). MERRA-2: File Specification. GMAO Office Note No. 9 (Version 1.1), 73 p. ; PDF téléchargé et lu le 09/11/2026 (tableau des variables de tavg1_2d_adg_Nx p. 25-26, tableau 6.2 des DOI p. 59)",
+  "statut_verification_variables": "vérifié sur la source (spécification officielle)",
+  "methode_prevue": "240 mois 2001-2020, sous-ensemble DAP4 lon 42,5-48,125 / lat -26,5 à -22 (100 mailles), somme des 20 variables, moyenne, x 31 557 600 s/an x 1e6 mg/kg ; chlorure = 0,55 x sel de mer ; distance au trait de côte Natural Earth 10 m (UTM 38S) ; mailles dont le centre est sur terre ; classes < 30, 30-100, > 100 km",
+  "mailles_terre_prevues": {
+   "total": 39,
+   "moins de 30 km": 10,
+   "30 à 100 km": 15,
+   "plus de 100 km": 14,
+   "distance_max_km": 218.6
+  },
+  "fraction_chlorure_sel_marin": {
+   "valeur": 0.55,
+   "source": "Millero F. J., Feistel R., Wright D. G., McDougall T. J. (2008). The composition of Standard Seawater and the definition of the Reference-Composition Salinity Scale. Deep-Sea Research I 55:50-72 (Cl 19,352 g/kg pour S_R 35,165 g/kg = 0,550)",
+   "statut": "valeur de référence connue, article non relu le 09/11/2026"
+  },
+  "licence": "données NASA GES DISC sans restriction d'usage ; citer GMAO (2015), MERRA-2 tavgM_2d_adg_Nx, doi:10.5067/RZIK2TV7PP38",
+  "limites_attendues": "maille de 55 x 50 km : le gradient des 10 premiers km n'est pas résolu ; le dépôt de sel de mer de MERRA-2 n'a pas été validé à Madagascar"
+ },
+ "scenarios_protocole_P500mm": {
+  "formule": "D = P x Cl_p(d) x (1 + s), Cl_p(d) = Cl_i + (Cl_c - Cl_i) x exp(-d / L), P = 500 mm",
+  "parametres": {
+   "bas": "Cl_c 1,8 ; Cl_i 0,3 ; L 10 km ; s 0",
+   "central": "Cl_c 2,2 ; Cl_i 0,4 ; L 30 km ; s 0,3",
+   "haut": "Cl_c 5,4 ; Cl_i 1,0 ; L 100 km ; s 0,5"
+  },
+  "depot_mg_m2_an": {
+   "bas": {
+    "10 km": 426.0,
+    "30 km": 187.0,
+    "100 km": 150.0,
+    "200 km": 150.0
+   },
+   "central": {
+    "10 km": 1098.0,
+    "30 km": 690.0,
+    "100 km": 302.0,
+    "200 km": 261.0
+   },
+   "haut": {
+    "10 km": 3736.0,
+    "30 km": 3195.0,
+    "100 km": 1964.0,
+    "200 km": 1197.0
+   }
+  }
+ },
+ "litterature": [
+  {
+   "reference": "Carrière S. D., Rakotomandrindra P. F. M., Heath T., Chalikakis K., Gillon M., Leblanc M., Tweed S. (2023). Water mixing processes in a complex multi-layer hydrosystem in southwestern Madagascar: a combined isotopic and piezometry approach. Hydrogeology Journal 31:2337-2346, doi:10.1007/s10040-023-02731-5",
+   "licence": "accès libre (© The Author(s) 2023, Springer)",
+   "contenu": "aucune mesure de chimie de la pluie ; le chlorure n'apparaît que comme rapport Cl/Br des nappes (fig. S4 du matériel supplémentaire, non téléchargé) ; les auteurs recommandent de suivre la pluie car cela « has not been carried out until now due to the access difficulties of the area » (p. 2345) ; pluie moyenne environ 400 mm près de la côte (p. 2338)",
+   "statut": "vérifié sur la source (PDF intégral lu le 09/11/2026)"
+  },
+  {
+   "reference": "Rabemanana V., Violette S., de Marsily G., Robain H., Deffontaines B., Andrieux P., Bensimon M., Parriaux A. (2005). Origin of the high variability of water mineral content in the bedrock aquifers of Southern Madagascar. Journal of Hydrology 310:143-156, doi:10.1016/j.jhydrol.2004.11.025",
+   "contenu": "texte intégral inaccessible : notice Infoscience EPFL 116948 sans PDF (seul license.txt), notice HAL bioemco-00396172 sans fichier, résumé retiré par l'éditeur sur OpenAlex et Semantic Scholar",
+   "statut": "non vérifié (aucune valeur reprise)"
+  },
+  {
+   "reference": "Fareze L. P., Rajaobelison J., Ramaroson V., Vallet-Coulomb C. (2016). Origin and Recharge Estimation of Groundwater using Chemistry and Environmental Isotopes in the Mahafaly Sedimentary Aquifer, District of Betioky, Southwestern Madagascar. International Research Journal of Earth Sciences (HAL hal-01476517)",
+   "contenu": "résumé seul (API HAL) : recharge d'environ 60 mm/an par le tritium (temps de séjour 75 ans), pas de bilan de chlorure ni de chlorure de la pluie dans le résumé ; PDF bloqué par la protection anti-robots de HAL",
+   "statut": "non vérifié au-delà du résumé"
+  },
+  {
+   "reference": "Carrière S. D. (2024). L'eau souterraine, une ressource en eau critique pour les forêts et les sociétés humaines en état de stress hydrique. HDR (HAL tel-04791954), licence CC BY-NC 4.0",
+   "contenu": "résumé seul (API HAL) : recharge régionale au Sud-Ouest de Madagascar, sans mention du chlorure ; PDF bloqué par la protection anti-robots de HAL",
+   "statut": "non vérifié"
+  },
+  {
+   "reference": "Rahobisoa J.-J. (2006). Étude de la recharge du bassin hydrogéologique de Morondava. Mémoire, Université d'Antananarivo, doi:10.63917/mem.2006.430",
+   "contenu": "bassin de Morondava (Ouest, hors zone) ; serveur biblio.univ-antananarivo.mg injoignable (3 essais, aucune réponse)",
+   "statut": "non vérifié"
+  },
+  {
+   "reference": "Ferrer, Folch et Thomas (2019), Kwale (Kenya) ; Van Wyk et al. (2011), Afrique du Sud",
+   "contenu": "déjà dans data/mdg/chlorure_pluie.json. Transposés à P = 500 mm : Kwale 1,8-2,4 mg/L à 3-15 km -> 900-1 200 mg/m²/an (humide seul) ; Van Wyk intérieur sud-africain : 260 mg/m²/an total mesuré",
+   "statut": "vérifié sur la source (entrées précédentes)",
+   "attention": "ces deux sources ont servi à construire les scénarios : la comparaison n'est pas indépendante"
+  }
+ ],
+ "mesure_au_sud_de_madagascar": "aucune trouvée (chlorure de la pluie ou dépôt), recherches du 09/11/2026",
+ "comparaison": {
+  "merra2": "en attente du calcul",
+  "litterature": "Côte (Kwale transposé, 900-1 200 mg/m²/an à 3-15 km sans dépôt sec) : central à 10 km = 1 098 ; bas = 426 (trop bas), haut = 3 736 (trop haut). Intérieur (Van Wyk, 260 mg/m²/an) : central à 200 km = 261 ; bas = 150 ; haut = 1 197. Le scénario central est le plus proche, mais cette comparaison est circulaire (mêmes sources)."
+ }
+}

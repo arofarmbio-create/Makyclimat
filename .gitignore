@@ -55,3 +55,6 @@ data/*/bushproof_inventaire_cl_scelle.json
 
 # Chlorure de la pluie : données brutes téléchargées (Kwale BGS OGL, PDF), jamais dans git
 data/*/chlorure_pluie_raw/
+
+# Dépôt de chlorure (MERRA-2, littérature) : données brutes téléchargées, jamais dans git
+data/*/depot_chlorure_raw/
