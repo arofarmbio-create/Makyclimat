@@ -355,7 +355,14 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     P, labels = rain
     T = P.shape[0]
     valid = land & np.isfinite(props["whc"]) & np.isfinite(et0[0]) & (props["whc"] > 0)
-    Pc = np.nan_to_num(P[:, valid], nan=0.0).astype("float64")
+    Pv = P[:, valid]
+    n_nan = int(np.isnan(Pv).sum())
+    if n_nan:   # audit Codex (09/11/2026) : une pluie manquante ne doit jamais devenir zéro (faux signal de sécheresse)
+        STATUS["rain_missing_cells"] = n_nan
+        write_json(status_path, STATUS)
+        print(f"Bilan hydrique non publié : {n_nan} valeurs de pluie manquantes sur les mailles valides (voir status.json)")
+        return None
+    Pc = Pv.astype("float64")
     pet = np.stack([et0[m][valid] for m in range(12)]).astype("float64")
     # Bilan SANS retrait SCS-CN mensuel. Corrigé le 02/11/2026 : depuis le 27/10, le SCS-CN (formule d'averse isolée) était
     # appliqué au cumul du mois et transformait presque toute la pluie en ruissellement (600 mm dans le mois -> 490 à 570 mm) ;

@@ -1209,3 +1209,13 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Lecture : à 0,1° et sur un périmètre de 406 mailles, la part des mailles au-dessus du seuil ne repère pas des
   inondations pluviales locales et déclarées à ± 1 jour. Piste : un score local (maille du district touché) plutôt
   qu'une part du périmètre ; à décider sous protocole. Résultat négatif publiable, comme prévu.
+
+### Correctifs P0 de l'audit Codex (09/11/2026, `validation/audit_codex_2026-11-09.md`)
+- 🔧 **Workflow CMIP6** : entrées passées par variables et validées (plus d'interpolation dans le shell), droits minimaux,
+  dépendance `pyyaml` ajoutée ; YAML vérifié. Reste ouvert : attribut de licence absent → extraction poursuivie (P1).
+- 🔧 **R-21** : la garde de complétude suit la portée réduite (décembre à mars des années à événement) ; le rapport
+  déclare l'échantillon enrichi en événements (Brier, fiabilité, valeur économique descriptifs). Décision demandée sur
+  le critère principal avant tout calcul.
+- 🔧 **Bilan hydrique** : les pluies manquantes n'étaient plus mises à zéro silencieusement ; le bilan refuse désormais de
+  publier s'il en manque. Mesure préalable : **aucune** valeur manquante sur les 535 mois (1981-11 à 2026-05) et les
+  21 617 mailles terrestres : défaut latent, sans effet sur les indicateurs publiés jusqu'ici.
