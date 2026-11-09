@@ -4,8 +4,7 @@ name: 14 - Reprévisions GloFAS v4 réduites (vérification par l'impact)
 # fenêtre d'échéance) et les range dans la release GitHub « reprevisions-glofas-v4 » (hors du dépôt git).
 # Un mois ≈ 9 min d'attente EWDS. Reprend là où il s'est arrêté (les mois déjà publiés sont sautés). Manuel.
 on:
-  schedule:
-    - cron: "0 1 * * 0"     # chaque dimanche : complète les mois manquants (archive figée, sans effet une fois complète)
+  # Lancement automatique hebdomadaire arrêté le 09/11/2026 (portée réduite, protocole_verification_impact.md).
   workflow_dispatch:
     inputs:
       years:
@@ -29,7 +28,7 @@ jobs:
       years: ${{ steps.y.outputs.years }}
     steps:
       - id: y
-        run: echo "years=$(echo '${{ github.event.inputs.years || '2003 2004 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023' }}' | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+        run: echo "years=$(echo '${{ github.event.inputs.years || '2010 2012 2013 2017 2019 2020 2022 2023' }}' | tr -s ' ' '\n' | grep -v '^$' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
 
   build:
     needs: plan

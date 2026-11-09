@@ -5,7 +5,7 @@ name: 16 - Prévision saisonnière hybride (multi-modèles C3S + ENSO/IOD)
 on:
   schedule:
     - cron: "0 6 16 10 *"   # le 16 octobre : prévisions C3S d'octobre publiées
-    - cron: "0 6 * * 3"     # chaque mercredi : complète les systèmes manquants (sans effet une fois complet)
+    # Complément hebdomadaire arrêté le 09/11/2026 : chapitre R-22 fermé (registre), il occupait la file Copernicus.
   workflow_dispatch:
 
 permissions:

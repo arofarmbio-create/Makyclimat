@@ -143,3 +143,10 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
   Prépublication EGUsphere-2025-3473. https://egusphere.copernicus.org/preprints/2025/egusphere-2025-3473/
 - Richardson D. S. (2000). Skill and relative economic value of the ECMWF ensemble prediction system. *Q. J. R.
   Meteorol. Soc.* 126, 649-667.
+- 09/11/2026 (avant tout calcul de vérification, décision du porteur du projet) : **réduction de la portée.** Le
+  téléchargement complet (21 saisons × 6 mois, environ 126 mois) échoue de façon répétée (limite de 5 heures,
+  file EWDS). Portée retenue : les 29 mois déjà téléchargés (surtout 2003-2009, qui servent aussi de mois témoins) et
+  les mois de saison des pluies des années ayant un événement documenté dans `validation/evenements.csv` :
+  2010, 2012, 2013, 2017, 2019, 2020, 2022 et 2023, mois de décembre à mars. Le lancement automatique hebdomadaire est
+  arrêté. Conséquence à déclarer : moins d'événements, donc une puissance plus faible ; une analyse de puissance sera
+  faite avant le calcul des scores (règle du 09/11/2026).
