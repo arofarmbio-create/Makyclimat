@@ -36,6 +36,7 @@ data/*/nappes_mondiales/*.gpkg
 data/*/nappes_mondiales/*.csv
 data/*/bgs_recharge_raw/
 data/*/nappes_mondiales/glim_vecteur_raw/
+data/*/nappes_mondiales/glim_vecteur_telechargement.log*
 !data/*/nappes_mondiales/covariables_hc6.csv
 data/*/e1/chirps_*.npz
 data/*/e1/imerg_*.npz
