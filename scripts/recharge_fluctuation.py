@@ -118,11 +118,8 @@ def report(tab: pd.DataFrame, t_main: dict, t_day: dict) -> str:
     return "\n".join(L) + "\n"
 
 
-def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--country", default="mdg")
-    args = ap.parse_args()
-    cdir = country_data_dir(args.country)
+def build_sites(cdir) -> pd.DataFrame:
+    """Tableau des sites (MGMERL HT, GROSoM) avec coordonnées, groupe d'aquifère, T2 et recharge mesurée."""
     rt = pd.read_csv(cdir / "nappes_mondiales" / "recharge_transferee.csv")
     sites = pd.read_csv(ROOT / "inputs" / "mgmerl" / "mgmerl_dataloggers_ht_analytics_sites.csv")
     rows = []
@@ -140,6 +137,15 @@ def main() -> None:
         grp = str(c.Aquifer_group) if pd.notna(c.Aquifer_group) else "Sedimentary"
         rows.append({"site": name, "source": "GROSoM", "lat": lat, "lon": lon, "groupe": grp, "t2_mm": float(c.T2_mmpa), **site_recharge(d, grp)})
     tab = pd.DataFrame(rows)
+    return tab
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--country", default="mdg")
+    args = ap.parse_args()
+    cdir = country_data_dir(args.country)
+    tab = build_sites(cdir)
     for col in ("r_mm", "r_jour_mm", "r_bas", "r_haut", "r_jour_bas", "r_jour_haut"):
         if col not in tab:
             tab[col] = np.nan
