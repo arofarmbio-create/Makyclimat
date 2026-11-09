@@ -965,3 +965,22 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   passage possible, pas un flux mesuré.
 - 📌 Suite : les petits bassins côtiers, où la nappe peut passer d'un bassin à l'autre, sont aussi ceux des 36
   sous-bassins à bilan élevé ; à croiser une fois la recharge corrigée (contrôle de vraisemblance de la recharge).
+
+### Contrôle de vraisemblance de la recharge, T2c (`validation/controle_recharge.md`)
+- ✅ Protocole fixé avant calcul (09/11/2026) : bornes de R/P (quantiles 10 et 90 %) tirées des 134 sites africains du
+  BGS par groupe d'aquifère × climat ; T2 ramenée dans ces bornes (T2c). Calcul local (entrées hors dépôt).
+- ❌ **H-R2 non soutenue** : T2c place 2 références malgaches sur 8 dans son intervalle, contre 3 pour T2 (règle : au
+  moins 5). Ankaranabo sort de l'intervalle : la borne basse remonte à 56 mm/an pour 46 mesurés.
+- ❌ **H-R1 non vérifiée pour le Grand Sud** : aucune maille au-dessus de la borne haute. Les recharges trop fortes du
+  Sud (Ihazoambo 262, Mahavelo 241, Nosiomby 208 mm/an, contre 22 à 48 mesurés) restent **plausibles au regard des
+  sites africains** (R/P jusqu'à 0,25 sur le socle). Lecture : l'erreur du Sud n'est pas une invraisemblance
+  physique ; c'est un écart propre à Madagascar (socle du Sud moins rechargé que ses analogues africains, ou
+  fluctuation de nappe qui sous-estime), que des bornes africaines ne peuvent pas corriger.
+- 📊 La borne basse joue : 30 % des mailles remontées (33 % hors du Grand Sud, 14 % dans le Grand Sud) ; recharge
+  médiane 75 → 84 mm/an. Mahajanga : 7 → 67 mm/an (carte BGS : 124), correction dans le bon sens.
+- ❌ Toliara inchangée (20 mm/an ; puits karstiques : 80 à 195) : la grille classe la maille en « Unconsolidated »,
+  pas en sédimentaire ; la limite karstique annoncée par le protocole se vérifie.
+- 📌 Décision fixée d'avance : T2 reste la valeur centrale ; le bilan de l'atlas est publié avec la fourchette T2 / T2c,
+  et les sous-bassins dont la classe change sont marqués « incertains ». Piste ouverte pour la thèse : une
+  correction propre à Madagascar, appuyée sur les mesures locales (fluctuation de nappe, puits karstiques), avec une
+  validation croisée par site.
