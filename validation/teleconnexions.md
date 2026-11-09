@@ -1,6 +1,6 @@
 # Modèle de prévision saisonnière El Niño / dipôle de l'océan Indien, par région
 
-Généré le 2026-11-02 par `scripts/build_teleconnections.py`. Cahier des charges §5, §8 (approche 1), §9, §13.
+Généré le 2026-11-09 par `scripts/build_teleconnections.py`. Cahier des charges §5, §8 (approche 1), §9, §13.
 Saisons 1981-1982 à 2025-2026 (45 saisons). Pluie CHIRPS par région.
 Prédicteurs connus avant la saison : ONI de juillet-septembre (NOAA CPC) et DMI de juillet-septembre (ERSST v5, `connector_dmi.py`).
 
@@ -77,13 +77,13 @@ Sinon, la meilleure prévision est la climatologie.
 
 ## Prévision 2026-2027
 
-ONI de juillet-septembre 2026 : **2,16**. DMI de juillet-septembre 2026 : **0,23**.
+ONI de juillet-septembre 2026 : **2,16**. DMI de juillet-septembre 2026 : **0,24**.
 
 | Région | Période | Modèle | Anomalie (écart-type) | % de la normale |
 |---|---|---|---|---|
-| Diana | novembre-janvier | ONI+DMI | 0,03 | 101 % |
+| Diana | novembre-janvier | ONI+DMI | 0,04 | 101 % |
 | Menabe | novembre-janvier | ONI | -1,02 | 77 % |
-| Sava | novembre-janvier | ONI+DMI | 0,35 | 110 % |
+| Sava | novembre-janvier | ONI+DMI | 0,36 | 110 % |
 
 ## Limites
 

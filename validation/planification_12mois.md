@@ -1,8 +1,8 @@
 # Scénarios de planification à 12 mois : saison 2027-2028
 
-Généré le 2026-11-02 par `scripts/build_planning.py`, selon `validation/protocole_planification_12mois.md` (fixé avant les calculs).
+Généré le 2026-11-09 par `scripts/build_planning.py`, selon `validation/protocole_planification_12mois.md` (fixé avant les calculs).
 
-- 45 saisons de pluie CHIRPS par région. Prédicteurs connus un an avant : ONI et DMI de juillet-septembre 2026 (ONI 2,16, DMI 0,23).
+- 45 saisons de pluie CHIRPS par région. Prédicteurs connus un an avant : ONI et DMI de juillet-septembre 2026 (ONI 2,16, DMI 0,24).
 - Un signal n'est utilisé que s'il passe les quatre épreuves (MSSS croisé > 0, MSSS chronologique > 0, corrélation significative après contrôle des tests multiples, RPSS croisé > 0). Sinon : scénarios climatologiques.
 
 ## 1. Résultat
