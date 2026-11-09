@@ -88,6 +88,7 @@ jobs:
           python tests/test_controle_recharge.py
           python tests/test_atlas_fourchette_recharge.py
           python tests/test_recharge_locale.py
+          python tests/test_recharge_karst.py
           python tests/test_nappes_mgmerl.py
           python tests/test_relief_e1.py
           python tests/test_mct_era5.py
