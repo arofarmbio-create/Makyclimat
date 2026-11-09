@@ -1,6 +1,6 @@
 # État des lieux et registre des méthodes et des résultats
 
-*Établi le 02/11/2026, en réponse aux sections 19 et 22 du protocole doctoral
+*Établi le 02/11/2026, mis à jour le 09/11/2026 (sections 2.4 quater et 2.4 sexies), en réponse aux sections 19 et 22 du protocole doctoral
 (`protocole_doctoral_modelisation_climatique_Madagascar.txt`). Méthode : inventaire du dépôt (code, données, notes de
 validation), de l'historique des workflows GitHub Actions et des sorties publiées, à cette date. Chaque chiffre est
 copié d'un fichier cité ; aucun n'est arrondi ou recalculé pour ce document. Ce registre est tenu à jour à chaque
@@ -181,7 +181,7 @@ statut, document détaillé.
 
 | ID | Question | Protocole | État au 02/11/2026 | Statut |
 |---|---|---|---|---|
-| R-39 | L'état de l'océan avant la saison (ONI, DMI, SIOD, canal de Mozambique) annonce-t-il les mois de pluie extrême du Grand Sud, et ces mois font-ils remonter les nappes ? Relief (au vent ou sous le vent) et géologie (karst ou socle) décrits à part | `protocole_climat_extremes_nappes.md` | Protocole écrit avant calcul ; maillon B exploratoire sur les 7 sites MGMERL, confirmatoire sur des sites indépendants à obtenir | ⏳ |
+| R-39 | L'état de l'océan avant la saison (ONI, DMI, SIOD, canal de Mozambique) annonce-t-il les mois de pluie extrême du Grand Sud, et ces mois font-ils remonter les nappes ? Relief (au vent ou sous le vent) et géologie (karst ou socle) décrits à part | `protocole_climat_extremes_nappes.md` | Protocole écrit avant calcul. 09/11 : puissance du protocole d'origine 10 à 17 % (`puissance_hn7.md`) ; test principal resserré avant calcul (ONI × Atsimo-Andrefana, pluie maximale) : ρ = −0,24, p = 0,11, non retenu, sens attendu ; maillon B à faire (`hn7_maillon_a.md`) | ❌ maillon A non établi (puissance faible) ; ⏳ maillon B |
 
 ### 2.4 quinquies Module eaux souterraines (protocole-cadre)
 
@@ -191,6 +191,23 @@ statut, document détaillé.
 | R-42 | Les données SEAM du ministère de l'Eau (points d'eau, population par commune) sont-elles utiles à MakyClimat ? | `protocole_seam_points_eau.md` | Fait le 03/11 (`seam_utilite.md`) : 45,8 % de positions par défaut ; relevés MGMERL plus secs que les forages du pays (24 % hors étendue) ; part de puits : lien faible (H-S1b, ρ = −0,11) sans gain pour la carte ; population par commune complète, retenue pour le risque d'épuisement ⚠️ (03/11) Calculé sur un extrait de 1 000 relevés MGMERL (limite d'affichage) : à refaire sur les données complètes. | ✅ partiel |
 | R-43 | Le transfert de connaissances depuis des régions analogues (géologie, climat) prédit-il la recharge malgache mieux que le transfert africain ? | `protocole_transfert_analogues.md` | Fait le 04/11 (`transfert_analogues.md`) : niveau 1 réussi (22 pays sur 29, p = 0,004) ; H-T1 soutenue (10 sites sur 12, p = 0,019) ; H-T2 non soutenue (ordre spatial faux) ; H-R1 non soutenue ; typage GLiM 0,5° trop grossier (47 % d'accord) Reprise GLiM vectorielle (04/11) : H-T1 11/12 (p = 0,003), H-T2 toujours non soutenue, accord 58 % < 70 % : conclusion inchangée (`transfert_analogues_vectoriel.md`). H-K1 karst (04/11) non soutenue dans les sources (8 pays sur 23) (`transfert_analogues_karst.md`). | 🟡 plausible, non démontré |
 | R-44 | THMS (mémoire hydrique du sous-sol, idée du porteur du projet) : plusieurs mémoires prédisent-elles mieux le niveau des nappes qu'une seule ? | `protocole_thms_test_sud.md` | Fait le 04/11 (`thms_test_sud.md`) : H-M1 non soutenue (2 sites sur 12) ; signal exploratoire : sites karstiques de Toliara à mémoire unique très rapide (1 à 10 jours), socle à mémoires multiples et lentes | ❌ H-M1 ; 🟡 piste karst |
+
+### 2.4 sexies Recharge des nappes : tests du 04 au 09/11/2026 (M3, M7 ; E3, E7 ; H2, H3, H4, H6)
+
+Synthèse : `methodologie_these.md`, section 7.1 ; bilan : `bilan_etape_2026-11-09.md`.
+
+| ID | Question | Protocole | Résultat | Statut |
+|---|---|---|---|---|
+| R-45 | Les bassins hydrogéologiques (écoulement sur la nappe) suivent-ils les bassins de surface ? | `protocole_bassins_hydrogeologiques.md` | 2,6 % des mailles changent de bassin ; 4,5 fois plus en terrain plat ; robuste au lissage ; écarts concentrés dans les petits bassins côtiers (`bassins_hydrogeologiques.md`) | ✅ H-B1, H-B2 robuste |
+| R-46 | Des bornes africaines de la part de pluie rechargée corrigent-elles T2 (T2c) ? | `protocole_controle_recharge.md` | 2 références sur 8 contre 3 ; l'erreur du Sud reste plausible au regard de l'Afrique (`controle_recharge.md`) ; atlas avec fourchette : 4 sous-bassins incertains sur 1 420 (`atlas_fourchette_recharge.md`) | ❌ H-R2 |
+| R-47 | Une correction par les 12 mesures malgaches (T2L) se généralise-t-elle ? | `protocole_recharge_locale.md` | Par groupes de sites : 2 sur 12, erreur 0,90 contre 0,69 ; site par site : 0,33 (`recharge_locale.md`) ; carte figée | ❌ H-L1, H-L2 ; carte figée |
+| R-48 | Une recharge propre au karst (T2K, Wan et al. 2024) améliore-t-elle T2 ? | `protocole_recharge_karst.md` | Tests non discriminants (erreur de protocole notée) ; aucune amélioration à Toliara ; sensibilité figée (option A) (`recharge_karst.md`) | ⚠️ non discriminant |
+| R-49 | T2L ou T2K séparent-elles mieux que T2 les puits à sec 2024-2025 (UNESCO) ? | `protocole_puits_a_sec.md` | T2 à l'envers (AUC 0,450), T2L 0,561 ; gain +0,111 [−0,004 ; +0,227] (`puits_a_sec.md`) | ❌ H-P1 de peu ; indice pour T2L |
+| R-50 | La recharge par bilan de chlorure (538 forages BushProof) départage-t-elle T2 et T2L ? | `protocole_recharge_chlorure.md` | Découpage fixé échoué (2 zones) ; T2 trop forte dans les 3 scénarios ; après coup (36 blocs) : T2L meilleure si dépôt bas ou central (`recharge_chlorure.md`, `recharge_chlorure_blocs.md`) | ⚠️ dépend du dépôt de chlorure |
+| R-51 | La nappe régionale profonde explique-t-elle les rangements inversés ? | `protocole_nappe_regionale.md` | Inversion effacée à charge fixée (H-D4) ; chlorure plus fort en bas et en profondeur, mais effet côtier ; Cl/Na 0,96 (`nappe_regionale.md`) | ⚠️ H-D1, H-D2, H-D4 soutenues ; H-D3, H-D5, H-D6 non |
+| R-52 | Combien d'unités indépendantes faudrait-il pour que les tests aient de la puissance ? | — (analyse, pas de test) | Puits à sec 46 % ; chlorure 43 % ; correction locale plafonnée par la dispersion entre sites (`analyse_puissance.md`) | ✅ règle « puissance avant hypothèse » |
+| R-53 | Les preuves réunies établissent-elles que T2 surestime (Q1) et que T2L est plus juste (Q2) ? | `protocole_combinaison_preuves.md` | Bas ou central : Q1 et Q2 établies ; haut (retenu par MERRA-2) : Q1 indice, Q2 non établie ; sans chlorure : indices (`combinaison_preuves.md`) | ⏳ validation de MERRA-2 en cours |
+| R-54 | Le dépôt de chlorure de MERRA-2 est-il crédible (Kwale, Afrique du Sud) ? | `protocole_combinaison_preuves.md` (section 7) | MERRA-2 Grand Sud : 3 500 à 11 700 mg/m²/an, 2 à 13 fois les mesures de terrain ; validation aux sites mesurés relancée (workflow 29) | ⏳ |
 
 ### 2.5 Prévision saisonnière et planification (M1, M7 ; E6)
 
