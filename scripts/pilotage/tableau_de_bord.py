@@ -20,7 +20,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 PIL = ROOT / "pilotage"
 OUT = PIL / "tableau_de_bord.html"
-PERIODE_S, GH_PERIODE_S, ARRET_MIN = 30, 300, 15
+PERIODE_S, PAGE_S, GH_PERIODE_S, ARRET_MIN = 60, 300, 300, 15
 _gh_cache: dict = {"t": 0.0, "runs": []}
 
 VERDICT = re.compile(r"\*\*(H-[A-Za-z0-9-]+)[^*]*?(non soutenue|soutenue|robuste|non confirmée|non vérifiée)")
@@ -318,17 +318,17 @@ def page() -> str:
                                                         ("hypotheses", "Hypothèses"), ("biblio", "Bibliographie"), ("glossaire", "Glossaire"),
                                                         ("activite", "Activité")))
 
-    return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="refresh" content="{PERIODE_S}">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>MakyClimat · Pilotage</title><style>
+    return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MakyClimat · Pilotage</title><style>
 :root{{--bg:#f7f8fa;--surface:#fff;--sub:#f2f4f7;--border:#e4e7ec;--text:#101828;--muted:#667085;--accent:#2e5aac;
 --ok:#16794c;--ok-bg:#e7f6ee;--ko:#b42318;--ko-bg:#fdecea;--warn:#a15c07;--warn-bg:#fef4e2;--info:#2e5aac;--info-bg:#eaf0fb;--neutre:#667085;--neutre-bg:#f2f4f7}}
 @media (prefers-color-scheme:dark){{:root{{--bg:#0f1115;--surface:#161a20;--sub:#1c2129;--border:#2a303b;--text:#e7eaf0;--muted:#98a1b2;--accent:#8fb0ec;
 --ok:#5fcf98;--ok-bg:#16301f;--ko:#f28b82;--ko-bg:#3a1c1a;--warn:#f0b45b;--warn-bg:#36290f;--info:#8fb0ec;--info-bg:#1b2840;--neutre:#98a1b2;--neutre-bg:#222833}}}}
-*{{box-sizing:border-box}} html{{scroll-behavior:smooth}}
+*{{box-sizing:border-box}}
 body{{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}}
 header{{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--border)}}
 .hwrap{{max-width:1320px;margin:0 auto;padding:12px 24px 0}} .brand{{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}}
 .brand h1{{font-size:16px;font-weight:600;margin:0}} .brand .sub{{color:var(--muted);font-size:13px}} .brand .upd{{margin-left:auto;color:var(--muted);font-size:12px}}
+#actualiser{{font:inherit;font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);cursor:pointer}} #actualiser:hover{{background:var(--sub)}}
 nav{{display:flex;gap:4px;overflow-x:auto;margin-top:8px}} nav a{{color:var(--muted);text-decoration:none;font-size:13px;padding:8px 10px;border-bottom:2px solid transparent;white-space:nowrap}}
 nav a:hover{{color:var(--text);border-bottom-color:var(--border)}}
 main{{max-width:1320px;margin:0 auto;padding:20px 24px 48px}} section{{margin-bottom:28px;scroll-margin-top:96px}}
@@ -378,7 +378,7 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 @media (max-width:640px){{.hwrap,main{{padding-left:16px;padding-right:16px}} .body{{padding-left:16px}} dl.kv{{grid-template-columns:1fr}} .cols{{grid-template-columns:1fr}}}}
 </style></head><body>
 <header><div class="hwrap"><div class="brand"><h1>MakyClimat</h1><span class="sub">Pilotage de la thèse</span>
-<span class="upd">Actualisé à {now:%H:%M:%S} · toutes les {PERIODE_S} s · suivi du protocole au {esc(suivi.get("mis_a_jour", "—"))}</span></div>
+<span class="upd">Données du {now:%H:%M} · mise à jour automatique toutes les 5 min · protocole au {esc(suivi.get("mis_a_jour", "—"))}</span><button id="actualiser" type="button" title="Recharger la page sans perdre la position">Actualiser</button></div>
 <nav>{nav}</nav></div></header>
 <main>{errs}
 <div class="lead"><div class="q">{esc(th.get("question_en_cours", ""))}</div><div class="t">{esc(th.get("titre", ""))}</div></div>
@@ -393,13 +393,20 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 </main>
 <script>
 (function(){{
-  var K="pilotage_ouverts",S="pilotage_defilement",o={{}};
+  var K="pilotage_ouverts",Y="pilotage_defilement",o={{}};
+  if("scrollRestoration" in history) history.scrollRestoration="manual";
+  function lire(k,d){{try{{var v=localStorage.getItem(k);return v===null?d:v;}}catch(e){{return d;}}}}
+  function ecrire(k,v){{try{{localStorage.setItem(k,v);}}catch(e){{}}}}
   function cle(d){{var s=d.querySelector("summary");return s?s.textContent.trim().slice(0,90):"";}}
-  try{{o=JSON.parse(localStorage.getItem(K)||"{{}}");}}catch(e){{}}
+  try{{o=JSON.parse(lire(K,"{{}}"));}}catch(e){{o={{}};}}
   document.querySelectorAll("details").forEach(function(d){{var k=cle(d);if(k in o)d.open=o[k];
-    d.addEventListener("toggle",function(){{o[k]=d.open;try{{localStorage.setItem(K,JSON.stringify(o));}}catch(e){{}}}});}});
-  try{{var y=+sessionStorage.getItem(S);if(y)window.scrollTo(0,y);}}catch(e){{}}
-  window.addEventListener("beforeunload",function(){{try{{sessionStorage.setItem(S,String(window.scrollY));}}catch(e){{}}}});
+    d.addEventListener("toggle",function(){{o[k]=d.open;ecrire(K,JSON.stringify(o));}});}});
+  function restaurer(){{var y=+lire(Y,"0");if(y>0)window.scrollTo({{top:y,left:0,behavior:"instant"}});}}
+  restaurer(); window.addEventListener("load",restaurer);
+  var t=null; window.addEventListener("scroll",function(){{clearTimeout(t);t=setTimeout(function(){{ecrire(Y,String(window.scrollY));}},150);}});
+  function recharger(){{ecrire(Y,String(window.scrollY));location.reload();}}
+  document.getElementById("actualiser").addEventListener("click",recharger);
+  setTimeout(recharger,{PAGE_S}*1000);
 }})();
 </script></body></html>"""
 
