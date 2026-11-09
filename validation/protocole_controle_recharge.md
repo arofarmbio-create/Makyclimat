@@ -76,3 +76,5 @@ le climat, corrige-t-il ces erreurs sans être réglé sur les sites malgaches ?
 ## 8. Journal des modifications
 
 - 09/11/2026 : version initiale.
+- 09/11/2026 (avant le calcul) : calcul **local** et non sur GitHub, car la base BGS, la grille T2 et les séries
+  MGMERL sont hors du dépôt (comme pour H-C6). Les tests tournent sur GitHub. Méthode et règles inchangées.

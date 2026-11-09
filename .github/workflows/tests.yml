@@ -85,6 +85,7 @@ jobs:
           python tests/test_thms.py
           python tests/test_atlas_bassins.py
           python tests/test_bassins_hydrogeologiques.py
+          python tests/test_controle_recharge.py
           python tests/test_nappes_mgmerl.py
           python tests/test_relief_e1.py
           python tests/test_mct_era5.py
