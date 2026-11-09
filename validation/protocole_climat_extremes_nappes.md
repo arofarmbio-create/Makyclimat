@@ -161,3 +161,12 @@ Régions du Grand Sud : Androy, Anosy, Atsimo-Andrefana.
   extrêmes. Pistes pour gagner en puissance, non adoptées à ce stade : nombre de mois extrêmes ou pluie maximale
   mensuelle (variable continue) au lieu du résultat binaire ; moins de tests (région et indice choisis par la
   littérature).
+- 09/11/2026 (avant tout calcul, décision du porteur du projet, après `puissance_hn7.md`) : **test principal unique du
+  maillon A** : corrélation de Spearman entre l'**ONI de juillet-septembre** (année Y − 1) et la **pluie du mois le plus
+  fort** de la saison novembre-avril (fin en Y) dans la région **Atsimo-Andrefana** (Sud-Ouest), 45 saisons
+  1981-2025, p bilatéral par permutation (5 000 tirages), seuil 5 %. Choix de la littérature : lien El Niño - pluies
+  d'été du Sud-Ouest (*Theoretical and Applied Climatology*, 2016). Puissance simulée : 47 % pour r = 0,3, 74 % pour
+  r = 0,4 ; le test reste **exploratoire de justesse** pour un lien modéré. Publiés à titre descriptif : validation
+  croisée (régression, une saison laissée de côté, MSSS) et test chronologique (jusqu'en 2005 / après). Les 8 autres
+  combinaisons (Androy, Anosy ; DMI, SIOD, canal de Mozambique) et la définition binaire d'origine (au moins un mois au
+  95e centile) sont calculées **à titre exploratoire** (Benjamini-Hochberg 10 %).
