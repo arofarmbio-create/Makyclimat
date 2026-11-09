@@ -948,3 +948,20 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📌 Correctif à écrire avant tout recalcul : contrôle de vraisemblance de la recharge (rapport recharge / pluie
   comparé aux fourchettes publiées par type de roche) avant tout calcul de bilan.
 
+
+### Bassins hydrogéologiques (`validation/bassins_hydrogeologiques.md`)
+- ✅ Protocole fixé avant calcul (04/11/2026) ; charge de la nappe = altitude GLO-90 − niveau statique (carte v2) ;
+  mêmes calculs de bassins que pour la surface, écoulement sur la nappe (workflow 28).
+- ✅ **H-B1 soutenue** : 2,6 % des mailles terrestres changent de bassin (règle : au plus 5 %). La nappe suit le relief
+  (Tóth 1963 ; Haitjema et Mitchell-Bruker 2005).
+- ✅ **H-B2 soutenue** : 5,0 % en terrain plat (pente < 2 %) contre 1,1 % en relief, rapport 4,8 (règle : au moins 2).
+- ✅ **Test de sensibilité H-B2-L** (ajouté le 09/11 avant son calcul) : profondeur lissée sur 8 fokontany (1/d²)
+  pour supprimer les marches aux limites des fokontany : 2,4 % ; plat 4,4 %, relief 1,0 %, rapport 4,5. **H-B2 robuste.**
+- 📊 Les écarts se concentrent dans les **petits bassins côtiers** (12,4 % ; 11,1 % lissé) contre 1,6 % (1,4 %) dans
+  les grands bassins ; plus concerné des grands : Androka (n° 20), environ 3 %. Hautes Terres sous 1 %.
+- ❌ **Le classement par région n'est pas robuste** (Boeny 12,8 % → 7,6 % ; Androy 3,7 % → 1,0 % ; Sofia 6,3 % →
+  7,8 %) : il n'est pas présenté comme résultat.
+- ❌ Limites : profondeur approximative hors du Grand Sud ; pompages et échanges nappe-rivière ignorés ; un écart est un
+  passage possible, pas un flux mesuré.
+- 📌 Suite : les petits bassins côtiers, où la nappe peut passer d'un bassin à l'autre, sont aussi ceux des 36
+  sous-bassins à bilan élevé ; à croiser une fois la recharge corrigée (contrôle de vraisemblance de la recharge).
