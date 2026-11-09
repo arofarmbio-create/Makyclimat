@@ -1156,3 +1156,13 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   ρ = 0,24). Le maillon A n'est ni confirmé ni réfuté ; la prévision des saisons rechargeantes par l'océan n'est pas
   utilisable en l'état. Le maillon B (pluies extrêmes → remontées des nappes) reste à tester, sur des séries plus
   nombreuses.
+
+### Analyse de puissance rétrospective des tests antérieurs (`validation/analyse_puissance_retro.md`)
+- ✅ Aucune hypothèse testée ; effectifs tirés des rapports publiés.
+- 📊 Tests du signe : E1 (5 stations) exigeait 5 sur 5 (puissance 33 % si la fusion aide 80 % des stations) ; H-N1
+  (7 sites) exigeait 7 sur 7 (21 %) ; R-02 (8 activations EMS, l'événement étant l'unité) exigeait 7 sur 8 (50 %) ;
+  THMS (12 sites) exigeait 10 sur 12, et 2 sur 12 observés est un **négatif réel**.
+- 📊 Téléconnexions (144 tests, Benjamini-Hochberg 10 %) : un lien r = 0,3 présent dans 5 tests seulement n'a que 39 %
+  de chances d'être retenu ; les régions « non prévisibles » ne prouvent pas l'absence de lien.
+- 📌 Rédaction : E1, H-N1, R-02 et R-25 passent de « non soutenue » à « non établi, puissance insuffisante » ; THMS
+  reste un résultat négatif ; R-01 (AUC 0,84, 21 cyclones) n'est pas concerné.
