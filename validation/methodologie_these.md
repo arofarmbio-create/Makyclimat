@@ -344,7 +344,10 @@ des pays d'Afrique ; Madagascar est le cas d'étude.
   départager les deux cartes.**
 - Expliquer pourquoi aucune carte ne reproduit la répartition de la recharge dans le Sud (rangs inversés pour les
   puits à sec et le chlorure) : piste d'une recharge épisodique et venue de loin (AVSF 2016 ; Taylor et al. 2013),
-  à tester avec le protocole H-N7 déjà fixé (`protocole_climat_extremes_nappes.md`).
+  à tester avec le protocole H-N7 (`protocole_climat_extremes_nappes.md`). Maillon A calculé le 09/11/2026
+  (`hn7_maillon_a.md`) : El Niño de juillet-septembre et pluie maximale mensuelle du Sud-Ouest, ρ = −0,24, p = 0,11,
+  non retenu ; sens attendu, cohérent dans les trois régions, puissance insuffisante avec 45 saisons. Le maillon B
+  (pluies extrêmes → remontées des nappes) attend des séries de niveaux plus nombreuses.
 - Sortir du Grand Sud : séries de niveaux et analyses chimiques du ministère de l'Eau (MEAH).
 - Classer les aquifères plus finement : GLiM vectorielle (téléchargement à reprendre), WOKAM si sa licence le permet.
 - Test prospectif des cartes figées T2L et T2K sur toute nouvelle mesure de recharge (règle : 60 % des sites retrouvés).
