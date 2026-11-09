@@ -284,6 +284,64 @@ Le registre de toutes les méthodes et de leurs résultats, avec l'état des lie
 4. Une documentation honnête des échecs (triggers non validés, extension EMS en grande partie infructueuse,
    modules sans vérité de terrain disponible) comme partie intégrante du résultat scientifique, pas comme
    un défaut à corriger avant publication.
+5. Une évaluation par réfutation, avec hypothèses fixées avant calcul, d'un transfert de recharge des nappes
+   d'une base continentale vers un pays pauvre en données (section 7.1).
+
+### 7.1 Recharge des nappes : quand un transfert continental devient-il utilisable ? (synthèse au 09/11/2026)
+
+**Question.** La recharge des nappes de Madagascar n'est mesurée qu'en 12 sites, tous dans le Sud et le Sud-Ouest. La
+recharge T2 est transférée depuis 134 sites africains mesurés au sol (MacDonald et al. 2021, base BGS) : chaque maille
+reçoit la moyenne des 5 sites les plus semblables (pluie, aridité, roche, végétation). **Quand un tel transfert
+devient-il utilisable dans un pays presque sans mesures, et pourquoi échoue-t-il ?** La question vaut pour la plupart
+des pays d'Afrique ; Madagascar est le cas d'étude.
+
+**Chaîne de tests** (chaque règle fixée avant le calcul ; détails dans `journal_recherche.md`) :
+
+| Étape | Ce qui est testé | Résultat |
+|---|---|---|
+| H-C6 (`transfert_recharge_hc6.md`) | T2 contre 8 références malgaches | **Non confirmée** : 3 sur 8 dans l'intervalle de 80 % (règle : 60 %) ; erreurs dans les deux sens selon la géologie : socle du Sud surestimé (facteur 3 à 30), sédiments côtiers de Toliara sous-estimés (facteur 2 à 5) |
+| H-R2 (`controle_recharge.md`) | Bornes physiques africaines de la part de pluie rechargée (T2c) | **Non soutenue** : 2 sur 8 contre 3. Les erreurs du Sud restent plausibles au regard des sites africains : l'écart est propre à Madagascar, pas une invraisemblance physique |
+| H-L1, H-L2 (`recharge_locale.md`) | Correction par les 12 mesures malgaches (T2L), validation par groupes de sites à moins de 20 km | **Non soutenues** : 2 sites retrouvés sur 12 ; erreur médiane 0,90 (log₁₀) contre 0,69 sans correction. La validation site par site donnait 0,33 : 12 sites ne valent que 8 informations indépendantes. Le groupe « autres » du BGS mélange des nappes opposées (sables de l'Androy, karst de Toliara) |
+| H-K1, H-K2 (`recharge_karst.md`) | Recharge propre au karst (T2K), d'après Wan et al. 2024 | Formellement soutenues mais **non discriminantes** : T2 réussissait déjà le contrôle (erreur du protocole relevée et documentée) ; aucune amélioration à Toliara (38 → 43 mm/an pour 80 à 195 mesurés). Décision : sensibilité figée (option A) |
+| H-P1 (`puits_a_sec.md`) | 87 puits à sec en 2024-2025 (UNESCO) contre 1 452 forages (BushProof), cartes figées | **Non soutenue, de peu** : T2 sépare à l'envers (AUC 0,450), T2L dans le bon sens (0,561) ; gain +0,111, intervalle à 95 % −0,004 à +0,227. Atteint en sensibilité (310 puits : +0,138, de +0,051 à +0,221). Indice favorable à T2L, pas une preuve |
+
+**Ce que la chaîne montre.**
+1. La limite du transfert n'est pas d'abord le **nombre** de mesures locales, mais la **classification des aquifères**
+   (trois classes du BGS qui réunissent des nappes de comportement opposé) et l'**indépendance spatiale** des sites
+   mesurés.
+2. Une correction locale qui échoue en validation croisée honnête peut pourtant aller dans le bon sens sur des données
+   indépendantes et récentes (puits à sec) : l'échec de H-L1 tient au petit nombre de groupes de sites, pas
+   nécessairement à une correction fausse.
+3. Un test n'apporte rien si la référence le réussit déjà (H-K2) : vérifier, avant de fixer une hypothèse, que la
+   référence échoue au test.
+
+**Contributions revendiquées** (nouveauté à confirmer par une recherche systématique ; voir
+`revue_litterature_contributions.md`) :
+- **C1, principale** : une évaluation préenregistrée, par réfutation, d'un transfert continental de recharge vers un pays
+  pauvre en données, qui localise la cause de l'échec (classification des aquifères, indépendance des sites). Pas
+  d'étude équivalente trouvée dans la revue rapide du 09/11/2026.
+- **C2, d'appui** : l'écart chiffré entre validation site par site (0,33) et par groupes de sites (0,90) sur la
+  recharge. Le principe est établi ailleurs (Roberts et al. 2017 ; Ploton et al. 2020) ; son application à un transfert
+  de recharge avec très peu de sites ne l'est pas, à notre connaissance.
+- **C3, de méthode** : hypothèses fixées avant calcul, échecs publiés, cartes figées avec empreinte SHA-256 pour un
+  test prospectif sur les futures mesures. Pratique rare en hydrogéologie (aucune politique de préenregistrement
+  trouvée dans *Water Resources Research* ni *HESS*).
+
+**Positionnement.**
+- MacDonald et al. (2021) : carte africaine de recharge à partir de mesures au sol ; ce travail en teste le transfert
+  hors du continent et ses conditions de validité.
+- Wan, Döll et Müller Schmied (2024, *Water Resources Research* 60, e2023WR036182) : le karst se recharge à part, à
+  l'échelle mondiale ; confirmé ici dans son principe, sans correction utile à 0,5° près de Toliara.
+- METIS-IPSL (S. Carrière, post-doctorat 2024-2025) : recharge à 1 km dans le Sud-Ouest avec GROSoM, fluctuation de
+  nappe et GRACE. Approche locale et physique ; ce travail est national, par transfert, et vise ses conditions de
+  validité. Les deux sont complémentaires ; leurs publications pourront servir de référence indépendante.
+
+**Ce qui reste à prouver, et avec quoi.**
+- Trancher entre T2 et T2L : bilan de chlorure sur 559 forages BushProof (protocole fixé, en pause : choix du dépôt de
+  chlorure de la pluie à valider ; chlorures de nappe sous scellés).
+- Sortir du Grand Sud : séries de niveaux et analyses chimiques du ministère de l'Eau (MEAH).
+- Classer les aquifères plus finement : GLiM vectorielle (téléchargement à reprendre), WOKAM si sa licence le permet.
+- Test prospectif des cartes figées T2L et T2K sur toute nouvelle mesure de recharge (règle : 60 % des sites retrouvés).
 
 ## 8. Sources de données (référencement pour la bibliographie)
 
