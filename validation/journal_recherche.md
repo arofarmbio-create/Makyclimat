@@ -1072,3 +1072,32 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   le chlorure de la pluie dans le Sud (quelques collecteurs sur une saison) départagerait les deux. Aucune des deux
   cartes ne reproduit la répartition spatiale de la recharge : cohérent avec une recharge épisodique et en partie
   venue de loin (AVSF 2016 ; Taylor et al. 2013), que des cartes fondées sur le climat moyen local ne voient pas.
+
+### Nappe régionale profonde : inverser le raisonnement (`validation/nappe_regionale.md`)
+- ✅ Protocole fixé avant calcul (09/11/2026), avec trois ajouts du porteur du projet avant le calcul : inverser le
+  raisonnement depuis la base ; la géologie reste le guide (intrusion marine, eaux fossiles, ions des sols) ; recharge
+  étagée dans le temps (H-D6). Correction notée avant calcul : Cl/Na de l'eau de mer = 1,80 en masse.
+- 📊 538 forages BushProof (517 en socle fracturé), 43 blocs de 20 km. Le cadre local n'explique pas le chlorure :
+  ρ(Cl, pluie locale) = +0,20 [+0,03 ; +0,35].
+- ✅ **H-D1 soutenue** : le chlorure diminue quand la charge augmente, ρ = −0,31 [−0,44 ; −0,18].
+- ⚠️ **Mais le contrôle côtier l'efface** : à distance à la côte fixée, ρ = +0,08 [−0,08 ; +0,16]. La relation
+  chlorure-charge passe par la position par rapport à la côte (charges basses près de la mer) ; ce test ne sépare pas
+  un trajet le long de la nappe régionale d'une influence côtière.
+- ✅ **H-D2 soutenue** : le chlorure augmente avec la profondeur captée, ρ = +0,18 [+0,10 ; +0,29].
+- ❌ **H-D3 non soutenue** : la charge n'explique pas nettement mieux que la pluie locale (+0,11 [−0,09 ; +0,31]).
+- ✅ **H-D4 soutenue** : au bloc, le rangement inversé de T2 disparaît à charge fixée (−0,22 → +0,09). L'inversion
+  vient de la position dans le paysage (charge, donc côte et altitude), pas d'une erreur aléatoire.
+- ❌ **H-D5 non soutenue** : la charge (interpolée) ne distingue pas les puits à sec (AUC 0,498).
+- ❌ **H-D6 non soutenue de peu** : la minéralisation augmente avec la profondeur, ρ = +0,22 [+0,13 ; +0,32] (partie
+  soutenue) ; le rapport Cl/Na baisse, ρ = −0,09 [−0,19 ; +0,01] (manque de peu). Le sens va dans celui de la recharge
+  étagée dans le temps.
+- 📊 **Cl/Na médian = 0,96, contre 1,80 pour l'eau de mer** : excès de sodium, venu des roches et des sols. Le sel
+  des nappes du socle du Sud ne vient majoritairement ni d'une intrusion marine ni seulement des embruns ; il porte
+  la marque de l'échange eau-roche (« ions des sols », hypothèse du porteur du projet).
+- 📌 Décision fixée d'avance : H-D3 non soutenue → le cadre local reste. Mais trois acquis : (1) les inversions ont une
+  cause de position (côte, altitude), pas le hasard ; (2) l'eau profonde est plus minéralisée ; (3) le chlorure des
+  nappes du socle n'est pas un simple traceur de la pluie (Cl/Na bas), ce qui **fragilise le bilan de chlorure** lui-même
+  dans le socle : une partie du chlorure peut venir des roches, et la recharge par chlorure y est alors sous-estimée.
+- 📌 Suite : séparer côte et trajet régional (lignes d'écoulement BushProof, isotopes) ; tester les bassins
+  sédimentaires et la côte avec d'autres données ; dater les eaux (tritium, carbone 14) pour mesurer le retard des
+  nappes profondes.

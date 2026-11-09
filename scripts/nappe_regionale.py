@@ -132,7 +132,7 @@ def main() -> None:
     h6 = obs["min_z"] > 0 and I["min_z"][0] > 0 and obs["clna_z"] < 0 and I["clna_z"][1] < 0
     h3 = (not pre) and obs["diff"] > 0 and I["diff"][0] > 0
     par_type = []
-    for t, g in f.groupby(f.TypeAquif1.fillna("non renseigné")):
+    for t, g in f.groupby(f.TypeAquif1.fillna("non renseigné").astype(str).str.strip().str.capitalize()):
         if len(g) >= MIN_TYPE:
             par_type.append((t, len(g), spearman(g.cl, g.h), spearman(g.cl, g.z), spearman(g.mineral, g.z),
                              spearman(g.clna, g.z), float(g.clna.median())))
