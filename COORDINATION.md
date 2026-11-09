@@ -1,53 +1,58 @@
 # Coordination de MakyClimat
 
-*Point de reprise du porteur du projet, de Claude Code et de Codex. Lire d'abord la ligne du chantier, puis les pièces liées. Les résultats détaillés vont dans `validation/`.*
+*Point de reprise du porteur du projet, de Claude Code et de Codex. Pour démarrer, lire les règles communes, la ligne du chantier et les décisions en attente qui le concernent. Ouvrir ensuite les pièces et sections utiles à la tâche.*
 
 ## Règles (communes, non négociables)
 
 1. **Le porteur du projet décide** des choix de fond. Les assistants proposent, exécutent, documentent.
 2. Le [protocole doctoral](protocole_doctoral_modelisation_climatique_Madagascar.txt) prévaut sur le [prompt maître](prompt_maitre.md). Rattacher chaque étude à son module, son expérience et son hypothèse quand elle existe.
-3. Toute nouvelle expérience scientifique exige un protocole écrit et une analyse de puissance **avant le calcul**. Consigner les résultats, échecs compris, dans le [journal](validation/journal_recherche.md) et le [registre](validation/etat_des_lieux_registre.md).
+3. Toute nouvelle expérience scientifique exige un protocole écrit (`validation/protocole_*.md`) et une analyse de puissance **avant le calcul**. Consigner les résultats, échecs compris, dans le [journal](validation/journal_recherche.md) et le [registre](validation/etat_des_lieux_registre.md).
 4. Le dépôt est public. Garder secrets, données personnelles et données brutes à diffusion restreinte hors de Git. Vérifier [les règles d'exclusion](.gitignore) et les droits avant d'ajouter des données. Une partie de `data/` est versionnée.
-5. Téléchargements : une tâche à la fois par fournisseur (NASA, Copernicus, CHIRPS), rythme lent.
-6. **Une tâche = un seul responsable.** Respecter le périmètre des autres chantiers. Pour des modifications en parallèle, utiliser des branches et worktrees distincts après accord, avec entrées partagées en lecture seule et sorties séparées. Indiquer la branche ou le commit de référence quand il existe.
-7. Réponses en français et commits signés de leur auteur. Une ligne de suivi ou de relecture ne vaut pas autorisation de publier, de lancer un calcul lourd ou de télécharger. Les autorisations déjà données continuent de s'appliquer.
+5. **Où calculer.** GitHub Actions pour les mises à jour programmées, les téléchargements avec identifiants et les calculs longs sur données publiques. Sorties lourdes en release. Le PC sert aux calculs courts et aux traitements sur données non publiables (MGMERL brut, BushProof, GROSoM, carte PGRM). Python local : `.venv/Scripts/python.exe`. Tests : `tests/`, aussi exécutés sur GitHub.
+6. Une tâche de téléchargement à la fois par fournisseur (NASA, Copernicus, CHIRPS), à rythme lent, sans relances en rafale.
+7. **Une tâche = un seul responsable.** Respecter le périmètre des autres chantiers. Pour des modifications en parallèle, utiliser des branches et worktrees distincts après accord, avec entrées partagées en lecture seule et sorties séparées. Indiquer la branche ou le commit de référence quand il existe.
+8. Réponses en français et commits signés de leur auteur. Une ligne de suivi ou de relecture ne vaut pas autorisation de publier, de lancer un calcul lourd ou de télécharger. Les autorisations déjà données continuent de s'appliquer.
 
 ## Rôles (décision du porteur du projet, 09/11/2026)
 
 - **Porteur du projet** : décide des orientations et des choix de fond.
 - **Codex** : assistant de réflexion du porteur du projet ; peut coder et terminer des tâches. **Audite le travail de Claude.**
 - **Claude Code** : bras droit pour le code (scripts, workflows, site, calculs). **Vérifie le travail de Codex.**
-- Tout livrable de code passe par la relecture de l'autre assistant avant d'être déclaré **Fait**.
 
 ## Définition de « Fait » (pour éviter les erreurs coûteuses)
 
-1. Tests concernés lancés et réussis (sur le PC ou sur GitHub), dépendances du workflow vérifiées.
-2. Pour un calcul ou un téléchargement : **résultat lu et vérifié**, pas seulement « lancé » ; état du run confirmé.
-3. Protocole et code alignés : toute modification de protocole est répercutée dans le code (et inversement).
-4. Journal, registre et ligne de ce fichier à jour ; relecture de l'autre assistant demandée.
+1. Le livrable est disponible et lié depuis la ligne du chantier. Les résultats scientifiques sont consignés dans le journal et le registre.
+2. Pour le code, les tests concernés réussissent, les dépendances du workflow sont vérifiées si elles sont concernées, et le code correspond au protocole applicable. Toute modification scientifique suit le protocole avant calcul.
+3. Pour un calcul ou un téléchargement, l'état du run est confirmé et le résultat est lu et vérifié.
+4. Pour un livrable de code, la relecture de l'autre assistant est **effectuée** et ses points bloquants sont levés. Tant qu'elle est attendue, la tâche est **À relire**.
 
 ## Prendre, suivre et transmettre un chantier
 
 1. **À la reprise.** Lire la tâche et ses liens. Vérifier son dernier résultat, l'état Git et le périmètre autorisé. Pour une tâche distante, vérifier l'état du run uniquement si l'accès et la consultation sont autorisés. Une mention « en file » dans ce fichier décrit le dernier état rapporté.
-2. **Au démarrage.** Le responsable passe la tâche à **En cours**, précise le résultat attendu et les fichiers concernés, puis avance dans le périmètre convenu. Un seul agent actualise la ligne. Un second agent reçoit une question de relecture ciblée dans sa propre ligne si nécessaire.
-3. **À un changement utile.** Mettre à jour la ligne si un résultat est disponible, si une dépendance bloque la suite ou si une décision est requise. En cas de blocage, préciser qui peut le lever et par quelle action. Les vérifications mécaniques se font avec les scripts existants quand ils suffisent. Une passation contient l'état, une preuve et la prochaine action.
-4. **À la clôture.** Lier le résultat et indiquer les vérifications faites. Passer à **À relire** si un avis est attendu, à **Prêt à publier** si la publication reste à décider ou à exécuter, puis à **Fait** lorsque le résultat attendu est livré. Si le chantier est abandonné, indiquer **Clos** avec le motif et le lien.
+2. **Au démarrage.** Le responsable passe la tâche à **En cours**, précise le résultat attendu et les fichiers concernés, puis avance dans le périmètre convenu. Il inscrit la date et l'heure de début et tient sa ligne à jour. Avant d'intervenir, il vérifie les créneaux et fichiers des tâches en cours.
+3. **À un changement utile.** Actualiser l'état, le lien vers la preuve et la prochaine action. En cas de blocage, préciser qui peut le lever et comment. Utiliser les scripts existants pour les vérifications mécaniques.
+4. **Pour une relecture.** Une fois le livrable prêt, donner à l'autre assistant le diff ou le commit, les vérifications déjà faites et le point à contrôler. Le relecteur signale les blocages avec leurs références ou confirme la revue. La relecture a sa propre ligne, avec le nom du relecteur et ses heures de début et de fin. Une nouvelle passe se limite aux corrections et à leurs effets directs.
+5. **À la clôture.** Passer à **Prêt à publier** si seule la publication reste à décider ou à exécuter, puis à **Fait** selon les critères ci-dessus. Renseigner l'heure de fin quand le responsable remet le livrable ou arrête son intervention. Si le chantier est abandonné, indiquer **Clos** avec le motif et le lien.
 
 **États** — À faire · En cours · En attente (dépendance ou run) · Bloqué (action nécessaire) · À relire · Prêt à publier · Fait · Clos.
 
 ## Tâches
 
-| Tâche | Responsable | État | Preuve ou périmètre | Prochaine action ou condition de fin |
-|---|---|---|---|---|
-| Audit technique et scientifique | Codex | Fait | [Audit Codex](validation/audit_codex_2026-11-09.md) | Rapport déposé et demande de relecture transmise par ce fichier. |
-| Avis sur l'audit | Claude | Fait | [Audit Codex](validation/audit_codex_2026-11-09.md) | CMIP6 (pyyaml manquant, entrées dans le shell) : confirmé. Pluies manquantes mises à zéro dans le bilan hydrique (`scripts/build_soilwater.py`, ligne 358) : confirmé. R-21 protocole réduit mais code inchangé : confirmé. Calibration imbriquée et analogues postérieurs : pertinents, à traiter sous protocole. |
-| Correctifs P0 : workflow CMIP6, code R-21, pluies manquantes du bilan hydrique | Claude | À faire | `.github/workflows/build-cmip6-nexgddp.yml`, `scripts/validate_reforecast_impact.py`, `scripts/build_soilwater.py` | Bilan hydrique sous protocole (comparaison avant et après sur les indicateurs publiés). Relecture par Codex avant « Fait ». |
-| Site, preuves, libellés et onglet Nappes | Claude | Prêt à publier | [Audit des indicateurs](validation/audit_indicateurs_site.md), `docs/`, `config/indicateurs_preuve.yml` | Reprendre la publication selon l'autorisation en vigueur, puis consigner la version publiée. |
-| Durée de la mise à jour du site, étape chocs cyclone | Claude | À faire | [Workflow de publication](.github/workflows/update-data.yml#L90) | Après l'audit, confirmer le goulot d'étranglement et proposer un correctif mesurable par rapport à la limite de 45 minutes. |
-| E6 — CMIP6, sonde puis collecte des 28 modèles | Claude | En attente | [Protocole CMIP6](validation/protocole_cmip6.md), [workflow](.github/workflows/build-cmip6-nexgddp.yml) | Après R-40 et la relecture des constats de sécurité et de dépendances, vérifier les prérequis de la sonde. Consigner le résultat avant la collecte. |
-| R-40 — Pluie IMERG et rafales des activations EMS | Claude | En attente | [Protocole](validation/protocole_r02bis_echelle_alea.md), [workflow](.github/workflows/build-r02bis-sources.yml) | Confirmer l'état de la file GitHub au prochain contrôle autorisé et noter les fenêtres reçues ou manquantes. |
-| R-21 — Reprévisions GloFAS, portée réduite | Claude | En attente | [Protocole de vérification](validation/protocole_verification_impact.md), [script](scripts/validate_reforecast_impact.py) | Vérifier l'état du run signalé et statuer sur l'écart entre périmètre réduit et garde de complétude avant de calculer les scores. |
-| Courriers au ministère, à BushProof et à GROSoM / METIS-IPSL | Porteur du projet | À faire | `courriers/` (local) | Relire, choisir les destinataires et décider de l'envoi. |
+**Horaires** — date et heure locales de Nairobi (UTC+3), au format `JJ/MM/AAAA HH:mm`. À chaque intervention, Claude et Codex inscrivent leurs propres heures de début et de fin. Une fin vide signale une intervention encore ouverte si le début est renseigné. Lors d'une reprise après interruption, conserver le créneau précédent dans la passation et renseigner le nouveau. Un chevauchement d'horaires est à examiner si les fichiers ou ressources se recoupent. « Non consignée » indique une heure historique inconnue.
+
+| Tâche | Responsable | État | Preuve ou périmètre | Prochaine action ou condition de fin | Début | Fin |
+|---|---|---|---|---|---|---|
+| Audit technique et scientifique | Codex | Fait | [Audit Codex](validation/audit_codex_2026-11-09.md) | Rapport déposé et demande de relecture transmise par ce fichier. | Non consignée | Non consignée |
+| Avis sur l'audit | Claude | Fait | [Audit Codex](validation/audit_codex_2026-11-09.md) | CMIP6 (pyyaml manquant, entrées dans le shell) : confirmé. Pluies manquantes mises à zéro dans le bilan hydrique (`scripts/build_soilwater.py`, ligne 358) : confirmé. R-21 protocole réduit mais code inchangé : confirmé. Calibration imbriquée et analogues postérieurs : pertinents, à traiter sous protocole. | Non consignée | Non consignée |
+| P0 — Sécurité et dépendances du workflow CMIP6 | Autre session (hors de la session Claude principale) | Fait | [Workflow](.github/workflows/build-cmip6-nexgddp.yml) | Correctif écrit sur le PC entre 19:38 et 19:42 par une autre session ; vérifié par Claude (pyyaml ajouté, entrées passées par variables et validées, droits minimaux, YAML valide) et commité. Reste ouvert (P1, non bloquant) : attribut de licence absent → extraction poursuivie. | 09/11/2026 19:38 | 09/11/2026 20:00 |
+| P0 — Relecture du workflow CMIP6 | Codex | Fait | [Workflow](.github/workflows/build-cmip6-nexgddp.yml) | YAML et syntaxe Bash vérifiés. Le garde accepte les cinq sélections de scénario et le mode sonde, et rejette quatre entrées invalides. Sonde réelle en attente. | 09/11/2026 19:44 | 09/11/2026 19:44 |
+| Correctifs P0 restants — code R-21 et pluies manquantes du bilan hydrique | Claude | En cours | `scripts/validate_reforecast_impact.py`, `scripts/build_soilwater.py` | Bilan hydrique sous protocole (comparaison avant et après sur les indicateurs publiés). Remettre les correctifs et les vérifications à Codex pour relecture. | 09/11/2026 20:00 | — |
+| Site, preuves, libellés et onglet Nappes | Claude | Prêt à publier | [Audit des indicateurs](validation/audit_indicateurs_site.md), `docs/`, `config/indicateurs_preuve.yml` | Reprendre la publication selon l'autorisation en vigueur, puis consigner la version publiée. | Non consignée | Non consignée |
+| Durée de la mise à jour du site, étape chocs cyclone | Claude | À faire | [Workflow de publication](.github/workflows/update-data.yml#L90) | Après l'audit, confirmer le goulot d'étranglement et proposer un correctif mesurable par rapport à la limite de 45 minutes. | — | — |
+| E6 — CMIP6, sonde puis collecte des 28 modèles | Claude | En attente | [Protocole CMIP6](validation/protocole_cmip6.md), [workflow](.github/workflows/build-cmip6-nexgddp.yml) | Après R-40 et la relecture des constats de sécurité et de dépendances, vérifier les prérequis de la sonde. Consigner le résultat avant la collecte. | — | — |
+| R-40 — Pluie IMERG et rafales des activations EMS | Claude | En attente | [Protocole](validation/protocole_r02bis_echelle_alea.md), [workflow](.github/workflows/build-r02bis-sources.yml) | Confirmer l'état de la file GitHub au prochain contrôle autorisé et noter les fenêtres reçues ou manquantes. | Non consignée | — |
+| R-21 — Reprévisions GloFAS, portée réduite | Claude | En attente | [Protocole de vérification](validation/protocole_verification_impact.md), [script](scripts/validate_reforecast_impact.py) | Vérifier l'état du run signalé et statuer sur l'écart entre périmètre réduit et garde de complétude avant de calculer les scores. | Non consignée | — |
+| Courriers au ministère, à BushProof et à GROSoM / METIS-IPSL | Porteur du projet | À faire | `courriers/` (local) | Relire, choisir les destinataires et décider de l'envoi. | — | — |
 
 ## Où lire l'état du projet (au lieu des conversations)
 
@@ -58,6 +63,6 @@
 
 ## Messages et décisions en attente
 
-- **09/11/2026 · Claude → Codex.** Constats CMIP6, R-21 et bilan hydrique confirmés (voir ligne « Avis sur l'audit ») ; je prends les correctifs P0 et te les soumets en relecture. Rôles et définition de « Fait » ajoutés ci-dessus.
+Aucune décision en attente dans cette section. Les prochaines actions figurent dans les lignes de tâche.
 
-Format d'un nouveau message — `Date · auteur → destinataire · décision ou question précise · lien`. Une fois traité, reporter la décision dans la ligne de tâche ou le journal, puis retirer le message de cette section.
+Réserver cette section aux questions ou arbitrages qui demandent une réponse. Format — `Date · auteur → destinataire · question précise · lien`. Une fois traité, consigner la décision dans la ligne de tâche ou le journal et retirer le message.

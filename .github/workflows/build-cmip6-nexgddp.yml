@@ -18,8 +18,8 @@ on:
         description: "true = un fichier seulement (pr 2014, historical) pour tester l'accès"
         default: "true"
 
-permissions:
-  contents: write
+# Droits minimaux par défaut ; seul le job qui publie dans la release reçoit contents: write.
+permissions: {}
 
 concurrency:
   group: nasa-nexgddp
@@ -28,38 +28,61 @@ concurrency:
 env:
   TAG: cmip6-nexgddp
 
+# Les entrées libres ne sont jamais interpolées dans le shell : elles passent par des variables d'environnement,
+# validées dans le job « scenarios » avant tout usage, puis toujours citées.
 jobs:
   scenarios:
     runs-on: ubuntu-latest
+    permissions: {}
     outputs:
       liste: ${{ steps.l.outputs.liste }}
     steps:
       - id: l
+        env:
+          MODELE: ${{ github.event.inputs.modele }}
+          SCENARIO: ${{ github.event.inputs.scenario }}
+          PROBE: ${{ github.event.inputs.probe }}
         run: |
-          case "${{ github.event.inputs.scenario }}" in
+          # Nom de modèle : lettres, chiffres, « - » et « _ » (cf. data/mdg/cmip6_modeles.json) ; le script vérifie
+          # ensuite qu'il figure dans la liste. Valeur brute jamais réécrite dans les journaux (commandes ::).
+          if ! [[ "$MODELE" =~ ^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$ ]]; then
+            echo "::error::modèle invalide : lettres, chiffres, - et _ seulement (64 caractères au plus)"; exit 1
+          fi
+          case "$PROBE" in
+            true|false) ;;
+            *) echo "::error::probe doit valoir true ou false"; exit 1 ;;
+          esac
+          case "$SCENARIO" in
             tous) echo 'liste=["historical","ssp126","ssp245","ssp585"]' >> "$GITHUB_OUTPUT" ;;
-            historical|ssp126|ssp245|ssp585) echo 'liste=["${{ github.event.inputs.scenario }}"]' >> "$GITHUB_OUTPUT" ;;
-            *) echo "::error::scénario inconnu : ${{ github.event.inputs.scenario }}"; exit 1 ;;
+            historical|ssp126|ssp245|ssp585) printf 'liste=["%s"]\n' "$SCENARIO" >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::scénario inconnu : historical, ssp126, ssp245, ssp585 ou tous"; exit 1 ;;
           esac
 
   nexgddp:
     needs: scenarios
     runs-on: ubuntu-latest
     timeout-minutes: 340
+    permissions:
+      contents: write          # gh release create / upload ; rien d'autre
     strategy:
       max-parallel: 1
       fail-fast: true
       matrix:
         scenario: ${{ fromJSON(needs.scenarios.outputs.liste) }}
+    env:
+      MODELE: ${{ github.event.inputs.modele }}     # validé par le job « scenarios »
+      SCENARIO: ${{ matrix.scenario }}              # issu de la liste fermée du job « scenarios »
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false   # le jeton n'est pas laissé dans .git/config (aucun push ici)
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy pandas requests scipy
+      - run: pip install numpy pandas pyyaml requests scipy
       - name: Sonde (un fichier)
         if: github.event.inputs.probe == 'true'
-        run: python scripts/build_cmip6_nexgddp.py --probe --modele "${{ github.event.inputs.modele }}" --annee 2014 --variable pr
+        run: python scripts/build_cmip6_nexgddp.py --probe --modele "$MODELE" --annee 2014 --variable pr
       - name: Reprendre les agrégats déjà publiés
         if: github.event.inputs.probe != 'true'
         env:
@@ -68,16 +91,17 @@ jobs:
           gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Projections NEX-GDDP-CMIP6 par région (Madagascar)" \
             --notes "Agrégats mensuels par région (adm1) de NEX-GDDP-CMIP6 v2.0 (NASA NEX, doi:10.7917/OFSG3345), pr en mm/mois, tas et tasmax en °C. Licences par modèle et sources : data/mdg/cmip6_modeles.json. Agrégats historiques : CC BY 4.0 (CC0 pour GISS-E2-1-G) ; agrégats SSP : CC BY-SA 4.0 (attribut cmip6_license des fichiers SSP). Citer NEX-GDDP-CMIP6 et chaque groupe de modélisation CMIP6. scripts/build_cmip6_nexgddp.py, validation/protocole_cmip6.md." || true
           mkdir -p data/mdg/cmip6_nexgddp
-          gh release download "$TAG" --pattern "${{ github.event.inputs.modele }}_${{ matrix.scenario }}*" --dir data/mdg/cmip6_nexgddp || true
+          gh release download "$TAG" --pattern "${MODELE}_${SCENARIO}*" --dir data/mdg/cmip6_nexgddp || true
       - name: Lire et agréger (reprise sur les années déjà publiées)
         if: github.event.inputs.probe != 'true'
         timeout-minutes: 320
-        run: python scripts/build_cmip6_nexgddp.py --modele "${{ github.event.inputs.modele }}" --scenario "${{ matrix.scenario }}"
+        run: python scripts/build_cmip6_nexgddp.py --modele "$MODELE" --scenario "$SCENARIO"
       - name: Publier dans la release (même après un échec ou un arrêt, pour reprendre ensuite)
         if: always() && github.event.inputs.probe != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          for f in data/mdg/cmip6_nexgddp/${{ github.event.inputs.modele }}_${{ matrix.scenario }}.csv                    data/mdg/cmip6_nexgddp/${{ github.event.inputs.modele }}_${{ matrix.scenario }}_meta.json; do
+          base="data/mdg/cmip6_nexgddp/${MODELE}_${SCENARIO}"
+          for f in "${base}.csv" "${base}_meta.json"; do
             if [ -f "$f" ]; then gh release upload "$TAG" "$f" --clobber; fi
           done
