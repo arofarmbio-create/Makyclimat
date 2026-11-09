@@ -23,6 +23,10 @@ EULER = 0.5772156649
 SEASON_MONTHS = (11, 12, 1, 2, 3, 4)
 THR_SEASONS = (2003, 2022)        # saisons complètes nov. Y - avr. Y+1 (reprévisions v4 sur EWDS : 2003-2023)
 VERIF_SEASONS = (2003, 2018)      # saisons vérifiées (DesInventar jusqu'en 2019)
+# Portée réduite (protocole_verification_impact.md, section 9, 09/11/2026) : mois de décembre à mars des années ayant un
+# événement documenté ; les autres mois déjà téléchargés servent de témoins. Échantillon enrichi en événements.
+PORTEE_ANNEES = (2010, 2012, 2013, 2017, 2019, 2020, 2022, 2023)
+PORTEE_MOIS = (12, 1, 2, 3)
 MIN_SEASONS = 15
 RETURN_PERIODS = (2, 5)
 Q_MIN = (5.0, 20.0, 50.0)         # référence puis sensibilité
@@ -237,11 +241,12 @@ def main() -> None:
     args = ap.parse_args()
     rng = np.random.default_rng(20261029)
     files = load_months(country_data_dir(args.country) / "reforecast")
-    expected = {f"glofas_v4_{y}_{m:02d}.npz" for y in range(2003, 2024) for m in SEASON_MONTHS if (y, m) >= (2003, 3)}
+    expected = {f"glofas_v4_{y}_{m:02d}.npz" for y in PORTEE_ANNEES for m in PORTEE_MOIS}
     missing = sorted(expected - {f.name for f in files})
-    if missing:                                    # jamais de scores publiés sur une archive incomplète
-        print(f"::warning::Reprévisions incomplètes ({len(missing)} mois manquants, ex. {missing[:3]}) : rien n'est publié.")
+    if missing:                                    # jamais de scores publiés sur une portée incomplète
+        print(f"::warning::Portée réduite incomplète ({len(missing)} mois manquants, ex. {missing[:3]}) : rien n'est publié.")
         return
+    print(f"Portée réduite complète ; {len(files)} mois au total (mois témoins compris). Échantillon enrichi en événements.")
     units = read_units(args.country)
     keys, dist, seasons, M, windows = cell_table(files, args.country)
     obs = impacts(args.country, units)
@@ -292,6 +297,10 @@ def write_report(path, S, V, R, n_files, n_cells, reported, obs):
          f"- Vérité terrain : DesInventar (UNDRR, fiches BNGRC), {len(obs)} fiches district x date (cyclone ou inondation, "
          "au moins une personne touchée ou une maison endommagée). Fiches brutes non republiées.",
          f"- Saisons vérifiées (avec au moins une fiche nationale) : {', '.join(str(s) for s in reported if VERIF_SEASONS[0] <= s <= VERIF_SEASONS[1])}.",
+         "- **Échantillon enrichi en événements** (portée réduite du 09/11/2026) : les mois retenus le sont parce qu'ils "
+         "contiennent un événement documenté. Les seuils sont estimés sur des saisons partielles et plus humides que la normale ; "
+         "le score de Brier, la fiabilité et la valeur économique ne mesurent pas un calibrage climatologique et sont publiés "
+         "à titre descriptif.",
          "- Fausses alertes : borne haute (absence de fiche ≠ absence d'impact).", "",
          "## 1. Compétence (cellules de rivière : crue de 2 ans ≥ 5 m³/s ; IC à 95 % par bootstrap des saisons)", "",
          "| Fenêtre (jours) | Crue | Cas | Impacts | AUC ensemble [IC] | AUC contrôle [IC] | BSS ensemble [IC] |",

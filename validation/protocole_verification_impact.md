@@ -150,3 +150,10 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
   2010, 2012, 2013, 2017, 2019, 2020, 2022 et 2023, mois de décembre à mars. Le lancement automatique hebdomadaire est
   arrêté. Conséquence à déclarer : moins d'événements, donc une puissance plus faible ; une analyse de puissance sera
   faite avant le calcul des scores (règle du 09/11/2026).
+- 09/11/2026 (avant tout calcul, après l'audit de Codex) : le code suit maintenant la portée réduite (garde sur les mois
+  de décembre à mars des années à événement ; mois témoins conservés). **Biais déclaré** : échantillon enrichi en
+  événements ; seuils estimés sur des saisons partielles et plus humides que la normale. Le score de Brier, la
+  fiabilité et la valeur économique (H3) ne mesurent plus un calibrage climatologique : publiés à titre descriptif.
+  **Décision à prendre avant calcul** (porteur du projet, avis de Codex) : quel critère principal remplace H1 (aire ROC
+  à 1-3 jours, discutable sur un échantillon sélectionné) ; proposition : détection des événements documentés et fausses
+  alertes par saison témoin, avec analyse de puissance.

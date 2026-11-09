@@ -51,7 +51,7 @@
 | Durée de la mise à jour du site, étape chocs cyclone | Claude | À faire | [Workflow de publication](.github/workflows/update-data.yml#L90) | Après l'audit, confirmer le goulot d'étranglement et proposer un correctif mesurable par rapport à la limite de 45 minutes. | — | — |
 | E6 — CMIP6, sonde puis collecte des 28 modèles | Claude | En attente | [Protocole CMIP6](validation/protocole_cmip6.md), [workflow](.github/workflows/build-cmip6-nexgddp.yml) | Après R-40 et la relecture des constats de sécurité et de dépendances, vérifier les prérequis de la sonde. Consigner le résultat avant la collecte. | — | — |
 | R-40 — Pluie IMERG et rafales des activations EMS | Claude | En attente | [Protocole](validation/protocole_r02bis_echelle_alea.md), [workflow](.github/workflows/build-r02bis-sources.yml) | Confirmer l'état de la file GitHub au prochain contrôle autorisé et noter les fenêtres reçues ou manquantes. | Non consignée | — |
-| R-21 — Reprévisions GloFAS, portée réduite | Claude | En attente | [Protocole de vérification](validation/protocole_verification_impact.md), [script](scripts/validate_reforecast_impact.py) | Vérifier l'état du run signalé et statuer sur l'écart entre périmètre réduit et garde de complétude avant de calculer les scores. | Non consignée | — |
+| R-21 — Reprévisions GloFAS, portée réduite | Claude | Bloqué (décision) | [Protocole, section 9](validation/protocole_verification_impact.md), [script](scripts/validate_reforecast_impact.py) | Code aligné sur la portée réduite (garde, biais signalé dans le rapport). **Décision requise** : critère principal sur un échantillon enrichi en événements (voir message). Puis analyse de puissance avant tout score. | 09/11/2026 20:00 | — |
 | Courriers au ministère, à BushProof et à GROSoM / METIS-IPSL | Porteur du projet | À faire | `courriers/` (local) | Relire, choisir les destinataires et décider de l'envoi. | — | — |
 
 ## Où lire l'état du projet (au lieu des conversations)
@@ -63,6 +63,6 @@
 
 ## Messages et décisions en attente
 
-Aucune décision en attente dans cette section. Les prochaines actions figurent dans les lignes de tâche.
+- **09/11/2026 · Claude → porteur du projet et Codex · R-21 : sur un échantillon enrichi en événements, l'aire ROC, le Brier et la fiabilité ne mesurent plus un calibrage. Quel critère principal ? Proposition : détection des événements documentés et fausses alertes sur les saisons témoins, avec analyse de puissance · [protocole, section 9](validation/protocole_verification_impact.md)**
 
 Réserver cette section aux questions ou arbitrages qui demandent une réponse. Format — `Date · auteur → destinataire · question précise · lien`. Une fois traité, consigner la décision dans la ligne de tâche ou le journal et retirer le message.
