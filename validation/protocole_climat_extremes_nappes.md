@@ -153,3 +153,11 @@ Régions du Grand Sud : Androy, Anosy, Atsimo-Andrefana.
     descriptive : avec 7 sites, pas de test.
   - H-A, H-B et H-B2 gardent le même énoncé. Les ajouts sont des prédicteurs et des stratifications fixés avant tout
     calcul.
+- 09/11/2026 (avant tout calcul du maillon A) : **analyse de puissance** (`validation/puissance_hn7.md`, simulation
+  seule). Avec 45 saisons, un résultat binaire et 9 tests corrigés (Benjamini-Hochberg 10 %), la puissance de
+  l'épreuve 3 est de 11 à 17 % pour un lien r = 0,3 s'il n'y en a qu'un seul vrai, et de 33 à 45 % s'il y en a trois.
+  Elle n'atteint 50 % qu'avec r ≈ 0,5 (un lien) ou r ≈ 0,4 (trois liens). Selon la règle adoptée le 09/11/2026, le
+  maillon A est **déclaré exploratoire dès maintenant** : un résultat négatif ne réfutera pas le lien océan → pluies
+  extrêmes. Pistes pour gagner en puissance, non adoptées à ce stade : nombre de mois extrêmes ou pluie maximale
+  mensuelle (variable continue) au lieu du résultat binaire ; moins de tests (région et indice choisis par la
+  littérature).
