@@ -304,6 +304,7 @@ des pays d'Afrique ; Madagascar est le cas d'étude.
 | H-L1, H-L2 (`recharge_locale.md`) | Correction par les 12 mesures malgaches (T2L), validation par groupes de sites à moins de 20 km | **Non soutenues** : 2 sites retrouvés sur 12 ; erreur médiane 0,90 (log₁₀) contre 0,69 sans correction. La validation site par site donnait 0,33 : 12 sites ne valent que 8 informations indépendantes. Le groupe « autres » du BGS mélange des nappes opposées (sables de l'Androy, karst de Toliara) |
 | H-K1, H-K2 (`recharge_karst.md`) | Recharge propre au karst (T2K), d'après Wan et al. 2024 | Formellement soutenues mais **non discriminantes** : T2 réussissait déjà le contrôle (erreur du protocole relevée et documentée) ; aucune amélioration à Toliara (38 → 43 mm/an pour 80 à 195 mesurés). Décision : sensibilité figée (option A) |
 | H-P1 (`puits_a_sec.md`) | 87 puits à sec en 2024-2025 (UNESCO) contre 1 452 forages (BushProof), cartes figées | **Non soutenue, de peu** : T2 sépare à l'envers (AUC 0,450), T2L dans le bon sens (0,561) ; gain +0,111, intervalle à 95 % −0,004 à +0,227. Atteint en sensibilité (310 puits : +0,138, de +0,051 à +0,221). Indice favorable à T2L, pas une preuve |
+| H-Cl1 à H-Cl4 (`recharge_chlorure.md`) | Recharge par bilan de chlorure, 538 forages BushProof, 3 scénarios de chlorure de la pluie (Kenya, Afrique du Sud) | Découpage fixé d'avance **échoué** (2 zones). Robuste : **T2 surestime dans les trois scénarios**. Après coup, exploratoire (36 blocs de 20 km) : T2L réduit l'écart d'au moins 30 % si le dépôt est bas ou central, pas s'il est haut ; les deux cartes ordonnent les zones à l'envers |
 
 **Ce que la chaîne montre.**
 1. La limite du transfert n'est pas d'abord le **nombre** de mesures locales, mais la **classification des aquifères**
@@ -337,8 +338,12 @@ des pays d'Afrique ; Madagascar est le cas d'étude.
   validité. Les deux sont complémentaires ; leurs publications pourront servir de référence indépendante.
 
 **Ce qui reste à prouver, et avec quoi.**
-- Trancher entre T2 et T2L : bilan de chlorure sur 559 forages BushProof (protocole fixé, en pause : choix du dépôt de
-  chlorure de la pluie à valider ; chlorures de nappe sous scellés).
+- Trancher entre T2 et T2L : le bilan de chlorure (09/11/2026) montre que le verdict dépend du dépôt de chlorure de la
+  pluie, jamais mesuré à Madagascar. **Quelques collecteurs de pluie dans le Sud pendant une saison suffiraient à
+  départager les deux cartes.**
+- Expliquer pourquoi aucune carte ne reproduit la répartition de la recharge dans le Sud (rangs inversés pour les
+  puits à sec et le chlorure) : piste d'une recharge épisodique et venue de loin (AVSF 2016 ; Taylor et al. 2013),
+  à tester avec le protocole H-N7 déjà fixé (`protocole_climat_extremes_nappes.md`).
 - Sortir du Grand Sud : séries de niveaux et analyses chimiques du ministère de l'Eau (MEAH).
 - Classer les aquifères plus finement : GLiM vectorielle (téléchargement à reprendre), WOKAM si sa licence le permet.
 - Test prospectif des cartes figées T2L et T2K sur toute nouvelle mesure de recharge (règle : 60 % des sites retrouvés).
