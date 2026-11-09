@@ -1184,3 +1184,17 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   volcanique (va) 1. **La GLiM range Sihanamaro et Toliara dans la même classe** : elle ne lève pas la confusion qui a
   fait échouer T2L. BGS et GLiM se contredisent pour Mahavelo (socle contre sables). Aucun test de la correction locale
   par classe GLiM avant de nouveaux sites ; classer les futurs sites par leur **coupe de forage**.
+
+### Validation de MERRA-2 aux sites mesurés (workflow 29, `data/mdg/depot_chlorure_merra2_validation.csv`)
+- 🔧 Deux échecs de lecture (une seule maille) corrigés en demandant un bloc de 2 × 2 mailles.
+- 📊 Kwale (côte du Kenya) : MERRA-2 surestime le dépôt humide d'un facteur 3,3 (11 043 contre 3 334 mg/m²/an), la maille
+  côtière contenant de la mer. Intérieur sud-africain : facteur 1,7 seulement (452 contre 260) : **MERRA-2 est
+  raisonnable à l'intérieur des terres.**
+- 📌 Règle appliquée : facteur de correction 0,42 ; Grand Sud corrigé environ 2 400 mg/m²/an à 30-100 km de la côte,
+  proche du scénario haut (environ 2 000). **Le scénario haut reste retenu ; Q1 (T2 surestime) « indice », Q2 (T2L plus
+  juste) « non établie ».**
+- 📌 Lecture : Madagascar étant une île baignée par les alizés, un dépôt de sel élevé est plausible, bien au-dessus de
+  l'intérieur sud-africain. Dans ce cas, le bilan de chlorure ne confirme pas que T2 surestime, et le chlorure venu des
+  roches (Cl/Na 0,96) irait dans le même sens (recharge par chlorure encore plus forte). **Les deux méthodes de terrain
+  divergent** : fluctuation de nappe (T2 trop forte, mais Sy incertain d'un facteur 3 à 5) contre chlorure (T2
+  plausible). Seule une mesure du chlorure de la pluie dans le Sud tranchera.

@@ -2,7 +2,7 @@
 
 Généré le 2026-11-09 par `scripts/combinaison_preuves.py`, selon `validation/protocole_combinaison_preuves.md` (fixé avant le calcul). **Synthèse rétrospective** : toutes les lignes avaient déjà été vues ; elle résume, elle ne prouve pas à nouveau.
 
-Scénario de dépôt de chlorure retenu : **haut**.
+Scénario de dépôt de chlorure retenu : **haut** (MERRA-2 corrigé par le facteur 0.42 tiré de sa validation à Kwale et en Afrique du Sud ; MERRA-2 brut : haut).
 
 ## Scores par ligne (z unilatéral ; positif = dans le sens de la question)
 

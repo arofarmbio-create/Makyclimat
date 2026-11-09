@@ -71,3 +71,8 @@ autre zone) est ajoutée avec les mêmes règles, sans modifier les lignes exist
   références ; sinon, un facteur de correction f = moyenne géométrique des rapports mesuré / MERRA-2 aux deux sites est
   appliqué aux mailles du Grand Sud, et le scénario est choisi à nouveau avec le dépôt corrigé. Les verdicts de la
   combinaison sont alors recalculés avec ce scénario ; les deux versions (brute et corrigée) sont publiées.
+- 09/11/2026 (validation de MERRA-2, `data/mdg/depot_chlorure_merra2_validation.csv`) : Kwale, dépôt humide MERRA-2
+  11 043 contre 3 334 mesurés (rapport 0,30) ; intérieur sud-africain, dépôt total 452 (médiane de 3 stations) contre
+  260 (rapport 0,58). MERRA-2 n'est pas à moins d'un facteur 2 des deux références : facteur de correction 0,42
+  appliqué ; Grand Sud corrigé environ 2 400 mg/m²/an à 30-100 km ; **scénario haut retenu, brut comme corrigé** ;
+  verdicts inchangés (Q1 indice, Q2 non établie).

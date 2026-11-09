@@ -50,9 +50,27 @@ def verdict(Z: float, lignes: list[tuple[float, int]]) -> str:
     return "non établi" + (" (contradiction forte d'une ligne)" if contra else "")
 
 
-def scenario_merra2() -> str | None:
-    """Scénario le plus proche du dépôt MERRA-2 sur les mailles terrestres (médiane de la classe de distance à la côte
-    qui contient la distance médiane des blocs), si la synthèse MERRA-2 existe ; sinon None."""
+KWALE_HUMIDE, INTERIEUR_TOTAL = 3334.0, 260.0      # mesures de référence (protocole, section 7)
+
+
+def facteur_validation() -> float | None:
+    """Facteur de correction de MERRA-2 (moyenne géométrique des rapports mesuré / MERRA-2), ou None s'il est crédible
+    (à moins d'un facteur 2 des deux références) ou non validé."""
+    p = ROOT / "data" / "mdg" / "depot_chlorure_merra2_validation.csv"
+    if not p.exists():
+        return None
+    v = pd.read_csv(p)
+    k = float(v[v.site.str.startswith("Kwale")].chlorure_humide_mg_m2_an.iloc[0])
+    sa = float(v[v.site.str.contains("Afrique du Sud")].chlorure_total_mg_m2_an.median())
+    r1, r2 = KWALE_HUMIDE / k, INTERIEUR_TOTAL / sa
+    if 0.5 <= r1 <= 2 and 0.5 <= r2 <= 2:
+        return 1.0
+    return float(np.sqrt(r1 * r2))
+
+
+def scenario_merra2(facteur: float = 1.0) -> str | None:
+    """Scénario le plus proche du dépôt MERRA-2 (× facteur) sur les mailles terrestres (médiane de la classe de distance à
+    la côte qui contient la distance médiane des blocs), si la synthèse MERRA-2 existe ; sinon None."""
     p = ROOT / "data" / "mdg" / "depot_chlorure.json"
     if not p.exists():
         return None
@@ -62,7 +80,7 @@ def scenario_merra2() -> str | None:
     import recharge_chlorure as RC
     d_med = float(pd.read_csv(ROOT / "validation" / "recharge_chlorure_blocs_zones.csv").dist_km.median())
     classe = "moins de 30 km" if d_med < 30 else ("30 à 100 km" if d_med <= 100 else "plus de 100 km")
-    cible = float(cl[classe]["mediane"])
+    cible = float(cl[classe]["mediane"]) * facteur
     ecarts = {s: abs(np.log10(RC.depot([500.0], [d_med], RC.SCENARIOS[s])[0] / cible)) for s in SCENARIOS}
     return min(ecarts, key=ecarts.get)
 
@@ -85,7 +103,9 @@ def main() -> None:
     L3 = {sc: (z_wilcoxon(np.log10(z.T2 / z[f"R_{sc}"])),
                z_wilcoxon(np.abs(np.log10(dom.T2 / dom[f"R_{sc}"])) - np.abs(np.log10(dom.T2L / dom[f"R_{sc}"]))))
           for sc in SCENARIOS}
-    sc_m = scenario_merra2()
+    f_val = facteur_validation()
+    sc_brut = scenario_merra2()
+    sc_m = scenario_merra2(f_val) if f_val else sc_brut
 
     def fz(t):
         return "—" if not np.isfinite(t[0]) else f"{t[0]:+.2f} (n = {t[1]})"
@@ -93,7 +113,9 @@ def main() -> None:
          f"Généré le {dt.date.today().isoformat()} par `scripts/combinaison_preuves.py`, selon "
          "`validation/protocole_combinaison_preuves.md` (fixé avant le calcul). **Synthèse rétrospective** : toutes les lignes avaient "
          "déjà été vues ; elle résume, elle ne prouve pas à nouveau.", "",
-         f"Scénario de dépôt de chlorure retenu : **{sc_m or 'aucun (MERRA-2 pas encore disponible)'}**.", "",
+         f"Scénario de dépôt de chlorure retenu : **{sc_m or 'aucun (MERRA-2 pas encore disponible)'}**"
+         + (f" (MERRA-2 corrigé par le facteur {f_val:.2f} tiré de sa validation à Kwale et en Afrique du Sud ; MERRA-2 brut : {sc_brut})"
+            if f_val and f_val != 1.0 else "") + ".", "",
          "## Scores par ligne (z unilatéral ; positif = dans le sens de la question)", "",
          "| Ligne | Q1 : T2 surestime | Q2 : T2L plus juste que T2 |", "|---|---|---|",
          f"| L1 fluctuation de nappe (groupes de sites) | {fz(L1_q1)} | {fz(L1_q2)} |",
