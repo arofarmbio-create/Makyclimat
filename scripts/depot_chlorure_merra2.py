@@ -86,7 +86,7 @@ def parse_csv(text: str, var: str, shape: tuple[int, int]) -> np.ndarray:
     rows = []
     for ln in text.splitlines():
         if re.match(r"^\s*/?" + re.escape(var) + r"(\[\d+\])+\s*,", ln):
-            rows.append([float(x) for x in ln.split(",")[1:]])
+            rows.append([float(x) for x in ln.split(",")[1:] if x.strip()])
     a = np.array(rows, dtype="float64")
     if a.shape != shape:
         raise ValueError(f"{var} : forme {a.shape} au lieu de {shape}")
