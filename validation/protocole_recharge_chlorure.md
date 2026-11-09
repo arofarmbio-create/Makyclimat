@@ -82,3 +82,26 @@ une confirmation du nouveau modèle.
 ## 10. Journal des modifications
 
 - 09/11/2026 : version initiale.
+- 09/11/2026 (avant toute lecture des chlorures de nappe, scellés depuis l'inventaire) : **choix fixés.**
+  - **Données disponibles** : 1 487 forages BushProof sur 2 880 (zone ZH10 perdue), 559 avec chlorure ; **aucun forage
+    karstique** : H-Cl3 (karst) est **infaisable** et ne sera pas calculée.
+  - **Dépôt de chlorure** D = P × Cl_p(d) × (1 + s), P = pluie moyenne de la maille (`LTA_P_mmpa` de la grille T2), d =
+    distance au trait de côte Natural Earth 10 m (UTM 38S), Cl_p(d) = Cl_i + (Cl_c − Cl_i) × exp(−d / L), s = part de
+    dépôt sec. Recharge R (mm/an) = D (mg/m²/an) / Cl_n (mg/L). Valeurs (`data/mdg/chlorure_pluie.json`, vérifiées
+    sur les sources primaires) :
+
+    | Scénario | Cl_c côte (mg/L) | Cl_i intérieur (mg/L) | L (km) | s | Origine |
+    |---|---|---|---|---|---|
+    | bas | 1,8 | 0,3 | 10 | 0 | Kwale (Kenya), stations à 13-15 km ; intérieur sud-africain bas (Van Wyk et al. 2011) |
+    | central | 2,2 | 0,4 | 30 | 0,3 | médiane Kwale ; intérieur sud-africain ; dépôt sec 30 % (Van Wyk et al. 2011) |
+    | haut | 5,4 | 1,0 | 100 | 0,5 | côte du KwaZulu-Natal, saison sèche ; intérieur sud-africain, saison sèche |
+
+    La longueur L n'est donnée par aucune source : c'est un choix encadré par les trois scénarios.
+  - **Filtre « autre source de sels »** : la minéralisation totale est approchée par la somme des ions majeurs mesurés
+    (Na, K, Ca, Mg, HCO3, CO3, SO4, Cl, NO3) ; exclusion si conductivité > 3 000 µS/cm et Cl < 10 % de cette somme.
+    Forages sans conductivité : gardés.
+  - **Doublons** : même coordonnées à 5 décimales et même chlorure.
+  - **H-Cl4** : rapport fluctuation / chlorure évalué dans le scénario central ; publié dans les trois.
+  - **Contrôle préalable (leçon du test karst)** : avant de juger H-Cl2, on publie l'écart médian de T2 ; si T2 est
+    déjà à moins d'un facteur 1,5 de la recharge par chlorure dans les trois scénarios, H-Cl2 est déclarée sans
+    objet (rien à améliorer), et non soutenue.
