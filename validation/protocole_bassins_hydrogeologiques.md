@@ -51,3 +51,8 @@ entre les deux découpages est une indication, pas une mesure de flux.
   pas présentée comme un résultat. H-B1 est relue de la même façon. Ajouts au rapport, sans nouvelle hypothèse :
   ventilation par région (région du fokontany le plus proche), par taille de bassin (grands bassins nommés et petits
   bassins), et noms des bassins (`basins.geojson`).
+- 09/11/2026 (résultat du test) : **H-B2 robuste** (lissée : 2,4 % ; plat 4,4 %, pente 1,0 %, rapport 4,5 contre 4,8).
+  Les écarts se concentrent dans les petits bassins côtiers (12,4 %, 11,1 % lissé) contre 1,6 % (1,4 %) dans les grands
+  bassins. **Le classement par région n'est pas robuste** : Boeny 12,8 % → 7,6 %, Androy 3,7 % → 1,0 %, Sofia 6,3 % →
+  7,8 % ; seuls le résultat national, l'opposition plat/pente et l'opposition petits/grands bassins sont présentés
+  comme résultats. Les régions des Hautes Terres restent sous 1 % dans les deux variantes.
