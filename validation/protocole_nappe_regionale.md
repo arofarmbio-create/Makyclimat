@@ -99,3 +99,12 @@ avec leur charge, leur profondeur et leur chimie, et relier ce cadre aux échecs
   évaporites, sédiments marins anciens). Contrôle prévu, descriptif : rapport Cl/Na (proche de 1,17 en masse pour l'eau
   de mer et les embruns ; nettement plus bas si le sodium vient des roches) et part du chlorure dans la minéralisation,
   par type d'aquifère.
+- 09/11/2026 (avant le calcul, proposition du porteur du projet) : **recharge étagée dans le temps.** L'infiltration
+  recharge les nappes peu profondes puis profondes, mais la recharge des nappes profondes demande beaucoup plus de
+  temps (cohérent avec les pics lissés avec la profondeur, isotopes du plateau Mahafaly, et avec le test THMS du
+  04/11 : mémoire rapide du karst de Toliara, mémoires multiples et lentes du socle). Conséquence testable avec la
+  chimie : une eau plus profonde, restée plus longtemps, a davantage échangé avec la roche.
+  **H-D6** : avec la profondeur captée z, la minéralisation (somme des ions majeurs) augmente (ρ > 0) et le rapport
+  Cl/Na (masse) diminue (ρ < 0 : sodium venu des roches) ; intervalles à 95 % par blocs sans 0 pour les deux.
+  Publiée par type d'aquifère. Le retard lui-même ne peut pas être mesuré avec ces données (une analyse par forage) ;
+  il le sera avec des séries de niveaux à plusieurs profondeurs ou des datations (tritium, carbone 14).
