@@ -114,21 +114,28 @@ def main() -> None:
     t2k = pd.read_csv(ROOT / "inputs" / "hydrogeologie" / "recharge_t2k.csv")
     f["P"] = t2k.LTA_P_mmpa.to_numpy()[RC.nearest(f.lat, f.lon, t2k.lat, t2k.lon)]
     f["bloc"] = PS.blocs(f.lat, f.lon)
+    ions = f[[c for c in RC.ION_COLS if c in f]].apply(pd.to_numeric, errors="coerce")
+    f["mineral"] = ions.sum(axis=1, min_count=3)
+    na = pd.to_numeric(f.get("Na+_mg/l"), errors="coerce")
+    f["clna"] = (f.cl / na).where(na > 0)
 
     st = {"Cl_h": lambda s: spearman(s.cl, s.h), "Cl_z": lambda s: spearman(s.cl, s.z), "Cl_P": lambda s: spearman(s.cl, s.P),
           "diff": lambda s: abs(spearman(s.cl, s.h)) - abs(spearman(s.cl, s.P)),
-          "Cl_h_cote": lambda s: partielle(s.cl, s.h, s.dist_km)}
+          "Cl_h_cote": lambda s: partielle(s.cl, s.h, s.dist_km),
+          "min_z": lambda s: spearman(s.mineral, s.z), "clna_z": lambda s: spearman(s.clna, s.z)}
     obs = {k: fn(f) for k, fn in st.items()}
     bs = boot(f, st)
     I = {k: ic(v) for k, v in bs.items()}
     pre = abs(obs["Cl_P"]) >= 0.3 and (I["Cl_P"][0] > 0 or I["Cl_P"][1] < 0)
     h1 = obs["Cl_h"] < 0 and I["Cl_h"][1] < 0
     h2 = I["Cl_z"][0] > 0 or I["Cl_z"][1] < 0
+    h6 = obs["min_z"] > 0 and I["min_z"][0] > 0 and obs["clna_z"] < 0 and I["clna_z"][1] < 0
     h3 = (not pre) and obs["diff"] > 0 and I["diff"][0] > 0
     par_type = []
     for t, g in f.groupby(f.TypeAquif1.fillna("non renseigné")):
         if len(g) >= MIN_TYPE:
-            par_type.append((t, len(g), spearman(g.cl, g.h), spearman(g.cl, g.z)))
+            par_type.append((t, len(g), spearman(g.cl, g.h), spearman(g.cl, g.z), spearman(g.mineral, g.z),
+                             spearman(g.clna, g.z), float(g.clna.median())))
 
     # H-D4 : au bloc
     z = f.groupby("bloc").agg(n=("cl", "size"), cl=("cl", "median"), lat=("lat", "mean"), lon=("lon", "mean"), h=("h", "median")).reset_index()
@@ -174,11 +181,16 @@ def main() -> None:
          f"| H-D3 : \\|ρ(Cl, charge)\\| − \\|ρ(Cl, pluie)\\| > 0 | {fm(obs['diff'])} | {fm(I['diff'][0])} ; {fm(I['diff'][1])} | **{'soutenue' if h3 else 'non soutenue'}** |",
          f"| H-D4 : T2 / recharge par chlorure au bloc ({len(z)} blocs), brute → à charge fixée | {fm(brut)} → {fm(part)} | — | **{'soutenue' if h4 else 'non soutenue'}** |",
          f"| H-D5 : charge des puits à sec ({len(cas)}) contre référence ({len(ref)}), AUC | {a5:.3f} | {i5[0]:.3f} ; {i5[1]:.3f} | **{'soutenue' if h5 else 'non soutenue'}** |",
+         f"| H-D6 : avec la profondeur, minéralisation ↑ et Cl/Na ↓ | {fm(obs['min_z'])} et {fm(obs['clna_z'])} | "
+         f"{fm(I['min_z'][0])} ; {fm(I['min_z'][1])} et {fm(I['clna_z'][0])} ; {fm(I['clna_z'][1])} | **{'soutenue' if h6 else 'non soutenue'}** |",
          "", f"Descriptif : ρ(chlorure, charge) à distance à la côte fixée = {fm(obs['Cl_h_cote'])} [{fm(I['Cl_h_cote'][0])} ; {fm(I['Cl_h_cote'][1])}] "
          "(contrôle de l'effet des embruns, plus forts en bas près de la côte).", "",
-         "## Par type d'aquifère (au moins 30 forages)", "", "| Type | Forages | ρ(Cl, charge) | ρ(Cl, profondeur) |", "|---|---|---|---|"]
-    for t, n, a, b in par_type:
-        L.append(f"| {t} | {n} | {fm(a)} | {fm(b)} |")
+         "## Par type d'aquifère (au moins 30 forages)", "", "| Type | Forages | ρ(Cl, charge) | ρ(Cl, profondeur) | ρ(minéralisation, profondeur) | ρ(Cl/Na, profondeur) | Cl/Na médian (eau de mer : 1,80) |",
+          "|---|---|---|---|---|---|---|"]
+    for t, n, a, b, c, d, e in par_type:
+        L.append(f"| {t} | {n} | {fm(a)} | {fm(b)} | {fm(c)} | {fm(d)} | {e:.2f} |")
+    L += ["", f"Cl/Na médian, tous forages : {f.clna.median():.2f} (eau de mer et embruns : 1,80 en masse ; nettement plus bas : "
+          "sodium venu des roches ou des sols ; nettement plus haut : autre source de chlorure)."]
     L += ["", "## Décision (fixée avant le calcul)", "",
           ("Le cadre « nappe régionale » devient le cadre de travail du module M3 pour le Grand Sud : bilan de chlorure le long "
            "des lignes d'écoulement, recharge rattachée aux zones d'alimentation, bassins hydrogéologiques refaits avec la charge mesurée."
@@ -186,7 +198,7 @@ def main() -> None:
           "Limites : charges mesurées à des dates différentes ; zone ZH10 absente ; socle fracturé majoritaire ; charge des puits à sec "
           "interpolée (8 forages les plus proches, 1/d²).", ""]
     (ROOT / "validation" / "nappe_regionale.md").write_text("\n".join(L) + "\n", encoding="utf-8")
-    print({"pre": pre, "H1": h1, "H2": h2, "H3": h3, "H4": h4, "H5": h5, **{k: round(v, 3) for k, v in obs.items()}, "brut": round(brut, 3), "part": round(part, 3), "auc5": round(a5, 3)})
+    print({"H6": h6, "pre": pre, "H1": h1, "H2": h2, "H3": h3, "H4": h4, "H5": h5, **{k: round(v, 3) for k, v in obs.items()}, "brut": round(brut, 3), "part": round(part, 3), "auc5": round(a5, 3)})
 
 
 if __name__ == "__main__":

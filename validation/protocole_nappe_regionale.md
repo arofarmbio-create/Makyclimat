@@ -108,3 +108,6 @@ avec leur charge, leur profondeur et leur chimie, et relier ce cadre aux échecs
   Cl/Na (masse) diminue (ρ < 0 : sodium venu des roches) ; intervalles à 95 % par blocs sans 0 pour les deux.
   Publiée par type d'aquifère. Le retard lui-même ne peut pas être mesuré avec ces données (une analyse par forage) ;
   il le sera avec des séries de niveaux à plusieurs profondeurs ou des datations (tritium, carbone 14).
+- 09/11/2026 (avant le calcul) : **correction** : le rapport Cl/Na de l'eau de mer vaut 1,80 **en masse** (19,35 et
+  10,77 g/kg) et 1,17 en moles ; la mention « 1,17 en masse » ci-dessus était fausse. Le calcul utilise les masses
+  (mg/L) et la référence 1,80.
