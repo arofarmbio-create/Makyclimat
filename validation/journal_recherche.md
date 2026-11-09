@@ -1037,3 +1037,5 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   (SHA-256 dans le rapport) pour le test prospectif.
 - 📌 Leçon de méthode : avant de fixer une hypothèse, vérifier sur les données déjà vues que la référence (ici T2)
   échoue bien au test ; sinon le test ne départage rien.
+- 📌 Décision du porteur du projet (09/11/2026) : **option A**, T2K reste une sensibilité figée ; T2 reste la valeur
+  centrale ; pas de recalcul de l'atlas.

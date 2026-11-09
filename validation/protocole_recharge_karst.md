@@ -78,3 +78,5 @@ avec la citation de Wan et al. (2024).
   T2 place 0 des 5 puits GROSoM dans son intervalle. C'est faux : l'intervalle de 80 % de T2 (11 à 195 mm/an) les
   contient déjà tous les 5. H-K2 ne pouvait donc pas départager T2 et T2K. Les règles restent inchangées ; la décision
   d'application est soumise au porteur du projet (voir `validation/recharge_karst.md` et le journal).
+- 09/11/2026 (décision du porteur du projet) : **option A**. T2 reste la valeur centrale ; T2K est conservée comme
+  sensibilité, figée (SHA-256 dans `validation/recharge_karst.md`) pour le test prospectif. L'atlas n'est pas refait.
