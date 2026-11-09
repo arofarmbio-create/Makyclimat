@@ -1,0 +1,30 @@
+# Niveau de preuve, type de résultat et incertitude de chaque indicateur du site (principe « le site est la vitrine de
+# la recherche », prompt_maitre.md §0, 09/11/2026 ; protocole doctoral §15).
+# Chaque règle s'applique aux indicateurs dont l'identifiant correspond au motif (expression régulière) ; la première
+# règle qui correspond l'emporte. Le niveau de preuve est calculé à partir des statuts du registre
+# (validation/etat_des_lieux_registre.md) pour les identifiants R-xx donnés ; sans identifiant, l'indicateur est
+# « non évalué par la thèse » (source externe ou calcul non testé).
+# Types : observation, analyse (calcul sur des observations), prévision, projection, scénario.
+
+regles:
+  - {motif: "^(rain_pct_normal|pluie_recente_)", type: observation, preuve: [R-14], incertitude: "Pluie satellite CHIRPS : sous-estime souvent les extrêmes ; dékades provisoires révisées"}
+  - {motif: "^drought_alert_level$", type: analyse, preuve: [R-15], incertitude: "Seuil opérationnel (pluie < 75 % de la normale) ; voir détection et fausses alertes"}
+  - {motif: "^(spi|spei)", type: analyse, preuve: [R-14, R-17, R-24], incertitude: "Indice standardisé ; résolution de la maille CHIRPS (environ 5 km, plus grossière que la plupart des fokontany)"}
+  - {motif: "^seas_", type: prévision, preuve: [R-25, R-26, R-27], incertitude: "Probabilités bornées à 15-50 % ; fourchette P10-P90 des analogues contenant l'observation dans 77 % des cas"}
+  - {motif: "^ruiss_prevu_", type: prévision, preuve: [R-09, R-10, R-23], incertitude: "Non validé : ni le cumul ni l'intensité des pluies ne repèrent les inondations pluviales testées (R-23)"}
+  - {motif: "^(recharge12_|runoff12_|sm_|whc_mm|cn2)", type: analyse, preuve: [R-16, R-18, R-36, R-37], incertitude: "Bilan hydrique mensuel : ne voit pas la recharge épisodique ; non comparé avec succès aux niveaux mesurés (R-36)"}
+  - {motif: "^water_table_depth_m$", type: analyse, preuve: [R-41], incertitude: "Ordre de grandeur régional ; carte du niveau statique par fokontany avec fourchette à 80 % dans l'onglet Nappes"}
+  - {motif: "^(aquifer_|potentiel_eau_pct)", type: analyse, preuve: [R-19], incertitude: "Classes cartographiques BGS à 1/5 000 000 : à confirmer par la coupe du forage"}
+  - {motif: "^conductivity_uscm$", type: observation, preuve: [R-42], incertitude: "Mesures ponctuelles de forages, dates variables"}
+  - {motif: "^susc_inond_pct$", type: analyse, preuve: [R-02, R-03], incertitude: "Score relatif, pas une probabilité calibrée ; instable d'un événement à l'autre (8 activations EMS)"}
+  - {motif: "^(crue_rp|hand_|cult_basse|bati_basse|route_basse)", type: analyse, preuve: [R-07, R-08], incertitude: "Exposition topographique ou modélisée, pas un dégât ; maille d'environ 90 m à 5 km selon la source"}
+  - {motif: "^choc_crue_", type: analyse, preuve: [R-07, R-21], incertitude: "Débit modélisé GloFAS (maille d'environ 5 km), loi de Gumbel"}
+  - {motif: "^(choc_cyc_|cyc_)", type: observation, preuve: [R-01], incertitude: "Trajectoires IBTrACS ; rayons de vent 50 et 64 nœuds parfois estimés"}
+  - {motif: "^vuln_cumul_", type: analyse, preuve: [R-20], incertitude: "Indice composite non validé ; pondérations choisies, pas apprises"}
+  - {motif: "^(rain_trend_)", type: analyse, preuve: [R-28], incertitude: "Tests par maille sans correction des tests multiples : environ 10 % de mailles « significatives » attendues par hasard"}
+  - {motif: "^enso_", type: analyse, preuve: [R-25, R-28], incertitude: "Lien non démontré dans la plupart des régions après correction des tests multiples (R-25)"}
+  - {motif: "^(population_exposed|femmes_enceintes_estimees|mwater_.*_expose)$", type: analyse, preuve: [], incertitude: "Estimation centrale, sans intervalle"}
+  - {motif: "^(flood_exposure|cyclone_exposure|et0_water_balance|ndvi_anomaly|crop_production_risk|air_quality_pm25|wash_access|health_access|school_continuity_risk|livestock_pasture)$", type: analyse, preuve: [], incertitude: "Indicateur prévu"}
+  - {motif: "^ndvi_anom_z$", type: observation, preuve: [R-24], incertitude: "NDVI MODIS mensuel ; nuages et saison de croissance"}
+  - {motif: "^(elev_|slope_|river_)", type: observation, preuve: [], incertitude: "Modèle de terrain Copernicus GLO-90 (environ 90 m)"}
+  - {motif: ".*", type: observation, preuve: [], incertitude: "Donnée externe citée ; non évaluée par la thèse"}

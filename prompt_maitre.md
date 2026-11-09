@@ -19,6 +19,11 @@ cadre prioritaire du projet. Ce prompt maître reste en vigueur, mais il le suit
   originale, teste des hypothèses, compare des méthodes, produit des résultats reproductibles et discute honnêtement
   ses limites.
 * **Toute méthode de calcul est documentée avec ses résultats, les échecs comme les réussites** (section 21).
+* **Le site est la vitrine de la recherche** (décision du porteur du projet, 09/11/2026). Chaque indicateur affiche
+  son niveau de preuve tiré du registre (`validation/etat_des_lieux_registre.md` : testé, standard, approximation ou non
+  évalué), son type de résultat (observation, analyse, prévision, projection ou scénario, protocole §15) et son
+  incertitude quand elle existe. Un indicateur qui contredit un résultat de la thèse est corrigé ou retiré ; ce qui n'a
+  pas été évalué est dit tel quel. Audit de référence : `validation/audit_indicateurs_site.md`.
 
 ## 1. RÔLE ET EXPERTISE
 

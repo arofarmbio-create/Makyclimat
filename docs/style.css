@@ -248,3 +248,15 @@ body.mapfull .crumbs { right: 250px; }
 .rbox ul { margin:6px 0; padding-left:18px; } .rbox li { margin:4px 0; }
 details.rmod { border:1px solid var(--line); border-radius:8px; padding:6px 10px; margin:6px 0; background:var(--panel); }
 details.rmod summary { cursor:pointer; } details.rmod ul { padding-left:18px; } details.rmod li { margin:6px 0; }
+
+/* Type de résultat (protocole doctoral §15 : distinguer observation, analyse, prévision, projection, scénario) */
+.pvbox { margin-top:8px; padding-top:6px; border-top:1px dashed var(--line); }
+.ty { display:inline-block; border-radius:4px; padding:1px 7px; font-size:12px; font-weight:600; }
+.ty-observation { background:#e6eef8; color:#1f4f8a; } .ty-analyse { background:#eef0e6; color:#4d5a1f; }
+.ty-prevision { background:#f3e8f8; color:#6a2d86; } .ty-projection { background:#fbe9e0; color:#8a3a12; }
+.ty-scenario { background:#fff4cc; color:#7a5a00; }
+@media (prefers-color-scheme: dark) {
+  .ty-observation { background:#1c2c42; color:#9cc3f5; } .ty-analyse { background:#2a2f1d; color:#c9d58f; }
+  .ty-prevision { background:#33213d; color:#d9a8f0; } .ty-projection { background:#3d2418; color:#f3b08c; }
+  .ty-scenario { background:#3a3112; color:#f0d77a; }
+}

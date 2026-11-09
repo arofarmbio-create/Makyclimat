@@ -40,7 +40,7 @@
   }
   var LAYERS = [
     { id: "l", label: "Niveau d'alerte sécheresse" }, { id: "pc", label: "Pluie cumulée (% de la normale)" },
-    { id: "e", label: "Population exposée" }, { id: "t", label: "Cibles potentiels (estimation)" },
+    { id: "e", label: "Population exposée à la sécheresse" }, { id: "t", label: "Cibles potentielles (estimation)" },
     { id: "g", label: "Écart : cibles moins bénéficiaires déclarés" }, { id: "p", label: "Population" },
     { id: "pa", label: "Probabilité d'alerte sécheresse en fin de saison", fmt: "pct" },
     { id: "ex", label: "Population exposée attendue (moyenne des saisons possibles)" },
@@ -508,6 +508,29 @@
     });
   }
 
+  // Type de résultat, niveau de preuve et incertitude (catalogue.json ; principe « vitrine de la recherche »).
+  var BASE_CAT = { l: "drought_alert_level", pc: "rain_pct_normal", e: "population_exposed", t: "potential_targets",
+                   g: "response_coverage", p: "population" };
+  var TYPE_FORCE = { pa: ["prévision", "Probabilité tirée des scénarios de fin de saison (analogues) ; fourchette P10-P90 calibrée à 77 %"],
+                     ex: ["scénario", "Moyenne sur les saisons possibles ; estimation centrale, sans intervalle"],
+                     w: ["scénario", "Scénario humide ou choisi ; estimation centrale, sans intervalle"] };
+  var TY_CLASS = { observation: "observation", analyse: "analyse", "prévision": "prevision", projection: "projection", "scénario": "scenario" };
+  function tyCls(t) { return TY_CLASS[t] || "analyse"; }
+  var PV_CLASS = { teste_ok: "rok", teste_partiel: "rpart", teste_non: "rko", en_cours: "ratt", non_evalue: "ratt" };
+  function preuveHtml(k) {
+    var d = layerDef(k); if (!d) return "";
+    var it = S.catById ? S.catById[d.ext ? d.ext.id : BASE_CAT[k]] : null;
+    var typ = TYPE_FORCE[k] ? TYPE_FORCE[k][0] : (d.ew ? "prévision" : (it ? it.type : ""));
+    if (!typ) return "";
+    var inc = TYPE_FORCE[k] ? TYPE_FORCE[k][1] : (d.ew ? "Prévision météo à 7 jours ; seuils provisoires, non évalués par la thèse" : (it ? it.incertitude : ""));
+    var pv = it && it.preuve ? it.preuve : (d.ew ? { niveau: "non_evalue", libelle: "Non évalué par la thèse", tests: [] } : null);
+    var h = '<div class="pvbox"><span class="ty ty-' + tyCls(typ) + '">' + esc(typ.charAt(0).toUpperCase() + typ.slice(1)) + "</span>";
+    if (pv) h += ' <span class="rbadge ' + (PV_CLASS[pv.niveau] || "ratt") + '" title="' + esc(pv.tests.map(function (t) { return t.id + " : " + t.statut; }).join(" | ")) + '">' + esc(pv.libelle) +
+      (pv.tests.length ? " (" + pv.tests.map(function (t) { return t.id; }).join(", ") + ")" : "") + "</span>";
+    if (inc) h += '<div class="note">' + esc(inc) + "</div>";
+    return h + "</div>";
+  }
+
   function legendFor(spec, br, tag) {
     var k = spec.layer, h = "<b>" + (tag ? tag + " · " : "") + esc(spec.diff ? "Différence B − A" : layerDef(k).label) + "</b>";
     var st = specStyle(spec);
@@ -557,6 +580,7 @@
         if (br.length) h += '<div><i style="background:' + pal2[Math.min(i, 4)] + '"></i>' + lab + "</div>";
       });
     }
+    if (!spec.diff && st !== "cx") h += preuveHtml(k);
     return h;
   }
 
@@ -582,7 +606,7 @@
     var parent = S.path.length ? S.path[S.path.length - 1].name : S.meta.country;
     $("viewtitle").textContent = "Vue : " + parent + " (" + S.meta.levels[S.view.lvl].plural.toLowerCase() + ")";
     var h = "";
-    [["p", "Population"], ["e", "Exposés"], ["t", "Cibles potentiels"]].forEach(function (x) {
+    [["p", "Population"], ["e", "Exposés"], ["t", "Cibles potentielles"]].forEach(function (x) {
       var obs = sumView(x[0], null, ""), sim = !isSim() ? null : sumView(x[0], S.simIdx, S.scn);
       h += '<div class="kpi' + (sim !== null && x[0] !== "p" ? " sim" : "") + '"><b>' + MC.fmtInt(sim !== null && x[0] !== "p" ? sim : obs) +
            "</b><span>" + x[1] + (sim !== null && x[0] !== "p" ? " (scénario)" : "") + "</span></div>";
@@ -626,7 +650,7 @@
     h += row("Niveau d'alerte", esc(levelName(m.l)) + (isSim() ? " → <b>" + esc(levelName(val(m, "l"))) + "</b>" : ""));
     if (m.sx) h += row("Depuis quand", stateChangeLabel(m.sx));
     h += row("Population exposée", MC.fmtInt(m.e) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "e")) + "</b>" : ""));
-    h += row("Cibles potentiels", MC.fmtInt(m.t) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "t")) + "</b>" : ""));
+    h += row("Cibles potentielles", MC.fmtInt(m.t) + (isSim() ? " → <b>" + MC.fmtInt(val(m, "t")) + "</b>" : ""));
     if (m.vs !== undefined) h += row("Vulnérabilité économique retenue", Math.round(m.vs * 100) + " % " +
       (m.vi === 1 ? "(donnée fournie)" : m.vi === 2 ? "(IPC phase 3 ou plus — insécurité alimentaire)" : "(taux de pauvreté national, valeur par défaut provisoire)"));
     h += externalIndicatorsByTheme(m);
@@ -659,7 +683,7 @@
       return { f: f, v: val(S.view.metrics[f.properties.c], "t") };
     }).filter(function (r) { return r.v !== null && r.v > 0; })
       .sort(function (a, b) { return b.v - a.v; }).slice(0, 10);
-    var h = "<tr><th>Zone</th><th>Cibles potentiels" + (isSim() ? " (scénario)" : "") + "</th></tr>";
+    var h = "<tr><th>Zone</th><th>Cibles potentielles" + (isSim() ? " (scénario)" : "") + "</th></tr>";
     if (!rows.length) h += '<tr><td colspan="2" class="note">Aucune zone exposée dans cette vue.</td></tr>';
     rows.forEach(function (r, i) {
       h += '<tr class="link" data-i="' + i + '"><td>' + esc(r.f.properties.n) + "</td><td>" + MC.fmtInt(r.v) + "</td></tr>";
@@ -1304,7 +1328,7 @@
       // couches
       var defs = [["ev_n", "Événements : nombre (période choisie)"], ["ev_p", "Événements : personnes affectées ou déplacées"]];
       if (H.rec.u.length) {
-        if (H.rec.k.indexOf(H.kinds.indexOf("3w")) >= 0) defs.push(["rb", "Réponse : bénéficiaires atteints (3W)"], ["rg", "Réponse : cibles potentiels moins bénéficiaires atteints"]);
+        if (H.rec.k.indexOf(H.kinds.indexOf("3w")) >= 0) defs.push(["rb", "Réponse : bénéficiaires atteints (3W)"], ["rg", "Réponse : cibles potentielles moins bénéficiaires atteints"]);
         defs.push(["rp", "Réponse : nombre de projets ou d'activités (HRP, IATI)"], ["rf", "Réponse : budget (€, HRP et IATI)"]);
       }
       defs.forEach(function (d) { LAYERS.push({ id: d[0], label: d[1] }); });
@@ -2046,11 +2070,13 @@
           b.addEventListener("click", function () { S.sector = s.id; draw(); }); chips.appendChild(b);
         });
         var rows = cat.indicators.filter(function (i) { return S.sector === "all" || i.sectors.indexOf(S.sector) !== -1; });
-        var h = "<tr><th>Indicateur</th><th>Secteurs</th><th>ODD</th><th>Cadre national (à valider)</th><th>Source et fréquence</th><th>Statut</th></tr>";
+        var h = "<tr><th>Indicateur</th><th>Secteurs</th><th>ODD</th><th>Cadre national (à valider)</th><th>Source et fréquence</th><th>Type et preuve</th><th>Statut</th></tr>";
         rows.forEach(function (i) {
           h += "<tr><td><b>" + esc(i.label) + "</b></td><td>" + i.sectors.map(function (s) { return esc(sectorLabel[s]); }).join(", ") + "</td><td>" +
             i.sdg.map(function (t) { return '<span title="' + esc(goalLabel[t.split(".")[0]] || "") + '">ODD ' + esc(t) + "</span>"; }).join(", ") + "</td><td>" +
-            (i.national || []).map(function (n) { return esc(natLabel[n] || n); }).join("<br>") + "</td><td>" + esc(i.source) + "<br><span class='note'>" + esc(i.frequency) + "</span></td><td><span class='status " + i.status + "'>" +
+            (i.national || []).map(function (n) { return esc(natLabel[n] || n); }).join("<br>") + "</td><td>" + esc(i.source) + "<br><span class='note'>" + esc(i.frequency) + "</span></td><td>" + (i.type ? "<span class='ty ty-" + tyCls(i.type) + "'>" + esc(i.type) + "</span>" : "") +
+            (i.preuve ? "<br><span class='rbadge " + (PV_CLASS[i.preuve.niveau] || "ratt") + "'>" + esc(i.preuve.libelle) + "</span>" : "") +
+            (i.incertitude ? "<br><span class='note'>" + esc(i.incertitude) + "</span>" : "") + "</td><td><span class='status " + i.status + "'>" +
             (i.status === "active" ? "Actif" : "Prévu") + "</span></td></tr>";
         });
         $("cattable").innerHTML = h;
@@ -2087,7 +2113,7 @@
       m.sources[0].baseline[0] + "–" + m.sources[0].baseline[1] + " pour la même période. Les niveaux d'alerte actuels sont : " + seuils +
       ". <b>Ces seuils sont provisoires</b> et doivent être calibrés avec la Météo, le BNGRC et le groupe IPC sur des crises passées.</p>" +
       "<h3>2. Population exposée</h3><p>Population des fokontany dont le niveau d'alerte atteint « " + esc(levelName(m.exposure_min_level)) + " » ou plus, puis cumul vers les communes, districts et régions.</p>" +
-      "<h3>3. Cibles potentiels</h3><p>Population exposée × <b>vulnérabilité économique</b> : la part de la population exposée qui, à ressources égales face au même aléa, est la moins capable d'y faire face (les ménages pauvres plus que les ménages aisés — l'exposition au point 2 est géographique et la même pour tous dans la zone ; ce facteur ajoute la dimension économique, distincte). Par défaut, cette part est de " + Math.round(m.default_vulnerable_share * 100) +
+      "<h3>3. Cibles potentielles</h3><p>Population exposée × <b>vulnérabilité économique</b> : la part de la population exposée qui, à ressources égales face au même aléa, est la moins capable d'y faire face (les ménages pauvres plus que les ménages aisés — l'exposition au point 2 est géographique et la même pour tous dans la zone ; ce facteur ajoute la dimension économique, distincte). Par défaut, cette part est de " + Math.round(m.default_vulnerable_share * 100) +
       " % (valeur provisoire, approximation fondée sur le taux de pauvreté national). Par ordre de priorité, elle est remplacée (1) par les valeurs du fichier <code>inputs/vulnerabilite.csv</code>, puis (2) par la part de population en IPC phase 3 ou plus — insécurité alimentaire, un proxy de vulnérabilité économique (OCHA/HAPI) — là où une analyse existe, héritée par les sous-zones.</p>" +
       (m.has_history ? "<h3>Changement climatique et ENSO</h3><p>Pour chaque saison des pluies depuis 1982, la pluie CHIRPS est comparée à la normale " + m.sources[0].baseline[0] + "–" + m.sources[0].baseline[1] +
         ". La saison est classée <b>El Niño</b> (indice ONI de la NOAA moyen ≥ +0,5), <b>La Niña</b> (≤ −0,5) ou neutre. Pour chaque zone, l'outil calcule : la <b>tendance</b> de la pluie saisonnière (régression linéaire, points de % de la normale par décennie) et sa significativité ; la <b>pluie moyenne lors des El Niño et des La Niña passés</b> ; la <b>corrélation</b> avec l'ONI. " +
@@ -2148,6 +2174,10 @@
       return getJSON("metrics/top.json");
     }).then(function (top) {
       S.top = top;
+      getJSON("catalogue.json").then(function (c) {
+        S.catById = {}; c.indicators.forEach(function (x) { S.catById[x.id] = x; });
+        if (S.sp && S.sp.length) renderLegend();
+      }).catch(function () {});
       $("country").textContent = S.meta.country;
       $("through").textContent = "Pluie jusqu'au " + fmtDate(S.meta.data_through);
       document.title = "MakyClimat — " + S.meta.country;

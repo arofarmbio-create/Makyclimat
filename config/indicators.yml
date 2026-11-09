@@ -42,7 +42,7 @@ indicators:
     frequency: Tous les 10 jours
     status: active
   - id: potential_targets
-    label: Cibles potentiels (estimation)
+    label: "Cibles potentielles (estimation)"
     unit: personnes
     sectors: [food_security, nutrition, social_protection, early_recovery]
     sdg: ["1.5", "2.1"]
@@ -51,7 +51,7 @@ indicators:
     frequency: Tous les 10 jours
     status: active
   - id: response_coverage
-    label: Bénéficiaires déclarés par les partenaires et écart
+    label: "Bénéficiaires déclarés par les partenaires et écart (écart de déclaration, pas un besoin non couvert)"
     unit: personnes
     sectors: [food_security, nutrition, health, wash, education, protection, shelter]
     sdg: ["17.17"]
@@ -61,42 +61,6 @@ indicators:
     status: active
 
   # ---------------- PRÉVUS (phases 2 à 4) ----------------
-  - id: flood_exposure
-    label: Exposition aux inondations (prévision de crue et zones inondables)
-    unit: personnes
-    sectors: [drr, shelter, health, wash, food_security]
-    sdg: ["11.5", "13.1"]
-    national: [axe1, eau]
-    source: "Google Flood Hub, Copernicus GloFAS (à vérifier)"
-    frequency: Quotidienne
-    status: planned
-  - id: cyclone_exposure
-    label: Exposition aux cyclones (trajectoire, vent, pluie)
-    unit: personnes
-    sectors: [drr, shelter, education, health, logistics]
-    sdg: ["11.5", "13.1"]
-    national: [axe1]
-    source: Prévisions ECMWF, Météo Madagascar
-    frequency: Quotidienne en saison cyclonique
-    status: planned
-  - id: et0_water_balance
-    label: Évapotranspiration, humidité du sol et bilan hydrique
-    unit: mm
-    sectors: [agriculture, livestock, wash, food_security]
-    sdg: ["2.4", "6.4"]
-    national: [axe1, eau]
-    source: "ERA5-Land / modèle FAO-56 : construit (voir spei3, spei6)"
-    frequency: Quotidienne
-    status: planned
-  - id: ndvi_anomaly
-    label: Anomalie de végétation (images satellites)
-    unit: indice
-    sectors: [agriculture, livestock, food_security]
-    sdg: ["2.4", "15.3"]
-    national: [axe1]
-    source: "MODIS : construit (voir ndvi_anom_z)"
-    frequency: Tous les 10 jours
-    status: planned
   - id: crop_production_risk
     label: Risque de baisse de production agricole
     unit: indice
@@ -197,7 +161,7 @@ indicators:
     frequency: Annuelle (recalcul après chaque saison)
     status: active
   - id: rain_trend_signif_share
-    label: Part de la zone où la tendance est statistiquement significative (p < 0,10)
+    label: "Part de la zone où la tendance est significative (p < 0,10, sans correction des tests multiples : environ 10 % attendus par hasard)"
     unit: "%"
     format: pct
     aggregate: popmean
@@ -232,7 +196,7 @@ indicators:
     frequency: Annuelle
     status: active
   - id: enso_corr
-    label: Corrélation entre la pluie de la saison et l'indice ENSO (ONI), de -1 à +1
+    label: "Corrélation entre la pluie de la saison et l'indice ENSO (ONI), de -1 à +1 (lien non démontré dans la plupart des régions)"
     unit: coefficient
     format: float
     style: signed
@@ -460,7 +424,7 @@ indicators:
     frequency: Mensuelle
     status: active
   - id: recharge12_z
-    label: Indice relatif de nappe (recharge sur 12 mois standardisée ; négatif = nappe probablement basse)
+    label: "Excédent hydrique standardisé sur 12 mois (indice de recharge potentielle ; non comparé avec succès aux niveaux de nappe mesurés)"
     unit: "écart-type"
     format: float
     style: signed
@@ -483,7 +447,7 @@ indicators:
     frequency: Ponctuelle
     status: active
   - id: aquifer_productivity_pct
-    label: "Productivité d'aquifère (classement 0-100 de la classe BGS : socle, sédimentaire, volcanique, karst)"
+    label: "Productivité d'aquifère (classement 0-100 de la classe BGS au 1/5 000 000 : socle, sédimentaire, volcanique, karst ; à confirmer par la coupe du forage)"
     unit: "indice 0-100"
     format: float
     aggregate: none
@@ -505,7 +469,7 @@ indicators:
     frequency: Ponctuelle
     status: active
   - id: water_table_depth_m
-    label: Profondeur de nappe publiée à l'échelle régionale (ordre de grandeur, pas une mesure locale)
+    label: "Profondeur de nappe publiée à l'échelle régionale (ordre de grandeur ; carte par fokontany avec fourchette dans l'onglet Nappes)"
     unit: m
     format: float
     aggregate: none
@@ -1100,7 +1064,7 @@ indicators:
     status: active
   # ---------------- SUSCEPTIBILITÉ AUX INONDATIONS (modèle validé sur les dégâts cartographiés par satellite) ----------------
   - id: susc_inond_pct
-    label: Susceptibilité aux inondations (probabilité estimée d'être inondé ou endommagé quand un cyclone ou une crue touche la zone)
+    label: "Susceptibilité aux inondations (score relatif de 0 à 100 quand un cyclone ou une crue touche la zone ; classement, pas une probabilité)"
     unit: "%"
     format: pct
     aggregate: popmean
@@ -1380,7 +1344,7 @@ indicators:
     status: active
   # ---------------- Ruissellement prévu à 7 jours (expérimental, inondation pluviale) ----------------
   - id: ruiss_prevu_mm
-    label: "EXPÉRIMENTAL - Ruissellement prévu sur 7 jours (maximum sur 3 jours, SCS-CN)"
+    label: "Ruissellement prévu sur 7 jours (maximum sur 3 jours, méthode SCS-CN ; non validé)"
     unit: "mm"
     format: float
     aggregate: none
@@ -1391,7 +1355,7 @@ indicators:
     frequency: Toutes les 6 heures
     status: active
   - id: ruiss_prevu_niveau
-    label: "EXPÉRIMENTAL - Niveau de ruissellement prévu à 7 jours (0 aucun, 1 vigilance = retour 2 ans, 2 alerte = retour 5 ans)"
+    label: "Niveau de ruissellement prévu à 7 jours (0 aucun, 1 vigilance = retour 2 ans, 2 alerte = retour 5 ans ; non validé)"
     unit: "niveau 0-2"
     format: int
     aggregate: none
@@ -1402,7 +1366,7 @@ indicators:
     frequency: Toutes les 6 heures
     status: active
   - id: ruiss_prevu_part_pct
-    label: "EXPÉRIMENTAL - Part des fokontany en vigilance de ruissellement ou plus, à 7 jours"
+    label: "Part des fokontany en vigilance de ruissellement ou plus, à 7 jours (non validé)"
     unit: "% des fokontany"
     format: float
     aggregate: none
