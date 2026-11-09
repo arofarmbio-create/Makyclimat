@@ -174,7 +174,7 @@ def part_validation() -> None:
     rows = []
     for nom, (lon, lat) in POINTS.items():
         i, j = indices_point(lon, lat)
-        sub = f"[0][{j}:{j}][{i}:{i}]"
+        sub = f"[0][{j}:{j + 1}][{i}:{i + 1}]"      # bloc 2 x 2 (format éprouvé) ; maille du site = [0, 0]
         parts, n = {k: 0.0 for k in ("DP", "WT", "SV", "SD")}, 0
         for y in range(2011, 2021):
             for m in range(1, 13):
@@ -184,7 +184,7 @@ def part_validation() -> None:
                 if text is None:
                     continue
                 for v in VARS:
-                    parts[v[2:4]] += float(parse_csv(text, v, (1, 1))[0, 0])
+                    parts[v[2:4]] += float(parse_csv(text, v, (2, 2))[0, 0])
                 n += 1
         f = lambda a: a / max(n, 1) * SEC_AN * 1e6 * CL_SEL
         rows.append({"site": nom, "lon": lon, "lat": lat, "maille_lon": -180 + 0.625 * i, "maille_lat": -90 + 0.5 * j, "mois": n,
