@@ -94,6 +94,8 @@ def forecast(communes, fc_cfg, batch=40, deadline=None):
             d = item["daily"]
             dates = dates or d["time"]
             q[i + k] = [np.nan if v is None else v for v in d["river_discharge"]]
+    if deadline is not None and time.monotonic() > deadline:   # dernier lot fini après l'échéance : rien n'est enregistré
+        raise RuntimeError(f"budget de temps épuisé pendant le dernier lot de la prévision ({(time.monotonic() - t0) / 60:.1f} min)")
     return dates, np.array(q, dtype="float32")
 
 

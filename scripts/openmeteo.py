@@ -5,6 +5,8 @@ https://open-meteo.com/en/docs   https://open-meteo.com/en/docs/flood-api
 """
 from __future__ import annotations
 
+import json
+import threading
 import time
 
 import requests
@@ -16,8 +18,9 @@ DAILY_VARS = ["precipitation_sum", "temperature_2m_max", "temperature_2m_min", "
 
 
 def get_json(url: str, params: dict, retries: int = 5, pause: float = 1.0, deadline: float | None = None):
-    """deadline (time.monotonic) : échéance stricte. Délai de chaque requête et attentes bornés au temps restant ; au-delà,
-    RuntimeError sans nouvel essai (relecture Codex du 10/11/2026 : un lot commencé avant l'échéance la dépassait)."""
+    """deadline (time.monotonic) : échéance stricte sur la durée totale. Délais de connexion et de lecture, attentes et
+    réception bornés au temps restant ; la réponse est lue par morceaux et abandonnée si l'échéance passe pendant la
+    réception (le timeout de Requests ne borne que l'inactivité, pas la durée totale : relectures Codex du 10/11/2026)."""
     last = None
 
     def reste() -> float:
@@ -27,14 +30,37 @@ def get_json(url: str, params: dict, retries: int = 5, pause: float = 1.0, deadl
         if reste() <= 0:
             raise RuntimeError(f"Open-Meteo : budget de temps épuisé ({last or 'avant la requête'})")
         try:
-            r = requests.get(url, params=params, timeout=max(1.0, min(120.0, reste())))
-            if r.status_code in (429, 500, 502, 503, 504):
-                last = f"HTTP {r.status_code}"
-            elif r.status_code == 400:
-                raise ValueError(f"HTTP 400 : {r.text[:200]}")
-            else:
-                r.raise_for_status()
-                return r.json()
+            # Connexion et attente du début de réponse se partagent le temps restant (chacune au plus la moitié).
+            delai = 120.0 if deadline is None else (max(0.05, min(30.0, reste() / 2)), max(0.05, min(120.0, reste() / 2)))
+            with requests.get(url, params=params, timeout=delai, stream=deadline is not None) as r:
+                if r.status_code in (429, 500, 502, 503, 504):
+                    last = f"HTTP {r.status_code}"
+                elif r.status_code == 400:
+                    raise ValueError(f"HTTP 400 : {r.text[:200]}")
+                else:
+                    r.raise_for_status()
+                    if deadline is None:
+                        return r.json()
+                    morceaux = []
+                    garde = threading.Timer(max(0.0, reste()), r.close)   # ferme la connexion à l'échéance, même en pleine attente
+                    garde.daemon = True
+                    garde.start()
+                    try:
+                        for morceau in r.iter_content(chunk_size=1 << 16):
+                            if reste() <= 0:
+                                break
+                            morceaux.append(morceau)
+                    except Exception:                  # lecture interrompue par la garde ou par le réseau
+                        if reste() > 0:
+                            raise
+                    finally:
+                        garde.cancel()
+                    if reste() <= 0:
+                        raise RuntimeError("Open-Meteo : budget de temps épuisé pendant la réception de la réponse")
+                    try:
+                        return json.loads(b"".join(morceaux))
+                    except ValueError:
+                        last = "réponse JSON illisible"
         except requests.RequestException as e:
             last = f"{type(e).__name__}"
         if attempt + 1 == retries:
