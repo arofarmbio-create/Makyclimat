@@ -14,6 +14,7 @@
 6. Une tâche de téléchargement à la fois par fournisseur (NASA, Copernicus, CHIRPS), à rythme lent, sans relances en rafale.
 7. **Une tâche = un seul responsable.** Respecter le périmètre des autres chantiers. Pour des modifications en parallèle, utiliser des branches et worktrees distincts après accord, avec entrées partagées en lecture seule et sorties séparées. Indiquer la branche ou le commit de référence quand il existe.
 8. Réponses en français et commits signés de leur auteur. Une ligne de suivi ou de relecture ne vaut pas autorisation de publier, de lancer un calcul lourd ou de télécharger. Les autorisations déjà données continuent de s'appliquer.
+9. **Vérifier avant de refaire** (idempotence, 10/11/2026). Après une coupure de connexion, une reprise de session ou une demande répétée, ne rien relancer avant d'avoir constaté ce qui est déjà fait : la ligne de la tâche ici, `git status` et `git log` (y compris les commits non poussés), les runs GitHub en cours ou en file et la dernière release. Reprendre au premier pas manquant. Un workflow ou un téléchargement déjà en cours n'est pas relancé ; un lancement identique attend le précédent (garde de concurrence des workflows).
 
 ## Rôles (décision du porteur du projet, 09/11/2026)
 
