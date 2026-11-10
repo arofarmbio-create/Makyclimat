@@ -18,6 +18,7 @@ from pathlib import Path
 import yaml
 
 from parcours import rendu_parcours
+from surveiller_coordination import cle_message, nom_fichier
 
 ROOT = Path(__file__).resolve().parents[2]
 PIL = ROOT / "pilotage"
@@ -245,9 +246,9 @@ COORD_ETAT = (("à faire", "neutre"), ("en cours", "info"), ("en attente", "warn
 PERSONNES = (("codex", "codex"), ("claude", "claude"), ("porteur", "toi"))
 
 
-def coordination(texte: str) -> tuple[list[list[str]], list[tuple[str, str]]]:
-    """Tâches ouvertes et messages en attente de COORDINATION.md, source de vérité de la répartition du travail."""
-    taches, messages, section = [], [], ""
+def coordination(texte: str):
+    """Tâches ouvertes, messages en attente et exécutions autorisées de COORDINATION.md (source de vérité)."""
+    taches, messages, executions, section = [], [], [], ""
     for ligne in texte.splitlines():
         if ligne.startswith("## "):
             section = ligne[3:].strip()
@@ -255,11 +256,26 @@ def coordination(texte: str) -> tuple[list[list[str]], list[tuple[str, str]]]:
             champs = [c.strip() for c in re.split(r"(?<!\\)\|", ligne)[1:-1]]
             if len(champs) >= 5 and champs[0] != "Tâche" and not champs[2].casefold().startswith(("fait", "clos")):
                 taches.append(champs)
-        elif section.startswith("Messages") and (m := re.match(r"^- \*\*(.+?)\*\*", ligne)):
+        elif section.startswith("Messages") and (m := re.match(r"^- \*\*(.+?)\*\*(.*)", ligne)):
             parties = [p.strip() for p in m.group(1).split("·")]
             if len(parties) >= 3 and "→" in parties[1]:
-                messages.append((parties[1].split("→", 1)[1].strip(), " · ".join(parties[2:]).rstrip(".")))
-    return taches, messages
+                auteur, destinataire = (p.strip() for p in parties[1].split("→", 1))
+                messages.append({"destinataire": destinataire, "auteur": auteur, "cle": cle_message(ligne),
+                                 "objet": " · ".join(parties[2:]).rstrip("."), "detail": m.group(2).strip()})
+        elif section == "Exécutions autorisées" and (m := re.match(r"^- \[( |x)\] `exec:(claude|codex):([^`]+)` (.*)", ligne)):
+            executions.append({"fait": m.group(1) == "x", "agent": m.group(2), "id": m.group(3), "demande": m.group(4)})
+    return taches, messages, executions
+
+
+def carte_decision(msg: dict) -> str:
+    """Carte de décision du porteur : boutons actifs seulement quand le tableau est servi par pilotage.cmd."""
+    return (f'<div class="item decision" data-cle="{esc(msg["cle"])}" data-auteur="{esc(msg["auteur"])}">'
+            f'<div class="i-top"><span class="i-title">{esc(msg["objet"])}</span><span class="st warn"><i></i>Décision</span></div>'
+            f'<div class="i-sub">De {esc(msg["auteur"])} · {esc(texte_brut(msg["detail"], 400))}</div>'
+            f'<div class="dec-ctl" hidden><textarea rows="2" placeholder="Précision ou reformulation (facultatif pour Autoriser et Refuser)"></textarea>'
+            f'<div class="dec-btn"><button type="button" data-action="autoriser">Autoriser</button>'
+            f'<button type="button" data-action="refuser">Refuser</button><button type="button" data-action="repondre">Répondre</button>'
+            f'</div><div class="dec-msg muted small"></div></div></div>')
 
 
 def texte_brut(t: str, n: int = 170) -> str:
@@ -274,7 +290,11 @@ def carte_coord(titre: str, sous: str, etat: str) -> str:
 
 
 def colonnes_coordination(col: dict, texte: str) -> None:
-    taches, messages = coordination(texte)
+    taches, messages, executions = coordination(texte)
+    for ex in executions:
+        if not ex["fait"]:
+            col.setdefault(ex["agent"], []).insert(0, carte_coord(f"Exécution autorisée · {ex['id']}", texte_brut(ex["demande"]),
+                                                                  "En file"))
     for tache, responsable, etat, _preuve, suite, *_ in taches:
         qui = [cle for nom, cle in PERSONNES if nom in responsable.casefold()]
         for cle in qui:
@@ -283,10 +303,33 @@ def colonnes_coordination(col: dict, texte: str) -> None:
             for nom, cle in PERSONNES[:2]:
                 if cle not in qui:
                     col.setdefault(cle, []).insert(0, carte_coord(f"Relire : {tache}", f"Livrable de {responsable}", "À relire"))
-    for destinataire, objet in messages:
+    for msg in messages:
         for nom, cle in PERSONNES:
-            if nom in destinataire.casefold():
-                col.setdefault(cle, []).insert(0, carte_coord(objet, "Message en attente de réponse (COORDINATION.md)", "Décision"))
+            if nom in msg["destinataire"].casefold():
+                carte_m = carte_decision(msg) if cle == "toi" else carte_coord(
+                    msg["objet"], f"De {msg['auteur']} · message en attente de réponse", "Message")
+                col.setdefault(cle, []).insert(0, carte_m)
+
+
+def lancements_recents() -> str:
+    """Derniers lancements automatiques avec leur consommation de tokens (base du surveillant)."""
+    import sqlite3
+    base = PIL / "etat" / "coordination" / "coordination.sqlite3"
+    if not base.exists():
+        return ""
+    try:
+        with sqlite3.connect(f"file:{base}?mode=ro", uri=True) as db:
+            colonnes = {c[1] for c in db.execute("PRAGMA table_info(lancements)")}
+            conso = "consommation" if "consommation" in colonnes else "NULL"
+            rangs = db.execute(f"SELECT id, debut, fin, statut, {conso} FROM lancements ORDER BY rowid DESC LIMIT 12").fetchall()
+    except sqlite3.Error:
+        return ""
+    lignes = "".join(
+        f'<tr><td><a href="etat/coordination/{esc(nom_fichier(i))}">{esc(i)}</a></td><td>{esc(s)}</td>'
+        f'<td class="nowrap muted">{esc(d)} → {esc(f or "—")}</td><td class="muted">{esc(c or "—")}</td></tr>'
+        for i, d, f, s, c in rangs)
+    return ('<h3 style="margin:16px 0 8px">Lancements automatiques et tokens</h3><div class="card pad"><table class="t">'
+            '<tr><th>Lancement</th><th>Statut</th><th>Créneau</th><th>Tokens</th></tr>' + lignes + "</table></div>")
 
 
 def carte(titre: str, sous: str = "", etat: str = "") -> str:
@@ -304,6 +347,11 @@ def page() -> str:
 
     col = {"toi": [], "claude": [], "codex": [], "agent": [], "github": []}
     colonnes_coordination(col, texte_coord)
+    col["toi"].insert(0, '<div class="item consigne" hidden><div class="i-title">Consigne à un assistant</div>'
+                         '<div class="dec-ctl"><select id="cons-agent"><option value="claude">Claude</option><option value="codex">Codex</option></select>'
+                         '<textarea id="cons-texte" rows="3" placeholder="Ce que l\'assistant doit faire (il l\'exécutera en mode écriture)"></textarea>'
+                         '<div class="dec-btn"><button type="button" id="cons-envoyer">Envoyer et exécuter</button></div>'
+                         '<div class="dec-msg muted small" id="cons-msg"></div></div></div>')
     for t in obj.get("taches") or []:
         if t.get("statut") != "fini":
             col.setdefault(t.get("qui", "claude"), []).append(carte(t.get("nom", ""), "", t.get("statut", "")))
@@ -388,6 +436,11 @@ header{{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:
 .auto{{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px}} .auto-ctl{{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}}
 .auto-ctl[hidden]{{display:none}} .auto select,.auto button{{font:inherit;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}}
 .auto button{{cursor:pointer}} .auto button:hover:not(:disabled){{background:var(--sub)}} .auto button:disabled{{opacity:.5;cursor:default}}
+.dec-ctl{{margin-top:8px;display:grid;gap:6px}} .dec-ctl[hidden],.consigne[hidden]{{display:none}}
+.dec-ctl textarea,.dec-ctl select{{font:inherit;font-size:12px;width:100%;padding:5px 7px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}}
+.dec-btn{{display:flex;gap:6px;flex-wrap:wrap}} .dec-btn button{{font:inherit;font-size:12px;padding:3px 9px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);cursor:pointer}}
+.dec-btn button:hover:not(:disabled){{background:var(--sub)}} .dec-btn button[data-action=autoriser],#cons-envoyer{{border-color:var(--ok);color:var(--ok)}}
+.dec-btn button[data-action=refuser]{{border-color:var(--ko);color:var(--ko)}} .dec-btn button:disabled{{opacity:.5}}
 nav{{display:flex;gap:4px;overflow-x:auto;margin-top:8px}} nav a{{color:var(--muted);text-decoration:none;font-size:13px;padding:8px 10px;border-bottom:2px solid transparent;white-space:nowrap}}
 nav a:hover{{color:var(--text);border-bottom-color:var(--border)}}
 main{{max-width:1320px;margin:0 auto;padding:20px 24px 48px}} section{{margin-bottom:28px;scroll-margin-top:96px}}
@@ -459,7 +512,7 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 <main>{errs}
 <div class="lead"><div class="q">{esc(th.get("question_en_cours", ""))}</div><div class="t">{esc(th.get("titre", ""))}</div></div>
 <section id="parcours"><h2>Parcours des chantiers</h2>{gantt}</section>
-<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div class="lanes">{equipe}</div></section>
+<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div class="lanes">{equipe}</div>{lancements_recents()}</section>
 <section id="protocole"><h2>Avancement par rapport au protocole doctoral et au prompt maître</h2>{proto}</section>
 <section id="objectifs" class="cols"><div><h2>Objectifs</h2><div class="card">{objs}</div></div>
 <div><h2>Blocages</h2><div class="card pad"><table class="t"><tr><th>Blocage</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc_}</table></div></div></section>
@@ -517,6 +570,34 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
   $("auto-demarrer").addEventListener("click",function(){{commande("demarrer",{{duree:+$("auto-duree").value,relectures:$("auto-relectures").checked}});}});
   $("auto-arreter").addEventListener("click",function(){{commande("arreter");}});
   lire(); setInterval(lire,10000);
+  // Décisions et consignes du porteur (option C) : écrites dans COORDINATION.md par le serveur local
+  function envoyer(chemin,corps,zone,boutons){{
+    boutons.forEach(function(b){{b.disabled=true;}}); zone.textContent="Envoi…";
+    return fetch(chemin,{{method:"POST",headers:{{"Content-Type":"application/json","X-Pilotage":jeton}},body:JSON.stringify(corps)}})
+      .then(function(r){{return r.json();}}).then(function(e){{
+        zone.textContent=e.erreur||(e.ok+(e.surveillant_actif?"":" Le surveillant est arrêté : cliquer sur Démarrer pour lancer l'exécution."));
+        if(e.erreur) boutons.forEach(function(b){{b.disabled=false;}});
+        else setTimeout(function(){{location.reload();}},2500);
+        return e;
+      }}).catch(function(){{zone.textContent="Serveur injoignable.";boutons.forEach(function(b){{b.disabled=false;}});}});
+  }}
+  document.querySelectorAll(".decision .dec-ctl,.consigne").forEach(function(z){{z.hidden=false;}});
+  document.querySelectorAll(".decision").forEach(function(carte){{
+    var boutons=[].slice.call(carte.querySelectorAll("button[data-action]")), zone=carte.querySelector(".dec-msg"), texte=carte.querySelector("textarea");
+    boutons.forEach(function(b){{b.addEventListener("click",function(){{
+      var action=b.dataset.action;
+      if(action==="repondre"&&!texte.value.trim()){{zone.textContent="Écrire la réponse ou la reformulation d'abord.";return;}}
+      if(action==="autoriser"&&!confirm("Autoriser lance une exécution automatique par "+carte.dataset.auteur+" (mode écriture). Continuer ?")) return;
+      envoyer("/api/decision",{{cle:carte.dataset.cle,action:action,texte:texte.value}},zone,boutons);
+    }});}});
+  }});
+  var envoi=$("cons-envoyer");
+  if(envoi) envoi.addEventListener("click",function(){{
+    var t=$("cons-texte").value.trim(), agent=$("cons-agent").value;
+    if(!t){{$("cons-msg").textContent="Écrire la consigne d'abord.";return;}}
+    if(!confirm("La consigne sera exécutée par "+(agent==="codex"?"Codex":"Claude")+" en mode écriture. Continuer ?")) return;
+    envoyer("/api/consigne",{{agent:agent,texte:t}},$("cons-msg"),[envoi]).then(function(e){{if(e&&e.ok)$("cons-texte").value="";}});
+  }});
 }})();
 </script></body></html>"""
 

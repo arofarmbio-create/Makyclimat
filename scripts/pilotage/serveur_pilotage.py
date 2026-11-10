@@ -24,7 +24,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import tableau_de_bord  # noqa: E402
-from surveiller_coordination import lire_instance  # noqa: E402
+from surveiller_coordination import NAIROBI, cle_message, ecrire_si_change, lire_instance  # noqa: E402
+from datetime import datetime  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 PIL = ROOT / "pilotage"
@@ -52,12 +53,14 @@ def binaire_claude() -> Path | None:
 
 
 def binaire_codex() -> Path | None:
-    """Ligne de commande Codex : sur le PATH, sinon celle installée par l'application Codex."""
+    """Ligne de commande Codex : sur le PATH, sinon celle de l'application Codex. La copie de .sandbox-bin ne trouve
+    pas son outil de lecture (codex-code-mode-host.exe) : relectures bloquées le 10/11/2026. Celle de
+    .plugin-appserver l'a à côté d'elle et fonctionne."""
     trouve = shutil.which("codex.exe") or shutil.which("codex")
     if trouve and Path(trouve).suffix.lower() == ".exe":
         return Path(trouve)
-    natif = Path.home() / ".codex" / ".sandbox-bin" / "codex.exe"
-    return natif if natif.is_file() else None
+    natif = Path.home() / ".codex" / "plugins" / ".plugin-appserver" / "codex.exe"
+    return natif if natif.is_file() and (natif.parent / "codex-code-mode-host.exe").is_file() else None
 
 
 def etat() -> dict:
@@ -113,6 +116,113 @@ def arreter() -> dict:
         return etat()
 
 
+# ------------------------------------------------------------------ décisions et consignes du porteur (option C)
+COORD = ROOT / "COORDINATION.md"
+SECTIONS = {
+    "Décisions du porteur du projet": "Réponses données depuis le tableau de bord. L'assistant concerné les lit à sa "
+                                      "reprise et met sa ligne de tâche à jour.",
+    "Exécutions autorisées": "Ajoutées par le tableau de bord après un clic du porteur du projet. Le surveillant les "
+                             "exécute une à une en mode écriture ; l'agent coche sa ligne à la fin.",
+}
+LIBELLES = {"autoriser": "Autorisé", "refuser": "Refusé", "repondre": "Réponse"}
+
+
+def propre(texte: str, n: int = 1500) -> str:
+    """Une seule ligne Markdown, sans accent grave (réservé aux identifiants d'exécution)."""
+    return " ".join(str(texte or "").split()).replace("`", "'")[:n]
+
+
+def inserer(lignes: list[str], titre: str, nouvelle: str) -> None:
+    """Ajoute une puce à la fin d'une section, créée au besoin avant « Lancements ponctuels autorisés »."""
+    entete = f"## {titre}"
+    if entete not in lignes:
+        position = next((i for i, l in enumerate(lignes) if l.startswith("## Lancements ponctuels")), len(lignes))
+        lignes[position:position] = [entete, "", SECTIONS[titre], ""]
+    i = lignes.index(entete) + 1
+    j = next((k for k in range(i, len(lignes)) if lignes[k].startswith("## ")), len(lignes))
+    while j > i and not lignes[j - 1].strip():      # remonter au-dessus des lignes vides de fin de section
+        j -= 1
+    if lignes[j - 1].strip() and not lignes[j - 1].startswith("- "):   # une liste après un paragraphe : ligne vide
+        lignes.insert(j, "")
+        j += 1
+    lignes.insert(j, nouvelle)
+    if j + 1 < len(lignes) and lignes[j + 1].strip():
+        lignes.insert(j + 1, "")
+
+
+def ecrire_coordination(modifier) -> dict:
+    with _verrou:
+        brut = COORD.read_text(encoding="utf-8-sig")
+        fin_ligne = "\r\n" if "\r\n" in brut else "\n"
+        lignes = brut.splitlines()
+        reponse = modifier(lignes)
+        if "erreur" not in reponse:
+            ecrire_si_change(COORD, fin_ligne.join(lignes) + fin_ligne)
+    try:
+        tableau_de_bord.generer()
+    except Exception:
+        pass
+    reponse["surveillant_actif"] = bool(lire_instance(ETAT))
+    return reponse
+
+
+def execution(lignes, agent: str, demande: str) -> str:
+    identifiant = datetime.now(NAIROBI).strftime("%Y%m%d-%H%M%S-") + secrets.token_hex(2)
+    inserer(lignes, "Exécutions autorisées", f"- [ ] `exec:{agent}:{identifiant}` {propre(demande, 3900)}")
+    return identifiant
+
+
+def decision(cle: str, action: str, texte: str) -> dict:
+    if action not in LIBELLES or (action == "repondre" and not texte.strip()):
+        return {"erreur": "Action inconnue, ou réponse vide."}
+
+    def modifier(lignes):
+        section = ""
+        for i, ligne in enumerate(lignes):
+            if ligne.startswith("## "):
+                section = ligne[3:]
+            if section.startswith("Messages") and ligne.startswith("- **") and cle_message(ligne) == cle:
+                break
+        else:
+            return {"erreur": "Message introuvable : il a peut-être déjà été traité."}
+        message = lignes.pop(i)
+        tete = message[4:].split("**", 1)[0]
+        parties = [p.strip() for p in tete.split("·")]
+        auteur = parties[1].split("→")[0].strip() if len(parties) > 1 else "Claude"
+        objet = " · ".join(parties[2:]).rstrip(".") or tete
+        maintenant = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
+        ligne = f"- {maintenant} · Porteur du projet → {auteur} · **{LIBELLES[action]}** · {propre(objet, 300)}"
+        if texte.strip():
+            ligne += f" · Précision : {propre(texte)}"
+        reponse = {"ok": f"{LIBELLES[action]} : décision inscrite dans COORDINATION.md."}
+        if action == "autoriser":
+            agent = "codex" if "codex" in auteur.casefold() else "claude"
+            demande = (f"Le porteur du projet autorise : {objet}. Message d'origine : {message[2:].replace('**', '')}"
+                       + (f" Précision du porteur : {texte}" if texte.strip() else ""))
+            identifiant = execution(lignes, agent, demande)
+            ligne += f" · Exécution `exec:{agent}:{identifiant}`"
+            reponse["ok"] = f"Autorisé : exécution confiée à {agent.capitalize()}."
+        inserer(lignes, "Décisions du porteur du projet", ligne)
+        return reponse
+
+    return ecrire_coordination(modifier)
+
+
+def consigne(agent: str, texte: str) -> dict:
+    if agent not in ("claude", "codex") or not texte.strip():
+        return {"erreur": "Choisir Claude ou Codex et écrire une consigne."}
+
+    def modifier(lignes):
+        identifiant = execution(lignes, agent, f"Consigne du porteur du projet : {texte}")
+        maintenant = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
+        inserer(lignes, "Décisions du porteur du projet",
+                f"- {maintenant} · Porteur du projet → {agent.capitalize()} · **Consigne** · {propre(texte, 600)}"
+                f" · Exécution `exec:{agent}:{identifiant}`")
+        return {"ok": f"Consigne confiée à {agent.capitalize()}."}
+
+    return ecrire_coordination(modifier)
+
+
 class Gestionnaire(SimpleHTTPRequestHandler):
     hotes: set[str] = set()
 
@@ -157,7 +267,7 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         if self.headers.get("X-Pilotage") != JETON or (origine and origine.split("//", 1)[-1] not in self.hotes):
             return self._json({"erreur": "Jeton absent ou origine refusée."}, 403)
         try:
-            longueur = min(int(self.headers.get("Content-Length") or 0), 1000)
+            longueur = min(int(self.headers.get("Content-Length") or 0), 20000)
             corps = json.loads(self.rfile.read(longueur) or b"{}")
         except ValueError:
             return self._json({"erreur": "Requête illisible."}, 400)
@@ -165,6 +275,10 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             reponse = demarrer(int(corps.get("duree", 60)), bool(corps.get("relectures", True)))
         elif self.path == "/api/surveillant/arreter":
             reponse = arreter()
+        elif self.path == "/api/decision":
+            reponse = decision(str(corps.get("cle", "")), str(corps.get("action", "")), str(corps.get("texte", "")))
+        elif self.path == "/api/consigne":
+            reponse = consigne(str(corps.get("agent", "")), str(corps.get("texte", "")))
         else:
             return self._json({"erreur": "Commande inconnue."}, 404)
         self._json(reponse, 409 if "erreur" in reponse else 200)

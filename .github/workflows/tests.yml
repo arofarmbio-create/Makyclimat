@@ -105,6 +105,7 @@ jobs:
           python tests/test_ndvi_mod13c2.py
           python tests/test_nappes_mondiales.py
           python tests/test_build_cmip6_nexgddp.py
+          python tests/test_pilotage.py
           python scripts/compute_metrics.py --country demo
       - name: Tests de l'interface
         run: node tests/ui_test.js demo
