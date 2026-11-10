@@ -216,7 +216,17 @@ def decision(cle: str, action: str, texte: str) -> dict:
         inserer(lignes, "Décisions du porteur du projet", ligne)
         return reponse
 
-    return ecrire_coordination(modifier)
+    return lancer_si_besoin(ecrire_coordination(modifier), action == "autoriser")
+
+
+def lancer_si_besoin(reponse: dict, execution_creee: bool) -> dict:
+    """Une exécution autorisée ne part que si le surveillant tourne : on le démarre (2 h, relectures actives)."""
+    if execution_creee and "erreur" not in reponse and not reponse.get("surveillant_actif"):
+        demarre = demarrer(120, True)
+        reponse["surveillant_actif"] = bool(demarre.get("actif"))
+        if reponse["surveillant_actif"]:
+            reponse["ok"] += " Surveillant démarré pour 2 h."
+    return reponse
 
 
 def consigne(agent: str, texte: str) -> dict:
@@ -231,7 +241,75 @@ def consigne(agent: str, texte: str) -> dict:
                 f" · Exécution `exec:{agent}:{identifiant}`")
         return {"ok": f"Consigne confiée à {agent.capitalize()}."}
 
-    return ecrire_coordination(modifier)
+    return lancer_si_besoin(ecrire_coordination(modifier), True)
+
+
+# ------------------------------------------------------------------ échec d'un run GitHub (règle du porteur, 10/11/2026)
+# Le responsable de la tâche liée au run diagnostique la cause ; s'il peut corriger, il corrige et relance une fois ;
+# sinon il écrit au porteur la cause et ses suggestions, et attend sa validation.
+ECHECS_MAX_JOUR = 2              # au-delà, pour un même workflow, plus de diagnostic automatique : avis du porteur
+
+
+def tache_du_run(lignes, run) -> tuple[str, str] | None:
+    """(tâche, responsable) de la première tâche ouverte qui cite le run ou le fichier de son workflow."""
+    cles = [str(run["id"])] + ([Path(run["chemin"]).name] if run.get("chemin") else [])
+    section = ""
+    for ligne in lignes:
+        if ligne.startswith("## "):
+            section = ligne[3:]
+        if section == "Tâches" and ligne.startswith("| ") and any(c in ligne for c in cles):
+            champs = [c.strip() for c in ligne.split("|")[1:-1]]
+            if len(champs) >= 5 and champs[0] != "Tâche" and not champs[2].casefold().startswith(("fait", "clos")):
+                return champs[0], champs[1]
+    return None
+
+
+def echec_run(run: dict) -> None:
+    journal = ETAT / "echecs_github.json"
+    try:
+        historique = json.loads(journal.read_text(encoding="utf-8"))
+    except (FileNotFoundError, ValueError):
+        historique = []
+    limite = time.time() - 86400
+    historique = [h for h in historique if h["t"] > limite]
+    if any(h["run"] == run["id"] for h in historique):
+        return                                       # déjà traité
+    recents = sum(h["workflow"] == run["workflow"] for h in historique)
+    historique.append({"t": time.time(), "run": run["id"], "workflow": run["workflow"]})
+    ETAT.mkdir(parents=True, exist_ok=True)
+    ecrire_si_change(journal, json.dumps(historique, ensure_ascii=False))
+    resume = f"run {run['id']} ({run['workflow']}, {run['conclusion']}) {run['url']}"
+
+    def modifier(lignes):
+        maintenant = datetime.now(NAIROBI).strftime("%d/%m/%Y")
+        trouve = tache_du_run(lignes, run)
+        agent = None
+        if trouve:
+            responsable = trouve[1].casefold()
+            agent = "codex" if "codex" in responsable else "claude" if "claude" in responsable else None
+        if agent and recents < ECHECS_MAX_JOUR:
+            execution(lignes, agent,
+                      f"Diagnostic d'échec automatique · {resume} · tâche « {trouve[0]} ». Lis le journal "
+                      f"(gh run view {run['id']} --log-failed ; si GitHub le refuse, gh run view {run['id']} --json jobs) "
+                      f"et identifie la cause. Si elle est corrigeable dans le périmètre de ta tâche : corrige, teste, "
+                      f"commite, pousse, puis relance une seule fois (gh run rerun {run['id']} --failed, ou gh workflow run "
+                      f"avec les mêmes paramètres) en respectant la règle 6 (aucun autre téléchargement du même fournisseur "
+                      f"en cours) ; consigne cause, correction et relance dans ta ligne de tâche. Si ce n'est pas "
+                      f"corrigeable, ou si la même cause a déjà fait échouer une relance : ne relance pas, écris au porteur "
+                      f"du projet dans « Messages et décisions en attente » la cause et tes suggestions, et attends sa "
+                      f"validation.")
+            return {"ok": f"diagnostic confié à {agent}"}
+        motif = ("aucune tâche ouverte de Claude ou Codex ne cite ce workflow" if not agent
+                 else f"{recents} échecs de ce workflow en 24 h : pas de nouveau diagnostic automatique")
+        i = next((k for k, l in enumerate(lignes) if l.startswith("## Messages")), None)
+        if i is None:
+            return {"erreur": "section des messages introuvable"}
+        lignes.insert(i + 2, f"- **{maintenant} · Surveillant → porteur du projet · Échec GitHub à examiner.** "
+                             f"{propre(resume, 400)} ; {motif}. Répondre ou autoriser une relance.")
+        return {"ok": "message au porteur"}
+
+    reponse = ecrire_coordination(modifier)               # le diagnostic ne part que si le surveillant tourne
+    lancer_si_besoin(reponse, reponse.get("ok", "").startswith("diagnostic"))
 
 
 class Gestionnaire(SimpleHTTPRequestHandler):
@@ -313,7 +391,7 @@ def suivre_github():
     """Toutes les 20 s : runs et jobs ; toutes les 2 min : mois de la release R-21."""
     cycle = 0
     while True:
-        github_direct.actualiser(avis=avis_windows, avec_release=cycle % 6 == 0)
+        github_direct.actualiser(avis=avis_windows, avec_release=cycle % 6 == 0, echec=echec_run)
         cycle += 1
         time.sleep(20)
 

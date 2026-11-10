@@ -72,11 +72,26 @@ def lire_release():
             "annees": {a: sorted(v) for a, v in sorted(annees.items())}}
 
 
-def actualiser(avis=None, avec_release=True):
-    """Interroge GitHub et met l'état en cache. avis(texte) est appelé pour chaque run qui vient de se terminer."""
+ECHECS = ("failure", "cancelled", "timed_out", "startup_failure")
+_chemins: dict[int, str] = {}    # identifiant de workflow -> chemin du fichier (.github/workflows/…)
+
+
+def chemin_workflow(identifiant):
+    if identifiant not in _chemins:
+        try:
+            _chemins.update({w["id"]: w["path"] for w in gh("workflow", "list", "--all", "--json", "id,path")})
+        except (RuntimeError, ValueError, subprocess.TimeoutExpired):
+            pass
+    return _chemins.get(identifiant, "")
+
+
+def actualiser(avis=None, avec_release=True, echec=None):
+    """Interroge GitHub et met l'état en cache. avis(texte) est appelé pour chaque run qui vient de se terminer ;
+    echec(run) en plus pour chaque run terminé en échec ou annulé (diagnostic automatique par le responsable)."""
     maintenant = datetime.now(timezone.utc)
     try:
-        champs = "databaseId,workflowName,displayTitle,status,conclusion,createdAt,startedAt,updatedAt,event,url"
+        champs = ("databaseId,workflowName,workflowDatabaseId,displayTitle,status,conclusion,createdAt,startedAt,"
+                  "updatedAt,event,url")
         runs = gh("run", "list", "-L", "12", "--json", champs)
         # Un run long (R-21 : plusieurs jours) sort des 12 derniers : on ajoute à part les runs encore actifs ou en file.
         connus = {r["databaseId"] for r in runs}
@@ -113,8 +128,14 @@ def actualiser(avis=None, avec_release=True):
                     alertes.append(f"{run['workflowName']} : en file depuis {duree(instant(run['createdAt']))} "
                                    f"sans job actif.")
             precedent = _vus.get(run["databaseId"])
-            if avis and precedent and precedent != "completed" and run["status"] == "completed":
-                avis(f"GitHub : {run['workflowName'][:60]} — {(run.get('conclusion') or 'terminé')}")
+            if precedent and precedent != "completed" and run["status"] == "completed":
+                if avis:
+                    avis(f"GitHub : {run['workflowName'][:60]} — {(run.get('conclusion') or 'terminé')}")
+                if echec and run.get("conclusion") in ECHECS:
+                    try:
+                        echec({**ligne, "chemin": chemin_workflow(run.get("workflowDatabaseId"))})
+                    except Exception as erreur:      # le suivi GitHub ne doit jamais s'arrêter sur un incident d'écriture
+                        print("Échec non transmis :", erreur, flush=True)
             _vus[run["databaseId"]] = run["status"]
             sortie.append(ligne)
         release = _etat["release"]

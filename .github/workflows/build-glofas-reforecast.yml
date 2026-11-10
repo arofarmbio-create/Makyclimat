@@ -2,7 +2,10 @@ name: 14 - Reprévisions GloFAS v4 réduites (vérification par l'impact)
 
 # Télécharge les reprévisions GloFAS v4 (Copernicus EWDS) mois par mois, les réduit (mailles de rivière, maximum par
 # fenêtre d'échéance) et les range dans la release GitHub « reprevisions-glofas-v4 » (hors du dépôt git).
-# Un mois ≈ 9 min d'attente EWDS. Reprend là où il s'est arrêté (les mois déjà publiés sont sautés). Manuel.
+# Un mois ≈ 9 min d'attente EWDS, parfois des heures. Manuel.
+# Depuis le 10/11/2026 : un job par mois (et non plus par année) avec 355 min chacun, le plafond de GitHub étant 360.
+# Le 09/11, le job 2010 avait été arrêté au bout de 300 min, toute l'année bloquée derrière un mois. Les mois déjà
+# publiés dans la release ne créent plus de job, et un mois en échec rend son job rouge au lieu d'un simple avertissement.
 on:
   # Lancement automatique hebdomadaire arrêté le 09/11/2026 (portée réduite, protocole_verification_impact.md).
   workflow_dispatch:
@@ -23,14 +26,18 @@ env:
 jobs:
   plan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read           # lire la liste des fichiers de la release
     outputs:
-      years: ${{ steps.y.outputs.years }}
-      months: ${{ steps.y.outputs.months }}
+      pairs: ${{ steps.y.outputs.pairs }}
+      count: ${{ steps.y.outputs.count }}
     steps:
       - id: y
         env:
           REQUESTED_YEARS: ${{ inputs.years || '2010 2012 2013 2017 2019 2020 2022 2023' }}
           REQUESTED_MONTHS: ${{ inputs.months || '1 2 3 4 11 12' }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           if ! [[ "$REQUESTED_YEARS" =~ ^[[:blank:]0-9]+$ && "$REQUESTED_MONTHS" =~ ^[[:blank:]0-9]+$ ]]; then
             echo "::error::Saisir les années et les mois avec des chiffres séparés par des espaces"
@@ -55,23 +62,39 @@ jobs:
             fi
             months[i]="${months[i]#0}"
           done
-          printf -v years_json '"%s",' "${years[@]}"
-          printf 'years=[%s]\nmonths=%s\n' "${years_json%,}" "${months[*]}" >> "$GITHUB_OUTPUT"
+          published=$(gh release view "$TAG" --json assets --jq '.assets[].name' 2>/dev/null || true)
+          pairs=""
+          count=0
+          for year in "${years[@]}"; do
+            for month in "${months[@]}"; do
+              name=$(printf 'glofas_v4_%s_%02d.npz' "$year" "$month")
+              if grep -qx "$name" <<< "$published"; then
+                echo "$name : déjà publié, pas de job"
+                continue
+              fi
+              pairs+=$(printf '{"year":"%s","month":"%s"},' "$year" "$month")
+              count=$((count + 1))
+            done
+          done
+          echo "$count mois à télécharger"
+          printf 'pairs=[%s]\ncount=%s\n' "${pairs%,}" "$count" >> "$GITHUB_OUTPUT"
 
   build:
     needs: plan
+    if: needs.plan.outputs.count != '0'
+    name: build (${{ matrix.year }}-${{ matrix.month }})
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 355       # plafond GitHub : 360 min par job
     permissions:
       contents: write
     env:
       YEAR: ${{ matrix.year }}
-      MONTHS: ${{ needs.plan.outputs.months }}
+      MONTH: ${{ matrix.month }}
     strategy:
       max-parallel: 1          # une requête à la fois : EWDS refuse au-delà d'une file par compte (01/11/2026)
       fail-fast: false
       matrix:
-        year: ${{ fromJson(needs.plan.outputs.years) }}
+        include: ${{ fromJson(needs.plan.outputs.pairs) }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -81,22 +104,19 @@ jobs:
           python-version: "3.11"
       - name: Installer les dépendances
         run: pip install numpy pandas pyyaml "cdsapi>=0.7.4" xarray cfgrib eccodes
-      - name: Release de stockage et mois déjà publiés
+      - name: Release de stockage
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Reprévisions GloFAS v4 réduites" \
-            --notes "Données de travail de la vérification par l'impact (validation/protocole_verification_impact.md). Copernicus EWDS, GloFAS v4 ; réduites par scripts/build_glofas_reforecast.py." || true
+            --notes "Données de travail de la vérification par l'impact (validation/protocole_verification_impact.md). Copernicus EWDS, GloFAS v4 ; réduites par scripts/build_glofas_reforecast.py."
           mkdir -p "data/$COUNTRY/reforecast"
-          gh release download "$TAG" --pattern "glofas_v4_${YEAR}_*.npz" --dir "data/$COUNTRY/reforecast" || true
-      - name: Télécharger et réduire, mois par mois (publié au fur et à mesure)
+      - name: Télécharger, réduire et publier le mois
         env:
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          read -r -a months <<< "$MONTHS"
-          for m in "${months[@]}"; do
-            python scripts/build_glofas_reforecast.py --country "$COUNTRY" --year "$YEAR" --months "$m" || { echo "::warning::${YEAR}-$m échoué"; continue; }
-            f="data/$COUNTRY/reforecast/glofas_v4_${YEAR}_$(printf %02d "$m").npz"
-            [ -f "$f" ] && gh release upload "$TAG" "$f" --clobber
-          done
+          python scripts/build_glofas_reforecast.py --country "$COUNTRY" --year "$YEAR" --months "$MONTH"
+          f="data/$COUNTRY/reforecast/glofas_v4_${YEAR}_$(printf %02d "$MONTH").npz"
+          test -f "$f" || { echo "::error::${YEAR}-${MONTH} : fichier réduit absent"; exit 1; }
+          gh release upload "$TAG" "$f" --clobber

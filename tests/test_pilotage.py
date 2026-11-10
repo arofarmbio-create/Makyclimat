@@ -11,6 +11,8 @@ sys.path.insert(0, str(RACINE / "scripts" / "pilotage"))
 import serveur_pilotage as S  # noqa: E402
 import surveiller_coordination as C  # noqa: E402
 
+DEMARRER = S.demarrer        # vraie fonction, remplacée par un leurre dans _copie()
+
 COPIE = """# Coordination
 
 ## Tâches
@@ -40,6 +42,8 @@ def _copie():
     S.COORD = chemin
     S.tableau_de_bord.generer = lambda: None        # ne pas régénérer le vrai tableau pendant le test
     S.lire_instance = lambda dossier: None
+    S.demarrer = lambda duree, relectures: {"actif": False}   # jamais de vrai surveillant pendant les tests
+    S.ETAT = dossier / "etat"
     return chemin
 
 
@@ -138,6 +142,29 @@ def test_ecriture_concurrente_non_ecrasee():
     assert "Ajout d'un assistant." in texte and "Ajout du serveur." in texte and len(appels) == 2
 
 
+def test_echec_run_confie_au_responsable_puis_au_porteur():
+    """Règle du porteur (10/11/2026) : diagnostic par le responsable de la tâche, au plus 2 par workflow et par jour,
+    sinon message au porteur ; un run sans tâche liée va directement au porteur."""
+    chemin = _copie()
+    base = {"workflow": "Outil", "conclusion": "cancelled", "url": "https://exemple/run", "chemin": ".github/workflows/x.yml"}
+    texte = chemin.read_text(encoding="utf-8").replace("Vérifier le rendu.", "Vérifier le rendu (run 4242).")
+    chemin.write_text(texte, encoding="utf-8")
+    S.echec_run({**base, "id": 4242})
+    demandes = list(C.demandes_claude(chemin.read_text(encoding="utf-8"), False, ("claude", "codex")))
+    assert len(demandes) == 1 and demandes[0][0] == "claude" and "run 4242" in demandes[0][2]
+    S.echec_run({**base, "id": 4242})                             # même run : rien de plus
+    assert len(list(C.demandes_claude(chemin.read_text(encoding="utf-8"), False, ("claude",)))) == 1
+    S.echec_run({**base, "id": 5555, "chemin": "", "workflow": "Autre"})   # aucune tâche ne le cite : message au porteur
+    texte = chemin.read_text(encoding="utf-8")
+    assert "Surveillant → porteur du projet · Échec GitHub à examiner.** run 5555" in texte
+    texte = texte.replace("(run 4242)", "(run 4242, 6666, 7777)")
+    chemin.write_text(texte, encoding="utf-8")
+    S.echec_run({**base, "id": 6666})                             # 2e échec du workflow en 24 h : encore un diagnostic
+    S.echec_run({**base, "id": 7777})                             # 3e : plafond atteint, message au porteur
+    texte = chemin.read_text(encoding="utf-8")
+    assert len(list(C.demandes_claude(texte, False, ("claude",)))) == 2 and "run 7777" in texte and "échecs de ce workflow" in texte
+
+
 def test_codex_transmis_sans_relectures():
     """Relecture Codex : décocher les relectures ne doit pas empêcher les exécutions confiées à Codex."""
     vus = []
@@ -156,7 +183,7 @@ def test_codex_transmis_sans_relectures():
         S.binaire_claude = lambda: Path("claude.exe")
         S.ETAT = Path(tempfile.mkdtemp())
         try:
-            S.demarrer(60, False)
+            DEMARRER(60, False)
         except Arret:
             pass
     finally:
