@@ -241,21 +241,17 @@ def test_codex_transmis_sans_relectures():
     assert "--codex-exe" in vus[0] and "--relectures-auto" not in vus[0], vus
 
 
-if __name__ == "__main__":
-    for nom, fonction in list(globals().items()):
-        if nom.startswith("test_"):
-            fonction()
-    print("OK : tests pilotage")
-
 
 def test_un_seul_serveur_par_port():
     """Sous Windows, un 2e serveur se liait au même port (SO_REUSEADDR) : un onglet et des avis en double par lancement."""
-    import pytest
     from http.server import SimpleHTTPRequestHandler
     premier = S.ServeurExclusif(("127.0.0.1", 0), SimpleHTTPRequestHandler)
     try:
-        with pytest.raises(OSError):
-            S.ServeurExclusif(("127.0.0.1", premier.server_address[1]), SimpleHTTPRequestHandler)
+        try:
+            S.ServeurExclusif(("127.0.0.1", premier.server_address[1]), SimpleHTTPRequestHandler).server_close()
+            assert False, "un 2e serveur a pu se lier au même port"
+        except OSError:
+            pass
     finally:
         premier.server_close()
     assert S.onglet_deja_ouvert(1) is False      # aucun serveur joignable → on ouvre (réponse prudente)
@@ -273,3 +269,12 @@ def test_crochet_actions_sans_texte_de_commande():
     g, t = H.decrire({"hook_event_name": "PostToolUse", "tool_name": "Edit",
                       "tool_input": {"file_path": str(RACINE / "scripts" / "common.py")}})
     assert t == "Modifié scripts/common.py"
+    g, t = H.decrire({"hook_event_name": "PostToolUse", "tool_name": "Grep", "tool_input": {"pattern": "mot de passe 1234"}})
+    assert g == "recherche" and "1234" not in t and "passe" not in t
+
+
+if __name__ == "__main__":
+    for nom, fonction in list(globals().items()):
+        if nom.startswith("test_"):
+            fonction()
+    print("OK : tests pilotage")

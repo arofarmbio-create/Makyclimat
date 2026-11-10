@@ -40,7 +40,7 @@ def decrire(ev: dict) -> tuple[str, str]:
     if outil == "Read":
         return "lecture", "Lu " + relatif(ti.get("file_path") or "")
     if outil in ("Grep", "Glob"):
-        return "recherche", f"Recherche « {str(ti.get('pattern', ''))[:60]} »"
+        return "recherche", "Recherche dans les fichiers du dépôt"     # le motif peut contenir une valeur privée
     if outil == "Agent":
         return "commande", "Agent lancé : " + (ti.get("description") or "sans description")
     if outil in ("WebSearch", "WebFetch") or outil.startswith("mcp__"):
