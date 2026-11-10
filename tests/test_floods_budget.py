@@ -71,7 +71,7 @@ def test_requete_lente_bornee_par_l_echeance(h):
 
     def muette(url, params=None, timeout=None, stream=False):
         vus.append(timeout)
-        h.sleep(sum(timeout))                              # connexion puis attente de réponse, chacune à son délai
+        h.sleep(timeout)
         raise F.om.requests.Timeout("pas de réponse")
 
     F.om.requests.get = muette
@@ -82,7 +82,7 @@ def test_requete_lente_bornee_par_l_echeance(h):
     except RuntimeError as e:
         assert "budget de temps épuisé" in str(e), e
     assert h.t <= echeance + 1, f"échéance dépassée de {h.t - echeance:.0f} s"
-    assert vus[0] == (30.0, 120.0) and sum(vus[-1]) < 150, vus   # le dernier essai n'a reçu que le temps restant
+    assert vus[0] == 120 and vus[-1] < 120, vus          # le dernier essai n'a reçu que le temps restant
 
 
 @avec_horloge
@@ -101,47 +101,6 @@ def test_echeance_pendant_le_dernier_lot(h):
         raise AssertionError("l'ensemble dépassant l'échéance a été renvoyé")
     except RuntimeError as e:
         assert "dernier lot" in str(e), e
-
-
-class ReponseLente:
-    """Réponse 200 envoyée par petits morceaux : chacun arrive avant le délai d'inactivité, la durée totale est longue."""
-    status_code = 200
-
-    def __init__(self, h, morceaux, pas):
-        self.h, self.morceaux, self.pas, self.fermee = h, morceaux, pas, False
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *a):
-        self.fermee = True
-
-    def raise_for_status(self):
-        pass
-
-    def close(self):
-        self.fermee = True
-
-    def iter_content(self, chunk_size=1):
-        for m in self.morceaux:
-            self.h.sleep(self.pas)
-            yield m
-
-
-@avec_horloge
-def test_reponse_progressive_bornee(h):
-    """Relecture Codex : une réponse qui arrive goutte à goutte ne doit pas dépasser l'échéance (le timeout ne la bornait pas)."""
-    corps = b'[{"daily": {"time": [], "river_discharge": []}}]'
-    F.om.requests.get = lambda url, params=None, timeout=None, stream=False: ReponseLente(h, [corps[i:i + 4] for i in range(0, len(corps), 4)], 30)
-    echeance = h.t + 100                                  # 13 morceaux × 30 s = 390 s : bien au-delà de l'échéance
-    try:
-        F.om.get_json("u", {}, deadline=echeance)
-        raise AssertionError("réponse acceptée après l'échéance")
-    except RuntimeError as e:
-        assert "pendant la réception" in str(e), e
-    assert h.t <= echeance + 30, f"dépassement de {h.t - echeance:.0f} s (au plus un morceau)"
-    F.om.requests.get = lambda url, params=None, timeout=None, stream=False: ReponseLente(h, [corps], 1)
-    assert F.om.get_json("u", {}, deadline=h.t + 100) == [{"daily": {"time": [], "river_discharge": []}}]
 
 
 @avec_horloge
@@ -164,76 +123,77 @@ def test_prevision_echeance_pendant_le_dernier_lot(h):
     assert q.shape == (80, 3)
 
 
-def test_lecture_bloquee_coupee_par_la_garde():
-    """Relecture Codex : un serveur qui n'envoie plus rien pendant la réception bloque la lecture sans délai d'inactivité
-    atteint. La garde doit fermer la connexion à l'échéance (horloge réelle, échéance à 0,5 s)."""
+def bloque_reellement(genre):
+    """Réponses qui bloquent vraiment (temps réel) et ne se débloquent jamais d'elles-mêmes, quoi que fasse le client :
+    seule l'abandon de la requête par l'appelant peut respecter l'échéance (relecture Codex : le test précédent se
+    débloquait par la fermeture même qu'il devait éprouver)."""
     import threading
+    jamais = threading.Event()
 
-    class Bloquee:
-        status_code = 200
-
-        def __init__(self):
-            self.fermee = threading.Event()
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, *a):
-            self.fermee.set()
+    class Reponse:
+        status_code = 400 if genre == "400" else 200
 
         def raise_for_status(self):
             pass
 
-        def close(self):
-            self.fermee.set()
-
-        def iter_content(self, chunk_size=1):
-            yield b"[{"
-            if not self.fermee.wait(30):                 # bloqué jusqu'à la fermeture par la garde (30 s si elle échoue)
-                yield b"}]"
-                return
-            raise ConnectionError("connexion fermée pendant la lecture")
-
-    original = F.om.requests.get
-    F.om.requests.get = lambda url, params=None, timeout=None, stream=False: Bloquee()
-    t0 = time.monotonic()
-    try:
-        F.om.get_json("u", {}, deadline=t0 + 0.5)
-        raise AssertionError("lecture bloquée acceptée")
-    except RuntimeError as e:
-        assert "pendant la réception" in str(e), e
-    finally:
-        F.om.requests.get = original
-    duree = time.monotonic() - t0
-    assert duree < 2, f"la garde n'a pas coupé la lecture ({duree:.1f} s)"
-
-
-@avec_horloge
-def test_erreur_400_progressive_non_lue(h):
-    """Relecture Codex : sous échéance, une réponse 400 au corps envoyé lentement ne doit pas être lue (ni dépasser le budget)."""
-    class Erreur400(ReponseLente):
-        status_code = 400
+        def json(self):                                  # corps envoyé goutte à goutte : jamais terminé
+            jamais.wait(20)
+            return []
 
         @property
         def text(self):
-            return b"".join(self.iter_content()).decode()
+            jamais.wait(20)
+            return ""
 
-    F.om.requests.get = lambda url, params=None, timeout=None, stream=False: Erreur400(h, [b"x"] * 100, 30)
-    echeance = h.t + 100
+    def get(url, params=None, timeout=None, **kw):
+        if genre == "entetes":                           # même les en-têtes n'arrivent pas
+            jamais.wait(20)
+        return Reponse()
+    return get
+
+
+def test_blocages_reels_abandonnes_a_l_echeance():
+    for genre in ("corps", "entetes", "400"):
+        original = F.om.requests.get
+        F.om.requests.get = bloque_reellement(genre)
+        t0 = time.monotonic()
+        try:
+            F.om.get_json("u", {}, deadline=t0 + 0.5)
+            raise AssertionError(f"{genre} : réponse acceptée")
+        except (RuntimeError, ValueError) as e:
+            attendu = "HTTP 400" if genre == "400" else "budget de temps épuisé"
+            assert attendu in str(e), (genre, e)
+        finally:
+            F.om.requests.get = original
+        duree = time.monotonic() - t0
+        assert duree < 1.5, f"{genre} : échéance dépassée ({duree:.1f} s)"
+
+
+def test_reponse_normale_sous_echeance():
+    original = F.om.requests.get
+
+    class Ok:
+        status_code = 200
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return [{"daily": {}}]
+
+    F.om.requests.get = lambda url, params=None, timeout=None, **kw: Ok()
     try:
-        F.om.get_json("u", {}, deadline=echeance)
-        raise AssertionError("une erreur 400 aurait dû être levée")
-    except ValueError as e:
-        assert str(e) == "HTTP 400", e
-    assert h.t <= echeance, f"corps d'erreur lu : {h.t - echeance:.0f} s au-delà de l'échéance"
+        assert F.om.get_json("u", {}, deadline=time.monotonic() + 5) == [{"daily": {}}]
+        assert F.om.get_json("u", {}) == [{"daily": {}}]                      # sans échéance : inchangé
+    finally:
+        F.om.requests.get = original
 
 
 if __name__ == "__main__":
     test_budget_epuise_arrete_l_ensemble()
     test_requete_lente_bornee_par_l_echeance()
     test_echeance_pendant_le_dernier_lot()
-    test_reponse_progressive_bornee()
     test_prevision_echeance_pendant_le_dernier_lot()
-    test_lecture_bloquee_coupee_par_la_garde()
-    test_erreur_400_progressive_non_lue()
+    test_blocages_reels_abandonnes_a_l_echeance()
+    test_reponse_normale_sous_echeance()
     print("OK : budget des débits GloFAS")

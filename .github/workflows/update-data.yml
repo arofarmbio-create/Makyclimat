@@ -33,7 +33,7 @@ jobs:
   build:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60   # étapes facultatives bornées une à une ; marge pour un jour où plusieurs fournisseurs ralentissent
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -46,6 +46,8 @@ jobs:
       - name: Mettre à jour la pluie (CHIRPS)
         run: python scripts/update_rainfall.py --country "$COUNTRY"
       - name: Pluie récente par dékade (CHIRPS définitif ou provisoire) — ignorée en cas d'indisponibilité
+        timeout-minutes: 8   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: |
           python scripts/update_recent_rain.py --country "$COUNTRY" || echo "Pluie récente indisponible"
           git config user.name "makyclimat-bot"
@@ -53,24 +55,34 @@ jobs:
           git add -f data/$COUNTRY/grids/dekad_ref_*.npz validation/pluie_recente_regions.csv 2>/dev/null || true
           git diff --cached --quiet || (git commit -m "Pluie récente : référence décadaire et résumé par région" && git pull --rebase --autostash origin main && git push) || echo "Archivage de la pluie récente non poussé"
       - name: Indicateurs ONU/OCHA via HAPI (IPC, pauvreté) — app_identifier généré automatiquement, ignoré en cas d'indisponibilité
+        timeout-minutes: 5   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: |
           python scripts/connector_hapi.py --country "$COUNTRY" || echo "HAPI indisponible, indicateurs externes non mis à jour"
       - name: Accessibilité aux services et aux routes (HeiGIT via HDX) — ignorée en cas d'indisponibilité
+        timeout-minutes: 5   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: |
           python scripts/connector_heigit.py --country "$COUNTRY" || echo "HeiGIT indisponible, indicateurs d'accessibilité non mis à jour"
       - name: Écoles et formations sanitaires cartographiées (OpenStreetMap) — ignorées en cas d'indisponibilité
+        timeout-minutes: 10   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: |
           python scripts/connector_osm_services.py --country "$COUNTRY" || echo "OpenStreetMap indisponible, comptes de services non mis à jour"
       - name: Formations sanitaires recensées sur mWater Portal (comptage réel, fichier source extrait manuellement)
         run: |
           python scripts/connector_mwater_services.py --country "$COUNTRY" || echo "mWater indisponible, formations sanitaires non mises à jour"
       - name: Santé, eau et assainissement par région (enquête DHS) — ignorés en cas d'indisponibilité
+        timeout-minutes: 5   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: |
           python scripts/connector_dhs.py --country "$COUNTRY" || echo "DHS indisponible, indicateurs de santé non mis à jour"
       - name: État actuel d'El Niño / La Niña (indice ONI)
         run: |
           python scripts/connector_enso.py || echo "ONI indisponible, état ENSO non mis à jour"
       - name: Prévision météo (Open-Meteo) — ignorée en cas d'indisponibilité
+        timeout-minutes: 10   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: |
           python scripts/update_forecast.py --country "$COUNTRY" || echo "Prévision indisponible, alertes précoces non mises à jour"
       - name: Date du jour (UTC)
@@ -95,12 +107,20 @@ jobs:
       - name: Susceptibilité aux inondations (modèle validé, sans réseau)
         run: python scripts/build_susceptibility.py --country "$COUNTRY" || echo "Susceptibilité indisponible"
       - name: Chocs cyclone des 12 derniers mois (format JIAF) — ignorés en cas d'indisponibilité
+        timeout-minutes: 15   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: python scripts/build_shocks.py --country "$COUNTRY" --recent || echo "Chocs indisponibles"
       - name: Choc crue (période de retour du débit récent, format JIAF) — ignoré en cas d'indisponibilité
+        timeout-minutes: 5   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: python scripts/build_flood_shock.py --country "$COUNTRY" || echo "Choc crue indisponible"
       - name: Indice de vulnérabilité cumulative (expérimental, non validé) — ignoré en cas d'indisponibilité
+        timeout-minutes: 5   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: python scripts/build_vuln_cumul.py --country "$COUNTRY" || echo "Vulnérabilité cumulative indisponible"
       - name: Prix du riz (WFP/HDX, donnée candidate non affichée) — ignoré en cas d'indisponibilité
+        timeout-minutes: 5   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: |
           python scripts/connector_wfp_prices.py || echo "Prix WFP indisponibles"
           if [ -f validation/wfp_prix_riz_candidat.csv ]; then
@@ -110,6 +130,8 @@ jobs:
             git diff --cached --quiet || (git commit -m "Prix du riz WFP (donnée candidate, non affichée sur le site)" && git pull --rebase --autostash origin main && git push)
           fi
       - name: Cartographie de crise Copernicus EMS en quasi temps réel (zones inondées actives) — ignorée en cas d'indisponibilité
+        timeout-minutes: 5   # étape facultative : bornée pour protéger la publication (10/11/2026)
+        continue-on-error: true
         run: python scripts/connector_ems_live.py --country "$COUNTRY" || echo "Cartographie EMS en direct indisponible"
       - name: Calculer les indicateurs
         run: |
