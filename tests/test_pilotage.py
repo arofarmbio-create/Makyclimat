@@ -165,6 +165,56 @@ def test_echec_run_confie_au_responsable_puis_au_porteur():
     assert len(list(C.demandes_claude(texte, False, ("claude",)))) == 2 and "run 7777" in texte and "échecs de ce workflow" in texte
 
 
+def test_fin_d_un_run_ancien_et_reessai():
+    """Relectures Codex (10:53, 10:57) : la fin d'un run sorti des listes est vue, et un échec non transmis est retenté."""
+    import github_direct as G
+    etat_run = {"statut": "in_progress"}
+
+    def faux_gh(*args, **kw):
+        if args[:2] == ("run", "list"):
+            if "-s" in args:      # listes des runs actifs
+                return [run()] if etat_run["statut"] != "completed" and args[args.index("-s") + 1] == "in_progress" else []
+            return []             # le run ancien n'est pas parmi les 12 derniers
+        if args[:2] == ("run", "view"):
+            return {"jobs": []} if args[-1] == "jobs" else run()
+        if args[:2] == ("workflow", "list"):
+            return [{"id": 9, "path": ".github/workflows/build-glofas-reforecast.yml"}]
+        raise AssertionError(args)
+
+    def run():
+        return {"databaseId": 42, "workflowName": "14", "workflowDatabaseId": 9, "displayTitle": "R-21",
+                "status": etat_run["statut"], "conclusion": "failure" if etat_run["statut"] == "completed" else "",
+                "createdAt": "2026-11-09T11:03:00Z", "startedAt": "2026-11-09T11:03:00Z",
+                "updatedAt": "2026-11-10T11:00:00Z", "event": "workflow_dispatch", "url": "u"}
+
+    vus, reponses = [], [False, True]
+    original = G.gh
+    try:
+        G.gh = faux_gh
+        G._vus.clear()
+        G.actualiser(avec_release=False, echec=lambda r: vus.append(r) or reponses.pop(0))
+        etat_run["statut"] = "completed"
+        G.actualiser(avec_release=False, echec=lambda r: vus.append(r) or reponses.pop(0))   # écriture refusée
+        G.actualiser(avec_release=False, echec=lambda r: vus.append(r) or reponses.pop(0))   # nouvel essai réussi
+        G.actualiser(avec_release=False, echec=lambda r: vus.append(r) or reponses.pop(0))   # plus rien
+    finally:
+        G.gh = original
+        G._vus.clear()
+    assert [r["id"] for r in vus] == [42, 42] and vus[0]["chemin"].endswith("build-glofas-reforecast.yml")
+
+
+def test_echec_non_memorise_si_ecriture_refusee():
+    _copie()
+    original = S.ecrire_coordination
+    try:
+        S.ecrire_coordination = lambda modifier: {"erreur": "COORDINATION.md change en continu"}
+        assert S.echec_run({"id": 8888, "workflow": "W", "conclusion": "failure", "url": "u", "chemin": ""}) is False
+    finally:
+        S.ecrire_coordination = original
+    assert not (S.ETAT / "echecs_github.json").exists()
+    assert S.echec_run({"id": 8888, "workflow": "W", "conclusion": "failure", "url": "u", "chemin": ""}) is True
+
+
 def test_codex_transmis_sans_relectures():
     """Relecture Codex : décocher les relectures ne doit pas empêcher les exécutions confiées à Codex."""
     vus = []

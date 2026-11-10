@@ -62,7 +62,16 @@ jobs:
             fi
             months[i]="${months[i]#0}"
           done
-          published=$(gh release view "$TAG" --json assets --jq '.assets[].name' 2>/dev/null || true)
+          # Relecture Codex (10/11) : une erreur de lecture ne doit pas passer pour une release vide (retéléchargement
+          # et écrasement des mois publiés). Seule une release absente donne un inventaire vide.
+          if ! published=$(gh release view "$TAG" --json assets --jq '.assets[].name' 2>release_err.txt); then
+            if grep -qi "release not found" release_err.txt; then
+              published=""
+            else
+              echo "::error::Inventaire de la release illisible : $(head -c 300 release_err.txt)"
+              exit 1
+            fi
+          fi
           pairs=""
           count=0
           for year in "${years[@]}"; do

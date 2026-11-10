@@ -264,7 +264,8 @@ def tache_du_run(lignes, run) -> tuple[str, str] | None:
     return None
 
 
-def echec_run(run: dict) -> None:
+def echec_run(run: dict) -> bool:
+    """Vrai si l'échec est transmis (ou l'avait déjà été). Faux : le suivi GitHub réessaiera au cycle suivant."""
     journal = ETAT / "echecs_github.json"
     try:
         historique = json.loads(journal.read_text(encoding="utf-8"))
@@ -273,11 +274,8 @@ def echec_run(run: dict) -> None:
     limite = time.time() - 86400
     historique = [h for h in historique if h["t"] > limite]
     if any(h["run"] == run["id"] for h in historique):
-        return                                       # déjà traité
+        return True                                  # déjà traité
     recents = sum(h["workflow"] == run["workflow"] for h in historique)
-    historique.append({"t": time.time(), "run": run["id"], "workflow": run["workflow"]})
-    ETAT.mkdir(parents=True, exist_ok=True)
-    ecrire_si_change(journal, json.dumps(historique, ensure_ascii=False))
     resume = f"run {run['id']} ({run['workflow']}, {run['conclusion']}) {run['url']}"
 
     def modifier(lignes):
@@ -308,8 +306,15 @@ def echec_run(run: dict) -> None:
                              f"{propre(resume, 400)} ; {motif}. Répondre ou autoriser une relance.")
         return {"ok": "message au porteur"}
 
-    reponse = ecrire_coordination(modifier)               # le diagnostic ne part que si le surveillant tourne
-    lancer_si_besoin(reponse, reponse.get("ok", "").startswith("diagnostic"))
+    reponse = ecrire_coordination(modifier)
+    if "erreur" in reponse:
+        return False                                 # rien n'est mémorisé : nouvel essai au cycle suivant
+    # Mémorisé seulement après l'écriture réussie (relecture Codex, 10:57).
+    historique.append({"t": time.time(), "run": run["id"], "workflow": run["workflow"]})
+    ETAT.mkdir(parents=True, exist_ok=True)
+    ecrire_si_change(journal, json.dumps(historique, ensure_ascii=False))
+    lancer_si_besoin(reponse, reponse.get("ok", "").startswith("diagnostic"))   # le diagnostic exige le surveillant
+    return True
 
 
 class Gestionnaire(SimpleHTTPRequestHandler):

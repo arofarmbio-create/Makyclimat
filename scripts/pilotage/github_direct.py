@@ -100,6 +100,15 @@ def actualiser(avis=None, avec_release=True, echec=None):
             if r["databaseId"] not in connus:
                 connus.add(r["databaseId"])
                 runs.append(r)
+        # Relecture Codex (10:53) : un run long qui se termine sort des deux listes ; sans cette requête, sa fin
+        # (avis, diagnostic d'échec) ne serait jamais vue. On interroge chaque run suivi encore non terminé et absent.
+        for identifiant, statut in list(_vus.items()):
+            if statut != "completed" and identifiant not in connus:
+                try:
+                    runs.append(gh("run", "view", str(identifiant), "--json", champs))
+                    connus.add(identifiant)
+                except (RuntimeError, ValueError, subprocess.TimeoutExpired):
+                    pass
         runs = [r for r in runs if r["status"] != "completed"] + sorted(
             (r for r in runs if r["status"] == "completed"), key=lambda r: r["createdAt"], reverse=True)
         sortie, alertes = [], []
@@ -128,15 +137,19 @@ def actualiser(avis=None, avec_release=True, echec=None):
                     alertes.append(f"{run['workflowName']} : en file depuis {duree(instant(run['createdAt']))} "
                                    f"sans job actif.")
             precedent = _vus.get(run["databaseId"])
+            nouveau = run["status"]
             if precedent and precedent != "completed" and run["status"] == "completed":
                 if avis:
                     avis(f"GitHub : {run['workflowName'][:60]} — {(run.get('conclusion') or 'terminé')}")
                 if echec and run.get("conclusion") in ECHECS:
                     try:
-                        echec({**ligne, "chemin": chemin_workflow(run.get("workflowDatabaseId"))})
+                        transmis = echec({**ligne, "chemin": chemin_workflow(run.get("workflowDatabaseId"))})
                     except Exception as erreur:      # le suivi GitHub ne doit jamais s'arrêter sur un incident d'écriture
                         print("Échec non transmis :", erreur, flush=True)
-            _vus[run["databaseId"]] = run["status"]
+                        transmis = False
+                    if not transmis:                 # relecture Codex : garder le run « non terminé » pour réessayer
+                        nouveau = precedent
+            _vus[run["databaseId"]] = nouveau
             sortie.append(ligne)
         release = _etat["release"]
         if avec_release:
