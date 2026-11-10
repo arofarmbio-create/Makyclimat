@@ -13,6 +13,7 @@ import json
 import os
 import secrets
 import shutil
+import socket
 import subprocess
 import sys
 import threading
@@ -34,6 +35,7 @@ ETAT = PIL / "etat" / "coordination"
 SURVEILLANT = Path(__file__).resolve().parent / "surveiller_coordination.py"
 DUREES = (30, 60, 120, 240, 480)
 JETON = secrets.token_urlsafe(24)
+ONGLET_ACTIF_S = 35                # un onglet qui a interrogé le serveur depuis moins de 35 s est considéré ouvert
 _verrou = threading.Lock()
 
 
@@ -319,6 +321,7 @@ def echec_run(run: dict) -> bool:
 
 class Gestionnaire(SimpleHTTPRequestHandler):
     hotes: set[str] = set()
+    derniere_visite = 0.0          # dernier appel d'un onglet ouvert (il interroge le serveur toutes les 10 s)
 
     def log_message(self, *args):
         pass
@@ -350,7 +353,10 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             self.send_header("Location", "/tableau_de_bord.html")
             self.end_headers()
             return
+        if self.path == "/api/presence":
+            return self._json({"onglet_ouvert": time.monotonic() - Gestionnaire.derniere_visite < ONGLET_ACTIF_S})
         if self.path == "/api/surveillant":
+            Gestionnaire.derniere_visite = time.monotonic()
             return self._json(etat())
         if self.path == "/api/github":
             return self._json(github_direct.etat())
@@ -410,6 +416,27 @@ def regenerer():
         time.sleep(tableau_de_bord.PERIODE_S)
 
 
+class ServeurExclusif(ThreadingHTTPServer):
+    """Un seul serveur par port. Sous Windows, SO_REUSEADDR (défaut de http.server) laisse un 2e serveur se lier au
+    même port : chaque lancement ajoutait un serveur, un onglet et des avis GitHub en double."""
+    allow_reuse_address = False
+
+    def server_bind(self):
+        if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
+
+
+def onglet_deja_ouvert(port: int) -> bool:
+    """Demande au serveur déjà lancé si un onglet l'interroge encore ; en cas de doute, répond non (on ouvre)."""
+    import urllib.request
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/presence", timeout=2) as r:
+            return bool(json.loads(r.read()).get("onglet_ouvert"))
+    except (OSError, ValueError):
+        return False
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--port", type=int, default=8765)
@@ -417,8 +444,11 @@ def main():
     a = ap.parse_args()
     adresse = f"http://127.0.0.1:{a.port}/tableau_de_bord.html"
     try:
-        serveur = ThreadingHTTPServer(("127.0.0.1", a.port), partial(Gestionnaire, directory=str(PIL)))
+        serveur = ServeurExclusif(("127.0.0.1", a.port), partial(Gestionnaire, directory=str(PIL)))
     except OSError:
+        if onglet_deja_ouvert(a.port):     # idempotent : relancer ne multiplie pas les onglets
+            print(f"Le tableau de bord est déjà ouvert dans le navigateur ({adresse}) : pas de nouvel onglet.")
+            return
         print(f"Port {a.port} occupé : le serveur tourne sans doute déjà. Ouverture de {adresse}")
         if not a.sans_navigateur:
             webbrowser.open(adresse)

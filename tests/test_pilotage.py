@@ -246,3 +246,16 @@ if __name__ == "__main__":
         if nom.startswith("test_"):
             fonction()
     print("OK : tests pilotage")
+
+
+def test_un_seul_serveur_par_port():
+    """Sous Windows, un 2e serveur se liait au même port (SO_REUSEADDR) : un onglet et des avis en double par lancement."""
+    import pytest
+    from http.server import SimpleHTTPRequestHandler
+    premier = S.ServeurExclusif(("127.0.0.1", 0), SimpleHTTPRequestHandler)
+    try:
+        with pytest.raises(OSError):
+            S.ServeurExclusif(("127.0.0.1", premier.server_address[1]), SimpleHTTPRequestHandler)
+    finally:
+        premier.server_close()
+    assert S.onglet_deja_ouvert(1) is False      # aucun serveur joignable → on ouvre (réponse prudente)
