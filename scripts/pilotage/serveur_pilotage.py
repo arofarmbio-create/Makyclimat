@@ -23,6 +23,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import github_direct  # noqa: E402
 import tableau_de_bord  # noqa: E402
 from surveiller_coordination import NAIROBI, cle_message, ecrire_si_change, lire_instance  # noqa: E402
 from datetime import datetime  # noqa: E402
@@ -268,6 +269,8 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             return
         if self.path == "/api/surveillant":
             return self._json(etat())
+        if self.path == "/api/github":
+            return self._json(github_direct.etat())
         super().do_GET()
 
     def do_POST(self):
@@ -292,6 +295,27 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         else:
             return self._json({"erreur": "Commande inconnue."}, 404)
         self._json(reponse, 409 if "erreur" in reponse else 200)
+
+
+def avis_windows(texte: str) -> None:
+    """Avis Windows ; le texte (titre GitHub) passe par une variable d'environnement, jamais dans la commande."""
+    if os.name != "nt":
+        return
+    commande = ("Add-Type -AssemblyName System.Windows.Forms,System.Drawing; "
+                "$i = New-Object System.Windows.Forms.NotifyIcon; $i.Icon = [System.Drawing.SystemIcons]::Information; "
+                "$i.Visible = $true; $i.ShowBalloonTip(10000, 'MakyClimat', $env:MAKYCLIMAT_AVIS, 'Info'); "
+                "Start-Sleep -Seconds 11; $i.Dispose()")
+    subprocess.Popen(["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", commande],
+                     env=dict(os.environ, MAKYCLIMAT_AVIS=texte[:200]), creationflags=subprocess.CREATE_NO_WINDOW)
+
+
+def suivre_github():
+    """Toutes les 20 s : runs et jobs ; toutes les 2 min : mois de la release R-21."""
+    cycle = 0
+    while True:
+        github_direct.actualiser(avis=avis_windows, avec_release=cycle % 6 == 0)
+        cycle += 1
+        time.sleep(20)
 
 
 def regenerer():
@@ -319,6 +343,7 @@ def main():
     Gestionnaire.hotes = {f"127.0.0.1:{a.port}", f"localhost:{a.port}"}
     tableau_de_bord.generer()
     threading.Thread(target=regenerer, daemon=True).start()
+    threading.Thread(target=suivre_github, daemon=True).start()
     print(f"Tableau de bord : {adresse}\nFermer cette fenêtre arrête le serveur (le surveillant continue jusqu'à sa durée maximale).",
           flush=True)
     if not a.sans_navigateur:

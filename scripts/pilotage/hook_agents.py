@@ -12,7 +12,8 @@ ETAT = Path(__file__).resolve().parents[2] / "pilotage" / "etat" / "agents.jsonl
 
 def main() -> None:
     try:
-        ev = json.loads(sys.stdin.read() or "{}")
+        # Claude Code envoie de l'UTF-8 ; sys.stdin.read() décodait en cp1252 sous Windows (« modÃ¨les », 10/11/2026).
+        ev = json.loads(sys.stdin.buffer.read().decode("utf-8", errors="replace") or "{}")
     except Exception:
         ev = {}
     ti = ev.get("tool_input") or {}

@@ -66,6 +66,13 @@ def agents():
                 rows.append(json.loads(line))
             except Exception:
                 pass
+    for r in rows:                      # lignes anciennes décodées en cp1252 par le crochet (corrigé le 10/11/2026)
+        d = r.get("description") or ""
+        if "Ã" in d or "â€" in d:
+            try:
+                r["description"] = d.encode("cp1252").decode("utf-8")
+            except UnicodeError:
+                pass
     started, stopped = {}, {}
     for r in rows:
         if r.get("agent_id") and r.get("evenement") == "SubagentStart":
@@ -191,7 +198,8 @@ def md_html(texte: str) -> str:
         if line.startswith("#"):
             out.append(f"<h4>{inline(line.lstrip('#').strip())}</h4>")
         elif line.lstrip().startswith(("- ", "* ")) or re.match(r"^\s*\d+\.\s", line):
-            out.append(f"<p class='md-li'>{inline(re.sub(r'^\s*([-*]|\d+\.)\s', '', line))}</p>")
+            puce_md = inline(re.sub(r"^\s*([-*]|\d+\.)\s", "", line))   # hors f-string : Python 3.11 (CI)
+            out.append(f"<p class='md-li'>{puce_md}</p>")
         elif line.strip():
             out.append(f"<p>{inline(line.strip())}</p>")
     flush()
@@ -436,6 +444,8 @@ header{{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:
 .auto{{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px}} .auto-ctl{{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}}
 .auto-ctl[hidden]{{display:none}} .auto select,.auto button{{font:inherit;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}}
 .auto button{{cursor:pointer}} .auto button:hover:not(:disabled){{background:var(--sub)}} .auto button:disabled{{opacity:.5;cursor:default}}
+.gh-live{{margin-bottom:14px}} .gh-live[hidden]{{display:none}} .gh-live .gh-h{{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}}
+.gh-live .gh-bloque td{{background:var(--ko-bg)}} .gh-live .gh-sous{{color:var(--muted);font-size:12px}} .gh-live .alert{{margin:6px 0}}
 .dec-ctl{{margin-top:8px;display:grid;gap:6px}} .dec-ctl[hidden],.consigne[hidden]{{display:none}}
 .dec-ctl textarea,.dec-ctl select{{font:inherit;font-size:12px;width:100%;padding:5px 7px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}}
 .dec-btn{{display:flex;gap:6px;flex-wrap:wrap}} .dec-btn button{{font:inherit;font-size:12px;padding:3px 9px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);cursor:pointer}}
@@ -512,7 +522,7 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 <main>{errs}
 <div class="lead"><div class="q">{esc(th.get("question_en_cours", ""))}</div><div class="t">{esc(th.get("titre", ""))}</div></div>
 <section id="parcours"><h2>Parcours des chantiers</h2>{gantt}</section>
-<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div class="lanes">{equipe}</div>{lancements_recents()}</section>
+<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div id="gh-live" class="card pad gh-live" hidden></div><div class="lanes">{equipe}</div>{lancements_recents()}</section>
 <section id="protocole"><h2>Avancement par rapport au protocole doctoral et au prompt maître</h2>{proto}</section>
 <section id="objectifs" class="cols"><div><h2>Objectifs</h2><div class="card">{objs}</div></div>
 <div><h2>Blocages</h2><div class="card pad"><table class="t"><tr><th>Blocage</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc_}</table></div></div></section>
@@ -570,6 +580,41 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
   $("auto-demarrer").addEventListener("click",function(){{commande("demarrer",{{duree:+$("auto-duree").value,relectures:$("auto-relectures").checked}});}});
   $("auto-arreter").addEventListener("click",function(){{commande("arreter");}});
   lire(); setInterval(lire,10000);
+  // GitHub en direct : état relu par le serveur toutes les 20 s, sans recharger la page
+  function echap(s){{return String(s==null?"":s).replace(/[&<>"']/g,function(c){{return {{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}}[c];}});}}
+  function pastille(r){{
+    var t=r.bloque?["ko","Bloqué"]:r.statut==="completed"?({{success:["ok","Réussi"],failure:["ko","Échec"],cancelled:["neutre","Annulé"],
+      timed_out:["ko","Délai dépassé"],skipped:["neutre","Ignoré"]}}[r.conclusion]||["neutre",r.conclusion||"Terminé"])
+      :(r.actifs.length||r.statut==="in_progress")?["info","En cours"]:["warn","En file"];
+    return '<span class="st '+t[0]+'"><i></i>'+t[1]+'</span>';
+  }}
+  function detail(r){{
+    var p=r.actifs.map(function(a){{return '<div><a href="'+echap(a.url)+'" target="_blank" rel="noopener">'+echap(a.nom)+'</a> · '+echap(a.etape||"démarrage")+' · depuis '+echap(a.depuis)+'</div>';}});
+    if(r.attente) p.push('<div class="gh-sous">'+r.attente+' job(s) en attente</div>');
+    var f=Object.keys(r.finis||{{}}).map(function(k){{return r.finis[k]+" "+({{success:"réussi(s)",failure:"en échec",cancelled:"annulé(s)"}}[k]||k);}});
+    if(f.length) p.push('<div class="gh-sous">Jobs terminés : '+f.join(", ")+'</div>');
+    return p.join("");
+  }}
+  function afficherGithub(e){{
+    var z=$("gh-live"); z.hidden=false;
+    var h='<div class="gh-h"><h3>GitHub en direct</h3><span class="muted small">'+(e.maj?"Mis à jour à "+echap(e.maj)+" · toutes les 20 s":"Première lecture en cours…")+'</span></div>';
+    if(e.erreur) h+='<div class="alert">'+echap(e.erreur)+'</div>';
+    (e.alertes||[]).forEach(function(a){{h+='<div class="alert">'+echap(a)+'</div>';}});
+    h+='<div class="gantt-scroll"><table class="t"><tr><th>Workflow</th><th>État</th><th>Durée</th><th>Job et étape</th></tr>';
+    (e.runs||[]).forEach(function(r){{
+      h+='<tr'+(r.bloque?' class="gh-bloque"':'')+'><td><a href="'+echap(r.url)+'" target="_blank" rel="noopener">'+echap(r.workflow)+'</a><div class="gh-sous">'
+        +echap(r.titre)+' · '+echap(r.cree.slice(5,16).replace("T"," "))+' UTC</div></td><td>'+pastille(r)+'</td><td class="nowrap">'+echap(r.duree)+'</td><td>'+detail(r)+'</td></tr>';
+    }});
+    h+='</table></div>';
+    if(e.release){{
+      var a=e.release.annees, ans=Object.keys(a);
+      h+='<p class="small"><strong>Release R-21 ('+echap(e.release.nom)+')</strong> · '+e.release.mois+' mois · '
+        +ans.map(function(y){{return y+" : "+a[y].join(" ");}}).join(" · ")+'</p>';
+    }}
+    z.innerHTML=h;
+  }}
+  function lireGithub(){{ fetch("/api/github",{{cache:"no-store"}}).then(function(r){{return r.json();}}).then(afficherGithub).catch(function(){{}}); }}
+  lireGithub(); setInterval(lireGithub,20000);
   // Décisions et consignes du porteur (option C) : écrites dans COORDINATION.md par le serveur local
   function envoyer(chemin,corps,zone,boutons){{
     boutons.forEach(function(b){{b.disabled=true;}}); zone.textContent="Envoi…";
