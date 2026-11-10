@@ -21,6 +21,12 @@ env:
   COUNTRY: mdg
   TAG: imerg-pilote
 
+# Idempotence (10/11/2026) : un lancement identique (même workflow, branche et paramètres) attend la fin du précédent
+# au lieu de tourner en parallèle ; des paramètres différents restent indépendants.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ join(github.event.inputs.*, '-') }}
+  cancel-in-progress: false
+
 jobs:
   plan:
     runs-on: ubuntu-latest

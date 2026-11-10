@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
 
+# Idempotence (10/11/2026) : un nouveau commit sur la même branche remplace les tests encore en cours.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests:
     runs-on: ubuntu-latest
