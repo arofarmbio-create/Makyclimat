@@ -36,7 +36,8 @@ def get_json(url: str, params: dict, retries: int = 5, pause: float = 1.0, deadl
                 if r.status_code in (429, 500, 502, 503, 504):
                     last = f"HTTP {r.status_code}"
                 elif r.status_code == 400:
-                    raise ValueError(f"HTTP 400 : {r.text[:200]}")
+                    # Sous échéance, le corps d'erreur n'est pas lu : un envoi lent dépasserait le budget (relecture Codex, 10/11/2026).
+                    raise ValueError("HTTP 400" if deadline is not None else f"HTTP 400 : {r.text[:200]}")
                 else:
                     r.raise_for_status()
                     if deadline is None:

@@ -208,6 +208,26 @@ def test_lecture_bloquee_coupee_par_la_garde():
     assert duree < 2, f"la garde n'a pas coupé la lecture ({duree:.1f} s)"
 
 
+@avec_horloge
+def test_erreur_400_progressive_non_lue(h):
+    """Relecture Codex : sous échéance, une réponse 400 au corps envoyé lentement ne doit pas être lue (ni dépasser le budget)."""
+    class Erreur400(ReponseLente):
+        status_code = 400
+
+        @property
+        def text(self):
+            return b"".join(self.iter_content()).decode()
+
+    F.om.requests.get = lambda url, params=None, timeout=None, stream=False: Erreur400(h, [b"x"] * 100, 30)
+    echeance = h.t + 100
+    try:
+        F.om.get_json("u", {}, deadline=echeance)
+        raise AssertionError("une erreur 400 aurait dû être levée")
+    except ValueError as e:
+        assert str(e) == "HTTP 400", e
+    assert h.t <= echeance, f"corps d'erreur lu : {h.t - echeance:.0f} s au-delà de l'échéance"
+
+
 if __name__ == "__main__":
     test_budget_epuise_arrete_l_ensemble()
     test_requete_lente_bornee_par_l_echeance()
@@ -215,4 +235,5 @@ if __name__ == "__main__":
     test_reponse_progressive_bornee()
     test_prevision_echeance_pendant_le_dernier_lot()
     test_lecture_bloquee_coupee_par_la_garde()
+    test_erreur_400_progressive_non_lue()
     print("OK : budget des débits GloFAS")
