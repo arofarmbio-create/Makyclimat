@@ -308,7 +308,9 @@ def lancer_claude(db, dossier, demandes, executables):
             statut = "Réponse reçue" if retour.returncode == 0 and texte else "Échec"
             if statut == "Réponse reçue" and "relecture impossible" in texte.casefold():
                 statut = "Relecture impossible"
-            resultat = texte if statut == "Réponse reçue" else f"Code de sortie : {retour.returncode}. {texte[:2000]}"
+            erreurs = "\n".join(l for l in (retour.stderr or "").splitlines() if l.strip())[-1500:]
+            resultat = (texte if statut == "Réponse reçue" else
+                        f"Code de sortie : {retour.returncode}. {texte[:2000]}\n\nSortie d'erreur (fin) :\n{erreurs or '(vide)'}")
         except subprocess.TimeoutExpired:
             statut, resultat = "Délai dépassé", f"{nom} a été arrêté après {delai} secondes."
         except OSError as erreur:
@@ -323,7 +325,9 @@ def lancer_claude(db, dossier, demandes, executables):
     with db:
         db.execute("UPDATE lancements SET fin = ?, statut = ?, consommation = ? WHERE id = ?",
                    (fin, statut, consommation, identifiant))
-        db.execute("INSERT INTO alertes VALUES (?, ?, ?, ?)",
+        # OR REPLACE : une relecture retentée a déjà une alerte du même identifiant ; un simple INSERT échouait et
+        # annulait aussi la mise à jour du statut, qui restait « En cours » et bloquait tous les lancements (10/11, 12:41).
+        db.execute("INSERT OR REPLACE INTO alertes VALUES (?, ?, ?, ?)",
                    (f"lancement:{identifiant}", fin, json.dumps(list(DESTINATAIRES)),
                     f"{nom} · {court} · {statut} · tokens : {consommation}. Résultat dans les lancements du tableau des alertes."))
     return 1
