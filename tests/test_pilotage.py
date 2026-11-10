@@ -106,6 +106,64 @@ def test_lecture_des_tokens_et_fichiers():
     shutil.rmtree(dossier, ignore_errors=True)
 
 
+def test_empreinte_sur_diff_complet():
+    """Relecture Codex : une correction au-delà de la troncature doit changer l'identifiant de relecture."""
+    a = next(l for l in COPIE.splitlines() if l.startswith("| Outil A"))
+    original = C.contexte_diff
+    try:
+        base = "+x\n" * (C.DIFF_MAX // 3 + 100)
+        C.contexte_diff = lambda chemins, commit="": base + "+fin 1\n"
+        (_, id1, consigne), = C.relecture_auto(a, "codex")
+        C.contexte_diff = lambda chemins, commit="": base + "+fin 2\n"
+        (_, id2, _), = C.relecture_auto(a, "codex")
+    finally:
+        C.contexte_diff = original
+    assert id1 != id2 and "diff tronqué" in consigne
+
+
+def test_ecriture_concurrente_non_ecrasee():
+    """Relecture Codex : si un assistant écrit COORDINATION.md pendant une décision, son ajout est conservé."""
+    chemin = _copie()
+    appels = []
+
+    def modifier(lignes):
+        if not appels:                     # simule l'écriture d'un autre processus entre lecture et remplacement
+            chemin.write_text(chemin.read_text(encoding="utf-8") + "\nAjout d'un assistant.\n", encoding="utf-8")
+        appels.append(1)
+        lignes.append("Ajout du serveur.")
+        return {"ok": "x"}
+
+    assert "erreur" not in S.ecrire_coordination(modifier)
+    texte = chemin.read_text(encoding="utf-8")
+    assert "Ajout d'un assistant." in texte and "Ajout du serveur." in texte and len(appels) == 2
+
+
+def test_codex_transmis_sans_relectures():
+    """Relecture Codex : décocher les relectures ne doit pas empêcher les exécutions confiées à Codex."""
+    vus = []
+
+    class Arret(Exception):
+        pass
+
+    def popen(commande, **kw):
+        vus.append(commande)
+        raise Arret
+
+    originaux = (S.subprocess.Popen, S.binaire_codex, S.binaire_claude, S.lire_instance, S.ETAT)
+    try:
+        S.subprocess.Popen, S.lire_instance = popen, (lambda d: None)
+        S.binaire_codex = lambda: Path("codex.exe")
+        S.binaire_claude = lambda: Path("claude.exe")
+        S.ETAT = Path(tempfile.mkdtemp())
+        try:
+            S.demarrer(60, False)
+        except Arret:
+            pass
+    finally:
+        S.subprocess.Popen, S.binaire_codex, S.binaire_claude, S.lire_instance, S.ETAT = originaux
+    assert "--codex-exe" in vus[0] and "--relectures-auto" not in vus[0], vus
+
+
 if __name__ == "__main__":
     for nom, fonction in list(globals().items()):
         if nom.startswith("test_"):

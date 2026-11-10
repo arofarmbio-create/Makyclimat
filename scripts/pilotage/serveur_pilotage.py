@@ -81,7 +81,7 @@ def demarrer(duree: int, relectures: bool) -> dict:
         codex = binaire_codex()
         if exe:
             commande += ["--claude-exe", str(exe)]
-        if codex and relectures:
+        if codex:            # toujours : les consignes et autorisations confiées à Codex en dépendent (relecture Codex)
             commande += ["--codex-exe", str(codex)]
         if relectures and (exe or codex):
             commande.append("--relectures-auto")
@@ -151,13 +151,23 @@ def inserer(lignes: list[str], titre: str, nouvelle: str) -> None:
 
 
 def ecrire_coordination(modifier) -> dict:
+    """Lecture, modification puis remplacement atomique. Relecture Codex du 10/11 : un assistant peut écrire le fichier
+    entre la lecture et le remplacement. On relit juste avant d'écrire ; si le contenu a changé, la modification est
+    rejouée sur la nouvelle version (trois essais), au lieu d'écraser l'écriture de l'autre."""
     with _verrou:
-        brut = COORD.read_text(encoding="utf-8-sig")
-        fin_ligne = "\r\n" if "\r\n" in brut else "\n"
-        lignes = brut.splitlines()
-        reponse = modifier(lignes)
-        if "erreur" not in reponse:
-            ecrire_si_change(COORD, fin_ligne.join(lignes) + fin_ligne)
+        for _ in range(3):
+            brut = COORD.read_text(encoding="utf-8-sig")
+            fin_ligne = "\r\n" if "\r\n" in brut else "\n"
+            lignes = brut.splitlines()
+            reponse = modifier(lignes)
+            if "erreur" in reponse:
+                break
+            if COORD.read_text(encoding="utf-8-sig") == brut:
+                ecrire_si_change(COORD, fin_ligne.join(lignes) + fin_ligne)
+                break
+            time.sleep(0.5)
+        else:
+            reponse = {"erreur": "COORDINATION.md change en continu : réessayer dans un instant."}
     try:
         tableau_de_bord.generer()
     except Exception:

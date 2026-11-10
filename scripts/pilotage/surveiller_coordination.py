@@ -136,28 +136,32 @@ def commit_cite(*textes):
 
 
 def contexte_diff(chemins, commit=""):
-    """Modifications à relire : le commit cité, sinon le travail non commité, sinon le dernier commit. Tronqué."""
+    """Modifications à relire, complètes : le commit cité, sinon le travail non commité, sinon le dernier commit.
+    La troncature se fait après le calcul de l'empreinte (relecture Codex du 10/11 : une correction au-delà de la
+    limite ne relançait pas de relecture)."""
     if not chemins:
         return ""
     if commit:
         diff = git("show", "--format=commit %h · %s", commit, "--", *chemins)
         local = git("diff", "HEAD", "--", *chemins)
-        if local.strip():
-            diff += "\n# Modifications non commitées depuis :\n" + local
-        return diff if len(diff) <= DIFF_MAX else diff[:DIFF_MAX] + f"\n[… diff tronqué à {DIFF_MAX} caractères]"
+        return diff + ("\n# Modifications non commitées depuis :\n" + local if local.strip() else "")
     diff = git("diff", "HEAD", "--", *chemins)
     nouveaux = [f for f in git("ls-files", "--others", "--exclude-standard", "--", *chemins).splitlines() if f]
     for fichier in nouveaux:
         try:
-            diff += f"\n--- nouveau fichier : {fichier}\n" + (ROOT / fichier).read_text(encoding="utf-8")[:6000]
+            contenu = (ROOT / fichier).read_text(encoding="utf-8")
+            diff += f"\n--- nouveau fichier : {fichier}\n" + "".join(f"+{l}\n" for l in contenu.splitlines())
         except (OSError, UnicodeError):
             pass
     if not diff.strip():
         commit = git("log", "-1", "--format=%H", "--", *chemins).strip()
         diff = git("show", "--format=commit %h · %s", commit, "--", *chemins) if commit else ""
-    if len(diff) > DIFF_MAX:
-        diff = diff[:DIFF_MAX] + f"\n[… diff tronqué à {DIFF_MAX} caractères ; ouvrir les fichiers pour la suite]"
     return diff
+
+
+def tronquer(diff):
+    return diff if len(diff) <= DIFF_MAX else diff[:DIFF_MAX] + (
+        f"\n[… diff tronqué à {DIFF_MAX} caractères ; ouvrir les fichiers pour la suite]")
 
 
 def demandes_claude(texte, relectures_auto=False, agents=("claude",)):
@@ -202,6 +206,7 @@ def relecture_auto(ligne, relecteur="claude"):
     modifiees = "\n".join(l for l in diff.splitlines() if l[:1] in "+-" and not l.startswith(("+++", "---")))
     empreinte = hashlib.sha256(" ".join((tache, modifiees or "|".join(chemins))).encode()).hexdigest()[:12]
     identifiant = f"relecture-{empreinte}" if relecteur == "claude" else f"codex/relecture-{empreinte}"
+    diff = tronquer(diff)
     yield relecteur, identifiant, (
         f"Relecture automatique de la tâche « {tache} » (responsable : {responsable}), passée à « À relire » dans "
         f"COORDINATION.md. Point à contrôler : {suite}\n\nFichiers concernés : {', '.join(chemins)}.\n"
