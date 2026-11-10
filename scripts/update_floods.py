@@ -76,7 +76,7 @@ def thresholds(cfg, communes, batch=3, last_year=None, existing=None, max_locati
     return pd.DataFrame(rows)
 
 
-def forecast(communes, fc_cfg, batch=40):
+def forecast(communes, fc_cfg, batch=40, deadline=None):
     q, dates = [None] * len(communes), None
     t0 = time.monotonic()
     for i in range(0, len(communes), batch):
@@ -86,10 +86,10 @@ def forecast(communes, fc_cfg, batch=40):
         params = {"latitude": ",".join(f"{x:.4f}" for x in sub.lat), "longitude": ",".join(f"{x:.4f}" for x in sub.lon),
                   "daily": "river_discharge", "forecast_days": fc_cfg["forecast_days"], "past_days": 3}
         try:
-            payload = om.get_json(om.FLOOD_URL, params)
+            payload = om.get_json(om.FLOOD_URL, params, deadline=deadline)
         except ValueError:
             params["past_days"] = 0
-            payload = om.get_json(om.FLOOD_URL, params)
+            payload = om.get_json(om.FLOOD_URL, params, deadline=deadline)
         for k, item in enumerate(om.as_list(payload)):
             d = item["daily"]
             dates = dates or d["time"]
@@ -112,12 +112,14 @@ def ensemble(th, cfg, batch=10, days=30, deadline=None):
             print(f"  ensemble : {i}/{len(th)} communes en {(time.monotonic() - t0) / 60:.1f} min", flush=True)
         params = {"latitude": ",".join(f"{x:.4f}" for x in lat[i:i + batch]), "longitude": ",".join(f"{x:.4f}" for x in lon[i:i + batch]),
                   "daily": "river_discharge", "ensemble": "true", "forecast_days": days}
-        for k, item in enumerate(om.as_list(om.get_json(om.FLOOD_URL, params, retries=4, pause=5.0))):
+        for k, item in enumerate(om.as_list(om.get_json(om.FLOOD_URL, params, retries=4, pause=5.0, deadline=deadline))):
             d = item["daily"]
             dates = dates or d["time"]
             keys = ["river_discharge"] + sorted(x for x in d if x.startswith("river_discharge_member"))
             q[i + k] = [[np.nan if v is None else v for v in d[m]] for m in keys]
         time.sleep(1.0)
+    if deadline is not None and time.monotonic() > deadline:   # dernier lot fini après l'échéance : rien n'est enregistré
+        raise RuntimeError(f"budget de temps épuisé pendant le dernier lot ({(time.monotonic() - t0) / 60:.1f} min)")
     n = max(len(x) for x in q)
     if any(len(x) != n for x in q):
         raise ValueError("nombre de membres différent selon les communes")
@@ -149,7 +151,10 @@ def main() -> None:
         return
     if not th_path.exists():
         sys.exit("Seuils de crue absents : lancer d'abord --thresholds (workflow « Seuils de crue »).")
-    dates, q = forecast(communes, cfg["forecast"])
+    try:
+        dates, q = forecast(communes, cfg["forecast"], deadline=fin_budget)
+    except RuntimeError as e:
+        sys.exit(f"Prévision de débit non enregistrée : {e}")
     if np.isnan(q).mean() > 0.2:
         sys.exit("Prévision de débit incomplète : non enregistrée.")
     save_grid(grid_dir(args.country) / "flood_forecast.npz", pcode=communes.pcode.to_numpy().astype(str), dates=np.array(dates),

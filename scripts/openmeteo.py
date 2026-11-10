@@ -15,26 +15,35 @@ DAILY_VARS = ["precipitation_sum", "temperature_2m_max", "temperature_2m_min", "
               "et0_fao_evapotranspiration"]
 
 
-def get_json(url: str, params: dict, retries: int = 5, pause: float = 1.0):
+def get_json(url: str, params: dict, retries: int = 5, pause: float = 1.0, deadline: float | None = None):
+    """deadline (time.monotonic) : échéance stricte. Délai de chaque requête et attentes bornés au temps restant ; au-delà,
+    RuntimeError sans nouvel essai (relecture Codex du 10/11/2026 : un lot commencé avant l'échéance la dépassait)."""
     last = None
+
+    def reste() -> float:
+        return float("inf") if deadline is None else deadline - time.monotonic()
+
     for attempt in range(retries):
+        if reste() <= 0:
+            raise RuntimeError(f"Open-Meteo : budget de temps épuisé ({last or 'avant la requête'})")
         try:
-            r = requests.get(url, params=params, timeout=120)
+            r = requests.get(url, params=params, timeout=max(1.0, min(120.0, reste())))
             if r.status_code in (429, 500, 502, 503, 504):
                 last = f"HTTP {r.status_code}"
-                attente = pause * (2 ** attempt) + 2
-                print(f"  Open-Meteo {last} : nouvel essai dans {attente:.0f} s ({attempt + 1}/{retries})", flush=True)
-                time.sleep(attente)
-                continue
-            if r.status_code == 400:
+            elif r.status_code == 400:
                 raise ValueError(f"HTTP 400 : {r.text[:200]}")
-            r.raise_for_status()
-            return r.json()
+            else:
+                r.raise_for_status()
+                return r.json()
         except requests.RequestException as e:
-            last = str(e)
-            attente = pause * (2 ** attempt) + 2
-            print(f"  Open-Meteo {type(e).__name__} : nouvel essai dans {attente:.0f} s ({attempt + 1}/{retries})", flush=True)
-            time.sleep(attente)
+            last = f"{type(e).__name__}"
+        if attempt + 1 == retries:
+            break
+        attente = pause * (2 ** attempt) + 2
+        if attente >= reste():
+            raise RuntimeError(f"Open-Meteo : budget de temps épuisé ({last})")
+        print(f"  Open-Meteo {last} : nouvel essai dans {attente:.0f} s ({attempt + 1}/{retries})", flush=True)
+        time.sleep(attente)
     raise RuntimeError(f"Open-Meteo : échec après {retries} essais ({last})")
 
 
