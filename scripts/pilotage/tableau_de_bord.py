@@ -444,6 +444,9 @@ header{{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:
 .auto{{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px}} .auto-ctl{{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}}
 .auto-ctl[hidden]{{display:none}} .auto select,.auto button{{font:inherit;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}}
 .auto button{{cursor:pointer}} .auto button:hover:not(:disabled){{background:var(--sub)}} .auto button:disabled{{opacity:.5;cursor:default}}
+.act-live{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:14px}} .act-live[hidden]{{display:none}}
+.act{{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto;font-size:13px}} .act li{{display:flex;gap:8px;padding:4px 0;border-top:1px solid var(--border);overflow-wrap:anywhere}}
+.act time{{color:var(--muted);font-variant-numeric:tabular-nums}} .act .act-g{{color:var(--muted);font-size:11px;min-width:78px}}
 .gh-live{{margin-bottom:14px}} .gh-live[hidden]{{display:none}} .gh-live .gh-h{{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}}
 .gh-live .gh-bloque td{{background:var(--ko-bg)}} .gh-live .gh-sous{{color:var(--muted);font-size:12px}} .gh-live .alert{{margin:6px 0}}
 .dec-ctl{{margin-top:8px;display:grid;gap:6px}} .dec-ctl[hidden],.consigne[hidden]{{display:none}}
@@ -522,7 +525,7 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 <main>{errs}
 <div class="lead"><div class="q">{esc(th.get("question_en_cours", ""))}</div><div class="t">{esc(th.get("titre", ""))}</div></div>
 <section id="parcours"><h2>Parcours des chantiers</h2>{gantt}</section>
-<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div id="gh-live" class="card pad gh-live" hidden></div><div class="lanes">{equipe}</div>{lancements_recents()}</section>
+<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div id="act-live" class="act-live" hidden></div><div id="gh-live" class="card pad gh-live" hidden></div><div class="lanes">{equipe}</div>{lancements_recents()}</section>
 <section id="protocole"><h2>Avancement par rapport au protocole doctoral et au prompt maître</h2>{proto}</section>
 <section id="objectifs" class="cols"><div><h2>Objectifs</h2><div class="card">{objs}</div></div>
 <div><h2>Blocages</h2><div class="card pad"><table class="t"><tr><th>Blocage</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc_}</table></div></div></section>
@@ -615,6 +618,18 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
   }}
   function lireGithub(){{ fetch("/api/github",{{cache:"no-store"}}).then(function(r){{return r.json();}}).then(afficherGithub).catch(function(){{}}); }}
   lireGithub(); setInterval(lireGithub,20000);
+  function afficherActions(e){{
+    var z=$("act-live"), h="";
+    [["claude","Claude"],["codex","Codex"]].forEach(function(a){{
+      var d=e[a[0]]||{{}}, st={{actif:["ok","Actif"],repos:["neutre","Au repos"]}}[d.etat]||["neutre","Pas de suivi"];
+      var l=(d.actions||[]).map(function(x){{return '<li><time>'+echap((x.quand||"").slice(11,16))+'</time><span class="act-g">'+echap(x.genre||"")+'</span>'+echap(x.texte||"")+'</li>';}}).join("");
+      h+='<div class="card pad"><div class="gh-h"><h3>'+a[1]+' en ce moment</h3><span class="st '+st[0]+'"><i></i>'+st[1]+'</span></div>'
+        +(l?'<ul class="act">'+l+'</ul>':'<p class="muted small">'+(a[0]==="codex"?"Suivi des actions de Codex non branché.":"Aucune action notée.")+'</p>')+'</div>';
+    }});
+    z.innerHTML=h; z.hidden=false;
+  }}
+  function lireActions(){{ fetch("/api/actions",{{cache:"no-store"}}).then(function(r){{return r.json();}}).then(afficherActions).catch(function(){{}}); }}
+  lireActions(); setInterval(lireActions,5000);
   // Décisions et consignes du porteur (option C) : écrites dans COORDINATION.md par le serveur local
   function envoyer(chemin,corps,zone,boutons){{
     boutons.forEach(function(b){{b.disabled=true;}}); zone.textContent="Envoi…";

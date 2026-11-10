@@ -358,6 +358,8 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         if self.path == "/api/surveillant":
             Gestionnaire.derniere_visite = time.monotonic()
             return self._json(etat())
+        if self.path == "/api/actions":
+            return self._json(actions())
         if self.path == "/api/github":
             return self._json(github_direct.etat())
         super().do_GET()
@@ -425,6 +427,32 @@ class ServeurExclusif(ThreadingHTTPServer):
         if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
         super().server_bind()
+
+
+ACTIF_S = 120                   # un assistant qui a agi depuis moins de 2 min est « actif »
+
+
+def actions(n: int = 15) -> dict:
+    """Dernières actions de chaque assistant (pilotage/etat/actions_<agent>.jsonl, écrites par leurs crochets)."""
+    sortie = {}
+    for agent in ("claude", "codex"):
+        f = PIL / "etat" / f"actions_{agent}.jsonl"
+        lignes = []
+        if f.exists():
+            for ligne in f.read_text(encoding="utf-8", errors="replace").splitlines()[-n:]:
+                try:
+                    lignes.append(json.loads(ligne))
+                except ValueError:
+                    pass
+        etat = "inconnu"
+        if lignes:
+            try:
+                age = (datetime.now() - datetime.fromisoformat(lignes[-1]["quand"])).total_seconds()
+                etat = "repos" if lignes[-1].get("genre") == "repos" or age > ACTIF_S else "actif"
+            except (KeyError, ValueError):
+                pass
+        sortie[agent] = {"etat": etat, "actions": lignes[::-1]}
+    return sortie
 
 
 def onglet_deja_ouvert(port: int) -> bool:

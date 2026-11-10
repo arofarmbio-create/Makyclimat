@@ -259,3 +259,17 @@ def test_un_seul_serveur_par_port():
     finally:
         premier.server_close()
     assert S.onglet_deja_ouvert(1) is False      # aucun serveur joignable → on ouvre (réponse prudente)
+
+
+def test_crochet_actions_sans_texte_de_commande():
+    """Le crochet ne note que la description ou le chemin relatif, jamais le texte d'une commande ou d'une demande."""
+    sys.path.insert(0, str(RACINE / "scripts" / "pilotage"))
+    import hook_actions as H
+    g, t = H.decrire({"hook_event_name": "PostToolUse", "tool_name": "Bash",
+                      "tool_input": {"command": "echo SECRET", "description": "Lister les fichiers"}})
+    assert (g, t) == ("commande", "Lister les fichiers") and "SECRET" not in t
+    g, t = H.decrire({"hook_event_name": "UserPromptSubmit", "prompt": "texte privé"})
+    assert g == "demande" and "privé" not in t
+    g, t = H.decrire({"hook_event_name": "PostToolUse", "tool_name": "Edit",
+                      "tool_input": {"file_path": str(RACINE / "scripts" / "common.py")}})
+    assert t == "Modifié scripts/common.py"
