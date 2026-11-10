@@ -27,6 +27,7 @@ concurrency:
 
 env:
   COUNTRY: ${{ github.event.inputs.country || 'mdg' }}
+  PYTHONUNBUFFERED: "1"   # journaux en direct : sans cela, tous les messages d'une étape arrivent à la fin, horodatés ensemble
 
 jobs:
   build:
@@ -80,7 +81,13 @@ jobs:
         with:
           path: data/${{ env.COUNTRY }}/grids/flood_ensemble.npz
           key: glofas-ensemble-${{ env.COUNTRY }}-${{ steps.jour.outputs.d }}
+          # Repli sur l'ensemble le plus récent : si la récupération du jour échoue ou dépasse son budget, celui de la veille
+          # reste utilisé (compute_metrics.py le cale sur la date du jour) ; le script retente tant que la date diffère.
+          restore-keys: glofas-ensemble-${{ env.COUNTRY }}-
       - name: Débits de rivière prévus (GloFAS via Open-Meteo) — ignorés en cas d'indisponibilité
+        # Budget interne de 15 min (script) ; coupure à 20 min sans faire échouer la publication (10/11/2026 : 36 min observées).
+        timeout-minutes: 20
+        continue-on-error: true
         run: |
           python scripts/update_floods.py --country "$COUNTRY" || echo "Débits indisponibles, alertes de crue non mises à jour"
       - name: "Ruissellement prévu à 7 jours (EXPÉRIMENTAL : inondation pluviale, SCS-CN)"

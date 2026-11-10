@@ -22,7 +22,9 @@ def get_json(url: str, params: dict, retries: int = 5, pause: float = 1.0):
             r = requests.get(url, params=params, timeout=120)
             if r.status_code in (429, 500, 502, 503, 504):
                 last = f"HTTP {r.status_code}"
-                time.sleep(pause * (2 ** attempt) + 2)
+                attente = pause * (2 ** attempt) + 2
+                print(f"  Open-Meteo {last} : nouvel essai dans {attente:.0f} s ({attempt + 1}/{retries})", flush=True)
+                time.sleep(attente)
                 continue
             if r.status_code == 400:
                 raise ValueError(f"HTTP 400 : {r.text[:200]}")
@@ -30,7 +32,9 @@ def get_json(url: str, params: dict, retries: int = 5, pause: float = 1.0):
             return r.json()
         except requests.RequestException as e:
             last = str(e)
-            time.sleep(pause * (2 ** attempt) + 2)
+            attente = pause * (2 ** attempt) + 2
+            print(f"  Open-Meteo {type(e).__name__} : nouvel essai dans {attente:.0f} s ({attempt + 1}/{retries})", flush=True)
+            time.sleep(attente)
     raise RuntimeError(f"Open-Meteo : échec après {retries} essais ({last})")
 
 

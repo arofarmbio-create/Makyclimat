@@ -78,7 +78,10 @@ def thresholds(cfg, communes, batch=3, last_year=None, existing=None, max_locati
 
 def forecast(communes, fc_cfg, batch=40):
     q, dates = [None] * len(communes), None
+    t0 = time.monotonic()
     for i in range(0, len(communes), batch):
+        if i and (i // batch) % 10 == 0:
+            print(f"  prévision : {i}/{len(communes)} communes en {(time.monotonic() - t0) / 60:.1f} min", flush=True)
         sub = communes.iloc[i:i + batch]
         params = {"latitude": ",".join(f"{x:.4f}" for x in sub.lat), "longitude": ",".join(f"{x:.4f}" for x in sub.lon),
                   "daily": "river_discharge", "forecast_days": fc_cfg["forecast_days"], "past_days": 3}
@@ -94,14 +97,19 @@ def forecast(communes, fc_cfg, batch=40):
     return dates, np.array(q, dtype="float32")
 
 
-def ensemble(th, cfg, batch=10, days=30):
+def ensemble(th, cfg, batch=10, days=30, deadline=None):
     """Ensemble GloFAS (contrôle + 50 membres) sur la maille même des seuils (cell_lat/cell_lon), pour les seules communes
     dont la crue de 2 ans dépasse flood.min_q2_m3s (les autres n'ont pas d'alerte de crue). Renvoie dates, pcode, q[m, c, j]."""
     th = th[th.q2 >= cfg["flood"]["min_q2_m3s"]].reset_index(drop=True)
     lat = th.cell_lat.fillna(th.lat) if "cell_lat" in th else th.lat
     lon = th.cell_lon.fillna(th.lon) if "cell_lon" in th else th.lon
     q, dates = [None] * len(th), None
+    t0 = time.monotonic()
     for i in range(0, len(th), batch):
+        if deadline is not None and time.monotonic() > deadline:
+            raise RuntimeError(f"budget de temps épuisé après {i}/{len(th)} communes ({(time.monotonic() - t0) / 60:.1f} min)")
+        if i and (i // batch) % 10 == 0:
+            print(f"  ensemble : {i}/{len(th)} communes en {(time.monotonic() - t0) / 60:.1f} min", flush=True)
         params = {"latitude": ",".join(f"{x:.4f}" for x in lat[i:i + batch]), "longitude": ",".join(f"{x:.4f}" for x in lon[i:i + batch]),
                   "daily": "river_discharge", "ensemble": "true", "forecast_days": days}
         for k, item in enumerate(om.as_list(om.get_json(om.FLOOD_URL, params, retries=4, pause=5.0))):
@@ -121,7 +129,12 @@ def main() -> None:
     ap.add_argument("--country", default="mdg")
     ap.add_argument("--thresholds", action="store_true")
     ap.add_argument("--max-locations", type=int, default=None, help="plafond de communes par exécution (quota de l'API)")
+    ap.add_argument("--budget-min", type=float, default=15.0,
+                    help="durée maximale de la mise à jour quotidienne : au-delà, l'ensemble de la veille est conservé "
+                         "(10/11/2026 : l'étape a pris 36 min et a fait dépasser les 45 min de la publication)")
     args = ap.parse_args()
+    debut = time.monotonic()
+    fin_budget = debut + 60 * args.budget_min
     cfg = load_config(args.country)
     units = read_units(args.country)
     communes = units[units.level == 3][["pcode", "lon", "lat"]].reset_index(drop=True)
@@ -141,24 +154,28 @@ def main() -> None:
         sys.exit("Prévision de débit incomplète : non enregistrée.")
     save_grid(grid_dir(args.country) / "flood_forecast.npz", pcode=communes.pcode.to_numpy().astype(str), dates=np.array(dates),
               q=q, fetched_at=np.array(dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")))
-    print(f"Débits prévus : {len(communes)} communes, {dates[0]} à {dates[-1]}")
+    print(f"Débits prévus : {len(communes)} communes, {dates[0]} à {dates[-1]} ({(time.monotonic() - debut) / 60:.1f} min)", flush=True)
     # GloFAS ne publie qu'une prévision par jour : l'ensemble n'est récupéré qu'une fois par jour (quota de l'API)
     ens_path = grid_dir(args.country) / "flood_ensemble.npz"
     today = dt.datetime.now(dt.timezone.utc).date().isoformat()
     if ens_path.exists() and str(load_grid(ens_path)["fetched_at"])[:10] == today:
         print("Ensemble GloFAS déjà récupéré aujourd'hui.")
         return
+    if fin_budget - time.monotonic() < 5 * 60:
+        print(f"::warning::Ensemble GloFAS non récupéré : moins de 5 min restantes sur {args.budget_min:.0f} ; ensemble précédent conservé.")
+        return
     try:
-        edates, epc, eq = ensemble(pd.read_csv(th_path, dtype={"pcode": str}), cfg)
+        edates, epc, eq = ensemble(pd.read_csv(th_path, dtype={"pcode": str}), cfg, deadline=fin_budget)
     except (RuntimeError, ValueError) as e:
-        print(f"::warning::Ensemble GloFAS indisponible : {e}")
+        print(f"::warning::Ensemble GloFAS indisponible : {e} ; ensemble précédent conservé.")
         return
     if np.isnan(eq).mean() > 0.2:
         print("::warning::Ensemble GloFAS incomplet : non enregistré.")
         return
     save_grid(ens_path, pcode=epc, dates=np.array(edates), q=eq,
               fetched_at=np.array(dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")))
-    print(f"Ensemble GloFAS : {eq.shape[0]} membres, {eq.shape[1]} communes, {edates[0]} à {edates[-1]}")
+    print(f"Ensemble GloFAS : {eq.shape[0]} membres, {eq.shape[1]} communes, {edates[0]} à {edates[-1]} "
+          f"({(time.monotonic() - debut) / 60:.1f} min au total)")
 
 
 if __name__ == "__main__":
