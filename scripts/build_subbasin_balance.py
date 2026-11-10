@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
 
 import numpy as np
 import pandas as pd
@@ -70,10 +71,23 @@ def aggregate(long: pd.DataFrame, lk: pd.DataFrame, leaves: pd.DataFrame) -> dic
     return out
 
 
+def bilan_perime(status_path) -> bool:
+    """Relecture Codex (10/11/2026) : si build_soilwater.py a refusé de publier (bilan_frais = False), soilwater.csv
+    date d'un run antérieur. Republier le bilan par sous-bassin lui donnerait une date neuve sur des valeurs anciennes."""
+    try:
+        return json.loads(status_path.read_text(encoding="utf-8")).get("bilan_frais") is False
+    except FileNotFoundError:
+        return False
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
     args = ap.parse_args()
+    if bilan_perime(country_docs_dir(args.country) / "soilwater" / "status.json"):
+        print("::warning::Bilan par sous-bassin non republié : bilan hydrique refusé (voir soilwater/status.json). "
+              "La version précédente garde sa date d'origine.")
+        return
     data_dir = country_data_dir(args.country)
     hu_path = data_dir / "hydro_units.csv"
     if not hu_path.exists():

@@ -1,6 +1,6 @@
 """Tableau de bord local de la thèse et de MakyClimat (aucun modèle de langage, aucun appel réseau sauf `gh`).
 
-Lit : pilotage/objectifs.yml, pilotage/protocole_suivi.yml, pilotage/glossaire.yml, pilotage/etat/agents.jsonl (hooks
+Lit : COORDINATION.md, config/parcours_pilotage.yml, pilotage/objectifs.yml, pilotage/protocole_suivi.yml, pilotage/glossaire.yml, pilotage/etat/agents.jsonl (hooks
 de Claude Code), validation/journal_recherche.md, git et GitHub (gh). Écrit : pilotage/tableau_de_bord.html.
 Usage : python scripts/pilotage/tableau_de_bord.py [--boucle]   (--boucle : régénère toutes les 30 s)
 """
@@ -16,6 +16,8 @@ import time
 from pathlib import Path
 
 import yaml
+
+from parcours import rendu_parcours
 
 ROOT = Path(__file__).resolve().parents[2]
 PIL = ROOT / "pilotage"
@@ -244,6 +246,8 @@ def carte(titre: str, sous: str = "", etat: str = "") -> str:
 
 def page() -> str:
     obj, suivi, glo = lire("objectifs.yml"), lire("protocole_suivi.yml"), lire("glossaire.yml")
+    parcours = yaml.safe_load((ROOT / "config" / "parcours_pilotage.yml").read_text(encoding="utf-8"))
+    gantt = rendu_parcours(parcours, (ROOT / "COORDINATION.md").read_text(encoding="utf-8-sig"))
     now = dt.datetime.now()
     th = obj.get("these") or {}
     en_cours, lancements, fins = agents()
@@ -314,7 +318,7 @@ def page() -> str:
     commits = "".join(f'<tr><td class="muted nowrap">{esc(l.split(" | ", 1)[0])}</td><td>{esc(l.split(" | ", 1)[-1])}</td></tr>'
                       for l in run(["git", "log", "-10", "--format=%ad | %s", "--date=format:%d/%m %H:%M"]).splitlines())
     errs = "".join(f'<div class="alert">{esc(x["erreur"])}</div>' for x in (obj, suivi, glo) if x.get("erreur"))
-    nav = "".join(f'<a href="#{i}">{t}</a>' for i, t in (("equipe", "Équipe"), ("protocole", "Protocole"), ("objectifs", "Objectifs"),
+    nav = "".join(f'<a href="#{i}">{t}</a>' for i, t in (("parcours", "Parcours"), ("equipe", "Équipe"), ("protocole", "Protocole"), ("objectifs", "Objectifs"),
                                                         ("hypotheses", "Hypothèses"), ("biblio", "Bibliographie"), ("glossaire", "Glossaire"),
                                                         ("activite", "Activité")))
 
@@ -329,6 +333,9 @@ header{{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:
 .hwrap{{max-width:1320px;margin:0 auto;padding:12px 24px 0}} .brand{{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}}
 .brand h1{{font-size:16px;font-weight:600;margin:0}} .brand .sub{{color:var(--muted);font-size:13px}} .brand .upd{{margin-left:auto;color:var(--muted);font-size:12px}}
 #actualiser{{font:inherit;font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);cursor:pointer}} #actualiser:hover{{background:var(--sub)}}
+.auto{{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px}} .auto-ctl{{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}}
+.auto-ctl[hidden]{{display:none}} .auto select,.auto button{{font:inherit;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}}
+.auto button{{cursor:pointer}} .auto button:hover:not(:disabled){{background:var(--sub)}} .auto button:disabled{{opacity:.5;cursor:default}}
 nav{{display:flex;gap:4px;overflow-x:auto;margin-top:8px}} nav a{{color:var(--muted);text-decoration:none;font-size:13px;padding:8px 10px;border-bottom:2px solid transparent;white-space:nowrap}}
 nav a:hover{{color:var(--text);border-bottom-color:var(--border)}}
 main{{max-width:1320px;margin:0 auto;padding:20px 24px 48px}} section{{margin-bottom:28px;scroll-margin-top:96px}}
@@ -375,13 +382,31 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 .muted{{color:var(--muted)}} .small{{font-size:12px}} .nowrap{{white-space:nowrap}}
 .md p{{margin:4px 0;font-size:13px}} .md .md-li{{padding-left:12px;position:relative}} .md .md-li::before{{content:"–";position:absolute;left:0;color:var(--muted)}}
 .scroll{{max-height:520px;overflow:auto}} .alert{{background:var(--ko-bg);color:var(--ko);border-radius:6px;padding:8px 12px;margin-bottom:12px}}
+.gantt-avance{{display:flex;align-items:center;gap:10px;flex-wrap:wrap}}
+.gantt-avance progress{{width:140px;accent-color:var(--ok)}}
+.gantt-suite{{padding:9px 12px;background:var(--info-bg);border-left:3px solid var(--info);border-radius:4px}}
+.gantt-scroll{{overflow-x:auto}}
+.gantt{{min-width:760px}}
+.gantt th[scope=row]{{width:34%;font-size:13px;color:var(--text);vertical-align:top}}
+.gantt th:last-child,.gantt td:last-child{{min-width:255px}}
+.gantt-prochaine{{background:var(--info-bg)}}
+.gantt-axe{{display:flex;justify-content:space-between;gap:4px;margin-top:5px;font-size:10px;font-variant-numeric:tabular-nums}}
+.gantt-piste{{position:relative;height:10px;margin:4px 0;background:var(--sub);border-radius:4px;overflow:hidden}}
+.gantt-piste span{{position:absolute;min-width:3px;height:100%;background:var(--muted);border-radius:4px}}
+.gantt-piste .ok{{background:var(--ok)}} .gantt-piste .info{{background:var(--info)}}
 @media (max-width:640px){{.hwrap,main{{padding-left:16px;padding-right:16px}} .body{{padding-left:16px}} dl.kv{{grid-template-columns:1fr}} .cols{{grid-template-columns:1fr}}}}
 </style></head><body>
 <header><div class="hwrap"><div class="brand"><h1>MakyClimat</h1><span class="sub">Pilotage de la thèse</span>
 <span class="upd">Données du {now:%H:%M} · mise à jour automatique toutes les 5 min · protocole au {esc(suivi.get("mis_a_jour", "—"))}</span><button id="actualiser" type="button" title="Recharger la page sans perdre la position">Actualiser</button></div>
+<div id="auto" class="auto"><span class="st neutre" id="auto-etat"><i></i>Surveillant : état inconnu</span>
+<span class="auto-ctl" id="auto-ctl" hidden><label>Durée <select id="auto-duree"></select></label>
+<label title="Claude relit automatiquement, en lecture seule, chaque ligne « À relire » dont il n'est pas responsable"><input type="checkbox" id="auto-relectures" checked> Relectures automatiques par Claude</label>
+<button type="button" id="auto-demarrer">Démarrer</button><button type="button" id="auto-arreter">Arrêter</button></span>
+<span class="muted small" id="auto-aide">Pour démarrer ou arrêter le surveillant d'ici, ouvrir le tableau avec <code>pilotage.cmd</code> (racine du dépôt).</span></div>
 <nav>{nav}</nav></div></header>
 <main>{errs}
 <div class="lead"><div class="q">{esc(th.get("question_en_cours", ""))}</div><div class="t">{esc(th.get("titre", ""))}</div></div>
+<section id="parcours"><h2>Parcours des chantiers</h2>{gantt}</section>
 <section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div class="lanes">{equipe}</div></section>
 <section id="protocole"><h2>Avancement par rapport au protocole doctoral et au prompt maître</h2>{proto}</section>
 <section id="objectifs" class="cols"><div><h2>Objectifs</h2><div class="card">{objs}</div></div>
@@ -407,6 +432,37 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
   function recharger(){{ecrire(Y,String(window.scrollY));location.reload();}}
   document.getElementById("actualiser").addEventListener("click",recharger);
   setTimeout(recharger,{PAGE_S}*1000);
+}})();
+(function(){{
+  if(!/^https?:$/.test(location.protocol)) return;   // ouvert comme fichier : pas de commande possible
+  var $=function(i){{return document.getElementById(i);}}, jeton="", libre=true;
+  $("auto-aide").textContent=""; $("auto-ctl").hidden=false;
+  function afficher(e){{
+    var st=$("auto-etat");
+    if(e.erreur){{ $("auto-aide").textContent=e.erreur; }}
+    if(e.jeton){{ jeton=e.jeton; }}
+    if(e.durees && !$("auto-duree").options.length){{
+      e.durees.forEach(function(d){{var o=document.createElement("option");o.value=d;o.textContent=d<60?d+" min":(d/60)+" h";if(d===60)o.selected=true;$("auto-duree").appendChild(o);}});
+    }}
+    if(!("actif" in e)) return;
+    st.className="st "+(e.actif?"ok":"neutre");
+    st.innerHTML="<i></i>"+(e.actif?"Surveillant actif depuis "+e.debut+" · fin prévue "+e.fin_prevue
+      +(e.claude?(e.relectures_auto?" · Claude : demandes et relectures automatiques":" · Claude : demandes explicites"):" · alertes seules"):"Surveillant arrêté");
+    $("auto-demarrer").disabled=e.actif||!libre; $("auto-arreter").disabled=!e.actif||!libre;
+    $("auto-duree").disabled=e.actif; $("auto-relectures").disabled=e.actif||!e.claude_disponible;
+    if(!e.claude_disponible) $("auto-aide").textContent="Binaire Claude introuvable : alertes seules.";
+  }}
+  function lire(){{ fetch("/api/surveillant",{{cache:"no-store"}}).then(function(r){{return r.json();}}).then(afficher)
+    .catch(function(){{ $("auto-etat").innerHTML="<i></i>Serveur de pilotage arrêté : relancer pilotage.cmd"; $("auto-ctl").hidden=true; }}); }}
+  function commande(nom,corps){{
+    libre=false; $("auto-demarrer").disabled=$("auto-arreter").disabled=true; $("auto-aide").textContent="";
+    fetch("/api/surveillant/"+nom,{{method:"POST",headers:{{"Content-Type":"application/json","X-Pilotage":jeton}},body:JSON.stringify(corps||{{}})}})
+      .then(function(r){{return r.json();}}).then(function(e){{libre=true;afficher(e);lire();}})
+      .catch(function(){{libre=true;lire();}});
+  }}
+  $("auto-demarrer").addEventListener("click",function(){{commande("demarrer",{{duree:+$("auto-duree").value,relectures:$("auto-relectures").checked}});}});
+  $("auto-arreter").addEventListener("click",function(){{commande("arreter");}});
+  lire(); setInterval(lire,10000);
 }})();
 </script></body></html>"""
 

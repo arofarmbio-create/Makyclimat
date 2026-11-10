@@ -6,7 +6,20 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from build_subbasin_balance import aggregate
+from build_subbasin_balance import aggregate, bilan_perime
+
+
+def test_bilan_perime(tmp_path=None):
+    """Un bilan hydrique refusé (bilan_frais = False) bloque la republication ; un statut absent ou frais ne la bloque pas."""
+    import json
+    import tempfile
+    d = Path(tmp_path or tempfile.mkdtemp())
+    st = d / "status.json"
+    assert bilan_perime(st) is False                      # pas encore de statut : premier calcul
+    st.write_text(json.dumps({"bilan_frais": False}), encoding="utf-8")
+    assert bilan_perime(st) is True
+    st.write_text(json.dumps({"bilan_frais": True}), encoding="utf-8")
+    assert bilan_perime(st) is False
 
 
 def test_aggregate_area_weighted_mean():
@@ -46,4 +59,5 @@ if __name__ == "__main__":
     test_aggregate_area_weighted_mean()
     test_aggregate_skips_fokontany_without_subbasin()
     test_aggregate_handles_missing_indicator_for_some_fokontany()
+    test_bilan_perime()
     print("OK : tests build_subbasin_balance")

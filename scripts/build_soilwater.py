@@ -351,6 +351,7 @@ def main(country="mdg", readers=None, max_et0_batches=150):
     status_path = out_dir / "status.json"
     STATUS["generated"] = dt.date.today().isoformat()
     if props is None or et0 is None or rain is None:
+        STATUS["bilan_frais"] = False      # sorties précédentes non à jour : l'aval ne doit pas les republier comme fraîches
         write_json(status_path, STATUS)
         print("Bilan hydrique non calculé : voir status.json")
         return None

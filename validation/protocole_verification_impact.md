@@ -157,3 +157,20 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
   **Décision à prendre avant calcul** (porteur du projet, avis de Codex) : quel critère principal remplace H1 (aire ROC
   à 1-3 jours, discutable sur un échantillon sélectionné) ; proposition : détection des événements documentés et fausses
   alertes par saison témoin, avec analyse de puissance.
+
+- 10/11/2026, avant tout calcul de score. **Le porteur du projet valide l'option 1.** Pour la portée réduite,
+  le critère principal de H1 est le **gain de détection des événements d'impact documentés à 1–3 jours de
+  l'ensemble GloFAS par rapport au scénario de contrôle, à charge d'alerte comparable sur les périodes témoins**.
+  Compter séparément les événements éligibles détectés et les épisodes d'alerte sans impact confirmé sur les
+  périodes témoins. Une absence de fiche ne permet pas de conclure à une absence d'impact.
+  L'aire ROC est secondaire et s'interprète sur les périodes sélectionnées. Le Brier, la fiabilité et la valeur
+  économique restent descriptifs pour cet échantillon.
+  - **Avant les scores**, figer les périodes et districts admissibles, les règles d'appariement et de regroupement
+    des fiches et des alertes successives, ainsi que la règle de comparaison à charge comparable. Fixer les seuils
+    à l'avance ou les ajuster sur l'apprentissage de chaque pli. Évaluer les deux méthodes sur les mêmes cas hors
+    apprentissage. Définir la charge par durée effectivement observée sur les périodes témoins.
+  - **Analyse de puissance préalable** sur le nombre d'événements et de saisons indépendants, avec une différence
+    de détection jugée pertinente fixée à l'avance. Les districts et dates d'un même épisode ne comptent pas comme
+    des événements indépendants. Si l'effectif ne permet pas de conclure, l'analyse reste exploratoire.
+  - Maintenir le verrou de calcul tant que ces choix, l'analyse de puissance et leur traduction dans le code
+    n'ont pas été documentés et relus.
