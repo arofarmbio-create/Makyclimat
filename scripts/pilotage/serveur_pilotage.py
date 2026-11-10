@@ -51,10 +51,19 @@ def binaire_claude() -> Path | None:
     return natif if natif.is_file() else None
 
 
+def binaire_codex() -> Path | None:
+    """Ligne de commande Codex : sur le PATH, sinon celle installée par l'application Codex."""
+    trouve = shutil.which("codex.exe") or shutil.which("codex")
+    if trouve and Path(trouve).suffix.lower() == ".exe":
+        return Path(trouve)
+    natif = Path.home() / ".codex" / ".sandbox-bin" / "codex.exe"
+    return natif if natif.is_file() else None
+
+
 def etat() -> dict:
     instance = lire_instance(ETAT)
     return {"actif": bool(instance), **(instance or {}), "claude_disponible": bool(binaire_claude()),
-            "jeton": JETON, "durees": DUREES}
+            "codex_disponible": bool(binaire_codex()), "jeton": JETON, "durees": DUREES}
 
 
 def demarrer(duree: int, relectures: bool) -> dict:
@@ -66,10 +75,13 @@ def demarrer(duree: int, relectures: bool) -> dict:
         exe = binaire_claude()
         commande = [sys.executable, "-B", "-X", "utf8", str(SURVEILLANT), "--boucle",
                     "--duree-minutes", str(duree), "--windows"]
+        codex = binaire_codex()
         if exe:
             commande += ["--claude-exe", str(exe)]
-            if relectures:
-                commande.append("--relectures-auto")
+        if codex and relectures:
+            commande += ["--codex-exe", str(codex)]
+        if relectures and (exe or codex):
+            commande.append("--relectures-auto")
         ETAT.mkdir(parents=True, exist_ok=True)
         journal = open(ETAT / "surveillant.log", "a", encoding="utf-8")
         subprocess.Popen(commande, cwd=ROOT, stdout=journal, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,

@@ -240,6 +240,55 @@ def bloc(r: dict, liste: list[dict], regles: list[dict], details: dict) -> str:
             f'{statut(r.get("statut", ""))}<span class="metas">{meta}</span></summary><div class="body">{corps}</div></details>')
 
 
+COORD_ETAT = (("à faire", "neutre"), ("en cours", "info"), ("en attente", "warn"), ("bloqué", "ko"),
+              ("à relire", "info"), ("prêt à publier", "warn"))
+PERSONNES = (("codex", "codex"), ("claude", "claude"), ("porteur", "toi"))
+
+
+def coordination(texte: str) -> tuple[list[list[str]], list[tuple[str, str]]]:
+    """Tâches ouvertes et messages en attente de COORDINATION.md, source de vérité de la répartition du travail."""
+    taches, messages, section = [], [], ""
+    for ligne in texte.splitlines():
+        if ligne.startswith("## "):
+            section = ligne[3:].strip()
+        elif section == "Tâches" and ligne.startswith("| ") and not re.match(r"^\|[\s\-:|]+\|$", ligne):
+            champs = [c.strip() for c in re.split(r"(?<!\\)\|", ligne)[1:-1]]
+            if len(champs) >= 5 and champs[0] != "Tâche" and not champs[2].casefold().startswith(("fait", "clos")):
+                taches.append(champs)
+        elif section.startswith("Messages") and (m := re.match(r"^- \*\*(.+?)\*\*", ligne)):
+            parties = [p.strip() for p in m.group(1).split("·")]
+            if len(parties) >= 3 and "→" in parties[1]:
+                messages.append((parties[1].split("→", 1)[1].strip(), " · ".join(parties[2:]).rstrip(".")))
+    return taches, messages
+
+
+def texte_brut(t: str, n: int = 170) -> str:
+    t = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", t).replace("**", "").replace("`", "")
+    return t if len(t) <= n else t[:n].rsplit(" ", 1)[0] + " …"
+
+
+def carte_coord(titre: str, sous: str, etat: str) -> str:
+    c = next((c for k, c in COORD_ETAT if etat.casefold().startswith(k)), "neutre")
+    return (f'<div class="item"><div class="i-top"><span class="i-title">{esc(titre)}</span><span class="st {c}"><i></i>{esc(etat)}</span></div>'
+            f'<div class="i-sub">{esc(sous)}</div></div>')
+
+
+def colonnes_coordination(col: dict, texte: str) -> None:
+    taches, messages = coordination(texte)
+    for tache, responsable, etat, _preuve, suite, *_ in taches:
+        qui = [cle for nom, cle in PERSONNES if nom in responsable.casefold()]
+        for cle in qui:
+            col.setdefault(cle, []).append(carte_coord(tache, texte_brut(suite), etat))
+        if etat.casefold().startswith("à relire"):        # la relecture revient à l'autre assistant
+            for nom, cle in PERSONNES[:2]:
+                if cle not in qui:
+                    col.setdefault(cle, []).insert(0, carte_coord(f"Relire : {tache}", f"Livrable de {responsable}", "À relire"))
+    for destinataire, objet in messages:
+        for nom, cle in PERSONNES:
+            if nom in destinataire.casefold():
+                col.setdefault(cle, []).insert(0, carte_coord(objet, "Message en attente de réponse (COORDINATION.md)", "Décision"))
+
+
 def carte(titre: str, sous: str = "", etat: str = "") -> str:
     return f'<div class="item"><div class="i-top"><span class="i-title">{esc(titre)}</span>{statut(etat)}</div>{f"<div class=i-sub>{esc(sous)}</div>" if sous else ""}</div>'
 
@@ -247,12 +296,14 @@ def carte(titre: str, sous: str = "", etat: str = "") -> str:
 def page() -> str:
     obj, suivi, glo = lire("objectifs.yml"), lire("protocole_suivi.yml"), lire("glossaire.yml")
     parcours = yaml.safe_load((ROOT / "config" / "parcours_pilotage.yml").read_text(encoding="utf-8"))
-    gantt = rendu_parcours(parcours, (ROOT / "COORDINATION.md").read_text(encoding="utf-8-sig"))
+    texte_coord = (ROOT / "COORDINATION.md").read_text(encoding="utf-8-sig")
+    gantt = rendu_parcours(parcours, texte_coord)
     now = dt.datetime.now()
     th = obj.get("these") or {}
     en_cours, lancements, fins = agents()
 
-    col = {"toi": [], "claude": [], "agent": [], "github": []}
+    col = {"toi": [], "claude": [], "codex": [], "agent": [], "github": []}
+    colonnes_coordination(col, texte_coord)
     for t in obj.get("taches") or []:
         if t.get("statut") != "fini":
             col.setdefault(t.get("qui", "claude"), []).append(carte(t.get("nom", ""), "", t.get("statut", "")))
@@ -276,7 +327,8 @@ def page() -> str:
     attente = [l for l in run(["git", "log", "origin/main..HEAD", "--format=%s"]).splitlines() if l]
     if attente:
         col["github"].insert(0, carte(f"{len(attente)} commit(s) non envoyé(s)", attente[0][:70], "bloque"))
-    noms = (("toi", "Porteur du projet"), ("claude", "Claude"), ("agent", "Agents et téléchargements"), ("github", "Intégration (GitHub)"))
+    noms = (("toi", "Porteur du projet"), ("claude", "Claude"), ("codex", "Codex"), ("agent", "Agents et téléchargements"),
+            ("github", "Intégration (GitHub)"))
     equipe = "".join(f'<div class="lane"><div class="lane-h">{t}<span class="count">{len(col.get(k, []))}</span></div>'
                      f'{"".join(col.get(k, [])) or "<div class=empty>Rien en attente</div>"}</div>' for k, t in noms)
 
@@ -400,7 +452,7 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 <span class="upd">Données du {now:%H:%M} · mise à jour automatique toutes les 5 min · protocole au {esc(suivi.get("mis_a_jour", "—"))}</span><button id="actualiser" type="button" title="Recharger la page sans perdre la position">Actualiser</button></div>
 <div id="auto" class="auto"><span class="st neutre" id="auto-etat"><i></i>Surveillant : état inconnu</span>
 <span class="auto-ctl" id="auto-ctl" hidden><label>Durée <select id="auto-duree"></select></label>
-<label title="Claude relit automatiquement, en lecture seule, chaque ligne « À relire » dont il n'est pas responsable"><input type="checkbox" id="auto-relectures" checked> Relectures automatiques par Claude</label>
+<label title="En lecture seule : Claude relit les lignes « À relire » de Codex, Codex relit celles de Claude"><input type="checkbox" id="auto-relectures" checked> Relectures croisées automatiques (Claude ↔ Codex)</label>
 <button type="button" id="auto-demarrer">Démarrer</button><button type="button" id="auto-arreter">Arrêter</button></span>
 <span class="muted small" id="auto-aide">Pour démarrer ou arrêter le surveillant d'ici, ouvrir le tableau avec <code>pilotage.cmd</code> (racine du dépôt).</span></div>
 <nav>{nav}</nav></div></header>
@@ -447,7 +499,9 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
     if(!("actif" in e)) return;
     st.className="st "+(e.actif?"ok":"neutre");
     st.innerHTML="<i></i>"+(e.actif?"Surveillant actif depuis "+e.debut+" · fin prévue "+e.fin_prevue
-      +(e.claude?(e.relectures_auto?" · Claude : demandes et relectures automatiques":" · Claude : demandes explicites"):" · alertes seules"):"Surveillant arrêté");
+      +(e.relectures_auto?" · relectures automatiques : "+[e.claude?"Claude":"",e.codex?"Codex":""].filter(Boolean).join(" et ")
+        :(e.claude?" · Claude : demandes explicites seulement":" · alertes seules"))
+      :"Surveillant arrêté"+(e.codex_disponible?"":" · Codex introuvable : relectures par Claude seulement"));
     $("auto-demarrer").disabled=e.actif||!libre; $("auto-arreter").disabled=!e.actif||!libre;
     $("auto-duree").disabled=e.actif; $("auto-relectures").disabled=e.actif||!e.claude_disponible;
     if(!e.claude_disponible) $("auto-aide").textContent="Binaire Claude introuvable : alertes seules.";

@@ -1,4 +1,4 @@
-"""Distribue les alertes locales et exécute les lancements Claude explicitement autorisés."""
+"""Distribue les alertes locales, exécute les lancements Claude autorisés et, en option, les relectures croisées Claude/Codex."""
 
 from __future__ import annotations
 
@@ -72,28 +72,45 @@ def ecrire_si_change(chemin, contenu):
         temporaire.unlink(missing_ok=True)
 
 
-def demandes_claude(texte, relectures_auto=False):
+AGENTS = {"claude": "Claude", "codex": "Codex"}
+
+
+def nom_fichier(identifiant):
+    """Résultat d'un lancement : claude-<id>.md, ou codex-<id>.md pour une relecture Codex (identifiant codex/<id>)."""
+    agent, _, court = identifiant.rpartition("/")
+    return f"{agent or 'claude'}-{court}.md"
+
+
+def demandes_claude(texte, relectures_auto=False, agents=("claude",)):
+    """Demandes à exécuter : (agent, identifiant, consigne). Les lignes explicites ne visent que Claude."""
     if any(ligne.startswith("> **Pilotage en pause") for ligne in texte.splitlines()):
         return
     section = ""
     for ligne in texte.splitlines():
         if ligne.startswith("## "):
             section = ligne[3:]
-        if section == "Lancements ponctuels autorisés" and (match := LANCEMENT.fullmatch(ligne)):
-            yield match.groups()
+        if section == "Lancements ponctuels autorisés" and (match := LANCEMENT.fullmatch(ligne)) and "claude" in agents:
+            yield ("claude", *match.groups())
         if relectures_auto and section == "Tâches" and ligne.startswith("| "):
-            yield from relecture_auto(ligne)
+            for agent in agents:
+                yield from relecture_auto(ligne, agent)
 
 
-def relecture_auto(ligne):
-    """Une ligne « À relire » dont Claude n'est pas responsable déclenche une relecture en lecture seule.
-    L'identifiant dépend du contenu : une nouvelle version de la ligne redemande une relecture, une seule fois."""
+def relecture_auto(ligne, relecteur="claude"):
+    """Une ligne « À relire » de l'autre assistant déclenche une relecture en lecture seule par le relecteur.
+    Claude relit Codex et Codex relit Claude. L'identifiant dépend du contenu : une nouvelle version de la ligne
+    redemande une relecture, une seule fois."""
     champs = [champ.strip() for champ in re.split(r"(?<!\\)\|", ligne)[1:-1]]
-    if len(champs) < 5 or not champs[2].casefold().startswith("à relire") or "claude" in destinataires(champs[1]):
+    if len(champs) < 5 or not champs[2].casefold().startswith("à relire"):
+        return
+    responsables = destinataires(champs[1])
+    autre = "codex" if relecteur == "claude" else "claude"
+    if relecteur in responsables or autre not in responsables:
         return
     tache, responsable, _, preuve, suite = champs[:5]
     empreinte = hashlib.sha256(" ".join((tache, preuve, suite)).encode()).hexdigest()[:12]
-    yield f"relecture-{empreinte}", (
+    identifiant = f"relecture-{empreinte}" if relecteur == "claude" else f"codex/relecture-{empreinte}"
+    yield relecteur, identifiant, (
         f"Relecture automatique de la tâche « {tache} » (responsable : {responsable}), "
         f"passée à « À relire » dans COORDINATION.md. Preuve ou périmètre : {preuve}. "
         f"Point à contrôler : {suite}. Lis les fichiers concernés. Signale chaque point bloquant avec "
@@ -102,9 +119,21 @@ def relecture_auto(ligne):
     )
 
 
-def lancer_claude(db, dossier, demandes, executable):
-    """Réserve une demande avant l'appel. Un échec ou un arrêt ne la rejoue pas."""
-    for identifiant, consigne in demandes:
+def commande_agent(agent, executable, sortie):
+    if agent == "codex":    # bac à sable en lecture seule, session non conservée, dernier message écrit dans un fichier
+        return ([str(executable), "exec", "-s", "read-only", "-C", str(ROOT), "--ephemeral", "--skip-git-repo-check",
+                 "-o", str(sortie), "-"], 300)
+    return ([str(executable), "-p", "--tools", "Read,Grep,Glob", "--allowedTools", "Read,Grep,Glob",
+             "--max-turns", "5"], 120)
+
+
+def lancer_claude(db, dossier, demandes, executables):
+    """Réserve une demande avant l'appel. Un échec ou un arrêt ne la rejoue pas. executables : {agent: binaire}."""
+    if not isinstance(executables, dict):
+        executables = {"claude": executables}
+    for agent, identifiant, consigne in demandes:
+        if not executables.get(agent):
+            continue
         debut = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
         with db:
             reserve = db.execute(
@@ -118,41 +147,43 @@ def lancer_claude(db, dossier, demandes, executable):
     else:
         return 0
 
+    nom = AGENTS[agent]
     prompt = (
         "Projet MakyClimat. Intervention en lecture seule, réponse en français et en 250 mots maximum. "
         "Utilise uniquement les fichiers utiles et respecte les règles de COORDINATION.md. "
         "Aucun changement de fichier, téléchargement, workflow, calcul de score ou appel d'un autre agent. "
         "Si une entrée manque, signale le blocage et termine.\n\n" + consigne
     )
-    try:
-        retour = subprocess.run(
-            [str(executable), "-p", "--tools", "Read,Grep,Glob", "--allowedTools", "Read,Grep,Glob",
-             "--max-turns", "5"],
-            input=prompt, capture_output=True, encoding="utf-8", errors="replace",
-            timeout=120, cwd=ROOT, check=False,
-            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
-        )
-        statut = "Réponse reçue" if retour.returncode == 0 and retour.stdout.strip() else "Échec"
-        resultat = retour.stdout.strip() if statut == "Réponse reçue" else f"Code de sortie : {retour.returncode}."
-    except subprocess.TimeoutExpired:
-        statut, resultat = "Délai dépassé", "Claude a été arrêté après 120 secondes."
-    except OSError as erreur:
-        statut, resultat = "Échec", f"Lancement impossible ({type(erreur).__name__})."
+    with tempfile.TemporaryDirectory() as temporaire:
+        sortie = Path(temporaire) / "reponse.md"
+        commande, delai = commande_agent(agent, executables[agent], sortie)
+        try:
+            retour = subprocess.run(
+                commande, input=prompt, capture_output=True, encoding="utf-8", errors="replace",
+                timeout=delai, cwd=ROOT, check=False,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+            )
+            texte = sortie.read_text(encoding="utf-8", errors="replace").strip() if sortie.exists() else retour.stdout.strip()
+            statut = "Réponse reçue" if retour.returncode == 0 and texte else "Échec"
+            resultat = texte if statut == "Réponse reçue" else f"Code de sortie : {retour.returncode}."
+        except subprocess.TimeoutExpired:
+            statut, resultat = "Délai dépassé", f"{nom} a été arrêté après {delai} secondes."
+        except OSError as erreur:
+            statut, resultat = "Échec", f"Lancement impossible ({type(erreur).__name__})."
 
     fin = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
-    ecrire_si_change(
-        dossier / f"claude-{identifiant}.md",
-        f"# Claude — {identifiant}\n\n{statut} · {debut} → {fin} (Nairobi)\n\n{resultat[:12000]}\n",
-    )
+    court = identifiant.rpartition("/")[2]
+    ecrire_si_change(dossier / nom_fichier(identifiant),
+                     f"# {nom} — {court}\n\n{statut} · {debut} → {fin} (Nairobi)\n\n{resultat[:12000]}\n")
     with db:
         db.execute("UPDATE lancements SET fin = ?, statut = ? WHERE id = ?", (fin, statut, identifiant))
         db.execute("INSERT INTO alertes VALUES (?, ?, ?, ?)",
                    (f"lancement:{identifiant}", fin, json.dumps(list(DESTINATAIRES)),
-                    f"Claude · {identifiant} · {statut}. Résultat dans les lancements du tableau des alertes."))
+                    f"{nom} · {court} · {statut}. Résultat dans les lancements du tableau des alertes."))
     return 1
 
 
-def verifier(source, dossier, executable=None, relectures_auto=False):
+def verifier(source, dossier, executable=None, relectures_auto=False, codex=None):
     texte = source.read_text(encoding="utf-8-sig")
     evenements = list(lire_coordination(texte))
     dossier.mkdir(parents=True, exist_ok=True)
@@ -176,8 +207,10 @@ def verifier(source, dossier, executable=None, relectures_auto=False):
                     db.execute("INSERT INTO alertes VALUES (?, ?, ?, ?)",
                                (cle, maintenant, json.dumps(sorted(cibles)), message))
                     nouvelles += int("porteur" in cibles)
-        if executable:
-            nouvelles += lancer_claude(db, dossier, demandes_claude(texte, relectures_auto), executable)
+        if executable or codex:
+            executables = {"claude": executable, "codex": codex}
+            agents = tuple(agent for agent, binaire in executables.items() if binaire)
+            nouvelles += lancer_claude(db, dossier, demandes_claude(texte, relectures_auto, agents), executables)
         alertes = db.execute(
             "SELECT date, cibles, message FROM alertes ORDER BY rowid DESC LIMIT 50"
         ).fetchall()
@@ -187,7 +220,7 @@ def verifier(source, dossier, executable=None, relectures_auto=False):
         ):
             libelle = f"{html.escape(identifiant)} · {html.escape(statut)} · {debut} → {fin or '—'}"
             if fin:
-                libelle = f'<a href="claude-{identifiant}.md">{libelle}</a>'
+                libelle = f'<a href="{nom_fichier(identifiant)}">{libelle}</a>'
             lancements.append(f"<li>{libelle}</li>")
         boites = {cle: [] for cle in DESTINATAIRES}
         for date, cibles, message in alertes:
@@ -211,7 +244,7 @@ def verifier(source, dossier, executable=None, relectures_auto=False):
             'li{margin:.8rem 0;overflow-wrap:anywhere}time{color:#515966}</style>'
             '<h1>Alertes de coordination</h1><p>Heure de Nairobi. '
             'Historique des notifications. Voir COORDINATION.md pour l’état courant.</p>'
-            + "<h2>Lancements Claude</h2><ul>"
+            + "<h2>Lancements Claude et Codex</h2><ul>"
             + ("".join(lancements) or "<li>Aucun lancement</li>") + "</ul>"
             + "".join(sections) + "</html>",
         )
@@ -270,8 +303,10 @@ def main():
     parser.add_argument("--boucle", action="store_true")
     parser.add_argument("--duree-minutes", type=int, default=60, help="Durée maximale de la surveillance en boucle")
     parser.add_argument("--claude-exe", type=Path, help="Active les lancements autorisés via le binaire natif Claude")
+    parser.add_argument("--codex-exe", type=Path, help="Active les relectures automatiques par Codex (codex exec, lecture seule)")
     parser.add_argument("--relectures-auto", action="store_true",
-                        help="Lance aussi une relecture Claude en lecture seule pour chaque ligne « À relire » d'un autre responsable")
+                        help="Relectures croisées en lecture seule : Claude relit les lignes « À relire » de Codex, "
+                             "Codex celles de Claude (si --codex-exe)")
     parser.add_argument("--windows", action="store_true", help="Afficher un avis Windows pour les nouvelles alertes")
     parser.add_argument("--source", type=Path, default=ROOT / "COORDINATION.md")
     parser.add_argument("--sortie", type=Path, default=ROOT / "pilotage" / "etat" / "coordination")
@@ -280,8 +315,10 @@ def main():
         parser.error("--duree-minutes doit être positif")
     if args.claude_exe and (args.claude_exe.suffix.lower() != ".exe" or not args.claude_exe.is_file()):
         parser.error("--claude-exe doit désigner le binaire natif Windows, sans intermédiaire .cmd")
-    if args.relectures_auto and not args.claude_exe:
-        parser.error("--relectures-auto exige --claude-exe")
+    if args.codex_exe and not args.codex_exe.is_file():
+        parser.error("--codex-exe doit désigner le binaire codex.exe")
+    if args.relectures_auto and not (args.claude_exe or args.codex_exe):
+        parser.error("--relectures-auto exige --claude-exe ou --codex-exe")
     fin = time.monotonic() + args.duree_minutes * 60
     instance = args.sortie / "surveillant.json"
     if args.boucle:
@@ -293,7 +330,7 @@ def main():
         ecrire_si_change(instance, json.dumps({
             "pid": os.getpid(), "debut": maintenant.strftime("%d/%m/%Y %H:%M"),
             "fin_prevue": (maintenant + timedelta(minutes=args.duree_minutes)).strftime("%d/%m/%Y %H:%M"),
-            "claude": bool(args.claude_exe), "relectures_auto": args.relectures_auto,
+            "claude": bool(args.claude_exe), "codex": bool(args.codex_exe), "relectures_auto": args.relectures_auto,
         }, ensure_ascii=False))
         # Un lancement resté « En cours » vient d'une boucle arrêtée de force : il bloquerait toutes les demandes suivantes.
         with closing(sqlite3.connect(args.sortie / "coordination.sqlite3")) as db, db:
@@ -310,7 +347,7 @@ def main():
 def boucle(args, fin):
     while True:
         try:
-            nouvelles = verifier(args.source, args.sortie, args.claude_exe, args.relectures_auto)
+            nouvelles = verifier(args.source, args.sortie, args.claude_exe, args.relectures_auto, args.codex_exe)
             if nouvelles:
                 print(f"{nouvelles} nouvelle(s) alerte(s).", flush=True)
                 if args.windows and os.name == "nt":
