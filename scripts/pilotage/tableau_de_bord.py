@@ -18,7 +18,7 @@ from pathlib import Path
 import yaml
 
 from parcours import rendu_parcours
-from surveiller_coordination import cle_message, nom_fichier
+from surveiller_coordination import cle_message, nom_fichier, relecture_auto
 
 ROOT = Path(__file__).resolve().parents[2]
 PIL = ROOT / "pilotage"
@@ -297,8 +297,56 @@ def carte_coord(titre: str, sous: str, etat: str) -> str:
             f'<div class="i-sub">{esc(sous)}</div></div>')
 
 
+ECHECS_RELECTURE = ("Échec", "Délai dépassé", "Relecture impossible", "Interrompu")
+
+
+def dernier_verdict(ligne: str, relecteur: str) -> dict | None:
+    """Rapproche une ligne « À relire » de la relecture que le surveillant a lancée pour le diff actuel.
+    Même identifiant que le surveillant (empreinte du diff) : un avis rendu sur une version antérieure ne compte pas."""
+    import sqlite3
+    try:
+        demande = next(relecture_auto(ligne, relecteur), None)
+    except Exception:                  # git indisponible : la carte reste « À relire »
+        return None
+    if demande is None:
+        return None
+    identifiant = demande[1]
+    base = PIL / "etat" / "coordination" / "coordination.sqlite3"
+    try:
+        db = sqlite3.connect(f"file:{base}?mode=ro", uri=True)
+        try:                           # « with » ne ferme pas la connexion : le fichier resterait verrouillé sous Windows
+            rang = db.execute("SELECT statut, fin FROM lancements WHERE id = ?", (identifiant,)).fetchone()
+        finally:
+            db.close()
+    except sqlite3.Error:
+        rang = None
+    if not rang:
+        return {"statut": "Pas encore lancée", "verdict": "", "fichier": "", "fin": ""}
+    fichier = nom_fichier(identifiant)
+    verdict = ""
+    try:
+        m = re.findall(r"Verdict\s*:\s*([^\n.]+)", (PIL / "etat" / "coordination" / fichier).read_text(encoding="utf-8"))
+        verdict = m[-1].strip().casefold() if m else ""
+    except OSError:
+        pass
+    return {"statut": rang[0], "verdict": verdict, "fichier": fichier, "fin": rang[1] or ""}
+
+
+def carte_relecture(titre: str, sous: str, etat: str, fichier: str = "") -> str:
+    lien = f' · <a href="etat/coordination/{esc(fichier)}">avis</a>' if fichier else ""
+    c = {"Corrections demandées": "warn", "Relu sans blocage": "ok", "Relecture échouée": "ko"}.get(etat, "info")
+    return (f'<div class="item"><div class="i-top"><span class="i-title">{esc(titre)}</span><span class="st {c}"><i></i>{esc(etat)}</span></div>'
+            f'<div class="i-sub">{esc(sous)}{lien}</div></div>')
+
+
 def colonnes_coordination(col: dict, texte: str) -> None:
     taches, messages, executions = coordination(texte)
+    brutes, section = {}, ""
+    for ligne in texte.splitlines():
+        if ligne.startswith("## "):
+            section = ligne[3:].strip()
+        elif section == "Tâches" and ligne.startswith("| "):
+            brutes.setdefault(re.split(r"(?<!\\)\|", ligne)[1].strip(), ligne)
     for ex in executions:
         if not ex["fait"]:
             col.setdefault(ex["agent"], []).insert(0, carte_coord(f"Exécution autorisée · {ex['id']}", texte_brut(ex["demande"]),
@@ -309,7 +357,24 @@ def colonnes_coordination(col: dict, texte: str) -> None:
             col.setdefault(cle, []).append(carte_coord(tache, texte_brut(suite), etat))
         if etat.casefold().startswith("à relire"):        # la relecture revient à l'autre assistant
             for nom, cle in PERSONNES[:2]:
-                if cle not in qui:
+                if cle in qui:
+                    continue
+                v = dernier_verdict(brutes.get(tache, ""), cle)
+                if v and v["statut"] == "Réponse reçue" and "sans blocage" in v["verdict"]:
+                    # Avis rendu : la suite revient au responsable (passer à « Fait »), pas au relecteur.
+                    for c in qui:
+                        col.setdefault(c, []).insert(0, carte_relecture(f"Relu par {nom.capitalize()} : {tache}",
+                                                                        f"Avis du {v['fin']} : passer la tâche à « Fait »", "Relu sans blocage", v["fichier"]))
+                elif v and v["statut"] == "Réponse reçue" and "corrections" in v["verdict"]:
+                    for c in qui:
+                        col.setdefault(c, []).insert(0, carte_relecture(f"Corriger : {tache}",
+                                                                        f"Avis de {nom.capitalize()} du {v['fin']}", "Corrections demandées", v["fichier"]))
+                elif v and v["statut"] in ECHECS_RELECTURE:
+                    col.setdefault(cle, []).insert(0, carte_relecture(f"Relire : {tache}",
+                        f"{v['statut']} le {v['fin']} · retentée au prochain démarrage du surveillant, sans relance manuelle", "Relecture échouée", v["fichier"]))
+                elif v and v["statut"] == "En cours":
+                    col.setdefault(cle, []).insert(0, carte_relecture(f"Relire : {tache}", f"Livrable de {responsable}", "Relecture en cours"))
+                else:
                     col.setdefault(cle, []).insert(0, carte_coord(f"Relire : {tache}", f"Livrable de {responsable}", "À relire"))
     for msg in messages:
         for nom, cle in PERSONNES:

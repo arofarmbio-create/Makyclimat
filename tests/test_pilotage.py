@@ -273,6 +273,35 @@ def test_crochet_actions_sans_texte_de_commande():
     assert g == "recherche" and "1234" not in t and "passe" not in t
 
 
+def test_carte_relire_rapprochee_du_verdict():
+    """Une carte « Relire » suit le dernier verdict du diff actuel : avis rendu → carte chez le responsable."""
+    import sqlite3
+    import tableau_de_bord as T
+    originaux = T.PIL, T.relecture_auto
+    with tempfile.TemporaryDirectory() as d:
+        dossier = Path(d) / "etat" / "coordination"
+        dossier.mkdir(parents=True)
+        from contextlib import closing
+        with closing(sqlite3.connect(dossier / "coordination.sqlite3")) as db, db:
+            db.execute("CREATE TABLE lancements (id TEXT PRIMARY KEY, debut TEXT, fin TEXT, statut TEXT)")
+            db.executemany("INSERT INTO lancements VALUES (?, '', '10/11/2026 10:07', ?)",
+                           [("codex/relecture-aaa", "Réponse reçue"), ("codex/relecture-bbb", "Délai dépassé")])
+        (dossier / "codex-relecture-aaa.md").write_text("Rien à signaler.\n\nVerdict : sans blocage\n", encoding="utf-8")
+        ids = {"Tâche A": "codex/relecture-aaa", "Tâche B": "codex/relecture-bbb", "Tâche C": "codex/relecture-ccc"}
+        try:
+            T.PIL = Path(d)
+            T.relecture_auto = lambda ligne, relecteur: iter([(relecteur, ids[ligne.split("|")[1].strip()], "")])
+            texte = "## Tâches\n\n" + "".join(f"| {t} | Claude | À relire | x | y |\n" for t in ids)
+            col = {}
+            T.colonnes_coordination(col, texte)
+        finally:
+            T.PIL, T.relecture_auto = originaux
+    codex, claude = " ".join(col.get("codex", [])), " ".join(col.get("claude", []))
+    assert "Tâche A" not in codex and "Relu sans blocage" in claude
+    assert "Relecture échouée" in codex and "Tâche B" in codex
+    assert "Relire : Tâche C" in codex and "À relire" in codex
+
+
 if __name__ == "__main__":
     for nom, fonction in list(globals().items()):
         if nom.startswith("test_"):
