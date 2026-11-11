@@ -1,0 +1,54 @@
+{
+  "description": "MakyClimat : afficher les jalons Codex dans le tableau de bord local.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -B \"$(git rev-parse --show-toplevel)/scripts/pilotage/hook_actions_codex.py\"",
+            "commandWindows": "python -B \"$(git rev-parse --show-toplevel)/scripts/pilotage/hook_actions_codex.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "^(Bash|apply_patch|Edit|Write)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -B \"$(git rev-parse --show-toplevel)/scripts/pilotage/hook_actions_codex.py\"",
+            "commandWindows": "python -B \"$(git rev-parse --show-toplevel)/scripts/pilotage/hook_actions_codex.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -B \"$(git rev-parse --show-toplevel)/scripts/pilotage/hook_actions_codex.py\"",
+            "commandWindows": "python -B \"$(git rev-parse --show-toplevel)/scripts/pilotage/hook_actions_codex.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Interrupt": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -B \"$(git rev-parse --show-toplevel)/scripts/pilotage/hook_actions_codex.py\"",
+            "commandWindows": "python -B \"$(git rev-parse --show-toplevel)/scripts/pilotage/hook_actions_codex.py\"",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,5 +1,21 @@
 # État des téléchargements (agent de téléchargement)
 
+## 10/11/2026 — Contrôle des entrées IMERG de R-40
+
+Claude a préparé le contrôle des sept fichiers de la [release R-02 bis](https://github.com/arofarmbio-create/Makyclimat/releases/tag/r02bis-sources). Codex a exécuté le script sur les fichiers locaux. Pour les sept activations, les débuts, les emprises et le pas de 30 minutes concordent avec le [calendrier](r02bis_fenetres.csv). Aucune valeur non finie ou négative sur les 3 696 pas. La colonne de chaque durée indique le nombre de fenêtres valides sur le nombre attendu.
+
+| Activation | Pas de 30 min | 1 h | 3 h | 6 h |
+|---|---:|---:|---:|---:|
+| EMSR264 | 528 | 527/527 | 523/523 | 517/517 |
+| EMSR274 | 432 | 431/431 | 427/427 | 421/421 |
+| EMSR424 | 288 | 287/287 | 283/283 | 277/277 |
+| EMSR564 | 384 | 383/383 | 379/379 | 373/373 |
+| EMSR565 | 384 | 383/383 | 379/379 | 373/373 |
+| EMSR645 | 720 | 719/719 | 715/715 | 709/709 |
+| EMSR652 | 960 | 959/959 | 955/955 | 949/949 |
+
+Le taux en mm/h est multiplié par 0,5 h avant de sommer 2, 6 ou 12 pas consécutifs. Pour une maille donnée, écarter une fenêtre si un pas manque ou est invalide. Les rafales ERA5 restent dans la file Copernicus après R-21.
+
 *Tenu par l'agent de téléchargement depuis le 02/11/2026, décision du porteur du projet : un seul agent pour tous les
 téléchargements et liaisons API, petit à petit, sans demandes forcées ni simultanées auprès d'un même fournisseur.
 Mis à jour à chaque étape. Dernière mise à jour : 03/11/2026, 08 h 45 UTC.*

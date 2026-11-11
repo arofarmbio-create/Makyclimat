@@ -5,6 +5,7 @@ import shutil
 import sys
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 RACINE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RACINE / "scripts" / "pilotage"))
@@ -93,6 +94,38 @@ def test_relecture_croisee_et_economie():
     reformulee = a.replace("Vérifier le rendu.", "Vérifier le rendu, autrement dit.")
     (_, ident2, _), = C.relecture_auto(reformulee, "codex")
     assert ident2 == ident                                     # reformuler la ligne ne relance pas la relecture
+
+
+def test_reveil_codex_sur_nouveau_message_ou_alerte():
+    with tempfile.TemporaryDirectory() as temporaire:
+        dossier = Path(temporaire)
+        chemin = dossier / "COORDINATION.md"
+        chemin.write_text(COPIE, encoding="utf-8")
+        etat = dossier / "etat"
+        C.verifier(chemin, etat)
+        texte = COPIE.replace("| Outil A |", "| Outil C | Codex | Bloqué | Entrée | Vérifier la source. | — | — |\n| Outil A |")
+        texte = texte.replace("Réserver cette section", "- **10/11/2026 · Claude → Codex · Fiche à examiner.** Annexe locale.\n"
+                             "- **10/11/2026 · Codex → Codex · Message interne.**\n\nRéserver cette section")
+        chemin.write_text("> **Pilotage en pause**\n\n" + texte, encoding="utf-8")
+        appels = []
+
+        def codex(commande, *, input, **options):
+            assert commande[commande.index("-s") + 1] == "read-only"
+            assert "ne vaut pas autorisation" in input
+            appels.append(input)
+            Path(commande[commande.index("-o") + 1]).write_text("Avis de test", encoding="utf-8")
+            return C.subprocess.CompletedProcess(commande, 0, stdout="", stderr="")
+
+        with patch.object(C.subprocess, "run", side_effect=codex):
+            C.verifier(chemin, etat, codex="codex-test")
+            assert appels == []
+            chemin.write_text(texte, encoding="utf-8")
+            for _ in range(3):
+                C.verifier(chemin, etat, codex="codex-test")
+
+        assert len(appels) == 2 and "Vérifier la source" in appels[0] and "Fiche à examiner" in appels[1]
+        assert len(list(etat.glob("codex-reveil-*.md"))) == 2
+        assert "Réponse reçue" in (etat / "claude.md").read_text(encoding="utf-8")
 
 
 def test_lecture_des_tokens_et_fichiers():
