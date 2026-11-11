@@ -81,6 +81,17 @@ class Plafond(unittest.TestCase):
         self.assertFalse(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "11/11/2026"))
         self.assertEqual(C.lancements_comptes(self.db, "codex", "reveil", "11/11/2026"), 0)
         self.assertEqual(C.lancements_comptes(self.db, "codex", "reveil", "12/11/2026"), 0)
+        self.ajouter("codex/reveil-apres", "x")                          # après la remise, même minute (10:00)
+        self.assertEqual(C.lancements_comptes(self.db, "codex", "reveil", "11/11/2026"), 1)   # avis Codex 19:36
+
+    def test_ancienne_table_de_remise_sans_seuil(self):
+        """Une table créée par la version précédente (sans colonne seuil) est complétée à la remise suivante."""
+        self.db.execute("CREATE TABLE remises_plafond (agent TEXT PRIMARY KEY, depuis TEXT NOT NULL)")
+        self.db.execute("INSERT INTO remises_plafond VALUES ('codex', '11/11/2026 19:12')")
+        self.ajouter("codex/reveil-0")
+        self.assertEqual(C.lancements_comptes(self.db, "codex", "reveil", "11/11/2026"), 1)
+        C.effacer_plafonds(self.db, "codex", "11/11/2026 19:40:00")
+        self.assertEqual(C.lancements_comptes(self.db, "codex", "reveil", "11/11/2026"), 0)
 
     def test_execution_autorisee_jamais_plafonnee(self):
         for i in range(50):
@@ -278,6 +289,17 @@ class Limites(unittest.TestCase):
             self.assertFalse(V.reprise("codex")["ancien"])
             self.assertTrue(V.reprise("codex", maintenant=f.stat().st_mtime + 25 * 3600)["ancien"])
         self.assertIn("reprise_codex.md", V.lien_codex().replace("%2F", "/"))
+
+
+class CrochetSobre(unittest.TestCase):
+    def test_seules_les_alertes_a_traiter_relancent_claude(self):
+        """11/11/2026 : en fin de tour, seules les alertes qui demandent une action relancent Claude."""
+        self.assertFalse(H.a_traiter("11/11/2026 19:17 · Codex · exec-x · Réponse reçue · tokens : entrée 1"))
+        self.assertFalse(H.a_traiter("11/11/2026 19:18 · Fait · Relecture · Codex · sans blocage"))
+        self.assertTrue(H.a_traiter("11/11/2026 · Codex → Claude · Corrections après avis."))
+        self.assertTrue(H.a_traiter("11/11/2026 · Bloqué (commit seulement) · Tâche · Codex · x"))
+        self.assertTrue(H.a_traiter("11/11/2026 · Codex · relecture-x · Échec · tokens"))
+
 
 if __name__ == "__main__":
     unittest.main()

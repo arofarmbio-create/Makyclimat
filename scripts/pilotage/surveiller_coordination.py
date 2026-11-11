@@ -146,15 +146,15 @@ def commit_cite(*textes):
 
 
 def contexte_diff(chemins, commit=""):
-    """Modifications à relire, complètes : le commit cité, sinon le travail non commité, sinon le dernier commit.
+    """Modifications à relire, complètes : le commit cité seul (la version livrée), sinon le travail non commité.
     La troncature se fait après le calcul de l'empreinte (relecture Codex du 10/11 : une correction au-delà de la
-    limite ne relançait pas de relecture)."""
+    limite ne relançait pas de relecture). Plus de travail local ajouté au commit ni de repli sur « le dernier commit
+    qui touche ces fichiers » (11/11/2026) : un fichier partagé par plusieurs lignes relançait la relecture de toutes
+    ces lignes à chaque commit ou modification en cours."""
     if not chemins:
         return ""
     if commit:
-        diff = git("show", "--format=commit %h · %s", commit, "--", *chemins)
-        local = git("diff", "HEAD", "--", *chemins)
-        return diff + ("\n# Modifications non commitées depuis :\n" + local if local.strip() else "")
+        return git("show", "--format=commit %h · %s", commit, "--", *chemins)
     diff = git("diff", "HEAD", "--", *chemins)
     nouveaux = [f for f in git("ls-files", "--others", "--exclude-standard", "--", *chemins).splitlines() if f]
     for fichier in nouveaux:
@@ -163,9 +163,6 @@ def contexte_diff(chemins, commit=""):
             diff += f"\n--- nouveau fichier : {fichier}\n" + "".join(f"+{l}\n" for l in contenu.splitlines())
         except (OSError, UnicodeError):
             pass
-    if not diff.strip():
-        commit = git("log", "-1", "--format=%H", "--", *chemins).strip()
-        diff = git("show", "--format=commit %h · %s", commit, "--", *chemins) if commit else ""
     return diff
 
 
@@ -175,17 +172,32 @@ def tronquer(diff):
 
 
 def reveille_codex(genre, cibles, message):
-    if "codex" not in cibles:
+    """Codex n'est réveillé que par un message de Claude qui lui est adressé (11/11/2026). Les changements d'état des
+    lignes ne le réveillent plus : les relectures ont leur propre lancement, et un réveil sur « Fait », « Bloqué »
+    ou « Clos » ne produisait que des avis redondants (6 réveils inutiles le 11/11 entre 19:17 et 19:25)."""
+    if "codex" not in cibles or genre != "message":
         return False
-    if genre == "message":
-        auteur = message.partition("→")[0].rsplit("·", 1)[-1].strip().casefold()
-        return auteur in {"claude", "claude code"}
-    etat, _, responsable, *_ = message.split(" · ", 4)
-    etat = etat.casefold()
-    # Les relectures ont déjà leur propre lancement. Une clôture par Codex est un accusé de suivi.
-    return not (etat.startswith("à relire") or (
-        etat.startswith(("fait", "clos")) and "codex" in destinataires(responsable)
-    ))
+    auteur = message.partition("→")[0].rsplit("·", 1)[-1].strip().casefold()
+    return auteur in {"claude", "claude code"}
+
+
+REVEIL_PERIME_MIN = 60         # un réveil resté en file plus d'une heure (plafond, réseau, pause) est abandonné
+
+
+def oublier_reveils_perimes(db, maintenant):
+    """Ne garder que les réveils récents : une alerte en file depuis plus de REVEIL_PERIME_MIN minutes est retirée de
+    la file sans lancement (elle reste dans l'historique des alertes). Avant, une remise à zéro des plafonds lançait
+    d'un coup tout l'arriéré, sur des sujets déjà traités. Retourne le nombre de réveils retirés."""
+    perimes = []
+    for alerte, date in db.execute("SELECT r.alerte, a.date FROM reveils_codex r JOIN alertes a ON a.id = r.alerte"):
+        try:
+            age = (maintenant - datetime.strptime(date, "%d/%m/%Y %H:%M").replace(tzinfo=NAIROBI)).total_seconds()
+        except (TypeError, ValueError):
+            age = REVEIL_PERIME_MIN * 60
+        if age >= REVEIL_PERIME_MIN * 60:
+            perimes.append((alerte,))
+    db.executemany("DELETE FROM reveils_codex WHERE alerte = ?", perimes)
+    return len(perimes)
 
 
 def demandes_claude(texte, relectures_auto=False, agents=("claude",), reveils=()):
@@ -233,7 +245,12 @@ def relecture_auto(ligne, relecteur="claude"):
     chemins = chemins_cites(preuve, suite)
     if not chemins:            # rien d'autre que du suivi : pas de relecture automatique
         return
-    diff = contexte_diff(chemins, commit_cite(preuve, suite))
+    commit = commit_cite(preuve, suite)
+    if not commit:             # une relecture par version livrée : l'auteur cite le commit à relire (11/11/2026)
+        return
+    diff = contexte_diff(chemins, commit)
+    if not diff.strip():       # le commit cité ne touche pas les fichiers cités : rien à relire
+        return
     # Empreinte sur les seules lignes ajoutées ou retirées : commiter un travail déjà relu ne relance pas de relecture.
     modifiees = "\n".join(l for l in diff.splitlines() if l[:1] in "+-" and not l.startswith(("+++", "---")))
     empreinte = hashlib.sha256(" ".join((tache, modifiees or "|".join(chemins))).encode()).hexdigest()[:12]
@@ -385,24 +402,37 @@ def remise_plafonds(db, agent, jour):
     return ligne[0] if ligne and ligne[0].startswith(jour) else jour
 
 
+def seuil_remise(db, agent, jour):
+    """Numéro d'ordre (rowid) du dernier lancement enregistré au moment de la remise du jour ; 0 sans remise ce jour."""
+    try:
+        ligne = db.execute("SELECT depuis, seuil FROM remises_plafond WHERE agent = ?", (agent,)).fetchone()
+    except sqlite3.OperationalError:          # table absente, ou ancienne table sans seuil
+        return 0
+    return int(ligne[1] or 0) if ligne and ligne[0].startswith(jour) else 0
+
+
 def effacer_plafonds(db, agent, depuis=None):
-    """Remise à zéro des plafonds automatiques d'un agent par le porteur ; seuls les lancements suivants comptent."""
-    depuis = depuis or datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M:%S")   # à la seconde : voir lancements_comptes
+    """Remise à zéro des plafonds automatiques d'un agent par le porteur ; seuls les lancements suivants comptent.
+    La frontière est le rowid du dernier lancement enregistré, et non l'heure : les lancements sont notés à la minute,
+    une heure ne sépare donc pas avant et après dans la même minute (avis Codex du 11/11, 19:17 et 19:36)."""
+    depuis = depuis or datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M:%S")      # affichage seulement
     with db:
         db.execute("CREATE TABLE IF NOT EXISTS remises_plafond (agent TEXT PRIMARY KEY, depuis TEXT NOT NULL)")
-        db.execute("INSERT OR REPLACE INTO remises_plafond (agent, depuis) VALUES (?, ?)", (agent, depuis))
+        if "seuil" not in {c[1] for c in db.execute("PRAGMA table_info(remises_plafond)")}:
+            db.execute("ALTER TABLE remises_plafond ADD COLUMN seuil INTEGER")
+        seuil = db.execute("SELECT COALESCE(MAX(rowid), 0) FROM lancements").fetchone()[0]
+        db.execute("INSERT OR REPLACE INTO remises_plafond (agent, depuis, seuil) VALUES (?, ?, ?)",
+                   (agent, depuis, seuil))
     return depuis
 
 
 def lancements_comptes(db, agent, genre, jour, sujet=None):
-    """Lancements automatiques d'un genre comptés pour le plafond : du jour, depuis la dernière remise à zéro.
-    « debut » s'écrit JJ/MM/AAAA HH:MM : dans un même jour, l'ordre des chaînes est l'ordre des heures. La remise est
-    notée à la seconde et comparée strictement : un lancement de la minute de la remise n'est plus compté (avis Codex
-    du 11/11, 19:17 : à la minute près, les lancements antérieurs de cette minute restaient comptés)."""
+    """Lancements automatiques d'un genre comptés pour le plafond : du jour, enregistrés après la dernière remise à
+    zéro du jour (rowid supérieur au seuil). Une relecture retentée est réinscrite, donc comptée comme un lancement."""
     # Identifiants : codex/<genre>-x pour Codex ; <genre>-x ou claude/<genre>-x pour Claude. LIKE est ancré au début.
     motif, motif_alt = (f"codex/{genre}-%",) * 2 if agent == "codex" else (f"{genre}-%", f"claude/{genre}-%")
-    requete = "SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND debut > ?"
-    parametres = [motif, motif_alt, f"{jour}%", remise_plafonds(db, agent, jour)]
+    requete = "SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND rowid > ?"
+    parametres = [motif, motif_alt, f"{jour}%", seuil_remise(db, agent, jour)]
     if sujet is not None:
         requete += " AND sujet = ?"
         parametres.append(sujet)
@@ -573,6 +603,7 @@ def verifier(source, dossier, executable=None, relectures_auto=False, codex=None
             db.execute("CREATE TABLE IF NOT EXISTS reveils_codex (alerte TEXT PRIMARY KEY)")
             colonnes_lancements(db)
             retenter_relectures(db, datetime.now(NAIROBI))
+            oublier_reveils_perimes(db, datetime.now(NAIROBI))
             # Verrouille l'écriture avant de déterminer si une base existe déjà.
             premier = db.execute("INSERT OR IGNORE INTO etat VALUES ('initialisé')").rowcount
             nouvelles = 0

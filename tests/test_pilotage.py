@@ -2,6 +2,7 @@
 sans lancer Claude ni Codex). Travaille sur une copie de COORDINATION.md."""
 import json
 import shutil
+import sqlite3
 import sys
 import tempfile
 from pathlib import Path
@@ -94,13 +95,43 @@ def test_relecture_croisee_et_economie():
     lignes = COPIE.splitlines()
     a = next(l for l in lignes if l.startswith("| Outil A"))
     b = next(l for l in lignes if l.startswith("| Outil B"))
-    assert list(C.relecture_auto(a, "claude")) == []          # Claude ne se relit pas
-    (agent, ident, consigne), = C.relecture_auto(a, "codex")
-    assert agent == "codex" and ident.startswith("codex/relecture-") and "```diff" in consigne
-    assert list(C.relecture_auto(b, "claude")) == []          # suivi seul : pas de relecture
-    reformulee = a.replace("Vérifier le rendu.", "Vérifier le rendu, autrement dit.")
-    (_, ident2, _), = C.relecture_auto(reformulee, "codex")
-    assert ident2 == ident                                     # reformuler la ligne ne relance pas la relecture
+    with patch.object(C, "commit_cite", return_value="abc1234"), \
+            patch.object(C, "contexte_diff", return_value="commit abc1234\n+ligne\n"):
+        assert list(C.relecture_auto(a, "claude")) == []          # Claude ne se relit pas
+        (agent, ident, consigne), = C.relecture_auto(a, "codex")
+        assert agent == "codex" and ident.startswith("codex/relecture-") and "```diff" in consigne
+        assert list(C.relecture_auto(b, "claude")) == []          # suivi seul : pas de relecture
+        reformulee = a.replace("Vérifier le rendu.", "Vérifier le rendu, autrement dit.")
+        (_, ident2, _), = C.relecture_auto(reformulee, "codex")
+        assert ident2 == ident                                     # reformuler la ligne ne relance pas la relecture
+
+
+def test_relecture_seulement_sur_version_livree():
+    """11/11/2026 : sans commit cité, pas de relecture automatique (avant : repli sur le dernier commit des fichiers
+    cités, qui relançait toutes les lignes partageant un fichier à chaque commit)."""
+    a = next(l for l in COPIE.splitlines() if l.startswith("| Outil A"))
+    with patch.object(C, "commit_cite", return_value=""):
+        assert list(C.relecture_auto(a, "codex")) == []
+    with patch.object(C, "commit_cite", return_value="abc1234"), patch.object(C, "contexte_diff", return_value=""):
+        assert list(C.relecture_auto(a, "codex")) == []           # le commit ne touche pas les fichiers cités
+
+
+def test_reveils_limites_aux_messages_et_perimes():
+    """11/11/2026 : un changement d'état ne réveille plus Codex ; un réveil en file depuis plus d'une heure est oublié."""
+    assert C.reveille_codex("message", {"codex"}, "11/11/2026 · Claude → Codex · Sujet.")
+    assert not C.reveille_codex("message", {"codex"}, "11/11/2026 · Codex → Claude · Sujet.")
+    assert not C.reveille_codex("etat", {"codex"}, "Bloqué · Tâche · Codex · x")
+    assert not C.reveille_codex("etat", {"codex"}, "Fait · Tâche · Claude · x")
+    db = sqlite3.connect(":memory:")
+    db.execute("CREATE TABLE alertes (id TEXT PRIMARY KEY, date TEXT, cibles TEXT, message TEXT)")
+    db.execute("CREATE TABLE reveils_codex (alerte TEXT PRIMARY KEY)")
+    for cle, date in (("vieux", "11/11/2026 17:45"), ("recent", "11/11/2026 19:20"), ("illisible", "?")):
+        db.execute("INSERT INTO alertes VALUES (?, ?, '[]', 'm')", (cle, date))
+        db.execute("INSERT INTO reveils_codex VALUES (?)", (cle,))
+    maintenant = C.datetime(2026, 11, 11, 19, 30, tzinfo=C.NAIROBI)
+    assert C.oublier_reveils_perimes(db, maintenant) == 2
+    assert [r[0] for r in db.execute("SELECT alerte FROM reveils_codex")] == ["recent"]
+    db.close()
 
 
 def test_reveil_codex_sur_nouveau_message_ou_alerte():
@@ -130,8 +161,9 @@ def test_reveil_codex_sur_nouveau_message_ou_alerte():
             for _ in range(3):
                 C.verifier(chemin, etat, codex="codex-test")
 
-        assert len(appels) == 2 and "Vérifier la source" in appels[0] and "Fiche à examiner" in appels[1]
-        assert len(list(etat.glob("codex-reveil-*.md"))) == 2
+        # Seul le message de Claude réveille Codex ; la ligne « Bloqué » ne le réveille plus (11/11/2026).
+        assert len(appels) == 1 and "Fiche à examiner" in appels[0]
+        assert len(list(etat.glob("codex-reveil-*.md"))) == 1
         assert "Réponse reçue" in (etat / "claude.md").read_text(encoding="utf-8")
 
 
@@ -156,10 +188,11 @@ def test_empreinte_sur_diff_complet():
     original = C.contexte_diff
     try:
         base = "+x\n" * (C.DIFF_MAX // 3 + 100)
-        C.contexte_diff = lambda chemins, commit="": base + "+fin 1\n"
-        (_, id1, consigne), = C.relecture_auto(a, "codex")
-        C.contexte_diff = lambda chemins, commit="": base + "+fin 2\n"
-        (_, id2, _), = C.relecture_auto(a, "codex")
+        with patch.object(C, "commit_cite", return_value="abc1234"):
+            C.contexte_diff = lambda chemins, commit="": base + "+fin 1\n"
+            (_, id1, consigne), = C.relecture_auto(a, "codex")
+            C.contexte_diff = lambda chemins, commit="": base + "+fin 2\n"
+            (_, id2, _), = C.relecture_auto(a, "codex")
     finally:
         C.contexte_diff = original
     assert id1 != id2 and "diff tronqué" in consigne

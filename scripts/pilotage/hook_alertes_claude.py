@@ -44,8 +44,23 @@ def nouvelles(marquer: bool = True) -> list[str]:
     vues = set(json.loads(VU.read_text(encoding="utf-8"))) if VU.exists() else set()
     liste = [a for a in alertes() if cle(a) not in vues]
     if marquer and liste:
-        VU.write_text(json.dumps(sorted(vues | {cle(a) for a in liste})), encoding="utf-8")
+        marquer_vues(liste)
     return liste
+
+
+def marquer_vues(liste: list[str]) -> None:
+    vues = set(json.loads(VU.read_text(encoding="utf-8"))) if VU.exists() else set()
+    VU.write_text(json.dumps(sorted(vues | {cle(a) for a in liste})), encoding="utf-8")
+
+
+ACTION = ("→ Claude", "Échec", "Délai dépassé", "Bloqué")
+
+
+def a_traiter(alerte: str) -> bool:
+    """Alerte qui demande une action de Claude avant de s'arrêter : avis « corrections demandées », message adressé à
+    Claude, échec ou blocage. Les simples comptes rendus (« Réponse reçue », « sans blocage », « Fait ») ne relancent
+    plus Claude en fin de tour : ils lui sont remis au prochain message du porteur (sobriété, 11/11/2026)."""
+    return "corrections demandées" in verdict(alerte) or any(m in alerte for m in ACTION)
 
 
 def texte(liste: list[str]) -> str:
@@ -104,7 +119,9 @@ def main() -> None:
     if nom == "Stop":
         if ev.get("stop_hook_active"):          # déjà relancé une fois par ce crochet : ne pas boucler
             return
-        liste = nouvelles()
+        liste = [a for a in nouvelles(marquer=False) if a_traiter(a)]   # les autres attendent le prochain message
+        if liste:
+            marquer_vues(liste)
         porteur = messages_porteur(ev.get("session_id") or "")
         if liste or porteur:
             motif = "\n".join(([texte(liste)] if liste else []) + ([porteur] if porteur else []))

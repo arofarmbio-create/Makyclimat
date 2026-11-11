@@ -27,7 +27,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import conversations  # noqa: E402
 from surveiller_coordination import (ARRETE, NAIROBI, PLAFOND_JOUR, cle_message, genre_lancement,  # noqa: E402
-                                     lancements_comptes, lire_instance, nom_fichier, remise_plafonds)
+                                     lancements_comptes, lire_instance, nom_fichier, remise_plafonds,
+                                     seuil_remise)
 from surveiller_coordination import effacer_plafonds as _effacer_plafonds  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -328,7 +329,7 @@ def plafonds(conso: dict, jour: str | None = None) -> dict:
             depuis = remise_plafonds(db, a, jour)
             for g in PLAFOND_JOUR:
                 sortie[a][g]["utilise"] = lancements_comptes(db, a, g, jour)
-            if depuis != jour:
+            if depuis != jour and seuil_remise(db, a, jour):      # ancienne remise sans seuil : ignorée
                 sortie[a]["_remise"] = depuis[11:]
     except sqlite3.Error:
         pass
