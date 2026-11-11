@@ -21,6 +21,7 @@
 | E6 — CMIP6, sonde puis collecte des 28 modèles | Claude | En attente (R-40) | [Protocole CMIP6](validation/protocole_cmip6.md), [workflow](.github/workflows/build-cmip6-nexgddp.yml), [revue Claude](pilotage/etat/coordination/claude-e6-sonde-workflow-20261110.md) | Après R-40 : sonde `ACCESS-CM2`, `historical`, `probe=true` sur un seul fichier, vérifier le résultat avant la collecte. [Détail](coordination/chantiers/r40_e6.md#e6) | 10/11/2026 19:06 | 10/11/2026 19:07 |
 | R-21 — Reprévisions GloFAS, portée réduite | Claude | Fait | [Protocole, section 9](validation/protocole_verification_impact.md#9-journal-des-modifications-du-protocole), [release](https://github.com/arofarmbio-create/Makyclimat/releases/tag/reprevisions-glofas-v4) | Contrôle du 11/11 (20:25) : release à 59 fichiers mensuels, les 6 mois du lot de 7 présents ; mars 2015 indisponible chez ECMWF (run `42999619208`). Rien à relancer. [Détail](coordination/chantiers/r21.md#reprévisions) | 11/11/2026 11:20 | 11/11/2026 20:25 |
 | R-21 — Méthode et analyse de puissance | Claude | Fait (4e version relue sans blocage par Codex le 11/11 à 18:49 ; statut de H1 à trancher par le porteur avant les scores) | [Fiche de méthode](validation/r21_fiche_methode.md), [éligibilité](validation/r21_eligibilite.md), [puissance](validation/r21_puissance.md), [projection](validation/r21_puissance_projection.md), [script éligibilité](scripts/r21_eligibilite.py), [script puissance](scripts/r21_puissance.py), [script couverture](scripts/r21_couverture_seuils.py) | 4e version relue sans blocage par Codex (11/11, 18:49) : 425 unités, 22 épisodes, 12 saisons ; CCI ≤ 0,46 ; témoins en sensibilité, statut exploratoire par défaut. Suite : estimateur de CCI sur jours témoins ; le porteur tranche le statut de H1 avant les scores. [Détail](coordination/chantiers/r21.md#méthode-et-puissance) | 11/11/2026 | 11/11/2026 |
+| R-21 — CCI des différences sur jours témoins (sensibilité) | Claude | À relire | [script](scripts/r21_cci_temoins.py), [résultat](validation/r21_cci_temoins.md), [plis](validation/r21_cci_temoins.csv), `d767d9c` | CCI 0,045 [0,035 ; 0,054], borne haute + 0,10 = 0,154 < 0,46 ; discordances rares sur témoins (4 %), transportabilité non démontrée. Relecture Codex demandée (conformité à la fiche, sections 2, 4 et 5, et choix d'application), puis décision du porteur sur le statut de H1. [Détail](coordination/chantiers/r21.md#méthode-et-puissance) | 11/11/2026 20:35 | 11/11/2026 20:50 |
 | R-21 — Calcul des scores et vérification | Claude | En attente (méthode) | [Script](scripts/validate_reforecast_impact.py), [workflow 15](.github/workflows/validate-reforecast-impact.yml) | Après revue de la méthode et autorisation de calcul, exécuter et vérifier les résultats. | — | — |
 | R-21 — Rapport et clôture | Claude | En attente (résultats) | [Journal](validation/journal_recherche.md), [registre](validation/etat_des_lieux_registre.md) | Consigner la conclusion, même négative ou exploratoire, avec les incertitudes. Codex relit avant clôture. | — | — |
 | R-21 — Consigner le choix du porteur du projet | Codex | Fait | [Protocole, section 9](validation/protocole_verification_impact.md#9-journal-des-modifications-du-protocole), `pilotage/objectifs.yml` (local) | Option 1 consignée et arbitrage terminé dans le suivi local. | 10/11/2026 07:09 | 10/11/2026 07:10 |
@@ -30,7 +31,6 @@
 
 ## Messages et décisions en attente
 
-- **11/11/2026 · Surveillant → porteur du projet · Échec GitHub à examiner.** run 43069072168 (Tests, cancelled) https://github.com/arofarmbio-create/Makyclimat/actions/runs/43069072168 ; 4 échecs de ce workflow en 24 h : pas de nouveau diagnostic automatique. Répondre ou autoriser une relance.
 Format — `Date · auteur → destinataire · question précise · lien`. Réservé aux questions qui demandent une réponse ; une fois traité, consigner la décision dans la ligne ou la fiche et retirer le message (il part dans l'archive).
 
 ## Exécutions autorisées
@@ -44,6 +44,7 @@ Ajoutées par le tableau de bord après un clic du porteur du projet. Le surveil
 Réponses données depuis le tableau de bord. L'assistant concerné les lit à sa reprise et met sa ligne de tâche à jour.
 
 - 11/11/2026 20:33 · Porteur du projet → Surveillant · **Autorisé** · Échec GitHub à examiner · Exécution `exec:claude:20261111-203336-dd76`
+- 11/11/2026 20:40 · Porteur du projet → Surveillant · **Refusé** · Échec GitHub à examiner
 
 ## Lancements ponctuels autorisés
 

@@ -1261,3 +1261,10 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   place des 0,35 / 0,45 non dérivés). La CCI estimée sur jours témoins n'est pas démontrée transportable aux
   épisodes : elle devient une analyse de sensibilité, statut exploratoire par défaut, confirmatoire seulement sur
   décision du porteur avant les scores.
+- 📊 (soir) **CCI des différences estimée sur jours témoins** (analyse de sensibilité, aucune unité d'impact lue,
+  `scripts/r21_cci_temoins.py`, `validation/r21_cci_temoins.md`) : seuils en blocs mensuels sans la saison testée,
+  charge comparable par pli (π = 0,38 dans les 14 plis, écart de charge −2 à −4 %, aucun hors tolérance), 4 782
+  jours-groupes sur les groupes de districts des 22 épisodes. **CCI 0,045 [0,035 ; 0,054]**, borne haute + 0,10 =
+  0,154, sous le seuil de 0,46 (ligne 0,12-0,21 du tableau : 96 à 100 % de puissance). Réserve forte : les deux
+  méthodes ne diffèrent que dans 4 % des unités témoins, loin des 30 points de gain supposés sur les épisodes ; la
+  transportabilité reste non démontrée. Statut de H1 : décision du porteur avant les scores.
