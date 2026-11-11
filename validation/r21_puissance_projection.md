@@ -1,5 +1,7 @@
 # R-21 — Analyse de puissance du critère H1 (inférence par saisons)
 
+> **Caduque (11/11/2026)** : mars 2015 est indisponible chez ECMWF (bande endommagée). La population finale est de 425 unités ; voir [r21_puissance.md](r21_puissance.md).
+
 Calcul du 11/11/2026 par [`scripts/r21_puissance.py`](../scripts/r21_puissance.py), 4000 simulations par case, graine fixe. Structure réelle tirée de [`r21_eligibilite.csv`](r21_eligibilite.csv) : **440 unités épisode × district, 23 épisodes, 12 saisons**. Détection du contrôle par unité : 0.4 en moyenne (écart type 0.15 entre épisodes) ; corrélation des méthodes par unité : 0.5. Gain moyen recalé exactement. Test A (principal) : permutation exacte des signes par saison. Le McNemar par épisode est écarté (fiche, section 5). Unilatéraux, α = 0,05. τ : écart type du gain entre saisons ; ω = 0,10 entre épisodes ; r : part des districts d'un épisode qui reprennent le tirage commun (paramètre du simulateur, non observable). La **CCI des différences** (corrélation intra-épisode de ens. − contrôle par district) est la grandeur observable qui relie chaque scénario à une estimation sur les prévisions.
 
 ## Erreur de type I (gain nul)

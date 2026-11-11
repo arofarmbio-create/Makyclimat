@@ -1,13 +1,13 @@
 # R-21 — Population éligible (épisodes, districts, témoins)
 
-Calcul du 11/11/2026 par [`scripts/r21_eligibilite.py`](../scripts/r21_eligibilite.py) ; 58 mois GloFAS en local. Détail par unité : [`r21_eligibilite.csv`](r21_eligibilite.csv). Aucun score calculé.
+Calcul du 11/11/2026 par [`scripts/r21_eligibilite.py`](../scripts/r21_eligibilite.py) ; 59 mois GloFAS en local. Détail par unité : [`r21_eligibilite.csv`](r21_eligibilite.csv). Aucun score calculé.
 
 ## Unités épisode × district
 
 - Unités avec fiche : 468, dans 25 épisodes.
-- **Éligibles : 376 unités, 20 épisodes, 11 saisons.**
-- Non éligibles, mois en cours de téléchargement : 64 unités (3 épisodes).
+- **Éligibles : 425 unités, 22 épisodes, 12 saisons.**
 - Non éligibles, aucune initialisation 1-3 j avant : 28 unités (2 épisodes).
+- Non éligibles, données ECMWF indisponibles (bande endommagée) : 15 unités (1 épisodes).
 
 | Épisode | Début | Saison | Districts éligibles |
 |---:|---|---:|---:|
@@ -29,6 +29,8 @@ Calcul du 11/11/2026 par [`scripts/r21_eligibilite.py`](../scripts/r21_eligibili
 | 16 | 2013-01-19 | 2012 | 5 |
 | 17 | 2013-01-28 | 2012 | 12 |
 | 19 | 2014-03-30 | 2013 | 6 |
+| 20 | 2015-02-07 | 2014 | 44 |
+| 21 | 2015-02-22 | 2014 | 5 |
 | 23 | 2016-02-02 | 2015 | 4 |
 | 24 | 2017-03-16 | 2016 | 51 |
 
@@ -73,8 +75,7 @@ Témoins : districts sans fiche de cyclone ou d'inondation dans le mois (sur 120
 | 2012 | mars 2013 | publié | 0 | 120 | 3720 |
 | 2013 | déc. 2013 | publié | 0 | 120 | 3720 |
 | 2013 | mars 2014 | publié | 6 | 112 | 3472 |
-| 2014 | fév. 2015 | en cours | 0 | 0 | 0 |
-| 2014 | mars 2015 | en cours | 0 | 0 | 0 |
+| 2014 | fév. 2015 | publié | 49 | 56 | 1568 |
 | 2015 | fév. 2016 | publié | 4 | 115 | 3335 |
 | 2016 | jan. 2017 | publié | 0 | 120 | 3720 |
 | 2016 | fév. 2017 | publié | 0 | 120 | 3360 |

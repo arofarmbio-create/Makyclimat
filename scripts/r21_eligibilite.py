@@ -28,7 +28,9 @@ ROOT = Path(__file__).resolve().parent.parent
 MOIS = (12, 1, 2, 3)
 SAISONS = (2003, 2018)
 EXCLUES = {2017}                     # saison 2017-2018 : fiches exclues (date douteuse), protocole section 9
-LOT_EN_COURS = {(2015, 2), (2015, 3)}
+LOT_EN_COURS: set[tuple[int, int]] = set()   # lot 3 terminé le 11/11/2026 (run 42999619208)
+# Mars 2015 : MARS/ECMWF « Requested data is on one or more damaged tape » (run 42999619208, 11/11/2026) ; relance inutile.
+INDISPONIBLES = {(2015, 3)}
 NOMS = {12: "déc.", 1: "jan.", 2: "fév.", 3: "mars"}
 
 
@@ -82,6 +84,8 @@ def main() -> None:
             raison = "janvier-mars 2019 exclu"
         elif bonnes:
             raison = ""
+        elif any(m in INDISPONIBLES for m in mois):
+            raison = "données ECMWF indisponibles (bande endommagée)"
         elif any(m in LOT_EN_COURS for m in mois):
             raison = "mois en cours de téléchargement"
         elif not all(m in publies for m in mois):

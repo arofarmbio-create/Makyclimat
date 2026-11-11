@@ -43,9 +43,10 @@ Pour H1, ce niveau est surtout un repère commun aux deux méthodes : la compara
 - **Initialisations deux fois par semaine** (reprévisions v4) : une unité n'est éligible que si une initialisation
   publiée tombe 1 à 3 jours avant l'une de ses dates ; les initialisations du mois précédent comptent (frontières).
 - **Effectifs figés** ([table](r21_eligibilite.md), [unités](r21_eligibilite.csv)) : 468 unités avec fiche dans
-  25 épisodes ; **376 éligibles (20 épisodes, 11 saisons)** avec les mois locaux ; 28 unités (2 épisodes) sans
-  initialisation utile ; 64 unités (3 épisodes) attendent février-mars 2015. **Projection : 440 unités, 23 épisodes,
-  12 saisons.**
+  25 épisodes ; **population finale : 425 éligibles (22 épisodes, 12 saisons)**, février 2015 compris ; 28 unités
+  (2 épisodes) sans initialisation utile ; 15 unités (1 épisode) exclues car mars 2015 est **indisponible chez ECMWF**
+  (« Requested data is on one or more damaged tape », [run 42999619208](https://github.com/arofarmbio-create/Makyclimat/actions/runs/42999619208),
+  11/11/2026 ; relance inutile). Avant le lot 3 : 376 unités ; la projection en espérait 440.
 - **Témoins** : jours-districts des mois publiés sans fiche, hors janvier-mars 2019 (aucune fiche datée dans
   l'export) et hors saison 2017-2018 (fiches exclues pour date douteuse). Une absence de fiche n'est pas une absence
   d'impact : les alertes sur témoins sont des « alertes sans impact confirmé ».
@@ -75,26 +76,27 @@ structure réelle des unités ; détection de chaque méthode simulée séparém
 moyenne ; gain moyen recalé exactement à 30 points ; τ = écart type du gain entre saisons (0 à 0,2). La dépendance
 est exprimée par la **CCI des différences** : corrélation intra-épisode, entre districts, de (détection ensemble −
 détection contrôle). C'est la grandeur observable ; le paramètre de mélange r du simulateur n'en est qu'un moyen
-(CCI ≈ r², plus l'hétérogénéité entre épisodes). Erreur de type I du test A : 4,0 à 5,5 % (± 0,7).
+(CCI ≈ r², plus l'hétérogénéité entre épisodes). Erreur de type I du test A sur la population finale : 4,4 à 5,3 %
+(± 0,7).
 
-| CCI des différences (τ = 0 / 0,1 / 0,2) | 376 unités, 20 épisodes, 11 saisons | 440 unités, 23 épisodes, 12 saisons |
+| CCI des différences (τ = 0 / 0,1 / 0,2) | Avant le lot 3 : 376 unités, 20 épisodes, 11 saisons | **Population finale : 425 unités, 22 épisodes, 12 saisons** |
 |---|---:|---:|
 | 0,12 à 0,21 | 95 à 100 % | 96 à 100 % |
 | 0,26 à 0,33 | 86 à 93 % | 89 à 96 % |
-| 0,36 à 0,43 | 79 à 87 % | 84 à 91 % |
-| 0,48 à 0,53 | 75 à 80 % | 79 à 84 % |
-| 0,79 à 0,82 | 62 à 68 % | 67 à 71 % |
+| 0,36 à 0,43 | 79 à 87 % | 83 à 89 % |
+| 0,48 à 0,54 | 75 à 80 % | 78 à 83 % |
+| 0,79 à 0,82 | 62 à 68 % | 66 à 71 % |
 
 Erreur de Monte-Carlo : ± 1,5 point au plus (IC à 95 %).
 
 **Lecture** (repères conservateurs, conditionnels aux hypothèses simulées : P_C, σ_C, κ, ω et forme de la
-dépendance). Le seuil de CCI est dérivé dans [la puissance](r21_puissance.md#seuil-de-cci-pour-80--de-puissance-dérivation)
-et [la projection](r21_puissance_projection.md#seuil-de-cci-pour-80--de-puissance-dérivation) : pour chaque τ,
-interpolation linéaire entre les deux scénarios qui encadrent 80 %, sur la **borne basse à 95 % de Monte-Carlo** de la
-puissance, puis plus petit seuil sur τ. Résultat : **CCI ≤ 0,40** avec la population actuelle, **CCI ≤ 0,49** avec la
-projection (février-mars 2015 publiés). Ce sont des bornes prudentes, pas des limites franches : des scénarios
-au-dessus atteignent encore 80 % (86,7 % à CCI 0,37 pour 376 unités ; 84,0 % à CCI 0,49 pour 440 unités), et
-l'interpolation porte sur des scénarios espacés d'environ 0,1 de CCI.
+dépendance). Le seuil de CCI est dérivé dans [la puissance](r21_puissance.md#seuil-de-cci-pour-80--de-puissance-dérivation) :
+pour chaque τ, interpolation linéaire entre les deux scénarios qui encadrent 80 %, sur la **borne basse à 95 % de
+Monte-Carlo** de la puissance, puis plus petit seuil sur τ. Résultat sur la population finale : **CCI ≤ 0,46**
+(seuils par τ : 0,54 / 0,53 / 0,46 ; 0,40 avant le lot 3). C'est une borne prudente, pas une limite franche : des
+scénarios au-dessus atteignent encore 80 % (83,2 % à CCI 0,49 et 82,2 % à CCI 0,50 pour τ = 0 et 0,1), et
+l'interpolation porte sur des scénarios espacés d'environ 0,1 de CCI. La [projection](r21_puissance_projection.md)
+(440 unités) est caduque depuis l'indisponibilité de mars 2015.
 
 **Estimation de la CCI avant tout score, sans information d'impact** : calculer les alertes des deux méthodes (seuils
 de la section 2, charge comparable de la section 4) sur les **initialisations témoins**, c'est-à-dire sans fiche dans
@@ -134,6 +136,6 @@ et 2016, puis février et mars 2015. Consigné au [protocole, section 9](protoco
 
 **Mise à jour du 11/11/2026 après-midi** : le porteur du projet maintient l'objectif de 80 % (le statut exploratoire est
 jugé insuffisant). Le passage à l'unité épisode × district avec inférence par saisons (section 5) le rend atteignable
-si la CCI des différences ne dépasse pas 0,40 (population actuelle) ou 0,49 (avec 2015), repères conservateurs dérivés
-en section 5 ; elle sera estimée sur les seules prévisions avant tout score, à titre de sensibilité (sa transportabilité
+si la CCI des différences ne dépasse pas 0,46 (population finale de 425 unités, mars 2015 indisponible), repère
+conservateur dérivé en section 5 ; elle sera estimée sur les seules prévisions avant tout score, à titre de sensibilité (sa transportabilité
 aux épisodes n'est pas démontrée) : le porteur tranche alors le statut avant les scores.

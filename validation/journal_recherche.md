@@ -1253,3 +1253,11 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   différences de détection (le paramètre r du simulateur donne CCI ≈ r²). Gain de 30 points : 80 % atteint si
   CCI ≤ 0,35 (376 unités) ou ≤ 0,45 (440 unités) ; 62-71 % si CCI ≈ 0,8. Estimateur sur jours témoins sans impact
   proposé, avec règle de décision fixée avant calcul.
+- ❌ Lot 3 (run `42999619208`) : février 2015 publié ; **mars 2015 indisponible chez ECMWF** (« Requested data is on
+  one or more damaged tape ») — relance inutile, 15 unités (1 épisode) exclues avec ce motif.
+- 🔧 Puissance, 4e version (relecture Codex 14:37) sur la **population finale : 425 unités, 22 épisodes,
+  12 saisons**. Type I 4,4-5,3 %. Gain de 30 points : 78-83 % vers CCI 0,5, 66-71 % vers CCI 0,8. Seuil de CCI dérivé
+  par interpolation sur la borne basse Monte-Carlo : **≤ 0,46** (repère conservateur ; 0,40 avant le lot 3, à la
+  place des 0,35 / 0,45 non dérivés). La CCI estimée sur jours témoins n'est pas démontrée transportable aux
+  épisodes : elle devient une analyse de sensibilité, statut exploratoire par défaut, confirmatoire seulement sur
+  décision du porteur avant les scores.
