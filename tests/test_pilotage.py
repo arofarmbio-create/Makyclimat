@@ -346,6 +346,31 @@ def test_crochet_actions_sans_texte_de_commande():
     assert g == "recherche" and "1234" not in t and "passe" not in t
 
 
+def test_crochet_codex_programme_sans_arguments():
+    """Codex : le panneau montre le programme lancé (et son script ou sous-commande), jamais les autres arguments."""
+    sys.path.insert(0, str(RACINE / "scripts" / "pilotage"))
+    import hook_actions_codex as H
+    cas = {
+        "git status --short": "Lance git status",
+        "git commit -m \"message SECRET\"": "Lance git commit",
+        "gh run view 43049712984 --log": "Lance gh run view",
+        "gh api repos/x/y --jq .SECRET": "Lance gh api",
+        ".venv\\Scripts\\python.exe -B -X utf8 scripts\\r21_puissance.py --graine 7": "Lance python scripts/r21_puissance.py",
+        "python -m pytest -q tests/test_pilotage.py": "Lance python -m pytest",
+        "python -c \"print('SECRET')\"": "Lance python",
+        "bash -lc \"rg -n SECRET scripts\"": "Lance rg",
+        "TOKEN=SECRET curl https://exemple.org/SECRET": "Lance curl",
+    }
+    for commande, attendu in cas.items():
+        g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash", "tool_input": {"command": commande}})
+        assert (g, t) == ("commande", attendu), (commande, t)
+    g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash",
+                      "tool_input": {"command": ["powershell.exe", "-Command", "Get-ChildItem SECRET"]}})
+    assert t == "Lance get-childitem", t
+    g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash", "tool_input": {"command": "\"unterminated"}})
+    assert g == "commande" and "unterminated" not in t or t.startswith("Lance")
+
+
 def test_carte_relire_rapprochee_du_verdict():
     """Une carte « Relire » suit le dernier verdict du diff actuel : avis rendu → carte chez le responsable."""
     import sqlite3

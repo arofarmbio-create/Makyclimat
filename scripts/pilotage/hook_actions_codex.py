@@ -1,6 +1,8 @@
 """Alimente le panneau « En ce moment » avec des événements locaux Codex."""
 
 import json
+import re
+import shlex
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -21,10 +23,63 @@ OUTILS = {
 }
 
 
+ENVELOPPES = {"bash", "sh", "powershell", "pwsh", "cmd"}       # « bash -lc "…" » : on lit la commande intérieure
+SOUS_COMMANDES = {"git": 1, "gh": 2, "npm": 1, "pip": 1, "uv": 1, "codex": 1}
+NOM_SUR = re.compile(r"^[\w.+-]{1,40}$")
+SCRIPT_SUR = re.compile(r"^[\w./\\-]{1,120}\.(py|ps1|cmd|bat|sh)$", re.I)
+
+
+def programme(commande):
+    """Programme lancé, sans ses arguments : « git status », « gh run view », « python scripts/x.py ».
+    Rien d'autre de la commande n'est retenu (confidentialité). None si on ne sait pas le dire sûrement."""
+    try:
+        if isinstance(commande, list):
+            mots = [str(m) for m in commande]
+        else:
+            mots = shlex.split(str(commande).replace("\\", "/"), posix=True)  # chemins Windows
+    except ValueError:
+        mots = str(commande).split()
+    for _ in range(2):  # au plus deux enveloppes (powershell -Command "bash -lc …" est improbable)
+        if mots and Path(mots[0]).stem.lower() in ENVELOPPES:
+            interieur = next((m for m in mots[1:] if not m.startswith(("-", "/"))), None)
+            if interieur is None:
+                break
+            try:
+                mots = shlex.split(interieur.replace("\\", "/"), posix=True)
+            except ValueError:
+                mots = interieur.split()
+    mots = [m for m in mots if "=" not in m or m.startswith("-")]    # variables d'environnement en tête
+    if not mots:
+        return None
+    nom = Path(mots[0].replace("\\", "/")).stem.lower()
+    if not NOM_SUR.match(nom):
+        return None
+    if nom.startswith("python") or nom == "py":
+        if "-m" in mots[:-1]:
+            module = mots[mots.index("-m") + 1]
+            return f"python -m {module}" if NOM_SUR.match(module) else "python"
+        if "-c" in mots:
+            return "python"
+        script = next((m for m in mots[1:] if SCRIPT_SUR.match(m)), None)
+        return f"python {script}" if script else "python"
+    n = SOUS_COMMANDES.get(nom, 0)
+    suite = []
+    for m in [m for m in mots[1:] if not m.startswith("-")][:n]:
+        if not NOM_SUR.match(m):
+            break
+        suite.append(m)
+    return " ".join([nom, *suite])
+
+
 def decrire(evenement):
     nom = evenement.get("hook_event_name")
     if nom == "PreToolUse":
-        return OUTILS.get(evenement.get("tool_name"))
+        action = OUTILS.get(evenement.get("tool_name"))
+        if action and action[0] == "commande":
+            prog = programme((evenement.get("tool_input") or {}).get("command") or "")
+            if prog:
+                return "commande", f"Lance {prog}"
+        return action
     return ETAPES.get(nom)
 
 
