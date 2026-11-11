@@ -375,21 +375,47 @@ def sujet_lancement(identifiant, consigne):
     return texte if len(texte) <= 200 else texte[:200].rsplit(" ", 1)[0] + " …"
 
 
+def remise_plafonds(db, agent, jour):
+    """Début du décompte du jour : l'heure de la dernière remise à zéro par le porteur si elle date de ce jour,
+    sinon le jour entier (porteur du projet, 11/11/2026 : travailler même plafond atteint)."""
+    try:
+        ligne = db.execute("SELECT depuis FROM remises_plafond WHERE agent = ?", (agent,)).fetchone()
+    except sqlite3.OperationalError:          # table absente : aucune remise jamais faite
+        return jour
+    return ligne[0] if ligne and ligne[0].startswith(jour) else jour
+
+
+def effacer_plafonds(db, agent, depuis=None):
+    """Remise à zéro des plafonds automatiques d'un agent par le porteur ; seuls les lancements suivants comptent."""
+    depuis = depuis or datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
+    with db:
+        db.execute("CREATE TABLE IF NOT EXISTS remises_plafond (agent TEXT PRIMARY KEY, depuis TEXT NOT NULL)")
+        db.execute("INSERT OR REPLACE INTO remises_plafond (agent, depuis) VALUES (?, ?)", (agent, depuis))
+    return depuis
+
+
+def lancements_comptes(db, agent, genre, jour, sujet=None):
+    """Lancements automatiques d'un genre comptés pour le plafond : du jour, depuis la dernière remise à zéro.
+    « debut » s'écrit JJ/MM/AAAA HH:MM : dans un même jour, l'ordre des chaînes est l'ordre des heures."""
+    # Identifiants : codex/<genre>-x pour Codex ; <genre>-x ou claude/<genre>-x pour Claude. LIKE est ancré au début.
+    motif, motif_alt = (f"codex/{genre}-%",) * 2 if agent == "codex" else (f"{genre}-%", f"claude/{genre}-%")
+    requete = "SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND debut >= ?"
+    parametres = [motif, motif_alt, f"{jour}%", remise_plafonds(db, agent, jour)]
+    if sujet is not None:
+        requete += " AND sujet = ?"
+        parametres.append(sujet)
+    return db.execute(requete, parametres).fetchone()[0]
+
+
 def au_plafond(db, agent, identifiant, sujet, jour):
     """Vrai si un lancement automatique dépasserait le plafond du jour (les exécutions autorisées n'y sont pas soumises)."""
     genre = genre_lancement(identifiant)
     if genre not in PLAFOND_JOUR:
         return False
-    # Identifiants : codex/<genre>-x pour Codex ; <genre>-x ou claude/<genre>-x pour Claude. LIKE est ancré au début.
-    motif, motif_alt = (f"codex/{genre}-%",) * 2 if agent == "codex" else (f"{genre}-%", f"claude/{genre}-%")
-    n = db.execute("SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ?",
-                   (motif, motif_alt, f"{jour}%")).fetchone()[0]
-    if n >= PLAFOND_JOUR[genre]:
+    if lancements_comptes(db, agent, genre, jour) >= PLAFOND_JOUR[genre]:
         return True
     if genre == "relecture":
-        n = db.execute("SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND sujet = ?",
-                       (motif, motif_alt, f"{jour}%", sujet)).fetchone()[0]
-        return n >= RELECTURES_TACHE_JOUR
+        return lancements_comptes(db, agent, genre, jour, sujet) >= RELECTURES_TACHE_JOUR
     return False
 
 

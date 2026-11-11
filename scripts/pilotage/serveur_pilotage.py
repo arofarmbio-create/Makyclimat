@@ -406,6 +406,8 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             reponse = consigne(str(corps.get("agent", "")), str(corps.get("texte", "")))
         elif self.path == "/api/message":
             reponse = poste.envoyer(str(corps.get("agent", "")), str(corps.get("texte", "")))
+        elif self.path == "/api/plafonds/effacer":
+            reponse = poste.effacer_plafonds(str(corps.get("agent", "")))
         elif self.path == "/api/enfant/arreter":
             reponse = poste.arreter_enfant(str(corps.get("id", "")))
         elif self.path == "/api/conversation/nouvelle":

@@ -352,7 +352,8 @@ function rendreEnfants(){
        '<div class="x">'+Object.keys(g).map(function(x){return (GENRES[x]||x)+" "+g[x];}).join(" · ")+'</div></div>';
     h+='<div class="kpi"><div class="l"><span class="etq '+a+'">'+NOMS[a]+'</span>jetons du jour</div><div class="v">'+k(s.entree)+'</div><div class="x">dont cache '+k(s.cache)+' · sortie '+k(s.sortie)+(s.cout?' · '+s.cout.toFixed(2)+' $':'')+'</div></div>';
     var p=pl[a]||{}; h+='<div class="kpi"><div class="l"><span class="etq '+a+'">'+NOMS[a]+'</span>plafonds automatiques</div>'+
-      Object.keys(p).map(function(x){var u=p[x].utilise,m=p[x].max;return '<div class="x">'+(GENRES[x]||x)+' '+u+' / '+m+'</div><div class="barre'+(u>=m?" plein":"")+'"><i style="width:'+Math.min(100,100*u/m)+'%"></i></div>';}).join("")+'</div>';
+      Object.keys(p).filter(function(x){return x.charAt(0)!=="_";}).map(function(x){var u=p[x].utilise,m=p[x].max;return '<div class="x">'+(GENRES[x]||x)+' '+u+' / '+m+'</div><div class="barre'+(u>=m?" plein":"")+'"><i style="width:'+Math.min(100,100*u/m)+'%"></i></div>';}).join("")+
+      '<div class="x">'+(p._remise?'remis à zéro à '+e(p._remise)+' · ':'')+'<button class="filtre" data-effacer="'+a+'" title="Remettre à zéro les plafonds du jour de '+NOMS[a]+'">Remettre à zéro</button></div></div>';
   });
   poser("kpis",h);
   var boutons=[["tous","Tous"],["claude","Claude"],["codex","Codex"]], genres=[["tous","Tous genres"],["relecture","Relectures"],["exec","Exécutions"],["reveil","Réveils"],["sous-agent","Sous-agents"]];
@@ -388,6 +389,12 @@ function ouvrir(id){
 }
 function fermer(){ ouvert=null; $("tiroir").classList.remove("ouvert"); $("voile").classList.remove("ouvert"); }
 $("t-fermer").onclick=fermer; $("voile").onclick=fermer; document.addEventListener("keydown",function(ev){ if(ev.key==="Escape") fermer(); });
+$("kpis").addEventListener("click",function(ev){
+  var b=ev.target.closest("[data-effacer]"); if(!b) return;
+  var a=b.getAttribute("data-effacer");
+  if(!confirm("Remettre à zéro les plafonds automatiques du jour de "+NOMS[a]+" ? Les relectures et réveils automatiques reprendront.")) return;
+  post("/api/plafonds/effacer",{agent:a}).then(function(r){ alert(r.erreur||r.ok); lire(); });
+});
 $("t-arreter").onclick=function(){ if(ouvert&&confirm("Arrêter cette session enfant ?")) post("/api/enfant/arreter",{id:ouvert}).then(function(r){retour($("t-retour"),r);lire();}); };
 
 /* ----- fil, runs, messages entre assistants ----- */

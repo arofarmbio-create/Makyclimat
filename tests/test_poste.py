@@ -54,6 +54,25 @@ class Plafond(unittest.TestCase):
         self.assertFalse(C.au_plafond(self.db, "claude", "relecture-n", "Tâche B", "11/11/2026"))
         self.assertFalse(C.au_plafond(self.db, "codex", "codex/relecture-n", "Tâche A", "11/11/2026"))
 
+    def test_remise_a_zero_par_le_porteur(self):
+        """Porteur, 11/11/2026 : effacer les plafonds pour travailler même plafond atteint, Claude ou Codex."""
+        for i in range(C.PLAFOND_JOUR["reveil"]):
+            self.ajouter(f"codex/reveil-{i}", f"s{i}")
+        for i in range(C.RELECTURES_TACHE_JOUR):
+            self.ajouter(f"relecture-{i}", "Tâche A")
+        self.assertTrue(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "11/11/2026"))
+        C.effacer_plafonds(self.db, "codex", "11/11/2026 11:00")
+        self.assertFalse(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "11/11/2026"))
+        self.assertTrue(C.au_plafond(self.db, "claude", "relecture-n", "Tâche A", "11/11/2026"))  # Claude non touché
+        C.effacer_plafonds(self.db, "claude", "11/11/2026 11:00")
+        self.assertFalse(C.au_plafond(self.db, "claude", "relecture-n", "Tâche A", "11/11/2026"))
+        for i in range(C.PLAFOND_JOUR["reveil"]):                    # le décompte repart après la remise
+            self.ajouter(f"codex/reveil-apres-{i}", f"t{i}")
+            self.db.execute("UPDATE lancements SET debut = '11/11/2026 12:00' WHERE id = ?", (f"codex/reveil-apres-{i}",))
+        self.assertTrue(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "11/11/2026"))
+        C.effacer_plafonds(self.db, "codex", "10/11/2026 23:00")    # une remise de la veille ne vaut pas aujourd'hui
+        self.assertTrue(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "11/11/2026"))
+
     def test_execution_autorisee_jamais_plafonnee(self):
         for i in range(50):
             self.ajouter(f"claude/exec-{i}")
@@ -136,12 +155,15 @@ class Instantane(unittest.TestCase):
             db.close()
             with patch.object(P, "BASE", base):
                 liste = P.enfants(jour="11/11/2026")
+                conso = P.consommation(liste)
+                plafonds = P.plafonds(conso, jour="11/11/2026")
+                self.assertIn("ok", P.effacer_plafonds("codex"))       # remise du jour réel : sans effet le 11/11
+                self.assertIn("erreur", P.effacer_plafonds("autre"))
             self.assertEqual([e["agent"] for e in liste], ["claude", "codex"])
             self.assertEqual(liste[1]["duree_min"], 3)
             self.assertEqual(liste[1]["jetons"], {"entree": 1000, "cache": 800, "sortie": 50, "cout": None})
-            conso = P.consommation(liste)
             self.assertEqual((conso["codex"]["sessions"], conso["claude"]["cout"]), (1, 0.5))
-            self.assertEqual(P.plafonds(conso)["codex"]["relecture"]["utilise"], 1)
+            self.assertEqual(plafonds["codex"]["relecture"]["utilise"], 1)
 
     def test_detail_refuse_un_chemin(self):
         self.assertIn("erreur", P.detail("../../secret"))

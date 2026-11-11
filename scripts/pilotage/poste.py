@@ -27,7 +27,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import conversations  # noqa: E402
 from surveiller_coordination import (ARRETE, NAIROBI, PLAFOND_JOUR, cle_message, genre_lancement,  # noqa: E402
-                                     lire_instance, nom_fichier)
+                                     lancements_comptes, lire_instance, nom_fichier, remise_plafonds)
+from surveiller_coordination import effacer_plafonds as _effacer_plafonds  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 ETAT = ROOT / "pilotage" / "etat"
@@ -313,9 +314,39 @@ def consommation(liste: list[dict]) -> dict:
     return sortie
 
 
-def plafonds(conso: dict) -> dict:
-    return {a: {g: {"utilise": conso[a]["par_genre"].get(g, 0), "max": m} for g, m in PLAFOND_JOUR.items()}
-            for a in AGENTS}
+def plafonds(conso: dict, jour: str | None = None) -> dict:
+    """Plafonds automatiques du jour, décomptés depuis la dernière remise à zéro par le porteur."""
+    sortie = {a: {g: {"utilise": conso[a]["par_genre"].get(g, 0), "max": m} for g, m in PLAFOND_JOUR.items()}
+              for a in AGENTS}
+    jour = jour or datetime.now(NAIROBI).strftime("%d/%m/%Y")
+    try:
+        db = sqlite3.connect(f"file:{BASE.as_posix()}?mode=ro", uri=True)
+    except sqlite3.Error:
+        return sortie
+    try:
+        for a in AGENTS:
+            depuis = remise_plafonds(db, a, jour)
+            for g in PLAFOND_JOUR:
+                sortie[a][g]["utilise"] = lancements_comptes(db, a, g, jour)
+            if depuis != jour:
+                sortie[a]["_remise"] = depuis[11:]
+    except sqlite3.Error:
+        pass
+    finally:
+        db.close()
+    return sortie
+
+
+def effacer_plafonds(agent: str) -> dict:
+    """Remise à zéro par le porteur des plafonds automatiques du jour (relectures, réveils) d'un agent."""
+    if agent not in AGENTS:
+        return {"erreur": "Choisir Claude ou Codex."}
+    db = sqlite3.connect(BASE)          # fermé explicitement : « with » laisserait le fichier verrouillé sous Windows
+    try:
+        depuis = _effacer_plafonds(db, agent)
+    finally:
+        db.close()
+    return {"ok": f"Plafonds de {NOMS[agent]} remis à zéro à {depuis[11:]} : les lancements automatiques reprennent."}
 
 
 def github_instantane() -> dict:
