@@ -128,6 +128,13 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
     hors de la saison des pluies, à 3 jours ou moins de sa date de saisie.
   - La saison 2017-2018 n'a donc plus aucune fiche utilisable. La règle du §5 (seules les saisons avec au moins une
     fiche sont vérifiées) l'écarte automatiquement : ses impacts réels ne sont pas comptés comme des fausses alertes.
+- 11/11/2026, avant tout calcul de score : **gain pertinent et effectif** (décision du porteur du projet, 11:19
+  Nairobi, sur la [fiche de méthode](r21_fiche_methode.md#6-décisions-demandées-au-porteur-du-projet)).
+  - Gain de détection jugé pertinent pour H1 : **30 points** (ensemble contre contrôle, McNemar unilatéral, α = 0,05).
+  - Collecte autorisée de 7 mois de plus : mars 2007, mars 2008, février 2011, mars 2014, février et mars 2015,
+    février 2016 (25 épisodes dans 12 saisons, puissance 72 % pour 30 points).
+  - Conséquence de la règle de statut (fiche, §6.3) : 72 % < 80 %, donc H1 reste **exploratoire** même avec ce lot,
+    résultats présentés avec intervalles de confiance.
 
 ## Références
 

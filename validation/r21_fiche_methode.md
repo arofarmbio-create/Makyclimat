@@ -77,3 +77,9 @@ confirmatoire n'atteint 80 % que pour un gain d'environ 35 à 40 points.
    au total d'après les derniers mois. Gain : 10 épisodes et 5 saisons. Sans ce lot, H1 est déclaré exploratoire.
 3. Statut final : confirmatoire seulement si l'effectif obtenu donne au moins 80 % de puissance au gain retenu ;
    sinon exploratoire, avec intervalles de confiance.
+
+**Décisions du porteur du projet (11/11/2026, 11:19 Nairobi)** : (1) gain pertinent fixé à **30 points** ; (2) lot de
+7 mois **autorisé**. Avec 25 épisodes, la puissance pour 30 points est de 72 % : selon le point 3, H1 restera
+**exploratoire**. Collecte lancée par Claude en trois lots successifs (une seule file Copernicus) : mars 2007, 2008 et
+2014 ([run 42987384953](https://github.com/arofarmbio-create/Makyclimat/actions/runs/42987384953)), puis février 2011
+et 2016, puis février et mars 2015. Consigné au [protocole, section 9](protocole_verification_impact.md#9-journal-des-modifications-du-protocole).
