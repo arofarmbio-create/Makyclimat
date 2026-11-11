@@ -1227,3 +1227,18 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   (`bilan_frais: false`), et le potentiel des nappes n'est plus recalculé sur des sorties anciennes. Test ajouté (lacune
   dans le dernier mois → refus). Effet de bord corrigé : le pays de démonstration des tests écrasait
   `validation/spi_regions.csv`.
+
+## 11/11/2026
+
+### R-21 — Couverture des seuils, épisodes et puissance (avant tout score)
+- ✅ Février et mars 2010 publiés (relance unique réussie) : 53 mois dans la release. Sept copies locales tronquées
+  (téléchargements interrompus) remplacées avant calcul.
+- ⚠️ Seuils : 91 % des mailles éligibles ont un seuil, mais la règle actuelle (maximum sur les mois disponibles)
+  mélange des saisons de 1 à 6 mois. Le maximum d'un seul mois vaut en médiane 23 à 79 % du maximum de décembre-mars,
+  donc les seuils sont biaisés vers le bas. Janvier seul : 14 saisons, sous le minimum. Proposition : blocs mensuels
+  décembre-mars (couverture 93-95 %). Détail : `validation/r21_couverture_seuils.md`.
+- ❌ Puissance : avec les mois publiés, 15 épisodes dans 7 saisons, puissance de 41 % pour un gain de détection de
+  30 points (McNemar exact). H1 ne peut pas être confirmatoire sur cette base. Avec 7 mois de plus : 25 épisodes,
+  72 % (30 points) et 89 % (40 points). Détail : `validation/r21_puissance.md`.
+- 📌 Fiche de méthode proposée (`validation/r21_fiche_methode.md`) ; décisions du porteur attendues sur le gain jugé
+  pertinent et le téléchargement des 7 mois. Verrou des scores maintenu.
