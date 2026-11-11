@@ -387,7 +387,7 @@ def remise_plafonds(db, agent, jour):
 
 def effacer_plafonds(db, agent, depuis=None):
     """Remise à zéro des plafonds automatiques d'un agent par le porteur ; seuls les lancements suivants comptent."""
-    depuis = depuis or datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
+    depuis = depuis or datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M:%S")   # à la seconde : voir lancements_comptes
     with db:
         db.execute("CREATE TABLE IF NOT EXISTS remises_plafond (agent TEXT PRIMARY KEY, depuis TEXT NOT NULL)")
         db.execute("INSERT OR REPLACE INTO remises_plafond (agent, depuis) VALUES (?, ?)", (agent, depuis))
@@ -396,10 +396,12 @@ def effacer_plafonds(db, agent, depuis=None):
 
 def lancements_comptes(db, agent, genre, jour, sujet=None):
     """Lancements automatiques d'un genre comptés pour le plafond : du jour, depuis la dernière remise à zéro.
-    « debut » s'écrit JJ/MM/AAAA HH:MM : dans un même jour, l'ordre des chaînes est l'ordre des heures."""
+    « debut » s'écrit JJ/MM/AAAA HH:MM : dans un même jour, l'ordre des chaînes est l'ordre des heures. La remise est
+    notée à la seconde et comparée strictement : un lancement de la minute de la remise n'est plus compté (avis Codex
+    du 11/11, 19:17 : à la minute près, les lancements antérieurs de cette minute restaient comptés)."""
     # Identifiants : codex/<genre>-x pour Codex ; <genre>-x ou claude/<genre>-x pour Claude. LIKE est ancré au début.
     motif, motif_alt = (f"codex/{genre}-%",) * 2 if agent == "codex" else (f"{genre}-%", f"claude/{genre}-%")
-    requete = "SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND debut >= ?"
+    requete = "SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND debut > ?"
     parametres = [motif, motif_alt, f"{jour}%", remise_plafonds(db, agent, jour)]
     if sujet is not None:
         requete += " AND sujet = ?"

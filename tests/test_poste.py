@@ -73,6 +73,15 @@ class Plafond(unittest.TestCase):
         C.effacer_plafonds(self.db, "codex", "10/11/2026 23:00")    # une remise de la veille ne vaut pas aujourd'hui
         self.assertTrue(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "11/11/2026"))
 
+    def test_remise_dans_la_minute_des_lancements(self):
+        """Avis Codex (11/11, 19:17) : des lancements de la minute de la remise, juste avant, ne comptent plus."""
+        for i in range(C.PLAFOND_JOUR["reveil"]):
+            self.ajouter(f"codex/reveil-{i}", f"s{i}")               # tous à 10:00
+        C.effacer_plafonds(self.db, "codex", "11/11/2026 10:00:30")
+        self.assertFalse(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "11/11/2026"))
+        self.assertEqual(C.lancements_comptes(self.db, "codex", "reveil", "11/11/2026"), 0)
+        self.assertEqual(C.lancements_comptes(self.db, "codex", "reveil", "12/11/2026"), 0)
+
     def test_execution_autorisee_jamais_plafonnee(self):
         for i in range(50):
             self.ajouter(f"claude/exec-{i}")
