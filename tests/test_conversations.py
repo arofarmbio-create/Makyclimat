@@ -59,6 +59,51 @@ def test_refus_si_claude_travaille(d):
     assert "erreur" in C.nouvelle_conversation(None, forcer=True)
 
 
+class _Horloge:
+    def __init__(self):
+        self.t = 0.0
+
+    def __call__(self):
+        return self.t
+
+    def dormir(self, s):
+        self.t += s
+
+
+def test_attente_du_nouveau_claude():
+    """Relecture Codex (11/11, 19:17 et 19:32) : le nouveau Claude doit tourner avant de fermer l'ancien."""
+    h = _Horloge()
+    tables = iter([{50: (1, "cmd.exe")}] * 2 + [{50: (1, "cmd.exe"), 51: (50, "claude.exe")}] * 20)
+    with patch.object(C, "processus", lambda: next(tables)):
+        assert C.attendre_claude(50, sommeil=h.dormir, horloge=h) == 51
+    h = _Horloge()
+    tables = iter([{50: (1, "cmd.exe"), 51: (50, "claude.exe")}] * 2 + [{50: (1, "cmd.exe")}] * 200)
+    with patch.object(C, "processus", lambda: next(tables)):
+        assert C.attendre_claude(50, sommeil=h.dormir, horloge=h) is None    # Claude apparu puis tombé
+    h = _Horloge()
+    with patch.object(C, "processus", lambda: {}):
+        assert C.attendre_claude(50, sommeil=h.dormir, horloge=h) is None    # console fermée
+
+
+@avec_etat
+def test_ancien_claude_conserve_si_le_nouveau_ne_demarre_pas(d):
+    C.fichier("claude").write_text(json.dumps({"pid": 77}), encoding="utf-8")
+    tues = []
+
+    class Console:
+        pid = 50
+
+    with patch.object(C, "processus", lambda: {77: (1, "claude.exe")}), \
+            patch.object(C.subprocess, "Popen", lambda *a, **k: Console()), \
+            patch.object(C, "attendre_claude", lambda pid: None), \
+            patch.object(C.subprocess, "run", lambda commande, **k: tues.append(commande)):
+        r = C.nouvelle_conversation(Path("claude.exe"))
+        assert "erreur" in r and tues == []
+        with patch.object(C, "attendre_claude", lambda pid: 51):
+            r = C.nouvelle_conversation(Path("claude.exe"))
+        assert "ok" in r and tues and tues[0][:3] == ["taskkill", "/PID", "77"]
+
+
 def test_javascript_du_tableau_valide():
     """Une erreur de syntaxe JS bloque toute la page (11/11/2026 : apostrophe non protégée)."""
     import re, shutil, subprocess

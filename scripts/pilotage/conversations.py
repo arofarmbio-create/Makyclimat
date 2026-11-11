@@ -15,6 +15,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 from urllib.parse import urlencode
 from uuid import UUID
@@ -337,6 +338,27 @@ def session_codex_recente(avant: dict) -> dict:
 
 
 # ------------------------------------------------------------------ changement de conversation (Claude)
+def attendre_claude(console: int, delai: float = 30.0, stable: float = 3.0,
+                    sommeil=time.sleep, horloge=time.monotonic) -> int | None:
+    """pid du nouveau claude.exe lancé par la console `console`, s'il tourne encore `stable` secondes après son
+    apparition ; None si la console se ferme ou si rien ne démarre dans `delai` secondes (l'ancien Claude est alors
+    conservé)."""
+    fin = horloge() + delai
+    vu, depuis = None, 0.0
+    while horloge() < fin:
+        table = processus()
+        if console not in table:
+            return None                          # console déjà fermée : le lancement a échoué
+        enfants = [pid for pid, (pere, nom) in table.items() if pere == console and nom == "claude.exe"]
+        if vu in enfants:
+            if horloge() - depuis >= stable:
+                return vu
+        else:
+            vu, depuis = (enfants[0], horloge()) if enfants else (None, 0.0)
+        sommeil(0.5)
+    return None
+
+
 def nouvelle_conversation(exe: Path | None, forcer: bool = False) -> dict:
     if exe is None:
         return {"erreur": "Claude Code introuvable sur ce PC."}
@@ -357,10 +379,14 @@ def nouvelle_conversation(exe: Path | None, forcer: bool = False) -> dict:
     lanceur = ETAT / "lancer_nouvelle_conversation.cmd"
     lanceur.write_text("@echo off\r\nchcp 65001 >nul\r\n"
                        f"set /p CONSIGNE=<\"{f}\"\r\n\"{exe}\" \"%CONSIGNE%\"\r\n", encoding="utf-8")
-    subprocess.Popen(["cmd.exe", "/k", str(lanceur)], cwd=ROOT,
-                     env={k: v for k, v in os.environ.items()
-                          if k.upper() != "CLAUDECODE" and not k.upper().startswith("CLAUDE_CODE_")},
-                     creationflags=getattr(subprocess, "CREATE_NEW_CONSOLE", 0))
+    console = subprocess.Popen(["cmd.exe", "/k", str(lanceur)], cwd=ROOT,
+                               env={k: v for k, v in os.environ.items()
+                                    if k.upper() != "CLAUDECODE" and not k.upper().startswith("CLAUDE_CODE_")},
+                               creationflags=getattr(subprocess, "CREATE_NEW_CONSOLE", 0))
+    # Relecture Codex (11/11/2026, 19:17 et 19:32) : ne fermer l'ancienne conversation qu'une fois la nouvelle démarrée.
+    if not attendre_claude(console.pid):
+        return {"erreur": "La nouvelle conversation Claude n'a pas démarré dans les temps : l'ancienne reste ouverte. "
+                          "Voir le message dans la fenêtre cmd qui vient de s'ouvrir."}
     if ancien:
         subprocess.run(["taskkill", "/PID", str(ancien), "/T", "/F"], capture_output=True, check=False,
                        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
