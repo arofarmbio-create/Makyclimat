@@ -200,15 +200,21 @@ def charge(agent: str) -> dict:
     n = d.get("jetons")
     if n is None:
         return {"connue": False, **({"au_travail": bool(d.get("au_travail"))} if d else {})}
+    estimee = agent == "codex" and not d.get("limite")
     if agent == "claude" and not d.get("limite"):
-        # Fenêtre réelle du modèle, écrite par la ligne d'état de la même conversation.
+        # Fenêtre réelle du modèle, écrite par la ligne d'état. Elle dépend du modèle, pas de la conversation :
+        # à l'ouverture d'une conversation, la ligne d'état porte encore l'ancienne session ; retomber alors sur
+        # LIMITE (200 000) donnait une charge fausse (131 % le 11/11 pour 262 000 jetons d'une fenêtre de 1 M).
         lc = _lire_json(ETAT / "limites_claude.json")
-        if lc.get("fenetre") and lc.get("session_id") == d.get("session_id"):
+        if isinstance(lc.get("fenetre"), int) and lc["fenetre"] > 0:
             d["limite"] = lc["fenetre"]
+            estimee = lc.get("session_id") != d.get("session_id")
+        else:
+            estimee = True
     limite = d.get("limite") or LIMITE
     part = n / limite
     niveau = "alerte" if part >= ALERTE else "conseil" if part >= CONSEIL else "ok"
-    return {"connue": True, "jetons": n, "limite": limite, "limite_estimee": agent == "codex" and not d.get("limite"),
+    return {"connue": True, "jetons": n, "limite": limite, "limite_estimee": estimee,
             "pourcent": round(100 * part), "niveau": niveau, "maj": d.get("maj", ""),
             "au_travail": bool(d.get("au_travail")), "fermable": bool(d.get("pid"))}
 

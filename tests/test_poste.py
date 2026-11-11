@@ -251,7 +251,9 @@ class Limites(unittest.TestCase):
                 self.assertEqual((V.charge("claude")["limite"], V.charge("claude")["pourcent"]), (1_000_000, 10))
                 (etat / "limites_claude.json").write_text(json.dumps({"session_id": "autre", "fenetre": 1_000_000}),
                                                           encoding="utf-8")
-                self.assertEqual(V.charge("claude")["limite"], V.LIMITE)
+                # Autre session : même fenêtre (elle dépend du modèle), marquée estimée.
+                c = V.charge("claude")
+                self.assertEqual((c["limite"], c["limite_estimee"]), (1_000_000, True))
 
     def lancer(self, ident, atteinte=True):
         with tempfile.TemporaryDirectory() as t:

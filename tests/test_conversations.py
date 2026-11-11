@@ -52,6 +52,17 @@ def test_niveaux_de_charge(d):
 
 
 @avec_etat
+def test_fenetre_reprise_d_une_autre_session(d):
+    # Ouverture d'une conversation : la ligne d'état porte encore l'ancienne session (cas « 131 % » du 11/11).
+    (d / "limites_claude.json").write_text(json.dumps({"session_id": "ancienne", "fenetre": 1_000_000}), encoding="utf-8")
+    C.fichier("claude").write_text(json.dumps({"session_id": "neuve", "jetons": 262_000, "pid": 1}), encoding="utf-8")
+    c = C.charge("claude")
+    assert (c["limite"], c["pourcent"], c["niveau"], c["limite_estimee"]) == (1_000_000, 26, "ok", True)
+    (d / "limites_claude.json").write_text(json.dumps({"session_id": "neuve", "fenetre": 1_000_000}), encoding="utf-8")
+    assert C.charge("claude")["limite_estimee"] is False
+
+
+@avec_etat
 def test_refus_si_claude_travaille(d):
     C.fichier("claude").write_text(json.dumps({"au_travail": True, "pid": 1}), encoding="utf-8")
     r = C.nouvelle_conversation(Path("claude.exe"))
