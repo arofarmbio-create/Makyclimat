@@ -1242,3 +1242,10 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   72 % (30 points) et 89 % (40 points). Détail : `validation/r21_puissance.md`.
 - 📌 Fiche de méthode proposée (`validation/r21_fiche_methode.md`) ; décisions du porteur attendues sur le gain jugé
   pertinent et le téléchargement des 7 mois. Verrou des scores maintenu.
+- 📌 (après-midi) Le porteur maintient l'objectif de 80 % de puissance. Population figée : 376 unités épisode ×
+  district éligibles (20 épisodes, 11 saisons), 440 avec février-mars 2015 (23 épisodes, 12 saisons). Les
+  reprévisions ne sont initialisées que deux fois par semaine : 2 épisodes perdus faute d'initialisation 1-3 j avant.
+- ❌ puis 🔧 Puissance, 2e version après relectures de Codex : le premier modèle sous-estimait le gain (bornage) et
+  confondait « détecté par les deux » et « manqué par les deux ». Corrigé (quatre issues, gain recalé). Test par
+  permutation des saisons : 85-100 % pour 30 points si r ≤ 0,6, 67-71 % si r = 0,9 ; type I 4-5 %. McNemar par
+  épisode écarté (6-50 %). Prochaine étape : estimer r sur les seules prévisions, sans impact.
