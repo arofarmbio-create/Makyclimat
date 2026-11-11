@@ -694,7 +694,7 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
         jg='<div class="conv"><span class="small">Conversation : '+c.pourcent+' % du contexte ('+Math.round(c.jetons/1000)+' k jetons)</span>'
           +'<span class="gauge"><span style="width:'+Math.min(100,c.pourcent)+'%"></span></span>'
           +(c.niveau!=="ok"?'<p class="small"><span class="st '+cl+'"><i></i>Nouvelle conversation conseillée</span></p>':'')
-          +(a[0]==="claude"?'<button type="button" class="nouv-conv">Nouvelle conversation (ferme l'ancienne)</button><span class="small muted conv-msg"></span>'
+          +(a[0]==="claude"?'<button type="button" class="nouv-conv">Nouvelle conversation (ferme l&#39;ancienne)</button><span class="small muted conv-msg"></span>'
             :(c.niveau!=="ok"?'<p class="small muted">Codex sur GPT Desktop : ouvrir une nouvelle conversation à la main, en lui demandant de relire COORDINATION.md.</p>':''))
           +'</div>';
       }}

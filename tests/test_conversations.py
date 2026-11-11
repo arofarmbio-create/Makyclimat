@@ -57,6 +57,23 @@ def test_refus_si_claude_travaille(d):
     assert "erreur" in C.nouvelle_conversation(None, forcer=True)
 
 
+def test_javascript_du_tableau_valide():
+    """Une erreur de syntaxe JS bloque toute la page (11/11/2026 : apostrophe non protégée)."""
+    import re, shutil, subprocess
+    node = shutil.which("node")
+    if not node:
+        return
+    f = Path(__file__).resolve().parents[1] / "pilotage" / "tableau_de_bord.html"   # page générée (locale)
+    if not f.exists():
+        return
+    html = f.read_text(encoding="utf-8")
+    with tempfile.TemporaryDirectory() as d:
+        js = Path(d) / "page.js"
+        js.write_text("\n;\n".join(re.findall(r"<script>(.*?)</script>", html, re.S)), encoding="utf-8")
+        r = subprocess.run([node, "--check", str(js)], capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr[:500]
+
+
 if __name__ == "__main__":
     for nom, f in list(globals().items()):
         if nom.startswith("test_"):
