@@ -70,6 +70,7 @@ def simuler(ep, gain, tau, omega, r, n_sim, rng, signes):
                             rng.standard_normal((n_sim, E)), decalage)
     b_s = np.zeros((n_sim, S)); c_s = np.zeros((n_sim, S)); n_s = np.zeros(S)
     det_e = np.zeros((n_sim, E), bool); det_c = np.zeros((n_sim, E), bool)
+    somme = np.zeros((n_sim, E)); carres = np.zeros((n_sim, E))     # pour la CCI des différences de détection
     for k, n in enumerate(ep.n.to_numpy()):
         def tirer(taille):                                  # (U, V) : V = U avec la probabilité KAPPA
             u = rng.random((n_sim, taille))
@@ -81,6 +82,8 @@ def simuler(ep, gain, tau, omega, r, n_sim, rng, signes):
         ctl, ens = u < p_c[:, k:k + 1], v < p_e[:, k:k + 1]   # quatre issues appariées par unité
         b_s[:, si[k]] += (ens & ~ctl).sum(1); c_s[:, si[k]] += (ctl & ~ens).sum(1); n_s[si[k]] += n
         det_e[:, k] = ens.any(1); det_c[:, k] = ctl.any(1)
+        d = ens.astype(float) - ctl.astype(float)                # différence de détection par district (-1, 0, 1)
+        somme[:, k] = d.sum(1); carres[:, k] = (d ** 2).sum(1)
     # A : permutation des signes par saison (exacte, 2^S combinaisons)
     x = (b_s - c_s) / np.sqrt(n_s)
     t_obs = x.sum(1)
@@ -89,12 +92,25 @@ def simuler(ep, gain, tau, omega, r, n_sim, rng, signes):
     # B : McNemar par épisode (détecté par une méthode si au moins un district l'est)
     b, c = (det_e & ~det_c).sum(1), (det_c & ~det_e).sum(1)
     p_b = np.where(b + c > 0, binom.sf(b - 1, b + c, 0.5), 1.0)
-    return float((p_a <= ALPHA).mean()), float((p_b <= ALPHA).mean())
+    return float((p_a <= ALPHA).mean()), float((p_b <= ALPHA).mean()), cci(somme, carres, ep.n.to_numpy())
+
+
+def cci(somme, carres, n):
+    """Corrélation intra-épisode (ANOVA à un facteur, effectifs inégaux) des différences de détection entre méthodes,
+    moyenne sur les simulations. C'est la grandeur à estimer sur les prévisions (relecture Codex, 13:52 et 13:55)."""
+    N, K = n.sum(), len(n)
+    total = somme.sum(1, keepdims=True) / N
+    msb = ((somme / n - total) ** 2 * n).sum(1) / (K - 1)
+    msw = (carres.sum(1) - (somme ** 2 / n).sum(1)) / (N - K)
+    n0 = (N - (n ** 2).sum() / N) / (K - 1)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        icc = (msb - msw) / (msb + (n0 - 1) * msw)
+    return float(np.nanmean(icc))
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sim", type=int, default=3000)
+    ap.add_argument("--sim", type=int, default=4000)
     ap.add_argument("--avec-lot-en-cours", action="store_true",
                     help="compter aussi les unités des mois en cours de téléchargement (projection)")
     ap.add_argument("--eligibilite", default=str(ROOT / "validation" / "r21_eligibilite.csv"))
@@ -109,15 +125,19 @@ def main() -> None:
          f"[`r21_eligibilite.csv`](r21_eligibilite.csv) : **{int(ep.n.sum())} unités épisode × district, "
          f"{len(ep)} épisodes, {S} saisons**. Détection du contrôle par unité : {P_C} en moyenne (écart type {SIGMA_C} "
          f"entre épisodes) ; corrélation des méthodes par unité : {KAPPA}. Gain moyen recalé exactement. "
-         "Test A (principal) : permutation exacte des signes par saison. Test B : McNemar exact par épisode. "
+         "Test A (principal) : permutation exacte des signes par saison. Le McNemar par épisode est écarté (fiche, section 5). "
          "Unilatéraux, α = 0,05. τ : écart type du gain entre saisons ; ω = 0,10 entre épisodes ; r : part des "
-         "districts d'un épisode qui partagent le même résultat.", ""]
-    for gain in (0.0, 0.20, 0.30):
-        titre = "Erreur de type I (gain nul)" if gain == 0 else f"Gain de {gain * 100:.0f} points"
-        L += [f"## {titre}", "", "| τ | r | Test A (saisons) | Test B (épisodes) |", "|---:|---:|---:|---:|"]
-        for tau, r in itertools.product((0.0, 0.10, 0.20), (0.3, 0.6, 0.9)):
-            a, b = simuler(ep, gain, tau, 0.10, r, args.sim, rng, signes)
-            L.append(f"| {tau:.2f} | {r:.1f} | {100 * a:.0f} % | {100 * b:.0f} % |".replace(".", ","))
+         "districts d'un épisode qui reprennent le tirage commun (paramètre du simulateur, non observable). La **CCI des "
+         "différences** (corrélation intra-épisode de ens. − contrôle par district) est la grandeur observable qui "
+         "relie chaque scénario à une estimation sur les prévisions.", ""]
+    for gain in (0.0, 0.30):
+        titre = "Erreur de type I (gain nul)" if gain == 0 else f"Gain de {gain * 100:.0f} points (fixé par le porteur)"
+        L += [f"## {titre}", "", "| τ | r | CCI des différences | Test A (saisons) | ± erreur Monte-Carlo |",
+              "|---:|---:|---:|---:|---:|"]
+        for tau, r in itertools.product((0.0, 0.10, 0.20), (0.3, 0.5, 0.6, 0.7, 0.9)):
+            a, _, icc = simuler(ep, gain, tau, 0.10, r, args.sim, rng, signes)
+            se = 1.96 * np.sqrt(a * (1 - a) / args.sim)
+            L.append(f"| {tau:.2f} | {r:.1f} | {icc:.2f} | {100 * a:.1f} % | {100 * se:.1f} |".replace(".", ","))
         L.append("")
     sortie = ROOT / "validation" / ("r21_puissance_projection.md" if args.avec_lot_en_cours else "r21_puissance.md")
     sortie.write_text("\n".join(L) + "\n", encoding="utf-8")

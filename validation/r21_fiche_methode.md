@@ -69,21 +69,36 @@ dans la saison s. La saison est l'unité d'échange : la dépendance entre distr
 respectée. Unilatéral, α = 0,05. **Test B** (McNemar par épisode, détecté si un district l'est) : écarté, car un
 épisode de plusieurs dizaines de districts est presque toujours détecté par les deux méthodes ; puissance de 6 à 50 %.
 
-Simulation ([détail](r21_puissance.md), [projection](r21_puissance_projection.md), [script](../scripts/r21_puissance.py)) :
-structure réelle des unités ; détection par unité de chaque méthode simulée séparément (quatre issues) ; contrôle à
-0,40 en moyenne ; gain moyen recalé exactement ; τ = écart type du gain entre saisons ; r = part des districts d'un
-épisode qui partagent le même résultat. Erreur de type I du test A : 4 à 5 %.
+Simulation, 3e version après les relectures de Codex de 13:52 et 13:55 ([détail](r21_puissance.md),
+[projection](r21_puissance_projection.md), [script](../scripts/r21_puissance.py)), 4 000 simulations par case :
+structure réelle des unités ; détection de chaque méthode simulée séparément (quatre issues) ; contrôle à 0,40 en
+moyenne ; gain moyen recalé exactement à 30 points ; τ = écart type du gain entre saisons (0 à 0,2). La dépendance
+est exprimée par la **CCI des différences** : corrélation intra-épisode, entre districts, de (détection ensemble −
+détection contrôle). C'est la grandeur observable ; le paramètre de mélange r du simulateur n'en est qu'un moyen
+(CCI ≈ r², plus l'hétérogénéité entre épisodes). Erreur de type I du test A : 4,0 à 5,5 % (± 0,7).
 
-| Gain de 30 points, test A | r = 0,3 | r = 0,6 | r = 0,9 |
-|---|---:|---:|---:|
-| 376 unités, 20 épisodes, 11 saisons (τ = 0 à 0,2) | 94-100 % | 79-87 % | 65-68 % |
-| 440 unités, 23 épisodes, 12 saisons (τ = 0 à 0,2) | 96-100 % | 85-90 % | 67-71 % |
+| CCI des différences (τ = 0 / 0,1 / 0,2) | 376 unités, 20 épisodes, 11 saisons | 440 unités, 23 épisodes, 12 saisons |
+|---|---:|---:|
+| 0,12 à 0,21 | 95 à 100 % | 96 à 100 % |
+| 0,26 à 0,33 | 86 à 93 % | 89 à 96 % |
+| 0,36 à 0,43 | 79 à 87 % | 84 à 91 % |
+| 0,48 à 0,53 | 75 à 80 % | 79 à 84 % |
+| 0,79 à 0,82 | 62 à 68 % | 67 à 71 % |
 
-**Lecture** : l'objectif de 80 % est atteint si les districts d'un même épisode ne réagissent pas en bloc (r ≤ 0,6),
-et manqué si presque tous les districts d'un épisode ont le même résultat (r = 0,9). r est donc la quantité décisive.
-**Proposition** : l'estimer avant tout score, sans information d'impact, à partir des seules prévisions : corrélation
-des dépassements du contrôle entre districts d'un même jour, sur toutes les initialisations des mois publiés. Si r
-estimé ≤ 0,6, H1 est confirmatoire au seuil de 80 % ; sinon, présenter la puissance obtenue et le statut exploratoire.
+Erreur de Monte-Carlo : ± 1,5 point au plus (IC à 95 %).
+
+**Lecture** : avec la population actuelle, 80 % est atteint dans tous les scénarios de τ si la CCI est au plus
+d'environ **0,35** ; avec la projection (février-mars 2015 publiés), si elle est au plus d'environ **0,45**. Au-delà,
+la puissance tombe sous 80 %.
+
+**Estimation de la CCI avant tout score, sans information d'impact (proposition soumise à Codex)** : calculer les
+alertes des deux méthodes (seuils de la section 2, charge comparable de la section 4) sur les **initialisations
+témoins**, c'est-à-dire sans fiche dans les districts concernés. On appliquerait à ces jours les groupes de districts
+des épisodes réels et on ne retiendrait que les jours-groupes où au moins une méthode alerte dans le groupe (situation
+d'activité comparable à un épisode). La CCI des différences s'estime alors par ANOVA, avec un intervalle par
+bootstrap des saisons. Aucune unité d'impact n'est lue : les résultats des épisodes réels restent cachés. **Décision
+fixée à l'avance** : si la borne haute de l'intervalle est sous le seuil de la population obtenue, H1 est
+confirmatoire au seuil de 80 % ; sinon, on publie la puissance correspondante et le statut exploratoire.
 
 ## 6. Décisions demandées au porteur du projet
 
@@ -101,4 +116,4 @@ et 2016, puis février et mars 2015. Consigné au [protocole, section 9](protoco
 
 **Mise à jour du 11/11/2026 après-midi** : le porteur du projet maintient l'objectif de 80 % (le statut exploratoire est
 jugé insuffisant). Le passage à l'unité épisode × district avec inférence par saisons (section 5) le rend atteignable
-si la dépendance intra-épisode r ne dépasse pas 0,6 ; r sera estimé sur les seules prévisions avant tout score.
+si la CCI des différences ne dépasse pas environ 0,35 (population actuelle) ou 0,45 (avec 2015) ; elle sera estimée sur les seules prévisions avant tout score.

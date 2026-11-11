@@ -1249,3 +1249,7 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   confondait « détecté par les deux » et « manqué par les deux ». Corrigé (quatre issues, gain recalé). Test par
   permutation des saisons : 85-100 % pour 30 points si r ≤ 0,6, 67-71 % si r = 0,9 ; type I 4-5 %. McNemar par
   épisode écarté (6-50 %). Prochaine étape : estimer r sur les seules prévisions, sans impact.
+- 🔧 Puissance, 3e version (relectures Codex 13:52-13:55) : la dépendance est exprimée par la CCI observable des
+  différences de détection (le paramètre r du simulateur donne CCI ≈ r²). Gain de 30 points : 80 % atteint si
+  CCI ≤ 0,35 (376 unités) ou ≤ 0,45 (440 unités) ; 62-71 % si CCI ≈ 0,8. Estimateur sur jours témoins sans impact
+  proposé, avec règle de décision fixée avant calcul.
