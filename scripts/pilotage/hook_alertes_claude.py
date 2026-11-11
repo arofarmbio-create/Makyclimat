@@ -103,8 +103,7 @@ def main() -> None:
         if conv:
             contexte.append(conv)
         if contexte:
-            print(json.dumps({"hookSpecificOutput": {"hookEventName": nom, "additionalContext": "
-".join(contexte)}}, ensure_ascii=False))
+            print(json.dumps({"hookSpecificOutput": {"hookEventName": nom, "additionalContext": "\n".join(contexte)}}, ensure_ascii=False))
 
 
 if __name__ == "__main__":

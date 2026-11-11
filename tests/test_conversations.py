@@ -74,6 +74,14 @@ def test_javascript_du_tableau_valide():
         assert r.returncode == 0, r.stderr[:500]
 
 
+def test_scripts_de_pilotage_compilent():
+    """Un crochet qui ne compile pas échoue en silence (11/11/2026 : chaîne coupée dans hook_alertes_claude.py)."""
+    import py_compile
+    dossier = Path(__file__).resolve().parents[1] / "scripts" / "pilotage"
+    for script in sorted(dossier.glob("*.py")):
+        py_compile.compile(str(script), doraise=True)
+
+
 if __name__ == "__main__":
     for nom, f in list(globals().items()):
         if nom.startswith("test_"):
