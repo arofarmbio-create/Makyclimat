@@ -93,6 +93,14 @@ CONSIGNE_ECRITURE = (
     "réécriture d'historique ni de suppression de données. S'il manque une décision de fond, arrête-toi et écris un "
     "message au porteur du projet dans « Messages et décisions en attente ». Termine par un résumé de 150 mots au "
     "plus : fait, vérifié, reste à faire.\n\n")
+# Codex : sa session enfant n'écrit pas dans .git (bac à sable workspace-write). Elle ne commite pas ; la session
+# mère de Claude relit le diff puis commite (règle 4 des sessions enfants, décision du porteur, 11/11/2026).
+CONSIGNE_ECRITURE_CODEX = CONSIGNE_ECRITURE.replace(
+    "commite avec un message clair et pousse si la demande l'implique.",
+    "ne commite pas et ne pousse pas (ta session n'a pas accès en écriture à .git) : laisse les fichiers modifiés, "
+    "liste-les dans ta ligne de tâche et passe-la à « À commiter par Claude ». Mets à jour ton point de reprise "
+    "pilotage/etat/reprise_codex.md (travail fait, fichiers non commités, prochaines étapes).")
+assert CONSIGNE_ECRITURE_CODEX != CONSIGNE_ECRITURE
 
 
 def nom_fichier(identifiant):
@@ -443,7 +451,8 @@ def lancer_claude(db, dossier, demandes, executables):
 
     nom = AGENTS[agent]
     ecriture = "/exec-" in identifiant
-    prompt = (CONSIGNE_ECRITURE if ecriture else CONSIGNE_LECTURE) + consigne
+    ecrire = CONSIGNE_ECRITURE_CODEX if agent == "codex" else CONSIGNE_ECRITURE
+    prompt = (ecrire if ecriture else CONSIGNE_LECTURE) + consigne
     if agent == "codex" and not ecriture:      # lecture seule = sans réseau : l'état GitHub lui est fourni
         prompt += contexte_github()
     consommation = "non communiquée"

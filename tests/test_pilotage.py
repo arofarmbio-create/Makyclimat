@@ -83,6 +83,13 @@ def test_consigne_codex():
     assert "erreur" in S.consigne("autre", "x")
 
 
+def test_codex_ne_commite_pas():
+    """Session enfant Codex : pas d'écriture dans .git ; Claude commite (porteur, 11/11/2026)."""
+    assert "ne commite pas" in C.CONSIGNE_ECRITURE_CODEX and "reprise_codex.md" in C.CONSIGNE_ECRITURE_CODEX
+    assert "commite avec un message clair" not in C.CONSIGNE_ECRITURE_CODEX
+    assert "commite avec un message clair" in C.CONSIGNE_ECRITURE
+
+
 def test_relecture_croisee_et_economie():
     lignes = COPIE.splitlines()
     a = next(l for l in lignes if l.startswith("| Outil A"))
