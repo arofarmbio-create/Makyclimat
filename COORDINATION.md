@@ -21,6 +21,7 @@
 - **Porteur du projet** : décide des orientations, des choix de fond, et tranche les litiges entre Claude et Codex.
 - **Claude Code** : **pilote**. Propose la stratégie et la méthode (calcul, modélisation), écrit et exécute le code, coordonne les tâches, surveille le surveillant, les runs et l'activité de Codex, et relance Codex quand une relecture tarde.
 - **Codex** : **vérificateur et améliorateur**. Relit chaque proposition et chaque code de Claude, valide ou formule des recommandations, et peut corriger lui-même si nécessaire (en le signalant ici). Ne lance pas de nouveau chantier sans accord de Claude ou du porteur.
+- **Audit système par Codex** (porteur du projet, 11/11/2026) : Codex audite l'ensemble du système (GitHub, workflows, releases, site, scripts, pilotage, données) et donne son avis ici. Claude relit chaque point d'audit, **vérifie sa pertinence sur les faits** (journal du run, code, fichiers) avant d'agir, code ce qui est justifié, et consigne pourquoi un point est écarté. Aucun point d'audit n'est appliqué sans cette vérification. Désaccord persistant : décision du porteur.
 - **Cycle de chaque étape** : Claude propose → Codex relit → Claude applique les recommandations et exécute → Codex vérifie le code et les résultats → Claude corrige → Fait. Désaccord persistant : décision du porteur.
 
 ## Définition de « Fait » (pour éviter les erreurs coûteuses)
