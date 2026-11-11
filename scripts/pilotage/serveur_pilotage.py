@@ -26,6 +26,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import conversations  # noqa: E402
 import github_direct  # noqa: E402
+import poste  # noqa: E402
 import tableau_de_bord  # noqa: E402
 from surveiller_coordination import NAIROBI, cle_message, ecrire_si_change, lire_instance  # noqa: E402
 from datetime import datetime  # noqa: E402
@@ -34,6 +35,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PIL = ROOT / "pilotage"
 ETAT = PIL / "etat" / "coordination"
 SURVEILLANT = Path(__file__).resolve().parent / "surveiller_coordination.py"
+POSTE_HTML = Path(__file__).resolve().parent / "poste.html"
 DUREES = (30, 60, 120, 240, 480)
 JETON = secrets.token_urlsafe(24)
 ONGLET_ACTIF_S = 35                # un onglet qui a interrogé le serveur depuis moins de 35 s est considéré ouvert
@@ -323,6 +325,7 @@ def echec_run(run: dict) -> bool:
 class Gestionnaire(SimpleHTTPRequestHandler):
     hotes: set[str] = set()
     derniere_visite = 0.0          # dernier appel d'un onglet ouvert (il interroge le serveur toutes les 10 s)
+    derniere_recherche = 0.0       # dernière ouverture de la page de recherche (tableau_de_bord.html)
 
     def log_message(self, *args):
         pass
@@ -351,7 +354,7 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             return
         if self.path in ("/", "/index.html"):
             self.send_response(302)
-            self.send_header("Location", "/tableau_de_bord.html")
+            self.send_header("Location", "/poste.html")
             self.end_headers()
             return
         if self.path == "/api/presence":
@@ -363,6 +366,23 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             return self._json(actions())
         if self.path == "/api/github":
             return self._json(github_direct.etat())
+        if self.path.split("?", 1)[0] == "/poste.html":       # page versionnée (pilotage/ est ignoré par Git)
+            corps = POSTE_HTML.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(corps)))
+            self.end_headers()
+            self.wfile.write(corps)
+            return
+        if self.path == "/api/poste":
+            Gestionnaire.derniere_visite = time.monotonic()
+            return self._json({**poste.instantane(actions(), github_direct.etat()), "jeton": JETON,
+                               "surveillant_detail": etat(), "durees": DUREES})
+        if self.path.startswith("/api/enfant?id="):
+            from urllib.parse import unquote
+            return self._json(poste.detail(unquote(self.path.split("=", 1)[1])))
+        if self.path.split("?", 1)[0] == "/tableau_de_bord.html":
+            Gestionnaire.derniere_recherche = time.monotonic()      # page de recherche : régénérée tant qu'on la consulte
         super().do_GET()
 
     def do_POST(self):
@@ -384,6 +404,10 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             reponse = decision(str(corps.get("cle", "")), str(corps.get("action", "")), str(corps.get("texte", "")))
         elif self.path == "/api/consigne":
             reponse = consigne(str(corps.get("agent", "")), str(corps.get("texte", "")))
+        elif self.path == "/api/message":
+            reponse = poste.envoyer(str(corps.get("agent", "")), str(corps.get("texte", "")))
+        elif self.path == "/api/enfant/arreter":
+            reponse = poste.arreter_enfant(str(corps.get("id", "")))
         elif self.path == "/api/conversation/nouvelle":
             reponse = conversations.nouvelle_conversation(binaire_claude(), bool(corps.get("forcer")))
         else:
@@ -403,22 +427,38 @@ def avis_windows(texte: str) -> None:
                      env=dict(os.environ, MAKYCLIMAT_AVIS=texte[:200]), creationflags=subprocess.CREATE_NO_WINDOW)
 
 
+GH_ACTIF_S, GH_REPOS_S, RELEASE_S = 60, 300, 600   # allègement du PC (porteur, 11/11/2026) : avant, 20 s en continu
+
+
 def suivre_github():
-    """Toutes les 20 s : runs et jobs ; toutes les 2 min : mois de la release R-21."""
-    cycle = 0
+    """Runs et jobs toutes les 60 s quand un run est en cours, toutes les 5 min sinon ; release R-21 toutes les 10 min.
+    Chaque relevé lance plusieurs appels gh : à 20 s en continu, ils pesaient sur le PC."""
+    derniere_release = 0.0
     while True:
-        github_direct.actualiser(avis=avis_windows, avec_release=cycle % 6 == 0, echec=echec_run)
-        cycle += 1
-        time.sleep(20)
+        avec_release = time.monotonic() - derniere_release >= RELEASE_S
+        github_direct.actualiser(avis=avis_windows, avec_release=avec_release, echec=echec_run)
+        if avec_release:
+            derniere_release = time.monotonic()
+        actifs = any(r.get("statut") != "completed" for r in (github_direct.etat().get("runs") or []))
+        time.sleep(GH_ACTIF_S if actifs else GH_REPOS_S)
+
+
+RECHERCHE_OUVERTE_S = 600
 
 
 def regenerer():
+    """La page de recherche (tableau_de_bord.html : git, relectures, protocole) n'est refaite que si elle a été ouverte
+    dans les 10 dernières minutes, ou au plus toutes les 30 min : le poste de pilotage n'en dépend pas."""
+    derniere = time.monotonic()
     while True:
-        try:
-            tableau_de_bord.generer()
-        except Exception as erreur:                 # une source illisible ne doit pas arrêter le serveur
-            print("Tableau de bord :", erreur, flush=True)
         time.sleep(tableau_de_bord.PERIODE_S)
+        if (time.monotonic() - Gestionnaire.derniere_recherche < RECHERCHE_OUVERTE_S
+                or time.monotonic() - derniere > 1800):
+            try:
+                tableau_de_bord.generer()
+                derniere = time.monotonic()
+            except Exception as erreur:                 # une source illisible ne doit pas arrêter le serveur
+                print("Tableau de bord :", erreur, flush=True)
 
 
 class ServeurExclusif(ThreadingHTTPServer):
@@ -455,6 +495,8 @@ def actions(n: int = 15) -> dict:
             except (KeyError, ValueError):
                 pass
         sortie[agent] = {"etat": etat, "actions": lignes[::-1], "charge": conversations.charge(agent)}
+        if agent == "codex":
+            sortie[agent]["nouvelle_conversation"] = conversations.lien_codex()
     return sortie
 
 
@@ -473,7 +515,7 @@ def main():
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--sans-navigateur", action="store_true")
     a = ap.parse_args()
-    adresse = f"http://127.0.0.1:{a.port}/tableau_de_bord.html"
+    adresse = f"http://127.0.0.1:{a.port}/poste.html"
     try:
         serveur = ServeurExclusif(("127.0.0.1", a.port), partial(Gestionnaire, directory=str(PIL)))
     except OSError:

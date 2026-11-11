@@ -1,0 +1,166 @@
+"""Poste de pilotage (11/11/2026) : sessions enfants visibles et plafonnées, arrêt, messagerie porteur ↔ sessions mères,
+remise des messages par les crochets et JavaScript de la page. Sans réseau, sans lancer Claude ni Codex."""
+import json
+import shutil
+import sqlite3
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+RACINE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(RACINE / "scripts" / "pilotage"))
+import hook_alertes_claude as H  # noqa: E402
+import poste as P  # noqa: E402
+import surveiller_coordination as C  # noqa: E402
+
+TABLE = "CREATE TABLE lancements (id TEXT PRIMARY KEY, debut TEXT, fin TEXT, statut TEXT NOT NULL, consommation TEXT)"
+
+
+class Sujet(unittest.TestCase):
+    def test_sujet_lisible_par_genre(self):
+        self.assertEqual(C.sujet_lancement("codex/relecture-ab", "Relecture automatique de la tâche « R-21 — Méthode » (x)"),
+                         "R-21 — Méthode")
+        self.assertEqual(C.sujet_lancement("claude/exec-1", "Consigne du porteur du projet : faire **X**"), "faire X")
+        self.assertEqual(C.sujet_lancement("codex/reveil-1", "Réponds." + C.SAUT + "**Claude → Codex · Sujet.** détail"),
+                         "Claude → Codex · Sujet. détail")
+        self.assertEqual(C.genre_lancement("relecture-x"), "relecture")
+        self.assertEqual(C.genre_lancement("r21-x"), "ponctuel")
+
+
+class Plafond(unittest.TestCase):
+    def setUp(self):
+        self.db = sqlite3.connect(":memory:")
+        self.db.execute(TABLE)
+        C.colonnes_lancements(self.db)
+
+    def ajouter(self, ident, sujet="S", jour="11/11/2026"):
+        self.db.execute("INSERT INTO lancements (id, debut, statut, sujet) VALUES (?, ?, 'Réponse reçue', ?)",
+                        (ident, f"{jour} 10:00", sujet))
+
+    def test_plafond_journalier_par_agent(self):
+        for i in range(C.PLAFOND_JOUR["reveil"]):
+            self.ajouter(f"codex/reveil-{i}", f"s{i}")
+        self.assertTrue(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "11/11/2026"))
+        self.assertFalse(C.au_plafond(self.db, "codex", "codex/reveil-z", "autre", "12/11/2026"))   # nouveau jour
+        self.assertFalse(C.au_plafond(self.db, "claude", "relecture-z", "autre", "11/11/2026"))     # autre agent
+
+    def test_relectures_d_une_meme_tache(self):
+        for i in range(C.RELECTURES_TACHE_JOUR):
+            self.ajouter(f"relecture-{i}", "Tâche A")
+        self.assertTrue(C.au_plafond(self.db, "claude", "relecture-n", "Tâche A", "11/11/2026"))
+        self.assertFalse(C.au_plafond(self.db, "claude", "relecture-n", "Tâche B", "11/11/2026"))
+        self.assertFalse(C.au_plafond(self.db, "codex", "codex/relecture-n", "Tâche A", "11/11/2026"))
+
+    def test_execution_autorisee_jamais_plafonnee(self):
+        for i in range(50):
+            self.ajouter(f"claude/exec-{i}")
+        self.assertFalse(C.au_plafond(self.db, "claude", "claude/exec-x", "S", "11/11/2026"))
+
+
+class Lancement(unittest.TestCase):
+    def test_sujet_consigne_enregistres_et_arret_conserve(self):
+        with tempfile.TemporaryDirectory() as t:
+            dossier = Path(t)
+            db = sqlite3.connect(dossier / "c.sqlite3")
+            db.execute(TABLE)
+            db.execute("CREATE TABLE alertes (id TEXT PRIMARY KEY, date TEXT, cibles TEXT, message TEXT)")
+
+            def faux(commande, *, input, **options):
+                # Pendant la session, le porteur l'arrête depuis le poste.
+                autre = sqlite3.connect(dossier / "c.sqlite3")      # « with » ne ferme pas : fichier verrouillé sous Windows
+                with autre:
+                    autre.execute("UPDATE lancements SET statut = ? WHERE statut = 'En cours'", (C.ARRETE,))
+                autre.close()
+                return subprocess.CompletedProcess(commande, 1, stdout="", stderr="tué")
+
+            with patch.object(C.subprocess, "run", side_effect=faux):
+                C.lancer_claude(db, dossier, [("claude", "claude/exec-1", "Consigne du porteur du projet : tester")],
+                                {"claude": "claude.exe"})
+            ligne = db.execute("SELECT statut, agent, genre, sujet, consigne FROM lancements").fetchone()
+            self.assertEqual(ligne[:4], (C.ARRETE, "claude", "exec", "tester"))
+            self.assertIn("tester", ligne[4])
+            self.assertIn("arrêtée depuis le poste", (dossier / "claude-exec-1.md").read_text(encoding="utf-8"))
+            db.close()
+
+
+class Messagerie(unittest.TestCase):
+    def setUp(self):
+        self.t = Path(tempfile.mkdtemp())
+        self.p = patch.object(P, "MESSAGES", self.t / "m.jsonl")
+        self.p.start()
+
+    def tearDown(self):
+        self.p.stop()
+        shutil.rmtree(self.t, ignore_errors=True)
+
+    def test_envoi_remise_reponse(self):
+        self.assertIn("erreur", P.envoyer("autre", "x"))
+        self.assertIn("erreur", P.envoyer("claude", "   "))
+        ident = P.envoyer("claude", "Bonjour  Claude")["id"]
+        self.assertEqual([m["texte"] for m in P.a_remettre("claude")], ["Bonjour Claude"])
+        self.assertEqual(P.a_remettre("codex"), [])
+        self.assertEqual(P.fil()[0]["etat"], "en attente de remise")
+        P.marquer_remis("claude", [ident])
+        self.assertEqual(P.a_remettre("claude"), [])
+        self.assertEqual(P.fil()[0]["etat"], "remis")
+        P.repondre("claude", ident, "Bien reçu")
+        f = P.fil()
+        self.assertEqual((f[0]["de"], f[0]["texte"]), ("claude", "Bien reçu"))
+        self.assertEqual(f[1]["etat"], "répondu")
+
+    def test_crochet_remet_seulement_a_la_session_mere(self):
+        P.envoyer("claude", "Pour la mère")
+        with patch.object(H, "lire_session", return_value="mere"):
+            self.assertEqual(H.messages_porteur("enfant"), "")          # session enfant : rien, rien de marqué
+            self.assertEqual(len(P.a_remettre("claude")), 1)
+            texte = H.messages_porteur("mere")
+            self.assertIn("Pour la mère", texte)
+            self.assertIn("poste.py repondre claude", texte)
+            self.assertEqual(H.messages_porteur("mere"), "")            # une seule remise
+
+
+class Instantane(unittest.TestCase):
+    def test_enfants_et_consommation(self):
+        with tempfile.TemporaryDirectory() as t:
+            base = Path(t) / "c.sqlite3"
+            with sqlite3.connect(base) as db:
+                db.execute(TABLE)
+                C.colonnes_lancements(db)
+                db.execute("INSERT INTO lancements VALUES ('codex/relecture-a', '11/11/2026 10:00', '11/11/2026 10:03', "
+                           "'Réponse reçue', 'entrée 1 000 (dont cache 800) · sortie 50', 'codex', 'relecture', 'T', 'c')")
+                db.execute("INSERT INTO lancements (id, debut, statut, consommation) VALUES ('claude/exec-b', "
+                           "'11/11/2026 11:00', 'En cours', 'entrée 2 000 (dont cache 0) · sortie 10 · 0.50 $')")
+            db.close()
+            with patch.object(P, "BASE", base):
+                liste = P.enfants(jour="11/11/2026")
+            self.assertEqual([e["agent"] for e in liste], ["claude", "codex"])
+            self.assertEqual(liste[1]["duree_min"], 3)
+            self.assertEqual(liste[1]["jetons"], {"entree": 1000, "cache": 800, "sortie": 50, "cout": None})
+            conso = P.consommation(liste)
+            self.assertEqual((conso["codex"]["sessions"], conso["claude"]["cout"]), (1, 0.5))
+            self.assertEqual(P.plafonds(conso)["codex"]["relecture"]["utilise"], 1)
+
+    def test_detail_refuse_un_chemin(self):
+        self.assertIn("erreur", P.detail("../../secret"))
+        self.assertIn("erreur", P.detail("codex/../x"))
+
+
+class Page(unittest.TestCase):
+    def test_javascript_valide(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("Node est nécessaire pour vérifier le JavaScript de la page.")
+        html = (RACINE / "scripts" / "pilotage" / "poste.html").read_text(encoding="utf-8")
+        script = html.split("<script>", 1)[1].split("</script>", 1)[0]
+        with tempfile.TemporaryDirectory() as t:
+            f = Path(t) / "poste.js"
+            f.write_text(script, encoding="utf-8")
+            r = subprocess.run([node, "--check", str(f)], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+
+
+if __name__ == "__main__":
+    unittest.main()

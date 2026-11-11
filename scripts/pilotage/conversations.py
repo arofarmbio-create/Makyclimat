@@ -3,7 +3,7 @@
 - Le crochet d'actions de Claude appelle noter() au début et à la fin de chaque tour : identifiant de session, processus
   claude.exe de la conversation interactive (les sessions lancées par le surveillant sont ignorées) et jetons du contexte,
   lus dans le dernier « usage » du journal de la conversation. Résultat : pilotage/etat/session_claude.json.
-- Codex peut écrire pilotage/etat/session_codex.json au même format ({"jetons": ..., "maj": ...}) pour avoir sa jauge.
+- Le crochet Codex mémorise la conversation Desktop du projet. Sa jauge lit le dernier token_count du journal local.
 - nouvelle_conversation() ouvre une nouvelle fenêtre Claude Code avec une consigne de reprise, puis ferme l'ancienne
   conversation (son journal reste sur le disque). Refusé si Claude est en plein travail, sauf forcer=True.
 Sans modèle, sans token, sans dépendance externe.
@@ -14,7 +14,10 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
+from urllib.parse import urlencode
+from uuid import UUID
 
 ROOT = Path(__file__).resolve().parents[2]
 ETAT = ROOT / "pilotage" / "etat"
@@ -69,16 +72,20 @@ def claude_parent(pid: int, table: dict | None = None) -> tuple[int | None, bool
 
 
 # ------------------------------------------------------------------ jetons du contexte
-def jetons(transcript: str) -> int | None:
-    """Taille du contexte au dernier appel du modèle : entrée + cache lu + cache créé (fin du journal seulement)."""
+def fin_journal(transcript: str) -> list[str]:
     try:
         with open(transcript, "rb") as f:
             f.seek(0, 2)
             f.seek(max(0, f.tell() - 400_000))
             lignes = f.read().decode("utf-8", errors="replace").splitlines()
     except OSError:
-        return None
-    for ligne in reversed(lignes):
+        return []
+    return lignes[::-1]
+
+
+def jetons(transcript: str) -> int | None:
+    """Taille du contexte au dernier appel du modèle : entrée + cache lu + cache créé."""
+    for ligne in fin_journal(transcript):
         if '"usage"' not in ligne:
             continue
         try:
@@ -88,6 +95,67 @@ def jetons(transcript: str) -> int | None:
         if "input_tokens" in u:
             return int(u.get("input_tokens", 0) + u.get("cache_read_input_tokens", 0) + u.get("cache_creation_input_tokens", 0))
     return None
+
+
+def mesure_codex(transcript: str) -> dict:
+    """Dernier contexte mesuré et fenêtre du modèle, distincts du cumul de consommation."""
+    for ligne in fin_journal(transcript):
+        try:
+            evenement = json.loads(ligne)
+        except ValueError:
+            continue
+        contenu = evenement.get("payload") or {}
+        if evenement.get("type") != "event_msg" or contenu.get("type") != "token_count":
+            continue
+        info = contenu.get("info") or {}
+        n = (info.get("last_token_usage") or {}).get("total_tokens")
+        limite = info.get("model_context_window")
+        if isinstance(n, int) and n >= 0 and isinstance(limite, int) and limite > 0:
+            return {"jetons": n, "limite": limite, "maj": evenement.get("timestamp", "")}
+    return {}
+
+
+def noter_codex(ev: dict) -> None:
+    sid = ev.get("session_id") or ev.get("thread_id") or os.environ.get("CODEX_THREAD_ID", "")
+    try:
+        sid = str(UUID(sid))
+    except (ValueError, TypeError, AttributeError):
+        return
+    avant = lire("codex")
+    meme = avant.get("session_id") == sid
+    if avant.get("session_id") and not meme and ev.get("hook_event_name") != "UserPromptSubmit":
+        return
+    sessions = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")) / "sessions"
+    transcript = ev.get("transcript_path") or (avant.get("transcript") if meme else None)
+    chemin = Path(transcript) if transcript else next(sessions.rglob(f"*{sid}.jsonl"), None)
+    if chemin is None or not chemin.resolve().is_relative_to(sessions.resolve()):
+        return
+    try:
+        with chemin.open(encoding="utf-8") as journal:
+            meta = json.loads(journal.readline()).get("payload") or {}
+    except (OSError, ValueError):
+        return
+    if (meta.get("id") != sid or meta.get("originator") != "Codex Desktop"
+            or meta.get("source") == "exec" or isinstance(meta.get("source"), dict)
+            or not meta.get("cwd") or Path(meta["cwd"]).resolve() != ROOT.resolve()):
+        return
+    d = {"session_id": sid, "transcript": str(chemin),
+         "au_travail": ev.get("hook_event_name") not in ("Stop", "Interrupt")}
+    ETAT.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=ETAT, delete=False) as f:
+        temporaire = Path(f.name)
+        json.dump(d, f, ensure_ascii=False)
+    try:
+        temporaire.replace(fichier("codex"))
+    finally:
+        temporaire.unlink(missing_ok=True)
+
+
+def lien_codex() -> str:
+    consigne = ("Reprise MakyClimat. Lis AGENTS.md, les règles, le bandeau et les rôles de COORDINATION.md, "
+                "puis pilotage/etat/coordination/codex.md. Claude pilote, Codex vérifie et améliore. "
+                "Vérifie l'état actuel avant de reprendre et suis les règles de coordination.")
+    return "codex://threads/new?" + urlencode({"path": str(ROOT), "prompt": consigne})
 
 
 def lire(agent: str) -> dict:
@@ -117,13 +185,57 @@ def noter(ev: dict) -> None:
 
 def charge(agent: str) -> dict:
     d = lire(agent)
+    if agent == "codex":
+        d = session_codex_recente(d)
+    if agent == "codex" and d.get("transcript"):
+        d.update(mesure_codex(d["transcript"]))
+    if agent == "claude" and d.get("transcript"):
+        # Le journal continue à évoluer entre deux appels du crochet.
+        d["jetons"] = jetons(d["transcript"])
     n = d.get("jetons")
-    if not n:
-        return {"connue": False}
-    part = n / LIMITE
+    if n is None:
+        return {"connue": False, **({"au_travail": bool(d.get("au_travail"))} if d else {})}
+    limite = d.get("limite") or LIMITE
+    part = n / limite
     niveau = "alerte" if part >= ALERTE else "conseil" if part >= CONSEIL else "ok"
-    return {"connue": True, "jetons": n, "pourcent": round(100 * part), "niveau": niveau, "maj": d.get("maj", ""),
+    return {"connue": True, "jetons": n, "limite": limite, "limite_estimee": agent == "codex" and not d.get("limite"),
+            "pourcent": round(100 * part), "niveau": niveau, "maj": d.get("maj", ""),
             "au_travail": bool(d.get("au_travail")), "fermable": bool(d.get("pid"))}
+
+
+def session_codex_recente(avant: dict) -> dict:
+    """Retrouve une nouvelle conversation Desktop même si son crochet n'a pas tourné.
+
+    Ne lit que les métadonnées des journaux récents : aucune session automatique
+    ni conversation d'un autre projet ne peut alimenter cette jauge.
+    """
+    sessions = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")) / "sessions"
+    candidats = list(sessions.glob("*.jsonl"))
+    for jour in (dt.date.today(), dt.date.today() - dt.timedelta(days=1)):
+        candidats.extend((sessions / jour.strftime("%Y/%m/%d")).glob("*.jsonl"))
+    if avant.get("transcript"):
+        candidats.append(Path(avant["transcript"]))
+    meilleur, ordre = avant, ""
+    for chemin in set(candidats):
+        try:
+            if not chemin.resolve().is_relative_to(sessions.resolve()):
+                continue
+            with chemin.open(encoding="utf-8") as f:
+                meta = json.loads(f.readline()).get("payload") or {}
+            if (meta.get("originator") != "Codex Desktop" or meta.get("source") != "vscode"
+                    or meta.get("thread_source", "user") != "user"
+                    or not meta.get("cwd") or Path(meta["cwd"]).resolve() != ROOT.resolve()):
+                continue
+            sid = str(UUID(meta.get("id", "")))
+            date = meta.get("timestamp") or dt.datetime.fromtimestamp(
+                chemin.stat().st_mtime, dt.timezone.utc).isoformat()
+        except (OSError, ValueError, TypeError, AttributeError):
+            continue
+        if date > ordre:
+            ordre = date
+            meilleur = avant if sid == avant.get("session_id") else {
+                "session_id": sid, "transcript": str(chemin)}
+    return meilleur
 
 
 # ------------------------------------------------------------------ changement de conversation (Claude)
@@ -142,8 +254,14 @@ def nouvelle_conversation(exe: Path | None, forcer: bool = False) -> dict:
         consigne += " Point de reprise : pilotage/etat/reprise_claude.md."
     f = ETAT / "consigne_nouvelle_conversation.txt"
     f.write_text(consigne, encoding="utf-8")
-    commande = f"& '{exe}' (Get-Content -Raw -Encoding UTF8 '{f}')"
-    subprocess.Popen(["powershell.exe", "-NoExit", "-NoProfile", "-Command", commande], cwd=ROOT,
+    # cmd plutôt que PowerShell : la fenêtre PowerShell de la session mère s'est figée le 11/11/2026 (porteur).
+    # La consigne (une ligne, sans guillemet droit) est lue par « set /p » depuis son fichier, jamais dans la commande.
+    lanceur = ETAT / "lancer_nouvelle_conversation.cmd"
+    lanceur.write_text("@echo off\r\nchcp 65001 >nul\r\n"
+                       f"set /p CONSIGNE=<\"{f}\"\r\n\"{exe}\" \"%CONSIGNE%\"\r\n", encoding="utf-8")
+    subprocess.Popen(["cmd.exe", "/k", str(lanceur)], cwd=ROOT,
+                     env={k: v for k, v in os.environ.items()
+                          if k.upper() != "CLAUDECODE" and not k.upper().startswith("CLAUDE_CODE_")},
                      creationflags=getattr(subprocess, "CREATE_NEW_CONSOLE", 0))
     if ancien:
         subprocess.run(["taskkill", "/PID", str(ancien), "/T", "/F"], capture_output=True, check=False,

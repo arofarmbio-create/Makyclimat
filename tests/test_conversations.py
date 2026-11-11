@@ -2,6 +2,7 @@
 import json
 import sys
 import tempfile
+from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "pilotage"))
@@ -14,7 +15,8 @@ def avec_etat(fonction):
         with tempfile.TemporaryDirectory() as d:
             C.ETAT = Path(d)
             try:
-                fonction(Path(d))
+                with patch.dict("os.environ", {"CODEX_HOME": str(Path(d) / "codex")}):
+                    fonction(Path(d))
             finally:
                 C.ETAT = ancien
     enveloppe.__name__ = fonction.__name__

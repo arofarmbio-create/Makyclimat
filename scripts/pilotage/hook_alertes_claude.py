@@ -82,6 +82,19 @@ def lire_session(session: str) -> str:
     return conversations.lire("claude").get("session_id", "")
 
 
+def messages_porteur(session: str) -> str:
+    """Messages écrits par le porteur dans le poste de pilotage, remis une seule fois et à la seule session mère
+    (jamais à une session enfant du surveillant, qui n'est pas la conversation suivie)."""
+    if not session or lire_session(session) != session:
+        return ""
+    import poste
+    liste = poste.a_remettre("claude")
+    if not liste:
+        return ""
+    poste.marquer_remis("claude", [m["id"] for m in liste])
+    return poste.texte_remise("claude", liste)
+
+
 def main() -> None:
     if "--marquer-lues" in sys.argv:
         nouvelles()
@@ -92,13 +105,18 @@ def main() -> None:
         if ev.get("stop_hook_active"):          # déjà relancé une fois par ce crochet : ne pas boucler
             return
         liste = nouvelles()
-        if liste:
-            print(json.dumps({"decision": "block", "reason": texte(liste) + "\nTraite-les ou dis au porteur ce que tu en fais avant de t'arrêter."},
+        porteur = messages_porteur(ev.get("session_id") or "")
+        if liste or porteur:
+            motif = "\n".join(([texte(liste)] if liste else []) + ([porteur] if porteur else []))
+            print(json.dumps({"decision": "block", "reason": motif + "\nTraite-les ou dis au porteur ce que tu en fais avant de t'arrêter."},
                              ensure_ascii=False))
         return
     if nom in ("UserPromptSubmit", "SessionStart"):
         liste = nouvelles()
         contexte = [texte(liste)] if liste else []
+        porteur = messages_porteur(ev.get("session_id") or "")
+        if porteur:
+            contexte.append(porteur)
         conv = alerte_conversation(ev.get("session_id") or "")
         if conv:
             contexte.append(conv)

@@ -113,6 +113,8 @@ jobs:
           python tests/test_build_cmip6_nexgddp.py
           python tests/test_pilotage.py
           python tests/test_conversations.py
+          python tests/test_conversations_codex.py
+          python tests/test_poste.py
           python scripts/compute_metrics.py --country demo
       - name: Tests de l'interface
         run: node tests/ui_test.js demo

@@ -329,20 +329,78 @@ def lire_sortie(agent, stdout, sortie):
     return str(donnees.get("result") or "").strip(), conso
 
 
+# ------------------------------------------------------------------ sessions enfants visibles et plafonnées (11/11/2026)
+# Décision du porteur : voir dans le poste de pilotage combien de sessions enfants Claude et Codex lancent, et sur quoi.
+# Chaque lancement garde son agent, son genre, son sujet en clair et sa consigne. Les lancements automatiques
+# (relectures croisées, réveils de Codex) sont plafonnés par jour ; les exécutions autorisées par le porteur ne le sont pas.
+COLONNES = {"consommation": "TEXT", "agent": "TEXT", "genre": "TEXT", "sujet": "TEXT", "consigne": "TEXT"}
+PLAFOND_JOUR = {"relecture": 12, "reveil": 6}     # par agent et par jour (heure de Nairobi)
+RELECTURES_TACHE_JOUR = 3                         # relectures automatiques d'une même tâche par jour
+ARRETE = "Arrêté par le porteur"
+SAUT = chr(10) * 2                                # séparateur consigne / message d'un réveil
+
+
+def colonnes_lancements(db):
+    presentes = {c[1] for c in db.execute("PRAGMA table_info(lancements)")}
+    for nom, genre in COLONNES.items():
+        if nom not in presentes:
+            db.execute(f"ALTER TABLE lancements ADD COLUMN {nom} {genre}")
+
+
+def genre_lancement(identifiant):
+    court = identifiant.rpartition("/")[2]
+    return "exec" if court.startswith("exec-") else "relecture" if court.startswith("relecture-") else         "reveil" if court.startswith("reveil-") else "ponctuel"
+
+
+def sujet_lancement(identifiant, consigne):
+    """Sujet lisible en une ligne : la tâche relue, la demande exécutée ou l'alerte qui réveille Codex."""
+    genre = genre_lancement(identifiant)
+    if genre == "relecture" and (m := re.search(r"« (.+?) »", consigne)):
+        return m.group(1)[:200]
+    texte = consigne.split(SAUT, 1)[1] if genre == "reveil" and SAUT in consigne else consigne
+    for prefixe in ("Consigne du porteur du projet : ", "Le porteur du projet autorise : "):
+        if texte.startswith(prefixe):
+            texte = texte[len(prefixe):]
+    texte = re.sub(r"\*\*|`", "", " ".join(texte.split()))
+    return texte if len(texte) <= 200 else texte[:200].rsplit(" ", 1)[0] + " …"
+
+
+def au_plafond(db, agent, identifiant, sujet, jour):
+    """Vrai si un lancement automatique dépasserait le plafond du jour (les exécutions autorisées n'y sont pas soumises)."""
+    genre = genre_lancement(identifiant)
+    if genre not in PLAFOND_JOUR:
+        return False
+    # Identifiants : codex/<genre>-x pour Codex ; <genre>-x ou claude/<genre>-x pour Claude. LIKE est ancré au début.
+    motif, motif_alt = (f"codex/{genre}-%",) * 2 if agent == "codex" else (f"{genre}-%", f"claude/{genre}-%")
+    n = db.execute("SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ?",
+                   (motif, motif_alt, f"{jour}%")).fetchone()[0]
+    if n >= PLAFOND_JOUR[genre]:
+        return True
+    if genre == "relecture":
+        n = db.execute("SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND sujet = ?",
+                       (motif, motif_alt, f"{jour}%", sujet)).fetchone()[0]
+        return n >= RELECTURES_TACHE_JOUR
+    return False
+
+
 def lancer_claude(db, dossier, demandes, executables):
     """Réserve une demande avant l'appel. Un échec ou un arrêt ne la rejoue pas. executables : {agent: binaire}."""
     if not isinstance(executables, dict):
         executables = {"claude": executables}
+    colonnes_lancements(db)
     for agent, identifiant, consigne in demandes:
         if not executables.get(agent):
             continue
         debut = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
+        sujet = sujet_lancement(identifiant, consigne)
+        if au_plafond(db, agent, identifiant, sujet, debut[:10]):
+            continue
         with db:
             reserve = db.execute(
-                """INSERT OR IGNORE INTO lancements (id, debut, fin, statut)
-                   SELECT ?, ?, NULL, 'En cours'
+                """INSERT OR IGNORE INTO lancements (id, debut, fin, statut, agent, genre, sujet, consigne)
+                   SELECT ?, ?, NULL, 'En cours', ?, ?, ?, ?
                    WHERE NOT EXISTS (SELECT 1 FROM lancements WHERE statut = 'En cours')""",
-                (identifiant, debut),
+                (identifiant, debut, agent, genre_lancement(identifiant), sujet, consigne[:6000]),
             ).rowcount
         if reserve:
             break
@@ -377,6 +435,8 @@ def lancer_claude(db, dossier, demandes, executables):
             statut, resultat = "Échec", f"Lancement impossible ({type(erreur).__name__})."
 
     fin = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
+    if (db.execute("SELECT statut FROM lancements WHERE id = ?", (identifiant,)).fetchone() or ("",))[0] == ARRETE:
+        statut, resultat = ARRETE, "Session arrêtée depuis le poste de pilotage." + SAUT + resultat[:2000]
     court = identifiant.rpartition("/")[2]
     genre = "Exécution" if ecriture else "Relecture ou demande en lecture seule"
     ecrire_si_change(dossier / nom_fichier(identifiant),
@@ -402,7 +462,7 @@ def retenter_relectures(db, maintenant):
     RETENTES_MAX fois, sans attendre le redémarrage du surveillant (porteur du projet, 11/11/2026)."""
     db.execute("CREATE TABLE IF NOT EXISTS retentes (id TEXT PRIMARY KEY, nombre INTEGER NOT NULL)")
     echecs = db.execute("""SELECT id, fin FROM lancements WHERE id LIKE '%relecture-%'
-                           AND statut IN ('Relecture impossible', 'Échec', 'Délai dépassé')""").fetchall()
+                           AND statut IN ('Relecture impossible', 'Échec', 'Délai dépassé', 'Interrompu')""").fetchall()
     for identifiant, fin in echecs:
         try:
             age = (maintenant - datetime.strptime(fin, "%d/%m/%Y %H:%M").replace(tzinfo=NAIROBI)).total_seconds()
@@ -412,6 +472,17 @@ def retenter_relectures(db, maintenant):
         if age >= RETENTE_MIN * 60 and nombre < RETENTES_MAX:
             db.execute("INSERT OR REPLACE INTO retentes VALUES (?, ?)", (identifiant, nombre + 1))
             db.execute("DELETE FROM lancements WHERE id = ?", (identifiant,))
+
+
+
+def reprendre_au_demarrage(db, maintenant):
+    """Au démarrage de la boucle : un lancement resté « En cours » vient d'une boucle arrêtée de force et bloquerait les
+    demandes suivantes ; il passe « Interrompu ». Les relectures en échec ou interrompues suivent ensuite la même règle
+    que pendant la boucle (délai de RETENTE_MIN minutes, RETENTES_MAX tentatives) : un redémarrage ne crée pas de
+    tentative supplémentaire (relecture Codex 23a8531d3f17, 11/11/2026)."""
+    db.execute("UPDATE lancements SET statut = 'Interrompu', fin = ? WHERE statut = 'En cours'",
+               (maintenant.strftime("%d/%m/%Y %H:%M"),))
+    retenter_relectures(db, maintenant)
 
 
 def verifier(source, dossier, executable=None, relectures_auto=False, codex=None):
@@ -429,8 +500,7 @@ def verifier(source, dossier, executable=None, relectures_auto=False, codex=None
                 id TEXT PRIMARY KEY, debut TEXT, fin TEXT, statut TEXT NOT NULL, consommation TEXT
             )""")
             db.execute("CREATE TABLE IF NOT EXISTS reveils_codex (alerte TEXT PRIMARY KEY)")
-            if "consommation" not in {c[1] for c in db.execute("PRAGMA table_info(lancements)")}:
-                db.execute("ALTER TABLE lancements ADD COLUMN consommation TEXT")
+            colonnes_lancements(db)
             retenter_relectures(db, datetime.now(NAIROBI))
             # Verrouille l'écriture avant de déterminer si une base existe déjà.
             premier = db.execute("INSERT OR IGNORE INTO etat VALUES ('initialisé')").rowcount
@@ -580,11 +650,7 @@ def main():
         # Un lancement resté « En cours » vient d'une boucle arrêtée de force : il bloquerait toutes les demandes suivantes.
         with closing(sqlite3.connect(args.sortie / "coordination.sqlite3")) as db, db:
             if db.execute("SELECT name FROM sqlite_master WHERE name = 'lancements'").fetchone():
-                db.execute("UPDATE lancements SET statut = 'Interrompu', fin = ? WHERE statut = 'En cours'",
-                           (maintenant.strftime("%d/%m/%Y %H:%M"),))
-                # Une relecture empêchée par l'environnement est retentée une fois à chaque démarrage (pas en boucle).
-                db.execute("""DELETE FROM lancements WHERE id LIKE '%relecture-%'
-                              AND statut IN ('Relecture impossible', 'Échec', 'Délai dépassé', 'Interrompu')""")
+                reprendre_au_demarrage(db, maintenant)
     try:
         boucle(args, fin)
     finally:

@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poste de pilotage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fond:#03070d; --fond2:#060e18; --panneau:rgba(8,22,36,.78); --bord:rgba(0,229,255,.22); --bord-fort:rgba(0,229,255,.55);
+  --cyan:#00e5ff; --cyan-doux:#7fefff; --texte:#d6f6ff; --gris:#7c97a8; --or:#ffb84d; --rouge:#ff4d6a; --vert:#3dffa8;
+  --violet:#b48cff; --lueur:0 0 12px rgba(0,229,255,.35); --r:14px;
+  --titre:'Orbitron',system-ui,sans-serif; --corps:'Rajdhani',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--fond);color:var(--texte);font:500 16px/1.4 var(--corps)}
+body{min-height:100vh;background:
+  radial-gradient(1200px 600px at 80% -10%,rgba(0,229,255,.10),transparent 60%),
+  radial-gradient(900px 500px at -10% 110%,rgba(180,140,255,.08),transparent 60%),
+  linear-gradient(rgba(0,229,255,.035) 1px,transparent 1px) 0 0/100% 32px,
+  linear-gradient(90deg,rgba(0,229,255,.035) 1px,transparent 1px) 0 0/32px 100%,var(--fond)}
+a{color:var(--cyan-doux)}
+button,select,textarea,input{font:inherit;color:inherit}
+.enveloppe{max-width:1500px;margin:0 auto;padding:16px}
+/* ---------- en-tête ---------- */
+header{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;padding:14px 18px;border:1px solid var(--bord);
+  border-radius:var(--r);background:linear-gradient(180deg,rgba(0,229,255,.07),rgba(0,0,0,0));box-shadow:inset 0 0 30px rgba(0,229,255,.05)}
+.reacteur{width:54px;height:54px;flex:none}
+.reacteur circle{fill:none;stroke:var(--cyan)}
+.reacteur .r1{stroke-width:2;stroke-dasharray:6 5;animation:tourne 12s linear infinite;transform-origin:50% 50%}
+.reacteur .r2{stroke-width:1;opacity:.5;stroke-dasharray:40 12;animation:tourne 7s linear infinite reverse;transform-origin:50% 50%}
+.reacteur .coeur{fill:var(--cyan);stroke:none;filter:drop-shadow(0 0 6px var(--cyan));animation:pouls 2.4s ease-in-out infinite}
+@keyframes tourne{to{transform:rotate(360deg)}}
+@keyframes pouls{50%{opacity:.45}}
+.marque h1{margin:0;font:700 20px/1.1 var(--titre);letter-spacing:.18em;color:var(--cyan);text-shadow:var(--lueur)}
+.marque p{margin:2px 0 0;color:var(--gris);font-size:14px;letter-spacing:.06em}
+.etats{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto;align-items:center}
+.puce{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid var(--bord);border-radius:99px;
+  font:600 13px var(--mono);letter-spacing:.04em;background:rgba(0,0,0,.25);white-space:nowrap}
+.puce i{width:8px;height:8px;border-radius:50%;background:var(--gris);box-shadow:0 0 8px currentColor}
+.puce.ok i{background:var(--vert);color:var(--vert)} .puce.ko i{background:var(--rouge);color:var(--rouge)}
+.puce.warn i{background:var(--or);color:var(--or)} .puce.info i{background:var(--cyan);color:var(--cyan)}
+.horloge{font:600 22px var(--mono);color:var(--cyan);text-shadow:var(--lueur)}
+.alerte-serveur{display:none;margin:12px 0 0;padding:12px 16px;border:1px solid var(--rouge);border-radius:var(--r);
+  background:rgba(255,77,106,.12);color:#ffd0d8;font-weight:600}
+.alerte-serveur.visible{display:block}
+/* ---------- grille ---------- */
+.grille{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin-top:16px}
+.p{grid-column:span 12;background:var(--panneau);border:1px solid var(--bord);border-radius:var(--r);padding:14px 16px;
+  position:relative;backdrop-filter:blur(6px);min-width:0}
+.p::before,.p::after{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--cyan);opacity:.7}
+.p::before{top:-1px;left:-1px;border-right:0;border-bottom:0;border-top-left-radius:var(--r)}
+.p::after{bottom:-1px;right:-1px;border-left:0;border-top:0;border-bottom-right-radius:var(--r)}
+.s6{grid-column:span 6} .s4{grid-column:span 4} .s8{grid-column:span 8}
+@media (max-width:1100px){.s6,.s4,.s8{grid-column:span 12}}
+@media (max-width:760px){
+  html,body{overflow-x:hidden}
+  .grille{grid-template-columns:minmax(0,1fr)} .p,.s4,.s6,.s8{grid-column:1/-1}
+  .marque h1{font-size:15px;letter-spacing:.1em} .etats{margin-left:0} .puce{white-space:normal}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} .nom-mere{font-size:15px;letter-spacing:.08em}
+  .enfants .sujet{max-width:none;word-break:break-word}
+}
+h2{margin:0 0 12px;font:700 13px var(--titre);letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-doux);
+  display:flex;align-items:center;gap:10px}
+h2 .n{font:600 12px var(--mono);color:var(--fond);background:var(--cyan);border-radius:99px;padding:1px 8px;letter-spacing:0}
+h2 .n.zero{background:rgba(124,151,168,.35);color:var(--texte)}
+h2 .droite{margin-left:auto;font:500 12px var(--mono);letter-spacing:.02em;color:var(--gris);text-transform:none}
+.vide{color:var(--gris);font-style:italic;padding:6px 0}
+.petit{font-size:13px;color:var(--gris)}
+.mono{font-family:var(--mono)}
+/* ---------- boutons ---------- */
+.b{border:1px solid var(--bord-fort);background:rgba(0,229,255,.08);color:var(--cyan-doux);border-radius:9px;padding:6px 13px;
+  cursor:pointer;font-weight:700;letter-spacing:.04em;transition:.15s}
+.b:hover{background:rgba(0,229,255,.2);box-shadow:var(--lueur)}
+.b.vert{border-color:rgba(61,255,168,.6);color:var(--vert);background:rgba(61,255,168,.08)}
+.b.rouge{border-color:rgba(255,77,106,.6);color:var(--rouge);background:rgba(255,77,106,.08)}
+.b.or{border-color:rgba(255,184,77,.6);color:var(--or);background:rgba(255,184,77,.08)}
+.b:disabled{opacity:.4;cursor:default;box-shadow:none}
+textarea,select{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--bord);border-radius:9px;padding:8px 10px;resize:vertical}
+select{width:auto}
+textarea:focus,select:focus{outline:none;border-color:var(--cyan);box-shadow:var(--lueur)}
+.ligne-btn{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+.retour{font-size:13px;color:var(--cyan-doux);min-height:1em}
+.retour.err{color:var(--rouge)}
+/* ---------- décisions ---------- */
+.decision{border:1px solid rgba(255,184,77,.45);background:linear-gradient(90deg,rgba(255,184,77,.10),rgba(255,184,77,.02));
+  border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.decision .t{font-weight:700;font-size:17px;color:#ffe2b3}
+.decision .d{color:var(--texte);opacity:.85;margin:4px 0 8px;font-size:15px}
+/* ---------- sessions mères ---------- */
+.mere{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
+@media (max-width:560px){.mere{grid-template-columns:1fr}}
+.jauge{width:120px;height:120px;position:relative}
+.jauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.jauge .fond{stroke:rgba(0,229,255,.12)} .jauge .val{transition:stroke-dashoffset .8s ease,stroke .4s}
+.jauge .txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.jauge .pc{font:700 24px var(--mono);color:var(--cyan);text-shadow:var(--lueur)}
+.jauge .sous{font-size:11px;color:var(--gris);letter-spacing:.08em}
+.nom-mere{font:700 18px var(--titre);letter-spacing:.16em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nom-mere.claude{color:#ffb38a} .nom-mere.codex{color:#9fd0ff}
+.flux{list-style:none;margin:8px 0 0;padding:0;font-size:14px;max-height:150px;overflow:auto}
+.flux li{display:flex;gap:10px;padding:3px 0;border-bottom:1px dashed rgba(0,229,255,.08)}
+.flux time{font:12px var(--mono);color:var(--gris);flex:none;padding-top:2px}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--cyan-doux);font-weight:600}
+.tache{padding:6px 0;border-bottom:1px dashed rgba(0,229,255,.1);font-size:14px}
+.tache b{font-weight:700}
+.etq{display:inline-block;font:600 11px var(--mono);padding:1px 7px;border-radius:6px;border:1px solid currentColor;margin-right:6px;
+  letter-spacing:.03em;vertical-align:1px;white-space:nowrap}
+.etq.ok{color:var(--vert)} .etq.info{color:var(--cyan)} .etq.warn{color:var(--or)} .etq.ko{color:var(--rouge)} .etq.neutre{color:var(--gris)}
+.etq.claude{color:#ffb38a} .etq.codex{color:#9fd0ff} .etq.violet{color:var(--violet)}
+/* ---------- indicateurs ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.kpi{border:1px solid var(--bord);border-radius:11px;padding:10px 12px;background:rgba(0,0,0,.22)}
+.kpi .v{font:700 24px var(--mono);color:var(--cyan);text-shadow:var(--lueur)}
+.kpi .l{font-size:12px;color:var(--gris);letter-spacing:.08em;text-transform:uppercase}
+.kpi .x{font-size:12px;color:var(--gris);font-family:var(--mono)}
+.barre{height:6px;border-radius:9px;background:rgba(0,229,255,.12);overflow:hidden;margin-top:6px}
+.barre i{display:block;height:100%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.barre.plein i{background:var(--rouge);box-shadow:0 0 8px var(--rouge)}
+/* ---------- sessions enfants ---------- */
+.filtres{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filtre{border:1px solid var(--bord);background:transparent;border-radius:99px;padding:3px 11px;cursor:pointer;font-weight:600;font-size:13px;color:var(--gris)}
+.filtre.actif{border-color:var(--cyan);color:var(--cyan);box-shadow:var(--lueur)}
+.enfants{width:100%;border-collapse:collapse;font-size:14px}
+.enfants th{text-align:left;font:600 11px var(--mono);letter-spacing:.08em;color:var(--gris);text-transform:uppercase;padding:6px 8px;
+  border-bottom:1px solid var(--bord)}
+.enfants td{padding:7px 8px;border-bottom:1px solid rgba(0,229,255,.07);vertical-align:top}
+.enfants tr.cl{cursor:pointer} .enfants tr.cl:hover td{background:rgba(0,229,255,.06)}
+.enfants tr.vivant td{background:rgba(0,229,255,.07)}
+.enfants .sujet{max-width:520px}
+.point{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+.point.vivant{background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:pouls 1.2s infinite}
+.point.ok{background:var(--vert)} .point.ko{background:var(--rouge)} .point.warn{background:var(--or)} .point.neutre{background:var(--gris)}
+.defile{overflow:auto;max-height:520px}
+@media (max-width:760px){.enfants .col-cache{display:none}}
+/* ---------- tiroir de détail ---------- */
+.voile{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:9}
+.voile.ouvert{display:block}
+.tiroir{position:fixed;top:0;right:0;height:100vh;width:min(760px,100vw);background:var(--fond2);border-left:1px solid var(--bord-fort);
+  box-shadow:-10px 0 40px rgba(0,229,255,.15);transform:translateX(105%);transition:transform .25s ease;z-index:10;display:flex;flex-direction:column}
+.tiroir.ouvert{transform:none}
+.tiroir header{border:0;border-bottom:1px solid var(--bord);border-radius:0}
+.tiroir .corps{overflow:auto;padding:16px;flex:1}
+.tiroir pre{white-space:pre-wrap;word-break:break-word;font:13px/1.5 var(--mono);background:rgba(0,0,0,.35);border:1px solid var(--bord);
+  border-radius:10px;padding:12px;margin:6px 0 16px}
+.tiroir h3{font:700 12px var(--titre);letter-spacing:.2em;color:var(--cyan-doux);margin:6px 0}
+/* ---------- fil ---------- */
+.bulle{max-width:88%;padding:8px 12px;border-radius:12px;margin:6px 0;font-size:15px;border:1px solid var(--bord)}
+.bulle.porteur{margin-left:auto;background:rgba(0,229,255,.10);border-color:rgba(0,229,255,.4)}
+.bulle.claude{background:rgba(255,179,138,.08);border-color:rgba(255,179,138,.35)}
+.bulle.codex{background:rgba(159,208,255,.08);border-color:rgba(159,208,255,.35)}
+.bulle .m{font:11px var(--mono);color:var(--gris);margin-bottom:2px}
+.runs .run{padding:8px 0;border-bottom:1px dashed rgba(0,229,255,.1);font-size:14px}
+.runs .job{font:12px var(--mono);color:var(--gris);margin-left:18px}
+footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
+.surv-ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.surv-ctl label{font-size:13px;color:var(--gris);display:flex;gap:6px;align-items:center}
+</style>
+</head>
+<body>
+<div class="enveloppe">
+<header>
+  <svg class="reacteur" viewBox="0 0 60 60" aria-hidden="true"><circle class="r1" cx="30" cy="30" r="26"/><circle class="r2" cx="30" cy="30" r="19"/><circle class="coeur" cx="30" cy="30" r="7"/></svg>
+  <div class="marque"><h1>MAKYCLIMAT · POSTE DE PILOTAGE</h1><p>Claude pilote · Codex vérifie · le porteur décide</p></div>
+  <div class="etats">
+    <span class="puce" id="p-serveur"><i></i>SERVEUR …</span>
+    <span class="puce" id="p-surv"><i></i>SURVEILLANT …</span>
+    <span class="puce" id="p-pause" hidden><i></i>PILOTAGE EN PAUSE</span>
+    <span class="horloge" id="horloge">--:--:--</span>
+  </div>
+</header>
+<div class="alerte-serveur" id="alerte-serveur">Le serveur du poste ne répond plus : les chiffres ci-dessous sont figés. Relancer <code>pilotage.cmd</code> à la racine du dépôt.</div>
+
+<div class="grille">
+  <section class="p s8" id="sec-decisions"><h2>À décider <span class="n" id="n-dec">0</span><span class="droite" id="maj-dec"></span></h2><div id="decisions"></div></section>
+  <section class="p s4"><h2>Surveillant<span class="droite" id="surv-info"></span></h2>
+    <div class="petit" id="surv-texte">—</div>
+    <div class="surv-ctl" style="margin-top:10px">
+      <label>Durée <select id="surv-duree"></select></label>
+      <label><input type="checkbox" id="surv-relect" checked> relectures croisées</label>
+      <button class="b vert" id="surv-go">Démarrer</button><button class="b rouge" id="surv-stop">Arrêter</button>
+    </div>
+    <div class="retour" id="surv-retour"></div>
+    <h2 style="margin-top:14px">Exécutions en file <span class="n zero" id="n-exec">0</span></h2><div id="executions"></div>
+  </section>
+
+  <section class="p s6" id="mere-claude"></section>
+  <section class="p s6" id="mere-codex"></section>
+
+  <section class="p s12" id="sec-enfants">
+    <h2>Sessions enfants <span class="n" id="n-vivants">0</span><span class="droite">en cours · journée du <span id="jour"></span></span></h2>
+    <div class="kpis" id="kpis"></div>
+    <div class="filtres" id="filtres"></div>
+    <div class="defile"><table class="enfants"><thead><tr><th>État</th><th>Agent</th><th>Genre</th><th>Sujet</th><th class="col-cache">Créneau</th><th class="col-cache">Durée</th><th>Jetons</th></tr></thead><tbody id="enfants"></tbody></table></div>
+  </section>
+
+  <section class="p s6"><h2>Fil avec les sessions mères <span class="n zero" id="n-fil">0</span></h2><div id="fil" class="defile" style="max-height:420px"></div></section>
+  <section class="p s6"><h2>Runs GitHub<span class="droite" id="gh-maj"></span></h2><div id="runs" class="runs defile" style="max-height:420px"></div></section>
+
+  <section class="p s12"><h2>Messages entre Claude et Codex <span class="n zero" id="n-entre">0</span></h2><div id="entre"></div></section>
+</div>
+<footer>Données lues toutes les 10 s sans recharger la page · <a href="/tableau_de_bord.html">Recherche : protocole, hypothèses, bibliographie</a> · <a href="/etat/coordination/notifications.html">Historique des alertes</a></footer>
+</div>
+
+<div class="voile" id="voile"></div>
+<aside class="tiroir" id="tiroir" aria-hidden="true">
+  <header><div class="marque"><h1 id="t-titre" style="font-size:15px">SESSION</h1><p id="t-sous"></p></div>
+    <div class="etats"><button class="b rouge" id="t-arreter" hidden>Arrêter cette session</button><button class="b" id="t-fermer">Fermer</button></div></header>
+  <div class="corps"><div class="retour" id="t-retour"></div><h3>Consigne envoyée</h3><pre id="t-consigne">…</pre><h3>Résultat</h3><pre id="t-resultat">…</pre></div>
+</aside>
+
+<script>
+(function(){
+"use strict";
+var D=null, jeton="", dernierOk=0, filtreAgent="tous", filtreGenre="tous", ouvert=null, cache={};
+var NOMS={claude:"Claude",codex:"Codex"}, GENRES={relecture:"Relecture",exec:"Exécution",reveil:"Réveil",ponctuel:"Ponctuel","sous-agent":"Sous-agent"};
+function $(id){return document.getElementById(id);}
+function e(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function k(n){n=n||0; return n>=1e6?(n/1e6).toFixed(n>=1e7?0:1).replace(".",",")+" M":n>=1e3?Math.round(n/1e3)+" k":String(n);}
+function poser(id,html){ if(cache[id]!==html){cache[id]=html; $(id).innerHTML=html;} }
+function post(chemin,corps){
+  return fetch(chemin,{method:"POST",headers:{"Content-Type":"application/json","X-Pilotage":jeton},body:JSON.stringify(corps||{})})
+    .then(function(r){return r.json();}).catch(function(){return {erreur:"Serveur injoignable."};});
+}
+function retour(el,r){ el.textContent=r.erreur||r.ok||""; el.className="retour"+(r.erreur?" err":""); }
+function couleurStatut(s){
+  s=(s||"").toLowerCase();
+  if(s.indexOf("en cours")===0) return "vivant";
+  if(s.indexOf("réponse")===0||s.indexOf("terminé")===0) return "ok";
+  if(s.indexOf("arrêté")===0||s.indexOf("interrompu")===0) return "warn";
+  if(s.indexOf("échec")===0||s.indexOf("délai")===0||s.indexOf("impossible")>=0) return "ko";
+  return "neutre";
+}
+
+/* ----- horloge locale (heure de Nairobi) ----- */
+setInterval(function(){
+  try{ $("horloge").textContent=new Date().toLocaleTimeString("fr-FR",{timeZone:"Africa/Nairobi"}); }catch(x){ $("horloge").textContent=new Date().toLocaleTimeString("fr-FR"); }
+  var age=dernierOk?Math.round((Date.now()-dernierOk)/1000):null, p=$("p-serveur");
+  if(age===null){ p.className="puce warn"; p.lastChild.textContent="SERVEUR …"; }
+  else if(age>25){ p.className="puce ko"; p.lastChild.textContent="SERVEUR MUET "+age+" s"; $("alerte-serveur").classList.add("visible"); }
+  else { p.className="puce ok"; p.lastChild.textContent="SERVEUR · il y a "+age+" s"; $("alerte-serveur").classList.remove("visible"); }
+},1000);
+
+/* ----- décisions ----- */
+function rendreDecisions(){
+  var l=D.decisions||[]; $("n-dec").textContent=l.length; $("n-dec").className="n"+(l.length?"":" zero");
+  var cles=l.map(function(d){return d.cle;}).join(",");
+  if(cache.decCles===cles) return;            /* ne pas effacer un texte en cours de saisie */
+  cache.decCles=cles;
+  $("decisions").innerHTML=l.length?l.map(function(d){
+    return '<div class="decision" data-cle="'+e(d.cle)+'"><div class="t">'+e(d.objet)+'</div><div class="petit">De '+e(d.auteur)+' · '+e(d.date)+'</div>'+
+      '<div class="d">'+e(d.detail)+'</div><textarea rows="2" placeholder="Précision (facultative pour Autoriser et Refuser, obligatoire pour Répondre)"></textarea>'+
+      '<div class="ligne-btn"><button class="b vert" data-a="autoriser">Autoriser</button><button class="b rouge" data-a="refuser">Refuser</button>'+
+      '<button class="b" data-a="repondre">Répondre</button><span class="retour"></span></div></div>';
+  }).join(""):'<div class="vide">Aucune décision en attente. Tout roule.</div>';
+}
+$("decisions").addEventListener("click",function(ev){
+  var b=ev.target.closest("button[data-a]"); if(!b) return;
+  var carte=b.closest(".decision"), a=b.getAttribute("data-a"), t=carte.querySelector("textarea").value, out=carte.querySelector(".retour");
+  if(a==="autoriser"&&!confirm("Autoriser : l'assistant exécutera la demande en mode écriture. Confirmer ?")) return;
+  b.disabled=true;
+  post("/api/decision",{cle:carte.getAttribute("data-cle"),action:a,texte:t}).then(function(r){ retour(out,r); b.disabled=false; if(!r.erreur){cache.decCles=null; lire();} });
+});
+
+/* ----- surveillant ----- */
+function rendreSurveillant(){
+  var s=D.surveillant_detail||{}, p=$("p-surv");
+  p.className="puce "+(s.actif?"ok":"warn"); p.lastChild.textContent=s.actif?"SURVEILLANT ACTIF":"SURVEILLANT ARRÊTÉ";
+  $("p-pause").hidden=!D.pause; if(D.pause) $("p-pause").className="puce ko";
+  $("surv-texte").textContent=s.actif?("Actif"+(s.fin?" jusqu'à "+String(s.fin).slice(11,16):"")+" · lance les relectures, exécutions et réveils une à une."):
+    "Arrêté : aucune session enfant ne part. Les exécutions autorisées le redémarrent pour 2 h.";
+  $("surv-go").disabled=!!s.actif; $("surv-stop").disabled=!s.actif;
+  var sel=$("surv-duree"); if(!sel.options.length){ (D.durees||[30,60,120,240,480]).forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=m>=60?(m/60)+" h":m+" min";if(m===120)o.selected=true;sel.appendChild(o);}); }
+  var ex=D.executions||[]; $("n-exec").textContent=ex.length; $("n-exec").className="n"+(ex.length?"":" zero");
+  poser("executions",ex.length?ex.map(function(x){return '<div class="tache"><span class="etq '+x.agent+'">'+NOMS[x.agent]+'</span>'+e(x.demande)+'</div>';}).join(""):'<div class="vide">File vide.</div>');
+}
+$("surv-go").onclick=function(){ post("/api/surveillant/demarrer",{duree:+$("surv-duree").value,relectures:$("surv-relect").checked}).then(function(r){retour($("surv-retour"),r.erreur?r:{ok:"Surveillant démarré."});lire();}); };
+$("surv-stop").onclick=function(){ if(confirm("Arrêter le surveillant (et la session enfant en cours) ?")) post("/api/surveillant/arreter",{}).then(function(r){retour($("surv-retour"),r.erreur?r:{ok:"Surveillant arrêté."});lire();}); };
+
+/* ----- sessions mères ----- */
+function anneau(c){
+  var pc=c&&c.connue?c.pourcent:0, R=52, L=2*Math.PI*R, coul=!c||!c.connue?"#7c97a8":c.niveau==="alerte"?"#ff4d6a":c.niveau==="conseil"?"#ffb84d":"#00e5ff";
+  return '<div class="jauge"><svg viewBox="0 0 120 120"><circle class="fond" cx="60" cy="60" r="'+R+'" fill="none" stroke-width="9"/>'+
+    '<circle class="val" cx="60" cy="60" r="'+R+'" fill="none" stroke-width="9" stroke-linecap="round" stroke="'+coul+'" stroke-dasharray="'+L.toFixed(1)+'" stroke-dashoffset="'+(L*(1-Math.min(pc,100)/100)).toFixed(1)+'" style="filter:drop-shadow(0 0 6px '+coul+')"/></svg>'+
+    '<div class="txt"><span class="pc" style="color:'+coul+'">'+(c&&c.connue?pc+"%":"—")+'</span><span class="sous">CONTEXTE</span><span class="sous mono">'+(c&&c.connue?k(c.jetons)+" / "+k(c.limite):"non mesuré")+'</span></div></div>';
+}
+function construireMere(agent){
+  var sec=$("mere-"+agent);
+  sec.innerHTML='<div class="mere"><div id="'+agent+'-anneau"></div><div><div class="nom-mere '+agent+'">'+NOMS[agent].toUpperCase()+' · SESSION MÈRE <span id="'+agent+'-etat"></span></div>'+
+    '<div class="petit" id="'+agent+'-conseil"></div><ul class="flux" id="'+agent+'-flux"></ul></div></div>'+
+    '<details id="'+agent+'-det"><summary id="'+agent+'-nt">Tâches ouvertes</summary><div id="'+agent+'-taches"></div></details>'+
+    '<div style="margin-top:12px"><textarea id="'+agent+'-msg" rows="2" placeholder="Écrire à '+NOMS[agent]+'…"></textarea>'+
+    '<div class="ligne-btn"><button class="b" data-envoi="mere">Envoyer à la session mère</button>'+
+    '<button class="b or" data-envoi="enfant" title="Une session enfant exécute la consigne tout de suite, en mode écriture">Confier à une session enfant</button>'+
+    '<span id="'+agent+'-conv"></span></div><div class="retour" id="'+agent+'-retour"></div>'+
+    '<div class="petit" id="'+agent+'-attente"></div></div>';
+  sec.addEventListener("click",function(ev){
+    var b=ev.target.closest("button[data-envoi]"); if(b){
+      var t=$(agent+"-msg").value.trim(); if(!t){ retour($(agent+"-retour"),{erreur:"Écrire un message d'abord."}); return; }
+      var enfant=b.getAttribute("data-envoi")==="enfant";
+      if(enfant&&!confirm("Une session enfant de "+NOMS[agent]+" exécutera cette consigne en mode écriture. Confirmer ?")) return;
+      post(enfant?"/api/consigne":"/api/message",{agent:agent,texte:t}).then(function(r){ retour($(agent+"-retour"),r); if(!r.erreur){$(agent+"-msg").value=""; lire();} });
+      return;
+    }
+    var n=ev.target.closest("button[data-nouvelle]"); if(n){
+      if(!confirm("Ouvrir une nouvelle conversation Claude (dans cmd) et fermer l'ancienne ? Son journal est conservé.")) return;
+      post("/api/conversation/nouvelle",{forcer:ev.shiftKey}).then(function(r){ retour($(agent+"-retour"),r); });
+    }
+  });
+}
+function rendreMere(agent){
+  var m=D.meres[agent]||{}, c=m.charge||{};
+  poser(agent+"-anneau",anneau(c));
+  var actif=m.etat==="actif"||c.au_travail;
+  poser(agent+"-etat",'<span class="etq '+(actif?"info":"neutre")+'">'+(actif?"AU TRAVAIL":"AU REPOS")+'</span>');
+  poser(agent+"-conseil",!c.connue?"Charge non mesurée pour l'instant.":c.niveau==="alerte"?"Contexte très chargé : ouvrir une nouvelle conversation à un point propre.":
+    c.niveau==="conseil"?"Contexte chargé : prévoir une nouvelle conversation.":"Contexte léger.");
+  poser(agent+"-flux",(m.actions||[]).map(function(a){return '<li><time>'+e(String(a.quand||"").slice(11,16))+'</time><span>'+e(a.texte||a.genre)+'</span></li>';}).join("")||'<li class="vide">Aucune action récente notée.</li>');
+  var t=m.taches||[]; $(agent+"-nt").textContent="Tâches ouvertes ("+t.length+")";
+  poser(agent+"-taches",t.map(function(x){return '<div class="tache"><span class="etq '+x.couleur+'">'+e(x.etat)+'</span><b>'+e(x.tache)+'</b><div class="petit">'+e(x.suite)+'</div></div>';}).join("")||'<div class="vide">Aucune.</div>');
+  var conv=agent==="claude"?'<button class="b" data-nouvelle="1" title="Maj+clic : forcer même si Claude travaille">Nouvelle conversation</button>':
+    (m.nouvelle_conversation?'<a class="b" style="text-decoration:none" href="'+e(m.nouvelle_conversation)+'">Nouvelle conversation Codex</a>':"");
+  poser(agent+"-conv",conv);
+  poser(agent+"-attente",m.messages_en_attente?m.messages_en_attente+" message(s) en attente de remise : la session mère le(s) recevra à sa prochaine action. Si elle est au repos, confier plutôt à une session enfant.":"");
+}
+
+/* ----- sessions enfants ----- */
+function rendreEnfants(){
+  var l=(D.enfants||[]).concat(D.sous_agents||[]), vivants=l.filter(function(x){return x.statut==="En cours";}).length;
+  $("n-vivants").textContent=vivants; $("n-vivants").className="n"+(vivants?"":" zero"); $("jour").textContent=D.date;
+  var c=D.consommation||{}, pl=D.plafonds||{}, h="";
+  ["claude","codex"].forEach(function(a){
+    var s=c[a]||{}, g=s.par_genre||{}, sa=a==="claude"?(D.sous_agents||[]).length:0;
+    h+='<div class="kpi"><div class="l"><span class="etq '+a+'">'+NOMS[a]+'</span>sessions du jour</div><div class="v">'+(s.sessions||0)+(sa?' <span class="x">+ '+sa+' sous-agents</span>':'')+'</div>'+
+       '<div class="x">'+Object.keys(g).map(function(x){return (GENRES[x]||x)+" "+g[x];}).join(" · ")+'</div></div>';
+    h+='<div class="kpi"><div class="l"><span class="etq '+a+'">'+NOMS[a]+'</span>jetons du jour</div><div class="v">'+k(s.entree)+'</div><div class="x">dont cache '+k(s.cache)+' · sortie '+k(s.sortie)+(s.cout?' · '+s.cout.toFixed(2)+' $':'')+'</div></div>';
+    var p=pl[a]||{}; h+='<div class="kpi"><div class="l"><span class="etq '+a+'">'+NOMS[a]+'</span>plafonds automatiques</div>'+
+      Object.keys(p).map(function(x){var u=p[x].utilise,m=p[x].max;return '<div class="x">'+(GENRES[x]||x)+' '+u+' / '+m+'</div><div class="barre'+(u>=m?" plein":"")+'"><i style="width:'+Math.min(100,100*u/m)+'%"></i></div>';}).join("")+'</div>';
+  });
+  poser("kpis",h);
+  var boutons=[["tous","Tous"],["claude","Claude"],["codex","Codex"]], genres=[["tous","Tous genres"],["relecture","Relectures"],["exec","Exécutions"],["reveil","Réveils"],["sous-agent","Sous-agents"]];
+  poser("filtres",boutons.map(function(b){return '<button class="filtre'+(filtreAgent===b[0]?" actif":"")+'" data-fa="'+b[0]+'">'+b[1]+'</button>';}).join("")+'<span style="width:14px"></span>'+
+    genres.map(function(b){return '<button class="filtre'+(filtreGenre===b[0]?" actif":"")+'" data-fg="'+b[0]+'">'+b[1]+'</button>';}).join(""));
+  var vus=l.filter(function(x){return (filtreAgent==="tous"||x.agent===filtreAgent)&&(filtreGenre==="tous"||x.genre===filtreGenre);});
+  vus.sort(function(a,b){return (b.statut==="En cours")-(a.statut==="En cours");});
+  poser("enfants",vus.length?vus.map(function(x){
+    var j=x.jetons||{}, cs=couleurStatut(x.statut), sa=x.genre==="sous-agent";
+    var creneau=sa?(x.debut+" → "+(x.fin||"…")):(String(x.debut).slice(0,5)===String(D.date).slice(0,5)?String(x.debut).slice(11):x.debut)+" → "+(x.fin?String(x.fin).slice(11):"…");
+    return '<tr class="'+(sa?"":"cl")+(cs==="vivant"?" vivant":"")+'" '+(sa?"":'data-id="'+e(x.id)+'"')+'><td><span class="point '+cs+'"></span>'+e(x.statut)+'</td>'+
+      '<td><span class="etq '+x.agent+'">'+NOMS[x.agent]+'</span></td><td><span class="etq '+(sa?"violet":"neutre")+'">'+e(GENRES[x.genre]||x.genre)+'</span></td>'+
+      '<td class="sujet">'+(x.sujet?e(x.sujet):'<span class="petit">sujet non enregistré (avant le 11/11, 17 h) · '+e(String(x.id).slice(0,40))+'</span>')+'</td><td class="col-cache mono petit">'+e(creneau)+'</td>'+
+      '<td class="col-cache mono petit">'+(x.duree_min!=null?x.duree_min+" min":"")+'</td><td class="mono petit">'+(j.entree?k(j.entree)+" / "+k(j.sortie):sa?"non mesuré":"—")+'</td></tr>';
+  }).join(""):'<tr><td colspan="7" class="vide">Aucune session pour ce filtre.</td></tr>');
+}
+$("filtres").addEventListener("click",function(ev){
+  var b=ev.target.closest("button"); if(!b) return;
+  if(b.dataset.fa) filtreAgent=b.dataset.fa; if(b.dataset.fg) filtreGenre=b.dataset.fg; rendreEnfants();
+});
+$("enfants").addEventListener("click",function(ev){ var tr=ev.target.closest("tr[data-id]"); if(tr) ouvrir(tr.getAttribute("data-id")); });
+function ouvrir(id){
+  ouvert=id; var x=(D.enfants||[]).filter(function(y){return y.id===id;})[0]||{};
+  $("t-titre").textContent=(NOMS[x.agent]||"")+" · "+(GENRES[x.genre]||"")+" · "+(x.statut||"");
+  $("t-sous").textContent=(x.sujet||id)+" · "+(x.debut||"")+(x.fin?" → "+x.fin:"");
+  $("t-arreter").hidden=x.statut!=="En cours"; $("t-retour").textContent="";
+  $("t-consigne").textContent="Chargement…"; $("t-resultat").textContent="";
+  $("tiroir").classList.add("ouvert"); $("voile").classList.add("ouvert");
+  fetch("/api/enfant?id="+encodeURIComponent(id),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+    $("t-consigne").textContent=d.consigne||"(consigne non enregistrée : lancement antérieur au 11/11/2026, 17 h)";
+    $("t-resultat").textContent=d.resultat||(x.statut==="En cours"?"Session en cours : le résultat s'affichera à la fin.":"(aucun fichier de résultat)");
+  });
+}
+function fermer(){ ouvert=null; $("tiroir").classList.remove("ouvert"); $("voile").classList.remove("ouvert"); }
+$("t-fermer").onclick=fermer; $("voile").onclick=fermer; document.addEventListener("keydown",function(ev){ if(ev.key==="Escape") fermer(); });
+$("t-arreter").onclick=function(){ if(ouvert&&confirm("Arrêter cette session enfant ?")) post("/api/enfant/arreter",{id:ouvert}).then(function(r){retour($("t-retour"),r);lire();}); };
+
+/* ----- fil, runs, messages entre assistants ----- */
+function rendreFil(){
+  var f=D.fil||[]; $("n-fil").textContent=f.length; $("n-fil").className="n"+(f.length?"":" zero");
+  poser("fil",f.length?f.map(function(m){
+    var de=m.de==="porteur"?"Vous → "+NOMS[m.a]:NOMS[m.de]+" → vous";
+    return '<div class="bulle '+e(m.de)+'"><div class="m">'+e(de)+' · '+e(m.quand)+(m.etat?' · '+e(m.etat):'')+'</div>'+e(m.texte)+'</div>';
+  }).join(""):'<div class="vide">Aucun message. Écrire à Claude ou à Codex dans leur panneau.</div>');
+}
+function rendreRuns(){
+  var g=D.github||{}, r=g.runs||[];
+  $("gh-maj").textContent=g.horodatage?"relevé "+new Date(g.horodatage).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"";
+  var enc=r.filter(function(x){return x.statut!=="completed";}), fin=r.filter(function(x){return x.statut==="completed";}).slice(0,6);
+  var h=(g.alertes||[]).map(function(a){return '<div class="decision" style="border-color:rgba(255,77,106,.5)"><div class="d">'+e(a)+'</div></div>';}).join("");
+  h+=enc.map(function(x){return '<div class="run"><span class="point vivant"></span><a href="'+e(x.url)+'" target="_blank" rel="noopener">'+e(x.workflow)+'</a> <span class="petit mono">· '+e(x.duree)+'</span>'+
+     (x.actifs||[]).map(function(j){return '<div class="job">▸ '+e(j.nom)+' · '+e(j.etape||"")+' · '+e(j.depuis||"")+'</div>';}).join("")+'</div>';}).join("");
+  h+=fin.map(function(x){var ok=x.conclusion==="success";return '<div class="run"><span class="point '+(ok?"ok":"ko")+'"></span><a href="'+e(x.url)+'" target="_blank" rel="noopener">'+e(x.workflow)+'</a> <span class="petit mono">· '+e(x.conclusion)+' · '+e(x.duree)+'</span></div>';}).join("");
+  poser("runs",h||'<div class="vide">Aucun relevé GitHub pour l\'instant.</div>');
+  if(g.release&&g.release.mois) poser("gh-maj",$("gh-maj").textContent+" · release R-21 : "+g.release.mois+" mois");
+}
+function rendreEntre(){
+  var l=D.messages_assistants||[]; $("n-entre").textContent=l.length; $("n-entre").className="n"+(l.length?"":" zero");
+  poser("entre",l.length?l.map(function(d){return '<div class="tache"><span class="etq '+(d.auteur.toLowerCase().indexOf("codex")>=0?"codex":"claude")+'">'+e(d.auteur)+' → '+e(d.destinataire)+'</span><b>'+e(d.objet)+'</b> <span class="petit">'+e(d.date)+'</span><div class="petit">'+e(d.detail)+'</div></div>';}).join(""):'<div class="vide">Aucun.</div>');
+}
+
+/* ----- boucle ----- */
+var construit=false;
+function lire(){
+  fetch("/api/poste",{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
+    D=d; jeton=d.jeton||jeton; dernierOk=Date.now();
+    if(!construit){ construireMere("claude"); construireMere("codex"); construit=true; }
+    [rendreDecisions,rendreSurveillant,function(){rendreMere("claude");},function(){rendreMere("codex");},rendreEnfants,rendreFil,rendreRuns,rendreEntre]
+      .forEach(function(f){ try{f();}catch(x){ console.error(x); } });
+  }).catch(function(){});
+}
+lire(); setInterval(lire,10000);
+document.addEventListener("visibilitychange",function(){ if(!document.hidden) lire(); });
+})();
+</script>
+</body>
+</html>

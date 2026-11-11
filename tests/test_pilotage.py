@@ -372,6 +372,28 @@ def test_relecture_empechee_retentee_deux_fois():
             break
 
 
+def test_redemarrage_sans_tentative_supplementaire():
+    """Relecture Codex 23a8531d3f17 : un redémarrage du surveillant ne contourne ni le délai ni le plafond."""
+    import sqlite3
+    from datetime import datetime, timedelta
+    db = sqlite3.connect(":memory:")
+    db.execute("CREATE TABLE lancements (id TEXT PRIMARY KEY, debut TEXT, fin TEXT, statut TEXT NOT NULL, consommation TEXT)")
+    db.execute("CREATE TABLE retentes (id TEXT PRIMARY KEY, nombre INTEGER NOT NULL)")
+    t0 = datetime(2026, 11, 11, 12, 0, tzinfo=C.NAIROBI)
+    fin = t0.strftime("%d/%m/%Y %H:%M")
+    db.execute("INSERT INTO lancements VALUES ('codex/relecture-epuisee', '', ?, 'Échec', NULL)", (fin,))
+    db.execute("INSERT INTO retentes VALUES ('codex/relecture-epuisee', ?)", (C.RETENTES_MAX,))
+    db.execute("INSERT INTO lancements VALUES ('codex/relecture-recente', '', ?, 'Échec', NULL)", (fin,))
+    db.execute("INSERT INTO lancements VALUES ('claude/relecture-coupee', ?, NULL, 'En cours', NULL)", (fin,))
+    C.reprendre_au_demarrage(db, t0 + timedelta(minutes=5))
+    statuts = dict(db.execute("SELECT id, statut FROM lancements"))
+    assert statuts == {"codex/relecture-epuisee": "Échec", "codex/relecture-recente": "Échec",
+                       "claude/relecture-coupee": "Interrompu"}                  # rien n'est relancé immédiatement
+    C.reprendre_au_demarrage(db, t0 + timedelta(hours=2))                        # délai écoulé
+    restants = {r[0] for r in db.execute("SELECT id FROM lancements")}
+    assert restants == {"codex/relecture-epuisee"}                               # plafond atteint : conservée
+
+
 if __name__ == "__main__":
     for nom, fonction in list(globals().items()):
         if nom.startswith("test_"):
