@@ -87,26 +87,44 @@ détection contrôle). C'est la grandeur observable ; le paramètre de mélange 
 
 Erreur de Monte-Carlo : ± 1,5 point au plus (IC à 95 %).
 
-**Lecture** : avec la population actuelle, 80 % est atteint dans tous les scénarios de τ si la CCI est au plus
-d'environ **0,35** ; avec la projection (février-mars 2015 publiés), si elle est au plus d'environ **0,45**. Au-delà,
-la puissance tombe sous 80 %.
+**Lecture** (repères conservateurs, conditionnels aux hypothèses simulées : P_C, σ_C, κ, ω et forme de la
+dépendance). Le seuil de CCI est dérivé dans [la puissance](r21_puissance.md#seuil-de-cci-pour-80--de-puissance-dérivation)
+et [la projection](r21_puissance_projection.md#seuil-de-cci-pour-80--de-puissance-dérivation) : pour chaque τ,
+interpolation linéaire entre les deux scénarios qui encadrent 80 %, sur la **borne basse à 95 % de Monte-Carlo** de la
+puissance, puis plus petit seuil sur τ. Résultat : **CCI ≤ 0,40** avec la population actuelle, **CCI ≤ 0,49** avec la
+projection (février-mars 2015 publiés). Ce sont des bornes prudentes, pas des limites franches : des scénarios
+au-dessus atteignent encore 80 % (86,7 % à CCI 0,37 pour 376 unités ; 84,0 % à CCI 0,49 pour 440 unités), et
+l'interpolation porte sur des scénarios espacés d'environ 0,1 de CCI.
 
-**Estimation de la CCI avant tout score, sans information d'impact (proposition soumise à Codex)** : calculer les
-alertes des deux méthodes (seuils de la section 2, charge comparable de la section 4) sur les **initialisations
-témoins**, c'est-à-dire sans fiche dans les districts concernés. On appliquerait à ces jours les groupes de districts
-des épisodes réels et on ne retiendrait que les jours-groupes où au moins une méthode alerte dans le groupe (situation
-d'activité comparable à un épisode). La CCI des différences s'estime alors par ANOVA, avec un intervalle par
-bootstrap des saisons. Aucune unité d'impact n'est lue : les résultats des épisodes réels restent cachés. **Décision
-fixée à l'avance** : si la borne haute de l'intervalle est sous le seuil de la population obtenue, H1 est
-confirmatoire au seuil de 80 % ; sinon, on publie la puissance correspondante et le statut exploratoire.
+**Estimation de la CCI avant tout score, sans information d'impact** : calculer les alertes des deux méthodes (seuils
+de la section 2, charge comparable de la section 4) sur les **initialisations témoins**, c'est-à-dire sans fiche dans
+les districts concernés. On appliquerait à ces jours les groupes de districts des épisodes réels et on ne retiendrait
+que les jours-groupes où au moins une méthode alerte dans le groupe (situation d'activité comparable à un épisode). La
+CCI des différences s'estime alors par ANOVA, avec un intervalle par bootstrap des saisons. Aucune unité d'impact n'est
+lue : les résultats des épisodes réels restent cachés.
+
+**Transportabilité non démontrée (relecture Codex du 11/11, 14:37).** Rien ne garantit que la CCI des jours témoins
+soit celle des épisodes d'impact : un aléa fort commun à tout un épisode peut rapprocher les décisions des deux
+méthodes dans les districts touchés, donc changer la corrélation des différences, et la sélection « au moins une
+méthode alerte » ne reproduit qu'en partie cette situation. Le bootstrap mesure l'incertitude d'échantillonnage, pas
+ce biais. En conséquence :
+
+1. L'estimation sur témoins sert d'**analyse de sensibilité** : on publie, avant les scores, la CCI estimée, son
+   intervalle et la puissance correspondante lue sur les tableaux (avec la borne haute de l'intervalle et avec cette
+   borne augmentée de 0,10, soit un pas de la grille simulée).
+2. Elle **n'attribue pas automatiquement** le statut confirmatoire. H1 reste exploratoire par défaut ; le porteur du
+   projet décide, au vu de cette sensibilité et avant les scores, s'il retient le statut confirmatoire (section 6).
+3. Après les scores, la CCI des différences observée sur les épisodes est calculée et publiée, avec la puissance
+   qu'elle implique. Elle ne modifie pas le statut fixé avant les scores.
 
 ## 6. Décisions demandées au porteur du projet
 
 1. **Gain de détection jugé pertinent**, fixé avant les scores. Proposition : 30 points.
 2. **Télécharger les 7 mois** de la section 3 (Copernicus, un mois par job, file unique). Coût : 7 jobs, quelques heures
    au total d'après les derniers mois. Gain : 10 épisodes et 5 saisons. Sans ce lot, H1 est déclaré exploratoire.
-3. Statut final : confirmatoire seulement si l'effectif obtenu donne au moins 80 % de puissance au gain retenu ;
-   sinon exploratoire, avec intervalles de confiance.
+3. Statut final, décidé avant les scores : exploratoire par défaut. Confirmatoire seulement si le porteur le retient au
+   vu de l'analyse de sensibilité de la section 5 (CCI estimée sur témoins, puissance à sa borne haute et à cette
+   borne + 0,10) ; dans tous les cas, intervalles de confiance publiés.
 
 **Décisions du porteur du projet (11/11/2026, 11:19 Nairobi)** : (1) gain pertinent fixé à **30 points** ; (2) lot de
 7 mois **autorisé**. Avec 25 épisodes, la puissance pour 30 points est de 72 % : selon le point 3, H1 restera
@@ -116,4 +134,6 @@ et 2016, puis février et mars 2015. Consigné au [protocole, section 9](protoco
 
 **Mise à jour du 11/11/2026 après-midi** : le porteur du projet maintient l'objectif de 80 % (le statut exploratoire est
 jugé insuffisant). Le passage à l'unité épisode × district avec inférence par saisons (section 5) le rend atteignable
-si la CCI des différences ne dépasse pas environ 0,35 (population actuelle) ou 0,45 (avec 2015) ; elle sera estimée sur les seules prévisions avant tout score.
+si la CCI des différences ne dépasse pas 0,40 (population actuelle) ou 0,49 (avec 2015), repères conservateurs dérivés
+en section 5 ; elle sera estimée sur les seules prévisions avant tout score, à titre de sensibilité (sa transportabilité
+aux épisodes n'est pas démontrée) : le porteur tranche alors le statut avant les scores.

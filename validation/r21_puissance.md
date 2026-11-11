@@ -42,3 +42,15 @@ Calcul du 11/11/2026 par [`scripts/r21_puissance.py`](../scripts/r21_puissance.p
 | 0,20 | 0,7 | 0,53 | 75,1 % | 1,3 |
 | 0,20 | 0,9 | 0,82 | 62,3 % | 1,5 |
 
+## Seuil de CCI pour 80 % de puissance (dérivation)
+
+Pour chaque τ, interpolation linéaire de la puissance entre les deux scénarios simulés qui encadrent 80 %, d'abord sur la valeur simulée, puis sur sa borne basse à 95 % de Monte-Carlo (valeur − erreur). Le **seuil de décision** est le plus petit des seuils sur borne basse, tous τ confondus : c'est un repère conservateur, conditionnel aux hypothèses simulées (P_C, σ_C, κ, ω, forme de la dépendance) et à l'interpolation entre scénarios espacés d'environ 0,1 de CCI. Des scénarios au-dessus de ce seuil peuvent dépasser 80 %.
+
+| τ | Seuil (valeur simulée) | Seuil (borne basse Monte-Carlo) |
+|---:|---:|---:|
+| 0,00 | 0,49 | 0,47 |
+| 0,10 | 0,45 | 0,44 |
+| 0,20 | 0,41 | 0,40 |
+
+**Seuil de décision : CCI des différences ≤ 0,40**
+

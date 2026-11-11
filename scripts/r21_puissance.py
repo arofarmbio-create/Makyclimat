@@ -108,6 +108,22 @@ def cci(somme, carres, n):
     return float(np.nanmean(icc))
 
 
+def seuil_cci(points, cible=0.80):
+    """CCI des différences à laquelle la puissance croise `cible`, par interpolation linéaire entre scénarios simulés
+    (triés par CCI). Retourne (seuil sur la valeur simulée, seuil sur la borne basse à 95 % de Monte-Carlo).
+    Hypothèse : puissance décroissante en CCI entre deux scénarios voisins. None si la cible n'est pas croisée."""
+    def croisement(ys):
+        xs = [p[0] for p in points]
+        if ys[0] < cible:
+            return 0.0
+        for (x0, y0), (x1, y1) in zip(zip(xs, ys), zip(xs[1:], ys[1:])):
+            if y0 >= cible > y1:
+                return x0 + (x1 - x0) * (y0 - cible) / (y0 - y1)
+        return None
+    points = sorted(points)
+    return croisement([p[1] for p in points]), croisement([p[1] - p[2] for p in points])
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sim", type=int, default=4000)
@@ -130,6 +146,7 @@ def main() -> None:
          "districts d'un épisode qui reprennent le tirage commun (paramètre du simulateur, non observable). La **CCI des "
          "différences** (corrélation intra-épisode de ens. − contrôle par district) est la grandeur observable qui "
          "relie chaque scénario à une estimation sur les prévisions.", ""]
+    courbes = {}
     for gain in (0.0, 0.30):
         titre = "Erreur de type I (gain nul)" if gain == 0 else f"Gain de {gain * 100:.0f} points (fixé par le porteur)"
         L += [f"## {titre}", "", "| τ | r | CCI des différences | Test A (saisons) | ± erreur Monte-Carlo |",
@@ -137,8 +154,24 @@ def main() -> None:
         for tau, r in itertools.product((0.0, 0.10, 0.20), (0.3, 0.5, 0.6, 0.7, 0.9)):
             a, _, icc = simuler(ep, gain, tau, 0.10, r, args.sim, rng, signes)
             se = 1.96 * np.sqrt(a * (1 - a) / args.sim)
+            if gain > 0:
+                courbes.setdefault(tau, []).append((icc, a, se))
             L.append(f"| {tau:.2f} | {r:.1f} | {icc:.2f} | {100 * a:.1f} % | {100 * se:.1f} |".replace(".", ","))
         L.append("")
+    L += ["## Seuil de CCI pour 80 % de puissance (dérivation)", "",
+          "Pour chaque τ, interpolation linéaire de la puissance entre les deux scénarios simulés qui encadrent 80 %, "
+          "d'abord sur la valeur simulée, puis sur sa borne basse à 95 % de Monte-Carlo (valeur − erreur). Le **seuil "
+          "de décision** est le plus petit des seuils sur borne basse, tous τ confondus : c'est un repère conservateur, "
+          "conditionnel aux hypothèses simulées (P_C, σ_C, κ, ω, forme de la dépendance) et à l'interpolation entre "
+          "scénarios espacés d'environ 0,1 de CCI. Des scénarios au-dessus de ce seuil peuvent dépasser 80 %.", "",
+          "| τ | Seuil (valeur simulée) | Seuil (borne basse Monte-Carlo) |", "|---:|---:|---:|"]
+    retenus = []
+    for tau, pts in courbes.items():
+        s_val, s_bas = seuil_cci(pts)
+        retenus.append(s_bas if s_bas is not None else np.inf)
+        fmt = lambda s: "non croisé" if s is None else f"{s:.2f}".replace(".", ",")
+        L.append(f"| {tau:.2f} | {fmt(s_val)} | {fmt(s_bas)} |".replace(".", ","))
+    L += ["", f"**Seuil de décision : CCI des différences ≤ {min(retenus):.2f}**".replace(".", ","), ""]
     sortie = ROOT / "validation" / ("r21_puissance_projection.md" if args.avec_lot_en_cours else "r21_puissance.md")
     sortie.write_text("\n".join(L) + "\n", encoding="utf-8")
     print(f"Écrit : {sortie}")
