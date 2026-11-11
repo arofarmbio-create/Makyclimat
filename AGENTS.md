@@ -1,7 +1,7 @@
 # Instructions pour Codex
 
-Au démarrage, lis les règles communes et la ligne de ton chantier dans [COORDINATION.md](COORDINATION.md).
-Suis les liens utiles à la tâche et mets à jour sa ligne au prochain changement significatif.
+Au démarrage, lis [COORDINATION.md](COORDINATION.md) (index court des tâches et décisions), puis les [règles](coordination/regles.md), puis la fiche de ton chantier (lien « Détail » de sa ligne). N'ouvre l'[archive](validation/coordination_archive.md) que sur besoin précis (règles de sobriété, 11/11/2026).
+Suis les liens utiles à la tâche et mets à jour sa ligne (deux phrases) au prochain changement significatif ; le détail va dans la fiche.
 Consulte `pilotage/etat/coordination/codex.md` si présent. Vérifie dans la coordination que l'alerte est encore d'actualité.
 Avant d'ouvrir une nouvelle conversation, tiens ton point de reprise `pilotage/etat/reprise_codex.md` (local, non versionné) : fichiers non commités, travail en cours, prochaines étapes, sans copier COORDINATION.md. Lis-le au démarrage.
 

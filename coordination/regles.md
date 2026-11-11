@@ -1,0 +1,91 @@
+# Règles de la coordination de MakyClimat
+
+*Règles stables, déplacées de [COORDINATION.md](../COORDINATION.md) le 11/11/2026 (texte d'origine conservé). À lire en début de session ; l'état courant est dans COORDINATION.md.*
+
+> **Pilotage confié à Claude le 11/11/2026 (décision du porteur du projet), remplace le pilotage par Codex du 10/11.** Claude pilote tout le processus : il propose les stratégies et les méthodes de calcul ou de modélisation, coordonne, vérifie le surveillant et l'activité de Codex, exécute le code. Codex vérifie et améliore : il relit chaque proposition et chaque code de Claude, valide ou recommande, et peut modifier si nécessaire. Claude relit ces recommandations, les applique ou motive son refus. Le porteur du projet tranche les litiges et les décisions importantes. Les autorisations de collecte déjà données restent valables. R-21 reste verrouillé jusqu'à l'analyse de puissance et à la revue de la méthode.
+
+## Règles (communes, non négociables)
+
+1. **Le porteur du projet décide** des choix de fond. Les assistants proposent, exécutent, documentent.
+2. Le [protocole doctoral](../protocole_doctoral_modelisation_climatique_Madagascar.txt) prévaut sur le [prompt maître](../prompt_maitre.md). Rattacher chaque étude à son module, son expérience et son hypothèse quand elle existe.
+3. Toute nouvelle expérience scientifique exige un protocole écrit (`validation/protocole_*.md`) et une analyse de puissance **avant le calcul**. Consigner les résultats, échecs compris, dans le [journal](../validation/journal_recherche.md) et le [registre](../validation/etat_des_lieux_registre.md).
+4. Le dépôt est public. Garder secrets, données personnelles et données brutes à diffusion restreinte hors de Git. Vérifier [les règles d'exclusion](../.gitignore) et les droits avant d'ajouter des données. Une partie de `data/` est versionnée.
+5. **Où calculer.** GitHub Actions pour les mises à jour programmées, les téléchargements avec identifiants et les calculs longs sur données publiques. Sorties lourdes en release. Le PC sert aux calculs courts et aux traitements sur données non publiables (MGMERL brut, BushProof, GROSoM, carte PGRM). Python local : `.venv/Scripts/python.exe`. Tests : `tests/`, aussi exécutés sur GitHub.
+6. Une tâche de téléchargement à la fois par fournisseur (NASA, Copernicus, CHIRPS), à rythme lent, sans relances en rafale.
+7. **Une tâche = un seul responsable.** Respecter le périmètre des autres chantiers. Pour des modifications en parallèle, utiliser des branches et worktrees distincts après accord, avec entrées partagées en lecture seule et sorties séparées. Indiquer la branche ou le commit de référence quand il existe.
+8. Réponses en français et commits signés de leur auteur. Une ligne de suivi ou de relecture ne vaut pas autorisation de publier, de lancer un calcul lourd ou de télécharger. Les autorisations déjà données continuent de s'appliquer.
+9. **Vérifier avant de refaire** (idempotence, 10/11/2026). Après une coupure de connexion, une reprise de session ou une demande répétée, ne rien relancer avant d'avoir constaté ce qui est déjà fait : la ligne de la tâche ici, `git status` et `git log` (y compris les commits non poussés), les runs GitHub en cours ou en file et la dernière release. Reprendre au premier pas manquant. Un workflow ou un téléchargement déjà en cours n'est pas relancé ; un lancement identique attend le précédent (garde de concurrence des workflows).
+10. **Lecture GitHub et décisions** (porteur du projet, 11/11/2026). Lire GitHub est autorisé en permanence et sans question : liste et état des runs, journaux de run, releases et leurs fichiers (`gh run list`, `gh run view`, `gh release view`, `gh api` en GET). Lancer, relancer, annuler un run, publier ou supprimer reste soumis à autorisation. Une décision à demander au porteur s'écrit dans « Messages et décisions en attente » (elle apparaît dans le poste de pilotage avec Autoriser, Refuser, Répondre), jamais seulement dans le chat d'une session. Fichiers écrits en UTF-8, accents compris.
+
+## Rôles (décision du porteur du projet, 11/11/2026 ; remplace celle du 09/11)
+
+- **Porteur du projet** : décide des orientations, des choix de fond, et tranche les litiges entre Claude et Codex.
+- **Claude Code** : **pilote**. Propose la stratégie et la méthode (calcul, modélisation), écrit et exécute le code, coordonne les tâches, surveille le surveillant, les runs et l'activité de Codex, et relance Codex quand une relecture tarde.
+- **Codex** : **vérificateur et améliorateur**. Relit chaque proposition et chaque code de Claude, valide ou formule des recommandations, et peut corriger lui-même si nécessaire (en le signalant ici). Ne lance pas de nouveau chantier sans accord de Claude ou du porteur.
+- **Audit système par Codex** (porteur du projet, 11/11/2026) : Codex audite l'ensemble du système (GitHub, workflows, releases, site, scripts, pilotage, données) et donne son avis ici. Claude relit chaque point d'audit, **vérifie sa pertinence sur les faits** (journal du run, code, fichiers) avant d'agir, code ce qui est justifié, et consigne pourquoi un point est écarté. Aucun point d'audit n'est appliqué sans cette vérification. Désaccord persistant : décision du porteur.
+- **Pas d'attente passive et sobriété** (porteur du projet, 11/11/2026) : quand une relecture de Codex tarde, Claude avance sur les points qui ne dépendent pas de sa validation. Échanges courts entre Claude, Codex et le porteur (l'essentiel, liens plutôt que copies). Quand le contexte d'une conversation devient lourd, Claude ou Codex repart dans une nouvelle conversation à partir de cette page.
+- **Cycle de chaque étape** : Claude propose → Codex relit → Claude applique les recommandations et exécute → Codex vérifie le code et les résultats → Claude corrige → Fait. Désaccord persistant : décision du porteur.
+- **Sobriété des lancements** (porteur du projet, 11/11/2026). (1) Une relecture automatique par version livrée : la ligne « À relire » cite entre accents graves le commit à relire ; sans commit cité, pas de relecture automatique. (2) Dès qu'un avis arrive, Claude met à jour la ligne relue (« Fait », « Corrections en cours ») : une ligne restée « À relire » relance une relecture. (3) Codex n'est réveillé que par un message de Claude qui lui est adressé ; un réveil en file depuis plus d'une heure est oublié. (4) Regrouper : une consigne qui couvre plusieurs points coûte moins que plusieurs lancements. (5) La session mère de Claude n'est relancée en fin de tour que par une alerte à traiter.
+- **Sessions enfants** (porteur du projet, 11/11/2026) : les sessions mères de Claude et de Codex décident ; les enfants exécutent. (1) Seules les sessions mères (ou le porteur depuis le poste de pilotage) commandent une session enfant, avec un motif écrit ; le surveillant enregistre son sujet et sa consigne. (2) Une relecture par version livrée : regrouper les corrections avant de repasser une ligne « À relire » ; au plus 3 relectures automatiques d'une même tâche par jour. (3) Plafond quotidien des lancements automatiques, par agent : 12 relectures, 6 réveils ; les exécutions autorisées par le porteur n'y sont pas soumises. (4) Les commits reviennent aux sessions mères ou aux exécutions en écriture, jamais à une session en lecture seule. (5) Une session enfant rend un résultat court ; le détail reste dans son fichier. Tout se suit dans le [poste de pilotage](../scripts/pilotage/poste.html) (`pilotage.cmd`).
+
+## Définition de « Fait » (pour éviter les erreurs coûteuses)
+
+1. Le livrable est disponible et lié depuis la ligne du chantier. Les résultats scientifiques sont consignés dans le journal et le registre.
+2. Pour le code, les tests concernés réussissent, les dépendances du workflow sont vérifiées si elles sont concernées, et le code correspond au protocole applicable. Toute modification scientifique suit le protocole avant calcul.
+3. Pour un calcul ou un téléchargement, l'état du run est confirmé et le résultat est lu et vérifié.
+4. Pour un livrable de code, la relecture de l'autre assistant est **effectuée** et ses points bloquants sont levés. Tant qu'elle est attendue, la tâche est **À relire**.
+
+## Prendre, suivre et transmettre un chantier
+
+1. **À la reprise.** Lire la tâche et ses liens. Vérifier son dernier résultat, l'état Git et le périmètre autorisé. Pour une tâche distante, lire d'abord `pilotage/etat/github_direct.json` (état GitHub relevé par le poste, avec sa date) ; s'il manque ou date de plus de 15 min, consulter GitHub en lecture seule sans demander (règle 10). Une mention « en file » dans ce fichier décrit le dernier état rapporté.
+2. **Au démarrage.** Le responsable passe la tâche à **En cours**, précise le résultat attendu et les fichiers concernés, puis avance dans le périmètre convenu. Il inscrit la date et l'heure de début et tient sa ligne à jour. Avant d'intervenir, il vérifie les créneaux et fichiers des tâches en cours.
+3. **À un changement utile.** Actualiser l'état, le lien vers la preuve et la prochaine action. En cas de blocage, préciser qui peut le lever et comment. Utiliser les scripts existants pour les vérifications mécaniques.
+4. **Pour une relecture.** Une fois le livrable prêt, donner à l'autre assistant le diff ou le commit, les vérifications déjà faites et le point à contrôler. Le relecteur signale les blocages avec leurs références ou confirme la revue. La relecture a sa propre ligne, avec le nom du relecteur et ses heures de début et de fin. Une nouvelle passe se limite aux corrections et à leurs effets directs.
+5. **À la clôture.** Passer à **Prêt à publier** si seule la publication reste à décider ou à exécuter, puis à **Fait** selon les critères ci-dessus. Renseigner l'heure de fin quand le responsable remet le livrable ou arrête son intervention. Si le chantier est abandonné, indiquer **Clos** avec le motif et le lien.
+
+**Horaires** — date et heure locales de Nairobi (UTC+3), au format `JJ/MM/AAAA HH:mm`. À chaque intervention, Claude et Codex inscrivent leurs propres heures de début et de fin. Une fin vide signale une intervention encore ouverte si le début est renseigné. Lors d'une reprise après interruption, conserver le créneau précédent dans la passation et renseigner le nouveau. Un chevauchement d'horaires est à examiner si les fichiers ou ressources se recoupent. « Non consignée » indique une heure historique inconnue.
+
+**États** — À faire · En cours · En attente (dépendance ou run) · Bloqué (action nécessaire) · À relire · Prêt à publier · Fait · Clos.
+
+
+## Sobriété en jetons (décision du porteur du projet, 11/11/2026, 20:30 ; à ajuster à l'usage)
+
+Constat du 11/11 : seuls les tours de modèle coûtent ; une session Codex coûte ~80 000 jetons même pour une petite tâche (lecture de la coordination) ; une action dans une conversation de 250 000 jetons coûte ~5 fois plus qu'au début.
+
+1. **Lecture en trois niveaux.** [COORDINATION.md](../COORDINATION.md) (index court) → ces règles → la fiche du chantier de sa tâche ([chantiers](chantiers/)). L'[archive](../validation/coordination_archive.md) ne se lit que sur besoin précis.
+2. **Index court.** Une ligne de tâche tient en deux phrases dans « Prochaine action » ; le détail (versions, avis, mesures) va dans la fiche du chantier, liée depuis la ligne. Objectif : COORDINATION.md sous 15 Ko.
+3. **Archivage.** Claude archive à sa première session de chaque journée : lignes « Fait » ou « Clos » sans suite attendue (hors étapes d'un parcours de `config/parcours_pilotage.yml`), messages traités, exécutions, décisions et lancements cochés, déplacés tels quels dans l'archive. Au-delà de 15 Ko, archiver plus tôt.
+4. **Nouvelle conversation** dès que le contexte dépasse ~150 000 jetons, à un point propre ; le point de reprise est tenu à jour à chaque étape terminée, pas seulement avant le changement.
+5. **Scripts d'abord.** Ce qui ne demande pas de jugement (état d'un run, présence d'un fichier, tests, encodage) passe par un script (0 jeton) ; un modèle n'est réveillé que si le script trouve un problème ou un résultat à interpréter. Aucune attente active d'un modèle : un script réveille quand c'est fini.
+6. **Travail par lot.** Une consigne couvre une tâche complète : objectif, fichiers, critère de fin, commit à relire. Pas de session pour une petite vérification isolée : on accumule et une session traite le lot. Une relecture par version livrée.
+7. **Consignes autonomes.** Une consigne à Codex ou à une session fille donne la fiche du chantier et le commit, pour éviter de parcourir le dépôt.
+8. **Sessions filles** seulement pour une grosse tâche isolée (calcul long, analyse complète) ; modèle plus léger pour les tâches mécaniques.
+9. **Plafond d'escalade.** Plus de 3 relances entre Claude et Codex sur un même sujet dans l'heure : on s'arrête et le sujet devient une décision du porteur.
+10. **Un seul agent actif par chantier** à la fois.
+11. **Lectures ciblées.** Chercher le passage utile d'un gros fichier plutôt que le relire en entier ; ne lire que la fin des journaux.
+
+## Où lire l'état du projet (au lieu des conversations)
+
+- **Responsabilités, prochaine action et arbitrages** — [COORDINATION.md](../COORDINATION.md) et les [fiches de chantier](chantiers/).
+- **Résultats et décisions scientifiques** — [registre](../validation/etat_des_lieux_registre.md), [entrées pertinentes du journal](../validation/journal_recherche.md), [méthodologie](../validation/methodologie_these.md) et [bilan d'étape](../validation/bilan_etape_2026-11-09.md).
+- **Téléchargements** — [état des téléchargements](../validation/etat_telechargements.md) et pièces du chantier. Vérifier le dernier artefact ou run avant de relancer.
+- **Pilotage sur le PC du porteur** — `pilotage/tableau_de_bord.html`. La section Parcours lit les responsables, états et horaires dans ce fichier. [La configuration des parcours](../config/parcours_pilotage.yml) fixe l'ordre des jalons, leurs conditions de fin et les relecteurs. Mettre à jour la ligne de tâche pour actualiser le parcours. Les autres sections lisent les YAML du pilotage local et le journal.
+
+## Pilotage automatique (décision du porteur du projet, 10/11/2026 : option C)
+
+**Démarrage :** double-cliquer sur [`pilotage.cmd`](../pilotage.cmd) et laisser la fenêtre noire ouverte. Le [surveillant](../scripts/pilotage/surveiller_coordination.py) relit COORDINATION.md toutes les 15 secondes pendant la durée choisie ; une seule boucle et un seul lancement à la fois. `Pilotage en pause` suspend les lancements.
+
+- **Décisions** — une carte Décision du tableau de bord propose Autoriser, Refuser ou Répondre. La réponse est inscrite sous « Décisions du porteur du projet » et le message retiré. **Autoriser** ajoute une ligne sous « Exécutions autorisées », exécutée en mode écriture par l'auteur de la proposition (Claude : 30 min et 80 étapes au plus, sans push forcé ni réécriture d'historique ; Codex : `workspace-write`, 30 min). Refuser et Répondre n'exécutent rien : l'assistant concerné lit la réponse à sa reprise. Une **consigne** libre à Claude ou Codex s'exécute comme une autorisation.
+- **Relectures croisées** — chaque ligne « À relire » d'un assistant est relue par l'autre, en lecture seule. Le diff des fichiers cités est fourni d'emblée ; une relecture n'est relancée que si ce diff change, pas si la ligne est reformulée. Une ligne qui ne cite que des fichiers de suivi n'est pas relue. Citer donc les fichiers modifiés dans la colonne Preuve.
+- **Réveil de Codex** — quand le surveillant est actif avec le binaire Codex, les nouveaux messages Claude → Codex et les alertes de tâche adressées à Codex déclenchent une session séparée en lecture seule. Les relectures conservent leur propre circuit. La file évite les doublons et garde les alertes reçues pendant une pause. Claude et le porteur trouvent la réponse dans les lancements du tableau des alertes.
+- **Économie de contexte** — chaque session part de zéro et s'appuie sur les fichiers, pas sur un historique de conversation. Les tâches terminées hors parcours sont déplacées dans [l'archive](../validation/coordination_archive.md). Garder chaque ligne de tâche en deux ou trois phrases ; le détail va dans les commits et le journal.
+- **Échec d'un run GitHub** (règle du porteur du projet, 10/11/2026) — le serveur repère la fin en échec ou annulée d'un run et confie le diagnostic au responsable de la tâche ouverte qui cite ce run ou le fichier de son workflow. S'il peut corriger, il corrige, teste, commite et relance **une seule fois**, en respectant la règle 6. Sinon, il écrit au porteur la cause et ses suggestions, et le porteur valide. Au-delà de 2 échecs du même workflow en 24 h, ou sans tâche liée, le porteur est saisi directement. Le surveillant démarre seul (2 h) quand une exécution est créée.
+- **Suivi** — [poste de pilotage](../scripts/pilotage/poste.html) (page d'accueil de `pilotage.cmd`) : sessions enfants, sujets, jetons, plafonds, décisions et messages ; la page de recherche reste accessible. Avis, résultats et tokens consommés par lancement : tableau de bord, section Équipe (dont « GitHub en direct », sans tokens), et `pilotage/etat/coordination/`.
+
+Commande manuelle équivalente (sans le tableau) :
+
+```powershell
+$claude = Join-Path (Split-Path (Get-Command claude.cmd).Source) 'node_modules/@anthropic-ai/claude-code/bin/claude.exe'
+.venv/Scripts/python.exe -B -X utf8 scripts/pilotage/surveiller_coordination.py --boucle --duree-minutes 60 --windows --claude-exe $claude --codex-exe "$env:USERPROFILE\.codex\plugins\.plugin-appserver\codex.exe" --relectures-auto
+```
+
