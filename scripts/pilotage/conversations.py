@@ -110,7 +110,10 @@ def mesure_codex(transcript: str) -> dict:
         info = contenu.get("info") or {}
         n = (info.get("last_token_usage") or {}).get("total_tokens")
         limite = info.get("model_context_window")
-        if isinstance(n, int) and n >= 0 and isinstance(limite, int) and limite > 0:
+        if isinstance(n, int) and n >= 0:
+            # Ne pas reprendre une ancienne mesure quand la fenêtre est omise.
+            # None déclenche le repli LIMITE et son indicateur « estimée » dans charge().
+            limite = limite if isinstance(limite, int) and limite > 0 else None
             return {"jetons": n, "limite": limite, "maj": evenement.get("timestamp", "")}
     return {}
 

@@ -60,6 +60,21 @@ class ConversationsCodex(unittest.TestCase):
             f.write('{"type":"event_msg","payload":{"type":"token_count","info":null}}\n')
         self.assertEqual(C.charge("codex")["pourcent"], 0)
 
+    def test_derniere_mesure_sans_fenetre_replie_a_200000(self):
+        path = self.journal(tokens=320_000, limite=400_000)
+        C.noter_codex({"hook_event_name": "UserPromptSubmit"})
+        for tokens in (120_000, 0):
+            with self.subTest(tokens=tokens):
+                evenement = {"type": "event_msg", "timestamp": "2026-11-11T09:00:00Z", "payload": {
+                    "type": "token_count", "info": {"last_token_usage": {"total_tokens": tokens}}}}
+                with path.open("a", encoding="utf-8") as f:
+                    f.write(json.dumps(evenement) + "\n")
+                charge = C.charge("codex")
+                self.assertEqual((charge["jetons"], charge["limite"], charge["pourcent"]),
+                                 (tokens, 200_000, round(100 * tokens / 200_000)))
+                self.assertTrue(charge["limite_estimee"])
+                self.assertEqual(charge["maj"], "2026-11-11T09:00:00Z")
+
     def test_sessions_automatiques_et_anciens_tours_ecartes(self):
         self.journal()
         C.noter_codex({"hook_event_name": "UserPromptSubmit", "session_id": SID})
