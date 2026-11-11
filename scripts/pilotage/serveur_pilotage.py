@@ -24,6 +24,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import conversations  # noqa: E402
 import github_direct  # noqa: E402
 import tableau_de_bord  # noqa: E402
 from surveiller_coordination import NAIROBI, cle_message, ecrire_si_change, lire_instance  # noqa: E402
@@ -383,6 +384,8 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             reponse = decision(str(corps.get("cle", "")), str(corps.get("action", "")), str(corps.get("texte", "")))
         elif self.path == "/api/consigne":
             reponse = consigne(str(corps.get("agent", "")), str(corps.get("texte", "")))
+        elif self.path == "/api/conversation/nouvelle":
+            reponse = conversations.nouvelle_conversation(binaire_claude(), bool(corps.get("forcer")))
         else:
             return self._json({"erreur": "Commande inconnue."}, 404)
         self._json(reponse, 409 if "erreur" in reponse else 200)
@@ -451,7 +454,7 @@ def actions(n: int = 15) -> dict:
                 etat = "repos" if lignes[-1].get("genre") == "repos" or age > ACTIF_S else "actif"
             except (KeyError, ValueError):
                 pass
-        sortie[agent] = {"etat": etat, "actions": lignes[::-1]}
+        sortie[agent] = {"etat": etat, "actions": lignes[::-1], "charge": conversations.charge(agent)}
     return sortie
 
 

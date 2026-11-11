@@ -509,7 +509,7 @@ header{{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:
 .auto{{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px}} .auto-ctl{{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}}
 .auto-ctl[hidden]{{display:none}} .auto select,.auto button{{font:inherit;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}}
 .auto button{{cursor:pointer}} .auto button:hover:not(:disabled){{background:var(--sub)}} .auto button:disabled{{opacity:.5;cursor:default}}
-.act-live{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:14px}} .act-live[hidden]{{display:none}}
+.conv{{margin:6px 0 10px}} .conv .gauge{{display:block;width:100%;margin:4px 0}} .act-live{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:14px}} .act-live[hidden]{{display:none}}
 .act{{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto;font-size:13px}} .act li{{display:flex;gap:8px;padding:4px 0;border-top:1px solid var(--border);overflow-wrap:anywhere}}
 .act time{{color:var(--muted);font-variant-numeric:tabular-nums}} .act .act-g{{color:var(--muted);font-size:11px;min-width:78px}}
 .gh-live{{margin-bottom:14px}} .gh-live[hidden]{{display:none}} .gh-live .gh-h{{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}}
@@ -688,10 +688,31 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
     [["claude","Claude"],["codex","Codex"]].forEach(function(a){{
       var d=e[a[0]]||{{}}, st={{actif:["ok","Actif"],repos:["neutre","Au repos"]}}[d.etat]||["neutre","Pas de suivi"];
       var l=(d.actions||[]).map(function(x){{return '<li><time>'+echap((x.quand||"").slice(11,16))+'</time><span class="act-g">'+echap(x.genre||"")+'</span>'+echap(x.texte||"")+'</li>';}}).join("");
-      h+='<div class="card pad"><div class="gh-h"><h3>'+a[1]+' en ce moment</h3><span class="st '+st[0]+'"><i></i>'+st[1]+'</span></div>'
+      var c=d.charge||{{}}, jg="";
+      if(c.connue){{
+        var cl={{ok:"ok",conseil:"neutre",alerte:"err"}}[c.niveau]||"neutre";
+        jg='<div class="conv"><span class="small">Conversation : '+c.pourcent+' % du contexte ('+Math.round(c.jetons/1000)+' k jetons)</span>'
+          +'<span class="gauge"><span style="width:'+Math.min(100,c.pourcent)+'%"></span></span>'
+          +(c.niveau!=="ok"?'<p class="small"><span class="st '+cl+'"><i></i>Nouvelle conversation conseillée</span></p>':'')
+          +(a[0]==="claude"?'<button type="button" class="nouv-conv">Nouvelle conversation (ferme l'ancienne)</button><span class="small muted conv-msg"></span>'
+            :(c.niveau!=="ok"?'<p class="small muted">Codex sur GPT Desktop : ouvrir une nouvelle conversation à la main, en lui demandant de relire COORDINATION.md.</p>':''))
+          +'</div>';
+      }}
+      h+='<div class="card pad"><div class="gh-h"><h3>'+a[1]+' en ce moment</h3><span class="st '+st[0]+'"><i></i>'+st[1]+'</span></div>'+jg
         +(l?'<ul class="act">'+l+'</ul>':'<p class="muted small">'+(a[0]==="codex"?"Suivi des actions de Codex non branché.":"Aucune action notée.")+'</p>')+'</div>';
     }});
     z.innerHTML=h; z.hidden=false;
+    var bt=z.querySelector(".nouv-conv");
+    if(bt) bt.addEventListener("click",function(){{
+      var m=z.querySelector(".conv-msg"), enCours=((e.claude||{{}}).charge||{{}}).au_travail;
+      if(!confirm("Ouvrir une nouvelle conversation Claude et fermer l'ancienne ?")) return;
+      var forcer=enCours&&confirm("Claude est en plein travail. Forcer quand même (son tour en cours sera perdu) ?");
+      if(enCours&&!forcer) return;
+      bt.disabled=true; m.textContent=" Ouverture…";
+      fetch("/api/conversation/nouvelle",{{method:"POST",headers:{{"Content-Type":"application/json","X-Pilotage":jeton}},body:JSON.stringify({{forcer:forcer}})}})
+        .then(function(r){{return r.json();}}).then(function(r){{m.textContent=" "+(r.erreur||r.ok);bt.disabled=false;}})
+        .catch(function(){{m.textContent=" Serveur injoignable.";bt.disabled=false;}});
+    }});
   }}
   function lireActions(){{ fetch("/api/actions",{{cache:"no-store"}}).then(function(r){{return r.json();}}).then(afficherActions).catch(function(){{}}); }}
   lireActions(); setInterval(lireActions,5000);

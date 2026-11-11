@@ -55,6 +55,33 @@ def texte(liste: list[str]) -> str:
             + "\n".join(lignes) + reste)
 
 
+def alerte_conversation(session: str) -> str:
+    """Une seule fois par niveau et par conversation : contexte chargé, proposer une nouvelle conversation au porteur."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import conversations
+    c = conversations.charge("claude")
+    if not c.get("connue") or c["niveau"] == "ok" or lire_session(session) != session:
+        return ""
+    vu = DOSSIER / "conversation_vu.json"
+    cle_ = f"{session}:{c['niveau']}"
+    try:
+        deja = json.loads(vu.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        deja = []
+    if cle_ in deja:
+        return ""
+    vu.write_text(json.dumps((deja + [cle_])[-20:]), encoding="utf-8")
+    return (f"Conversation chargée à {c['pourcent']} % du contexte : propose au porteur, en une phrase, d'ouvrir une nouvelle "
+            "conversation (bouton « Nouvelle conversation » du tableau de bord) à un point propre, après avoir mis à jour "
+            "COORDINATION.md et, si utile, pilotage/etat/reprise_claude.md.")
+
+
+def lire_session(session: str) -> str:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import conversations
+    return conversations.lire("claude").get("session_id", "")
+
+
 def main() -> None:
     if "--marquer-lues" in sys.argv:
         nouvelles()
@@ -71,8 +98,13 @@ def main() -> None:
         return
     if nom in ("UserPromptSubmit", "SessionStart"):
         liste = nouvelles()
-        if liste:
-            print(json.dumps({"hookSpecificOutput": {"hookEventName": nom, "additionalContext": texte(liste)}}, ensure_ascii=False))
+        contexte = [texte(liste)] if liste else []
+        conv = alerte_conversation(ev.get("session_id") or "")
+        if conv:
+            contexte.append(conv)
+        if contexte:
+            print(json.dumps({"hookSpecificOutput": {"hookEventName": nom, "additionalContext": "
+".join(contexte)}}, ensure_ascii=False))
 
 
 if __name__ == "__main__":

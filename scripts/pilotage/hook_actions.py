@@ -58,6 +58,9 @@ def main() -> None:
     lignes = ETAT.read_text(encoding="utf-8").splitlines()
     if len(lignes) > MAX:
         ETAT.write_text("\n".join(lignes[-GARDER:]) + "\n", encoding="utf-8")
+    if ev.get("hook_event_name") in ("UserPromptSubmit", "Stop"):
+        import conversations                 # charge du contexte et processus de la conversation (tableau de bord)
+        conversations.noter(ev)
 
 
 if __name__ == "__main__":
