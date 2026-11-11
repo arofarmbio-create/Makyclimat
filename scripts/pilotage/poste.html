@@ -169,6 +169,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <span class="puce" id="p-serveur"><i></i>SERVEUR …</span>
     <span class="puce" id="p-surv"><i></i>SURVEILLANT …</span>
     <span class="puce" id="p-pause" hidden><i></i>PILOTAGE EN PAUSE</span>
+    <span class="puce ko" id="p-reseau" hidden><i></i>RÉSEAU COUPÉ</span>
     <span class="horloge" id="horloge">--:--:--</span>
   </div>
 </header>
@@ -269,6 +270,7 @@ $("decisions").addEventListener("click",function(ev){
 function rendreSurveillant(){
   var s=D.surveillant_detail||{}, p=$("p-surv");
   p.className="puce "+(s.actif?"ok":"warn"); p.lastChild.textContent=s.actif?"SURVEILLANT ACTIF":"SURVEILLANT ARRÊTÉ";
+  var rs=D.reseau||{}; $("p-reseau").hidden=!rs.coupe; $("p-reseau").title=rs.coupe?"GitHub injoignable au dernier passage du surveillant ("+(rs.maj||"?")+") : aucun lancement.":"";
   $("p-pause").hidden=!D.pause; if(D.pause) $("p-pause").className="puce ko";
   $("surv-texte").textContent=s.actif?("Actif"+(s.fin?" jusqu'à "+String(s.fin).slice(11,16):"")+" · lance les relectures, exécutions et réveils une à une."):
     "Arrêté : aucune session enfant ne part. Les exécutions autorisées le redémarrent pour 2 h.";
@@ -287,10 +289,19 @@ function anneau(c){
     '<circle class="val" cx="60" cy="60" r="'+R+'" fill="none" stroke-width="9" stroke-linecap="round" stroke="'+coul+'" stroke-dasharray="'+L.toFixed(1)+'" stroke-dashoffset="'+(L*(1-Math.min(pc,100)/100)).toFixed(1)+'" style="filter:drop-shadow(0 0 6px '+coul+')"/></svg>'+
     '<div class="txt"><span class="pc" style="color:'+coul+'">'+(c&&c.connue?pc+"%":"—")+'</span><span class="sous">CONTEXTE</span><span class="sous mono">'+(c&&c.connue?k(c.jetons)+" / "+k(c.limite):"non mesuré")+'</span></div></div>';
 }
+function barresLimites(l){
+  var h=[["cinq_heures","Limite 5 h"],["semaine","Limite semaine"]].map(function(x){
+    var b=l[x[0]]; if(!b) return "";
+    var r=b.remise?" · remise à zéro "+(x[0]==="semaine"?b.remise.slice(8,10)+"/"+b.remise.slice(5,7)+" ":"")+b.remise.slice(11,16):b.perimee?" · fenêtre écoulée, compteur à zéro":"";
+    return '<div class="x">'+x[1]+' : <b'+(b.alerte?' style="color:#ff4d6a"':'')+'>'+Math.round(b.pourcent)+' %</b>'+e(r)+(b.alerte?' — <b style="color:#ff4d6a">ALERTE</b>':'')+'</div>'+
+      '<div class="barre'+(b.alerte?" plein":"")+'"><i style="width:'+Math.min(100,b.pourcent)+'%"></i></div>';
+  }).join("");
+  return h?'<div style="margin:6px 0">'+h+'</div>':'<div class="petit">Limites d’usage non mesurées.</div>';
+}
 function construireMere(agent){
   var sec=$("mere-"+agent);
   sec.innerHTML='<div class="mere"><div id="'+agent+'-anneau"></div><div><div class="nom-mere '+agent+'">'+NOMS[agent].toUpperCase()+' · SESSION MÈRE <span id="'+agent+'-etat"></span></div>'+
-    '<div class="petit" id="'+agent+'-conseil"></div><ul class="flux" id="'+agent+'-flux"></ul></div></div>'+
+    '<div class="petit" id="'+agent+'-conseil"></div><div id="'+agent+'-limites"></div><ul class="flux" id="'+agent+'-flux"></ul></div></div>'+
     '<details id="'+agent+'-det"><summary id="'+agent+'-nt">Tâches ouvertes</summary><div id="'+agent+'-taches"></div></details>'+
     '<div style="margin-top:12px"><textarea id="'+agent+'-msg" rows="2" placeholder="Écrire à '+NOMS[agent]+'…"></textarea>'+
     '<div class="ligne-btn"><button class="b" data-envoi="mere">Envoyer à la session mère</button>'+
@@ -318,6 +329,9 @@ function rendreMere(agent){
   poser(agent+"-etat",'<span class="etq '+(actif?"info":"neutre")+'">'+(actif?"AU TRAVAIL":"AU REPOS")+'</span>');
   poser(agent+"-conseil",!c.connue?"Charge non mesurée pour l'instant.":c.niveau==="alerte"?"Contexte très chargé : ouvrir une nouvelle conversation à un point propre.":
     c.niveau==="conseil"?"Contexte chargé : prévoir une nouvelle conversation.":"Contexte léger.");
+  var rp=m.reprise||{};
+  poser(agent+"-limites",barresLimites(m.limites||{})+'<div class="x">Point de reprise : '+(!rp.present?'<b style="color:#ff4d6a">absent</b>':
+    rp.ancien?'<b style="color:#ffb84d">ancien</b> ('+e(rp.maj)+')':'à jour ('+e(rp.maj)+')')+'</div>');
   poser(agent+"-flux",(m.actions||[]).map(function(a){return '<li><time>'+e(String(a.quand||"").slice(11,16))+'</time><span>'+e(a.texte||a.genre)+'</span></li>';}).join("")||'<li class="vide">Aucune action récente notée.</li>');
   var t=m.taches||[]; $(agent+"-nt").textContent="Tâches ouvertes ("+t.length+")";
   poser(agent+"-taches",t.map(function(x){return '<div class="tache"><span class="etq '+x.couleur+'">'+e(x.etat)+'</span><b>'+e(x.tache)+'</b><div class="petit">'+e(x.suite)+'</div></div>';}).join("")||'<div class="vide">Aucune.</div>');

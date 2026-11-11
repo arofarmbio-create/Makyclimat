@@ -162,5 +162,91 @@ class Page(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
 
 
+
+
+import conversations as V  # noqa: E402
+import ligne_etat_claude as L  # noqa: E402
+
+
+class Limites(unittest.TestCase):
+    """Limites d'usage (11/11/2026) : ligne d'état de Claude, journal de Codex, garde du surveillant."""
+
+    def test_ligne_etat_lit_le_json_reel(self):
+        ev = {"session_id": "s", "model": {"display_name": "Opus"},
+              "context_window": {"context_window_size": 1_000_000, "used_percentage": 9},
+              "rate_limits": {"five_hour": {"used_percentage": 19, "resets_at": 1794423000},
+                              "seven_day": {"used_percentage": 61, "resets_at": 1794682800}}}
+        d = L.extraire(ev)
+        self.assertEqual((d["fenetre"], d["cinq_heures"]["pourcent"], d["semaine"]["pourcent"]), (1_000_000, 19, 61))
+        self.assertTrue(d["cinq_heures"]["remise"].startswith("2026-11-"))
+        self.assertIn("5 h 19 %", L.ligne(d))
+        vide = L.extraire({})                       # champs absents : rien ne casse
+        self.assertIsNone(vide["fenetre"])
+        self.assertEqual(L.ligne(vide), "MakyClimat")
+
+    def test_codex_dernier_token_count_et_fenetre_ecoulee(self):
+        futur = int(__import__("time").time()) + 3600
+        with tempfile.TemporaryDirectory() as t:
+            j = Path(t) / "rollout.jsonl"
+            evs = [{"timestamp": "T", "type": "event_msg", "payload": {"type": "token_count", "rate_limits": {
+                "primary": {"used_percent": 95.0, "window_minutes": 300, "resets_at": futur},
+                "secondary": {"used_percent": 29.0, "window_minutes": 10080, "resets_at": futur - 7 * 86400}}}}]
+            j.write_text("\n".join(json.dumps(e) for e in evs), encoding="utf-8")
+            brut = V.limites_codex([j])
+            self.assertEqual(brut["cinq_heures"]["pourcent"], 95.0)
+            with patch.object(V, "limites_codex", return_value=brut):
+                d = V.limites("codex")
+        self.assertTrue(d["cinq_heures"]["alerte"])
+        self.assertEqual(d["semaine"]["pourcent"], 0)       # remise à zéro passée depuis la mesure
+        self.assertTrue(d["semaine"]["perimee"])
+
+    def test_jauge_claude_prend_la_fenetre_reelle(self):
+        with tempfile.TemporaryDirectory() as t:
+            etat = Path(t)
+            (etat / "session_claude.json").write_text(json.dumps({"session_id": "s", "jetons": 100_000}), encoding="utf-8")
+            (etat / "limites_claude.json").write_text(json.dumps({"session_id": "s", "fenetre": 1_000_000}), encoding="utf-8")
+            with patch.object(V, "ETAT", etat):
+                self.assertEqual((V.charge("claude")["limite"], V.charge("claude")["pourcent"]), (1_000_000, 10))
+                (etat / "limites_claude.json").write_text(json.dumps({"session_id": "autre", "fenetre": 1_000_000}),
+                                                          encoding="utf-8")
+                self.assertEqual(V.charge("claude")["limite"], V.LIMITE)
+
+    def lancer(self, ident, atteinte=True):
+        with tempfile.TemporaryDirectory() as t:
+            db = sqlite3.connect(":memory:")
+            db.execute(TABLE)
+            db.execute("CREATE TABLE alertes (id TEXT PRIMARY KEY, date TEXT, cibles TEXT, message TEXT)")
+            fini = subprocess.CompletedProcess([], 0, stdout="", stderr="")
+            with patch.object(C, "limite_atteinte", return_value=atteinte), \
+                    patch.object(C.subprocess, "run", return_value=fini) as run:
+                C.lancer_claude(db, Path(t), [("codex", ident, "Relecture automatique « X »")], {"codex": "codex.exe"})
+            return run.called
+
+    def test_suspension_a_90_pour_cent(self):
+        self.assertFalse(self.lancer("codex/relecture-1"))          # automatique : suspendu
+        self.assertTrue(self.lancer("codex/exec-1"))                # exécution autorisée par le porteur : maintenue
+        self.assertTrue(self.lancer("codex/relecture-2", atteinte=False))
+
+    def test_reseau_coupe_aucun_lancement(self):
+        with tempfile.TemporaryDirectory() as t:
+            dossier = Path(t)
+            source = dossier / "COORDINATION.md"
+            source.write_text("# Coordination\n", encoding="utf-8")
+            with patch.object(C.socket, "create_connection", side_effect=OSError), \
+                    patch.object(C, "lancer_claude") as lancer:
+                C.verifier(source, dossier / "etat", codex="codex.exe")
+            self.assertFalse(lancer.called)
+            self.assertTrue(json.loads((dossier / "etat" / "reseau.json").read_text(encoding="utf-8"))["coupe"])
+
+
+    def test_point_de_reprise_a_jour_ou_ancien(self):
+        with tempfile.TemporaryDirectory() as t, patch.object(V, "ETAT", Path(t)):
+            self.assertFalse(V.reprise("codex")["present"])
+            f = Path(t) / "reprise_codex.md"
+            f.write_text("# Reprise", encoding="utf-8")
+            self.assertFalse(V.reprise("codex")["ancien"])
+            self.assertTrue(V.reprise("codex", maintenant=f.stat().st_mtime + 25 * 3600)["ancien"])
+        self.assertIn("reprise_codex.md", V.lien_codex().replace("%2F", "/"))
+
 if __name__ == "__main__":
     unittest.main()

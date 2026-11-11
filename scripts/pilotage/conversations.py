@@ -153,7 +153,8 @@ def noter_codex(ev: dict) -> None:
 
 def lien_codex() -> str:
     consigne = ("Reprise MakyClimat. Lis AGENTS.md, les règles, le bandeau et les rôles de COORDINATION.md, "
-                "puis pilotage/etat/coordination/codex.md. Claude pilote, Codex vérifie et améliore. "
+                "puis pilotage/etat/coordination/codex.md et ton point de reprise pilotage/etat/reprise_codex.md. "
+                "Claude pilote, Codex vérifie et améliore. "
                 "Vérifie l'état actuel avant de reprendre et suis les règles de coordination.")
     return "codex://threads/new?" + urlencode({"path": str(ROOT), "prompt": consigne})
 
@@ -195,12 +196,106 @@ def charge(agent: str) -> dict:
     n = d.get("jetons")
     if n is None:
         return {"connue": False, **({"au_travail": bool(d.get("au_travail"))} if d else {})}
+    if agent == "claude" and not d.get("limite"):
+        # Fenêtre réelle du modèle, écrite par la ligne d'état de la même conversation.
+        lc = _lire_json(ETAT / "limites_claude.json")
+        if lc.get("fenetre") and lc.get("session_id") == d.get("session_id"):
+            d["limite"] = lc["fenetre"]
     limite = d.get("limite") or LIMITE
     part = n / limite
     niveau = "alerte" if part >= ALERTE else "conseil" if part >= CONSEIL else "ok"
     return {"connue": True, "jetons": n, "limite": limite, "limite_estimee": agent == "codex" and not d.get("limite"),
             "pourcent": round(100 * part), "niveau": niveau, "maj": d.get("maj", ""),
             "au_travail": bool(d.get("au_travail")), "fermable": bool(d.get("pid"))}
+
+
+def _lire_json(chemin: Path) -> dict:
+    try:
+        d = json.loads(chemin.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return d if isinstance(d, dict) else {}
+
+
+def _remise(secondes) -> str:
+    if not isinstance(secondes, (int, float)) or isinstance(secondes, bool) or secondes <= 0:
+        return ""
+    try:
+        return dt.datetime.fromtimestamp(secondes).astimezone().isoformat(timespec="minutes")
+    except (OSError, OverflowError, ValueError):
+        return ""
+
+
+def limites_codex(transcripts: list[Path] | None = None) -> dict:
+    """Limites d'usage de Codex (5 h et semaine) : dernier token_count portant rate_limits.
+
+    Les limites valent pour tout le compte : on prend le journal Codex modifié le plus récemment (aujourd'hui ou hier)."""
+    if transcripts is None:
+        sessions = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")) / "sessions"
+        transcripts = []
+        for jour in (dt.date.today(), dt.date.today() - dt.timedelta(days=1)):
+            transcripts.extend((sessions / jour.strftime("%Y/%m/%d")).glob("*.jsonl"))
+
+    def date_modif(p: Path) -> float:
+        try:
+            return p.stat().st_mtime
+        except OSError:
+            return 0.0
+    for chemin in sorted(transcripts, key=date_modif, reverse=True)[:5]:
+        for ligne in fin_journal(str(chemin)):
+            if '"rate_limits"' not in ligne:
+                continue
+            try:
+                ev = json.loads(ligne)
+            except ValueError:
+                continue
+            rl = (ev.get("payload") or {}).get("rate_limits") or {}
+            sortie = {}
+            for cle, nom in (("primary", "cinq_heures"), ("secondary", "semaine")):
+                b = rl.get(cle) or {}
+                p = b.get("used_percent")
+                if isinstance(p, (int, float)) and not isinstance(p, bool):
+                    sortie[nom] = {"pourcent": round(p, 1), "remise": _remise(b.get("resets_at")),
+                                   "fenetre_min": b.get("window_minutes")}
+            if sortie:
+                return {**sortie, "maj": ev.get("timestamp", "")}
+    return {}
+
+
+def reprise(agent: str, maintenant: float | None = None) -> dict:
+    """Date du point de reprise de l'agent ; « ancien » au-delà de 24 h (à réécrire avant une nouvelle conversation)."""
+    chemin = ETAT / f"reprise_{agent}.md"
+    try:
+        t = chemin.stat().st_mtime
+    except OSError:
+        return {"present": False}
+    age = ((maintenant or dt.datetime.now().timestamp()) - t) / 3600
+    return {"present": True, "maj": dt.datetime.fromtimestamp(t).strftime("%d/%m %H:%M"), "ancien": age > 24}
+
+
+SEUIL_LIMITE = 80          # % d'une limite d'usage : alerte sur le poste
+
+
+def limites(agent: str) -> dict:
+    """Limites d'usage de 5 h et de la semaine, avec niveau d'alerte, pour le poste de pilotage."""
+    if agent == "claude":
+        d = _lire_json(ETAT / "limites_claude.json")
+        d = {k: d[k] for k in ("cinq_heures", "semaine") if isinstance(d.get(k), dict)
+             and d[k].get("pourcent") is not None} | ({"maj": d.get("maj", "")} if d else {})
+    else:
+        d = limites_codex()
+    maintenant = dt.datetime.now().astimezone()
+    for k in ("cinq_heures", "semaine"):
+        if k not in d:
+            continue
+        try:
+            passee = bool(d[k].get("remise")) and dt.datetime.fromisoformat(d[k]["remise"]) <= maintenant
+        except ValueError:
+            passee = False
+        if passee:                     # fenêtre écoulée depuis la mesure : compteur remis à zéro
+            d[k].update(pourcent=0, remise="", perimee=True)
+        d[k]["alerte"] = d[k]["pourcent"] >= SEUIL_LIMITE
+    return d
 
 
 def session_codex_recente(avant: dict) -> dict:

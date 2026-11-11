@@ -116,7 +116,7 @@ def test_reveil_codex_sur_nouveau_message_ou_alerte():
             Path(commande[commande.index("-o") + 1]).write_text("Avis de test", encoding="utf-8")
             return C.subprocess.CompletedProcess(commande, 0, stdout="", stderr="")
 
-        with patch.object(C.subprocess, "run", side_effect=codex):
+        with patch.object(C.subprocess, "run", side_effect=codex), patch.object(C, "reseau_ok", return_value=True),                 patch.object(C, "limite_atteinte", return_value=False):
             C.verifier(chemin, etat, codex="codex-test")
             assert appels == []
             chemin.write_text(texte, encoding="utf-8")

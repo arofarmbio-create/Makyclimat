@@ -10,6 +10,8 @@ import os
 import re
 import sqlite3
 import subprocess
+import socket
+import sys
 import tempfile
 import time
 from contextlib import closing
@@ -383,6 +385,36 @@ def au_plafond(db, agent, identifiant, sujet, jour):
     return False
 
 
+SEUIL_SUSPENSION = 90          # % de la limite de 5 h : plus de lancement automatique (relectures, réveils)
+
+
+def reseau_ok(dossier=None, hote="api.github.com", delai=4):
+    """GitHub joignable ? Le résultat est écrit dans dossier/reseau.json pour la pastille du poste."""
+    try:
+        with socket.create_connection((hote, 443), timeout=delai):
+            ok = True
+    except OSError:
+        ok = False
+    if dossier is not None:
+        try:
+            (Path(dossier) / "reseau.json").write_text(json.dumps(
+                {"coupe": not ok, "maj": datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")}), encoding="utf-8")
+        except OSError:
+            pass
+    return ok
+
+
+def limite_atteinte(agent):
+    """Vrai si la limite d'usage de 5 h de l'agent atteint SEUIL_SUSPENSION (mesure locale, sans réseau)."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import conversations
+        b = conversations.limites(agent).get("cinq_heures") or {}
+    except Exception:                  # une mesure illisible ne bloque pas le surveillant
+        return False
+    return (b.get("pourcent") or 0) >= SEUIL_SUSPENSION
+
+
 def lancer_claude(db, dossier, demandes, executables):
     """Réserve une demande avant l'appel. Un échec ou un arrêt ne la rejoue pas. executables : {agent: binaire}."""
     if not isinstance(executables, dict):
@@ -395,6 +427,8 @@ def lancer_claude(db, dossier, demandes, executables):
         sujet = sujet_lancement(identifiant, consigne)
         if au_plafond(db, agent, identifiant, sujet, debut[:10]):
             continue
+        if genre_lancement(identifiant) in PLAFOND_JOUR and limite_atteinte(agent):
+            continue                   # reste en file : relancé quand la limite de 5 h se libère
         with db:
             reserve = db.execute(
                 """INSERT OR IGNORE INTO lancements (id, debut, fin, statut, agent, genre, sujet, consigne)
@@ -514,7 +548,7 @@ def verifier(source, dossier, executable=None, relectures_auto=False, codex=None
                     if reveille_codex(genre, cibles, message):
                         db.execute("INSERT INTO reveils_codex VALUES (?)", (cle,))
                     nouvelles += int("porteur" in cibles)
-        if executable or codex:
+        if (executable or codex) and reseau_ok(dossier):     # réseau coupé : aucun lancement, rien n'est consommé
             executables = {"claude": executable, "codex": codex}
             agents = tuple(agent for agent, binaire in executables.items() if binaire)
             reveils = db.execute("""

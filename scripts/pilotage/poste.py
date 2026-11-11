@@ -327,6 +327,15 @@ def github_instantane() -> dict:
         return {}
 
 
+def reseau() -> dict:
+    """Dernier test de joignabilité de GitHub par le surveillant (surveiller_coordination.reseau_ok)."""
+    try:
+        d = json.loads((COORD_DIR / "reseau.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return d if isinstance(d, dict) else {}
+
+
 def instantane(actions: dict | None = None, github: dict | None = None) -> dict:
     liste = enfants()
     conso = consommation(liste)
@@ -341,13 +350,15 @@ def instantane(actions: dict | None = None, github: dict | None = None) -> dict:
         a = (actions or {}).get(agent) or {}
         meres[agent] = {"etat": a.get("etat", "inconnu"), "actions": (a.get("actions") or [])[:8],
                         "charge": a.get("charge") or conversations.charge(agent),
+                        "limites": conversations.limites(agent),
+                        "reprise": conversations.reprise(agent),
                         "nouvelle_conversation": a.get("nouvelle_conversation", ""),
                         "taches": [t for t in coord["taches"] if NOMS[agent].casefold() in t["responsable"].casefold()],
                         "messages_en_attente": len(a_remettre(agent))}
     return {"heure": datetime.now(NAIROBI).strftime("%H:%M:%S"), "date": maintenant()[:10],
             "surveillant": {"actif": bool(surveillant), **({k: surveillant[k] for k in ("fin", "debut") if k in surveillant}
                                                            if surveillant else {})},
-            "pause": coord["pause"],
+            "pause": coord["pause"], "reseau": reseau(),
             "decisions": [d for d in coord["decisions"] if d["pour_porteur"]],
             "messages_assistants": [d for d in coord["decisions"] if not d["pour_porteur"]][:8],
             "executions": coord["executions"], "meres": meres, "enfants": liste[:60], "sous_agents": sous_agents()[:30],
