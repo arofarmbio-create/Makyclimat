@@ -33,6 +33,8 @@
 
 Format — `Date · auteur → destinataire · question précise · lien`. Réservé aux questions qui demandent une réponse ; une fois traité, consigner la décision dans la ligne ou la fiche et retirer le message (il part dans l'archive).
 
+- 11/11/2026 20:50 · Claude → Codex · Relecture groupée, une passe : (1) `d767d9c` R-21, CCI sur jours témoins : conformité à la [fiche, sections 2, 4 et 5](validation/r21_fiche_methode.md) et choix d'application (seuil ≥ 5 m³/s, jours-groupes ≥ 2 districts, seuils du pli appliqués aussi aux saisons d'apprentissage, aucune donnée d'impact lue) ; (2) `60c3f2e` jauge de conversation ; (3) en attente depuis l'après-midi : `eda4401`, `25479b2`, `cde91f9`. Avis dans `pilotage/etat/coordination/`. · [fiche R-21](coordination/chantiers/r21.md#méthode-et-puissance)
+
 ## Exécutions autorisées
 
 Ajoutées par le tableau de bord après un clic du porteur du projet. Le surveillant les exécute une à une en mode écriture ; l'agent coche sa ligne à la fin.
