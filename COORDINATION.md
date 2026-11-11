@@ -10,7 +10,7 @@
 
 | Tâche | Responsable | État | Preuve ou périmètre | Prochaine action ou condition de fin | Début | Fin |
 |---|---|---|---|---|---|---|
-| Échec GitHub : run Tests 43068465026 annulé | Claude | Fait | [run annulé](https://github.com/arofarmbio-create/Makyclimat/actions/runs/43068465026), [run réussi](https://github.com/arofarmbio-create/Makyclimat/actions/runs/43069237741), [workflow](.github/workflows/tests.yml) | Pas un échec : annulé par `cancel-in-progress` au push suivant (`d2d6d47`, 20:31:59), comme le run 43069072168. Le run 43069237741 sur `cddac4f`, qui contient `c5308ae`, a réussi ; aucune relance utile. | 11/11/2026 20:34 | 11/11/2026 20:37 |
+| Échec GitHub : runs Tests 43068465026 et 43071062648 annulés | Claude | Fait | [run annulé](https://github.com/arofarmbio-create/Makyclimat/actions/runs/43071062648), [run réussi](https://github.com/arofarmbio-create/Makyclimat/actions/runs/43071374661), [workflow](.github/workflows/tests.yml) | Pas des échecs : chacun annulé par `cancel-in-progress` au push suivant (43071062648 sur `39b4974`, remplacé par `6390b5b` à 20:46:26). Le run 43071374661 sur `6390b5b`, qui contient `39b4974`, a réussi ; aucune relance utile (même cas que 43068465026, voir run 43069237741). | 11/11/2026 20:34 | 11/11/2026 20:52 |
 | Jauge de conversation : alerte fausse « 131 % » | Claude | À relire | [module](scripts/pilotage/conversations.py), [tests](tests/test_conversations.py), [test du poste](tests/test_poste.py), `60c3f2e` | À l'ouverture d'une conversation, la ligne d'état porte encore l'ancienne session : la fenêtre réelle (1 M) était ignorée et le calcul retombait sur 200 000 (262 k → 131 %). La fenêtre est désormais reprise quelle que soit la session, marquée « estimée » ; 51 tests réussis. | 11/11/2026 20:20 | 11/11/2026 20:30 |
 | Panneau Codex : programme lancé | Claude | À relire | [crochet Codex](scripts/pilotage/hook_actions_codex.py), [test](tests/test_pilotage.py), `eda4401` | Demande du porteur (11/11, 20:55) : « En ce moment » montre pour Codex le programme lancé (« Lance git status », « Lance gh run view », « Lance python scripts/x.py ») au lieu de « Commande locale lancée », jamais les autres arguments. 58 tests réussis. Relecture ciblée de `eda4401` demandée à Codex (confidentialité, format réel de `tool_input.command` sous Windows). | 11/11/2026 20:55 | 11/11/2026 21:05 |
 | Restructuration de la coordination et sobriété en jetons | Claude | Fait | [règles](coordination/regles.md), [fiches](coordination/chantiers/), [archive](validation/coordination_archive.md), [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md) | Décision du porteur (11/11, 20:30) : index court, règles et détail hors de ce fichier, archivage quotidien, règles de sobriété (section « Sobriété en jetons »). À ajuster à l'usage. | 11/11/2026 20:25 | 11/11/2026 20:50 |
@@ -40,6 +40,7 @@ Format — `Date · auteur → destinataire · question précise · lien`. Rése
 Ajoutées par le tableau de bord après un clic du porteur du projet. Le surveillant les exécute une à une en mode écriture ; l'agent coche sa ligne à la fin.
 
 - [x] `exec:claude:20261111-203336-dd76` Le porteur du projet autorise : Échec GitHub à examiner. Message d'origine : 11/11/2026 · Surveillant → porteur du projet · Échec GitHub à examiner. run 43068465026 (Tests, cancelled) https://github.com/arofarmbio-create/Makyclimat/actions/runs/43068465026 ; aucune tâche ouverte de Claude ou Codex ne cite ce workflow. Répondre ou autoriser une relance.
+- [x] `exec:claude:20261111-204934-8e9e` Le porteur du projet autorise : Échec GitHub à examiner. Message d'origine : 11/11/2026 · Surveillant → porteur du projet · Échec GitHub à examiner. run 43071062648 (Tests, cancelled) https://github.com/arofarmbio-create/Makyclimat/actions/runs/43071062648 ; aucune tâche ouverte de Claude ou Codex ne cite ce workflow. Répondre ou autoriser une relance.
 
 ## Décisions du porteur du projet
 
@@ -47,6 +48,7 @@ Réponses données depuis le tableau de bord. L'assistant concerné les lit à s
 
 - 11/11/2026 20:33 · Porteur du projet → Surveillant · **Autorisé** · Échec GitHub à examiner · Exécution `exec:claude:20261111-203336-dd76`
 - 11/11/2026 20:40 · Porteur du projet → Surveillant · **Refusé** · Échec GitHub à examiner
+- 11/11/2026 20:49 · Porteur du projet → Surveillant · **Autorisé** · Échec GitHub à examiner · Exécution `exec:claude:20261111-204934-8e9e`
 
 ## Lancements ponctuels autorisés
 
