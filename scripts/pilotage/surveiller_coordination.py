@@ -393,6 +393,27 @@ def lancer_claude(db, dossier, demandes, executables):
     return 1
 
 
+RETENTE_MIN = 20
+RETENTES_MAX = 2
+
+
+def retenter_relectures(db, maintenant):
+    """Une relecture empêchée (environnement, délai, entrée absente) est retentée après RETENTE_MIN minutes, au plus
+    RETENTES_MAX fois, sans attendre le redémarrage du surveillant (porteur du projet, 11/11/2026)."""
+    db.execute("CREATE TABLE IF NOT EXISTS retentes (id TEXT PRIMARY KEY, nombre INTEGER NOT NULL)")
+    echecs = db.execute("""SELECT id, fin FROM lancements WHERE id LIKE '%relecture-%'
+                           AND statut IN ('Relecture impossible', 'Échec', 'Délai dépassé')""").fetchall()
+    for identifiant, fin in echecs:
+        try:
+            age = (maintenant - datetime.strptime(fin, "%d/%m/%Y %H:%M").replace(tzinfo=NAIROBI)).total_seconds()
+        except (TypeError, ValueError):
+            continue
+        nombre = (db.execute("SELECT nombre FROM retentes WHERE id = ?", (identifiant,)).fetchone() or (0,))[0]
+        if age >= RETENTE_MIN * 60 and nombre < RETENTES_MAX:
+            db.execute("INSERT OR REPLACE INTO retentes VALUES (?, ?)", (identifiant, nombre + 1))
+            db.execute("DELETE FROM lancements WHERE id = ?", (identifiant,))
+
+
 def verifier(source, dossier, executable=None, relectures_auto=False, codex=None):
     texte = source.read_text(encoding="utf-8-sig")
     evenements = list(lire_coordination(texte))
@@ -410,6 +431,7 @@ def verifier(source, dossier, executable=None, relectures_auto=False, codex=None
             db.execute("CREATE TABLE IF NOT EXISTS reveils_codex (alerte TEXT PRIMARY KEY)")
             if "consommation" not in {c[1] for c in db.execute("PRAGMA table_info(lancements)")}:
                 db.execute("ALTER TABLE lancements ADD COLUMN consommation TEXT")
+            retenter_relectures(db, datetime.now(NAIROBI))
             # Verrouille l'écriture avant de déterminer si une base existe déjà.
             premier = db.execute("INSERT OR IGNORE INTO etat VALUES ('initialisé')").rowcount
             nouvelles = 0

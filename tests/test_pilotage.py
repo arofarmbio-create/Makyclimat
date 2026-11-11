@@ -353,6 +353,25 @@ def test_etat_github_fourni_a_codex_en_lecture_seule():
         assert C.contexte_github(Path(d) / "absent.json") == ""
 
 
+def test_relecture_empechee_retentee_deux_fois():
+    import sqlite3
+    from datetime import datetime, timedelta
+    db = sqlite3.connect(":memory:")
+    db.execute("CREATE TABLE lancements (id TEXT PRIMARY KEY, debut TEXT, fin TEXT, statut TEXT NOT NULL, consommation TEXT)")
+    t0 = datetime(2026, 11, 11, 12, 0, tzinfo=C.NAIROBI)
+    ident = "codex/relecture-abc"
+    for essai in range(3):
+        db.execute("INSERT INTO lancements VALUES (?, '', ?, 'Relecture impossible', NULL)",
+                   (ident, (t0 + timedelta(hours=essai)).strftime("%d/%m/%Y %H:%M")))
+        C.retenter_relectures(db, t0 + timedelta(hours=essai, minutes=5))       # trop tôt : conservée
+        assert db.execute("SELECT COUNT(*) FROM lancements").fetchone()[0] == 1
+        C.retenter_relectures(db, t0 + timedelta(hours=essai, minutes=25))
+        restant = db.execute("SELECT COUNT(*) FROM lancements").fetchone()[0]
+        assert restant == (0 if essai < 2 else 1)                               # deux nouvelles tentatives, pas plus
+        if restant:
+            break
+
+
 if __name__ == "__main__":
     for nom, fonction in list(globals().items()):
         if nom.startswith("test_"):
