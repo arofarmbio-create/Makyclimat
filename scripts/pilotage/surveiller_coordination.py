@@ -241,6 +241,42 @@ def relecture_auto(ligne, relecteur="claude"):
     )
 
 
+GITHUB_INSTANTANE = ROOT / "pilotage" / "etat" / "github_direct.json"
+GITHUB_FRAIS_MIN = 15
+
+
+def contexte_github(chemin=None, maintenant=None):
+    """Résumé de l'état GitHub relevé par le serveur (github_direct.py), pour Codex en lecture seule sans réseau.
+    Vide si l'instantané manque ou date de plus de GITHUB_FRAIS_MIN minutes."""
+    chemin = chemin or GITHUB_INSTANTANE
+    try:
+        donnees = json.loads(chemin.read_text(encoding="utf-8"))
+        releve = datetime.fromisoformat(donnees["horodatage"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+    maintenant = maintenant or datetime.now(timezone.utc)
+    if (maintenant - releve).total_seconds() > GITHUB_FRAIS_MIN * 60:
+        return ""
+    lignes = [f"\n\nÉtat GitHub relevé par le serveur local à {releve.astimezone(NAIROBI):%H:%M} (Nairobi). "
+              "Tu n'as pas besoin du réseau pour ces informations ; signale-le si elles ne suffisent pas :"]
+    runs = donnees.get("runs") or []
+    for run in [r for r in runs if r.get("statut") != "completed"][:6]:
+        jobs = ", ".join(f"{j.get('nom')} ({j.get('etape') or '—'}, {j.get('depuis')})" if isinstance(j, dict) else str(j)
+                         for j in (run.get("actifs") or [])[:3])
+        lignes.append(f"- en cours · {run.get('workflow')} · run {run.get('id')} · {run.get('statut')} depuis "
+                      f"{run.get('duree')}" + (f" · jobs actifs : {jobs}" if jobs else ""))
+    for run in [r for r in runs if r.get("statut") == "completed"][:6]:
+        lignes.append(f"- terminé · {run.get('workflow')} · run {run.get('id')} · {run.get('conclusion') or '—'} · "
+                      f"créé {run.get('cree')}")
+    for alerte in (donnees.get("alertes") or [])[:3]:
+        lignes.append(f"- alerte : {alerte}")
+    release = donnees.get("release") or {}
+    if release.get("annees"):
+        mois = "; ".join(f"{a} : {', '.join(map(str, m))}" for a, m in release["annees"].items())
+        lignes.append(f"- release {release.get('nom')} : {release.get('mois')} mois ({mois})")
+    return "\n".join(lignes)
+
+
 def commande_agent(agent, executable, sortie, ecriture):
     """Commande et délai. Sorties JSON pour relever la consommation de tokens."""
     if agent == "codex":
@@ -316,6 +352,8 @@ def lancer_claude(db, dossier, demandes, executables):
     nom = AGENTS[agent]
     ecriture = "/exec-" in identifiant
     prompt = (CONSIGNE_ECRITURE if ecriture else CONSIGNE_LECTURE) + consigne
+    if agent == "codex" and not ecriture:      # lecture seule = sans réseau : l'état GitHub lui est fourni
+        prompt += contexte_github()
     consommation = "non communiquée"
     with tempfile.TemporaryDirectory() as temporaire:
         sortie = Path(temporaire) / "reponse.md"

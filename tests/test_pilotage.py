@@ -335,6 +335,24 @@ def test_carte_relire_rapprochee_du_verdict():
     assert "Relire : Tâche C" in codex and "À relire" in codex
 
 
+def test_etat_github_fourni_a_codex_en_lecture_seule():
+    """Porteur du projet, 11/11/2026 : Codex relit sans réseau ; le serveur lui fournit l'état GitHub."""
+    import github_direct
+    from datetime import datetime, timedelta, timezone
+    with tempfile.TemporaryDirectory() as d:
+        f = Path(d) / "github_direct.json"
+        t0 = datetime(2026, 11, 11, 8, 0, tzinfo=timezone.utc)
+        github_direct.ecrire_instantane({"horodatage": t0.isoformat(), "alertes": [],
+            "runs": [{"id": 1, "workflow": "14 - Reprévisions", "statut": "in_progress", "duree": "12 min",
+                      "actifs": [{"nom": "build (2007-3)", "etape": "Télécharger", "depuis": "10 min"}]},
+                     {"id": 2, "workflow": "Tests", "statut": "completed", "conclusion": "success", "cree": "x"}],
+            "release": {"nom": "reprevisions-glofas-v4", "mois": 2, "annees": {"2010": [2, 3]}}}, f)
+        texte = C.contexte_github(f, t0 + timedelta(minutes=5))
+        assert "build (2007-3)" in texte and "run 2" in texte and "2010 : 2, 3" in texte
+        assert C.contexte_github(f, t0 + timedelta(minutes=30)) == ""          # instantané trop ancien
+        assert C.contexte_github(Path(d) / "absent.json") == ""
+
+
 if __name__ == "__main__":
     for nom, fonction in list(globals().items()):
         if nom.startswith("test_"):

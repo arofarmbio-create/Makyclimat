@@ -160,9 +160,27 @@ def actualiser(avis=None, avec_release=True, echec=None):
         with _verrou:
             _etat.update(runs=sortie, alertes=alertes, release=release, erreur=None,
                          maj=datetime.now().strftime("%H:%M:%S"))
+        ecrire_instantane({"runs": sortie, "alertes": alertes, "release": release,
+                           "horodatage": maintenant.isoformat()})
     except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as erreur:
         with _verrou:
             _etat.update(erreur=f"GitHub injoignable : {str(erreur)[:200]}", maj=datetime.now().strftime("%H:%M:%S"))
+
+
+INSTANTANE = ROOT / "pilotage" / "etat" / "github_direct.json"
+
+
+def ecrire_instantane(donnees, chemin=None):
+    """Copie locale de l'état GitHub, lue par le surveillant pour les relectures de Codex (lecture seule, sans
+    réseau) : Codex dispose ainsi des runs et de la release sans droit supplémentaire (porteur du projet, 11/11/2026)."""
+    chemin = chemin or INSTANTANE
+    try:
+        chemin.parent.mkdir(parents=True, exist_ok=True)
+        provisoire = chemin.with_suffix(".tmp")
+        provisoire.write_text(json.dumps(donnees, ensure_ascii=False), encoding="utf-8")
+        os.replace(provisoire, chemin)
+    except OSError as erreur:              # le suivi GitHub ne doit pas s'arrêter sur un incident d'écriture
+        print("Instantané GitHub non écrit :", erreur, flush=True)
 
 
 def etat():
