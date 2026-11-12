@@ -28,17 +28,19 @@ hydrométriques. Ici, la vérification repose uniquement sur les impacts (DesInv
 Détails et tableau par saison : [r21_scores.md](r21_scores.md) ; calcul `scripts/r21_scores.py` (commit `d7e5611`,
 relu sans blocage par Codex le 12/11).
 
-- Charge d'alerte égale atteinte dans les 12 plis (écart −2 à −4 %, tolérance ± 20 %).
+- Charge comparable selon la tolérance prévue, sur l'apprentissage de chacun des 12 plis (écart −2 à −4 %, tolérance
+  ± 20 %) ; les charges en test diffèrent et sont publiées par pli dans [r21_scores.md](r21_scores.md).
 - Détection 1 à 3 jours avant, sur 425 unités épisode × district :
   **ensemble 16,0 %** [7,0 ; 26,8], **contrôle 14,8 %** [6,6 ; 25,5], **écart 1,2 point** [−1,0 ; 2,5]
   (intervalles à 95 %, bootstrap des saisons).
 - Discordances : 8 unités détectées par l'ensemble seul, 3 par le contrôle seul.
 - Test A (permutation exacte des signes, 4 096 combinaisons, unilatéral) : **p = 0,31**.
 
-**Conclusion (exploratoire) : à charge d'alerte égale, l'ensemble GloFAS v4 ne détecte pas mieux que son scénario de
-contrôle les impacts de crue déclarés par district, 1 à 3 jours avant. H1 n'est pas soutenue.** Une absence de gain
-démontrée n'établit pas une absence de gain : l'intervalle de l'écart exclut un gain supérieur à 2,5 points dans cet
-échantillon, très loin des 30 points jugés pertinents.
+**Conclusion (exploratoire) : à charge comparable sur l'apprentissage, aucun gain de détection de l'ensemble GloFAS v4
+sur son scénario de contrôle n'est mis en évidence pour les impacts de crue déclarés par district, 1 à 3 jours avant ;
+H1 n'est pas soutenue.** Ce n'est pas une preuve d'absence de gain. La borne supérieure de l'intervalle bootstrap
+estimé de l'écart (2,5 points, sous ses hypothèses : saisons indépendantes, échantillon de cette portée) reste très
+loin des 30 points jugés pertinents.
 
 ## 4. Ce que le résultat apprend
 
@@ -47,7 +49,8 @@ démontrée n'établit pas une absence de gain : l'intervalle de l'écart exclut
    impacts déclarés, avec ou sans ensemble. Plusieurs causes plausibles, non séparées ici : inondations pluviales
    ou côtières hors du réseau de rivières de GloFAS (28 unités sans maille de rivière retenue), impacts cycloniques
    dus au vent, déclarations groupées par district, dates de fiche imprécises.
-2. **L'ensemble n'ajoute presque rien à charge égale** : l'information du test tient dans 11 discordances.
+2. **Peu de différences entre les deux méthodes à charge comparable** : l'information du test tient dans 11
+   discordances.
 3. **Les hypothèses de puissance ne correspondaient pas aux données** : la simulation supposait une détection du
    contrôle de 40 % ; observée : 14,8 %. Les puissances simulées ne sont pas transposables aux résultats, et la
    puissance pour un autre gain n'a pas été évaluée. La CCI observée sur les épisodes (0,065) est, elle, proche de
