@@ -43,13 +43,21 @@ du vent seul.
 Pour chaque unité épisode × district (425), sur les mailles de rivière du district retenues dans R-21, avec les seuils
 de R-21 (section 2 de la [fiche](r21_fiche_methode.md), saison testée exclue).
 
-**Rapport journalier R(j)**, pour un jour de validité j (version précisée après la relecture Codex du 12/11, 16:21) :
-- **contrôle** : maximum, sur les mailles du district et sur les initialisations d'échéance 1 à 3 jours valides le
-  jour j, de débit / seuil ;
-- **ensemble** : pour chaque membre m, r_m(j) = même maximum pour ce membre ; R(j) = k-ième plus grande des 11 valeurs
-  r_m(j), avec k = ⌈11 × pi⌉ (pi du pli R-21). Ainsi R(j) ≥ 1 équivaut exactement à « part des membres au-dessus du seuil ≥ pi »,
-  c'est-à-dire à l'alerte de R-21 ;
-- **réanalyse (D2)** : débit / seuil du jour j, maximum sur les mailles du district (pas d'échéance).
+**Rapport R(j)** pour un jour j, dans l'ordre exact des opérations de R-21 (`scripts/r21_cci_temoins.py`, fonction
+`alertes` ; 3e version après la relecture Codex du 12/11, 16:24). Les reprévisions publiées ne donnent pas un débit
+par jour : pour chaque initialisation t, la valeur q[t, m, maille] est le **maximum du débit sur la fenêtre de 1 à 3
+jours** après t. Une initialisation t « couvre » le jour j si j vaut t + 1, t + 2 ou t + 3.
+1. Par initialisation t et membre m : r(t, m) = maximum, sur les mailles retenues du district, de q[t, m, maille] / seuil.
+2. Par initialisation t :
+   - **contrôle** : R(t) = r(t, cf) ;
+   - **ensemble** : R(t) = k-ième plus grande des 11 valeurs r(t, m), avec k = ⌈11 × pi⌉ (pi du pli R-21). R(t) ≥ 1
+     équivaut à « part des membres au-dessus du seuil ≥ pi » pour cette initialisation.
+3. Par jour j : R(j) = maximum de R(t) sur les initialisations qui couvrent j. Comme R-21 garde la probabilité
+   maximale des initialisations couvrant le jour, R(j) ≥ 1 équivaut exactement à l'alerte de R-21 ce jour-là.
+- **Réanalyse (D2)**, même construction pour rester comparable : aux **mêmes dates d'initialisation t** que les
+  reprévisions, q[t, maille] = maximum du débit journalier de la réanalyse sur t + 1 à t + 3 ; R(t) = maximum sur les
+  mailles de q / seuil ; R(j) = maximum sur les t qui couvrent j. Ses seuils sont estimés sur les maxima mensuels
+  de ces mêmes valeurs de fenêtre (section 5).
 
 **Classes**, attribuées dans cet ordre de priorité (la première vraie l'emporte), J = jours de l'unité, J±3 = ces
 jours étendus de 3 jours de part et d'autre :
@@ -57,10 +65,17 @@ jours étendus de 3 jours de part et d'autre :
 | Priorité | Classe | Règle (fixée avant calcul) |
 |---|---|---|
 | 1 | a. Sans rivière | Aucune maille de rivière retenue dans le district |
-| 2 | e. Détecté | R(j) ≥ 1 pour un jour j de J (alerte R-21 ; pour la réanalyse, dépassement un jour de l'unité) |
+| 2 | e. Détecté | R(j) ≥ 1 pour un jour j de J (alerte R-21) |
 | 3 | d. Hors fenêtre | R(j) ≥ 1 pour un jour de J±3, aucun dans J |
-| 4 | c. Signal sous le seuil | max de R sur J±3 entre 0,5 inclus et 1 exclu |
-| 5 | b. Aucun signal | max de R sur J±3 < 0,5, ou aucune donnée valide |
+| 4 | n. Non évaluable | Aucun jour de J couvert par une initialisation, ou donnée manquante (réanalyse absente, valeur non finie) sur tous les jours couverts de J±3 |
+| 5 | c. Signal sous le seuil | max de R sur les jours couverts de J±3 entre 0,5 inclus et 1 exclu |
+| 6 | b. Aucun signal | max de R sur les jours couverts de J±3 < 0,5 |
+
+**Non évaluable** (relecture Codex du 12/11, 16:24) : une donnée absente n'est jamais comptée comme une absence de
+signal. Son effectif est publié pour chaque méthode ; les parts des classes b, c, d et e sont calculées **hors**
+unités non évaluables (dénominateur publié) et les unités non évaluables pour l'une des méthodes forment une ligne
+et une colonne à part dans les croisements. Pour les reprévisions, les 425 unités ont par construction une
+initialisation de 1 à 3 jours avant l'une de leurs dates ; la classe n vise surtout la réanalyse.
 
 Sorties : effectifs par classe et par méthode (contrôle, ensemble, réanalyse), par saison et par épisode.
 
@@ -71,11 +86,12 @@ modèle « voit » lorsque la météo est connue. Ce n'est **pas une borne supé
 16:21) : rien n'assure que les détections des prévisions soient incluses dans celles de la réanalyse. C'est une
 **référence diagnostique, conditionnelle** au modèle hydrologique et aux seuils.
 
-- **Données** : réanalyse GloFAS v4, débit journalier, emprise de Madagascar, mois de décembre à mars des saisons 2003
-  à 2016, **aux mêmes mailles de rivière que R-21**. Source EWDS (Copernicus), une demande par saison, collecte
+- **Données** : réanalyse GloFAS v4, débit journalier, emprise de Madagascar, saisons 2003 à 2016, de la fin novembre
+  au début avril (pour couvrir les fenêtres des initialisations de décembre à mars) ; **aux mêmes mailles de rivière que R-21**. Source EWDS (Copernicus), une demande par saison, collecte
   reprenable comme R-40. **Téléchargement soumis à l'autorisation du porteur** (environ 14 demandes).
 - **Seuils** : même règle que R-21 (blocs mensuels de décembre à mars, Gumbel des moments, saison testée exclue, au
-  moins 30 blocs, T_m ≈ 6,3, seuil ≥ 5 m³/s), appliquée aux maxima mensuels de la réanalyse.
+  moins 30 blocs, T_m ≈ 6,3, seuil ≥ 5 m³/s), appliquée aux maxima mensuels des valeurs de fenêtre de la réanalyse
+  aux dates d'initialisation (section 4).
 - **Charge comparable** (relecture Codex du 12/11, 16:21) : la comparaison avec la prévision se fait à charge
   d'alerte comparable, avec la règle de la section 4 de la fiche. Pour chaque pli (saison testée exclue), on
   multiplie le seuil de la réanalyse par un facteur k (de 0,50 à 2,00, pas de 0,05) choisi sur les saisons
@@ -132,11 +148,18 @@ cartographiées par satellite, indépendantes des déclarations) pour les activa
 - 12/11/2026, 2e version avant tout calcul (relecture Codex de 16:21) : « plafond » remplacé par une référence
   diagnostique conditionnelle ; hypothèses A/B/C présentées comme telles ; comparaison réanalyse-prévision à charge
   comparable (facteur k) ; rapport journalier de l'ensemble et de la réanalyse, bornes et priorité des classes fixés.
+- 12/11/2026, 3e version avant tout calcul (relecture Codex de 16:24) : ordre des opérations de R-21 repris exactement
+  (maximum de fenêtre par initialisation, puis membres, puis initialisations couvrant le jour) ; réanalyse construite
+  aux mêmes initialisations ; classe « non évaluable » séparée de « aucun signal » ; apport formulé sous hypothèses.
+- **12/11/2026 — Décisions du porteur du projet** : protocole validé (sous réserve de la relecture de Codex de cette
+  version) ; téléchargement de la réanalyse GloFAS autorisé ; observations communales Copernicus EMS réservées au
+  test confirmatoire par sous-bassin (section 8).
 
 ## 10. Apport attendu pour la thèse
 
-Une méthode de vérification par l'impact sans station hydrométrique qui **sépare trois sources d'erreur** :
-l'observation des impacts, la détectabilité hydrologique (référence par la réanalyse) et la compétence de prévision,
+Une méthode de vérification par l'impact sans station hydrométrique qui **aide à départager, sous hypothèses**,
+trois sources d'erreur possibles : l'observation des impacts, la détectabilité hydrologique (référence conditionnelle
+par la réanalyse) et la compétence de prévision,
 puis qui raisonne par unité hydrologique plutôt qu'administrative. Les travaux proches (Mitheu et al. 2025 ; Kuipers
 et al. 2026) s'appuient sur des stations hydrométriques. Aucune évaluation publiée pour Madagascar n'a été trouvée
 le 29/10/2026.
