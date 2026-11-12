@@ -145,3 +145,4 @@ Décisions du porteur du projet :
 - 11/11/2026 20:33 · Porteur du projet → Surveillant · **Autorisé** · Échec GitHub à examiner · Exécution `exec:claude:20261111-203336-dd76`
 - 11/11/2026 20:40 · Porteur du projet → Surveillant · **Refusé** · Échec GitHub à examiner
 - 11/11/2026 20:49 · Porteur du projet → Surveillant · **Autorisé** · Échec GitHub à examiner · Exécution `exec:claude:20261111-204934-8e9e`
+- 12/11/2026 12:50 · Claude → porteur du projet · **R-40 : EMSR564 arrêté par la limite de durée (5 h 40) faute de réponse de Copernicus.** Choix : (a) après la fin du run, relancer EMSR564 seul, une fois, sans changement ; (b) recommandé : rendre d'abord la collecte reprenable (la demande reste chez Copernicus et la tâche suivante télécharge son résultat), puis relancer EMSR564 et, si besoin, les événements suivants. · [diagnostic](coordination/chantiers/r40_e6.md#r-40) — **Décision du porteur (12/11, 14:30) : (b).** Fait dans `4149316`.
