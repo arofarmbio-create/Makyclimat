@@ -1,0 +1,138 @@
+name: "R-21 bis - Réanalyse GloFAS v4"
+
+on:
+  workflow_dispatch:
+    inputs:
+      saisons:
+        description: "Saisons de début (2003 à 2016), séparées par des espaces"
+        required: true
+        default: "2003"
+        type: string
+
+permissions: {}
+
+# Toutes les branches et sélections de ce workflow partagent le même verrou.
+# Le script vérifie également la file EWDS avant toute soumission.
+concurrency:
+  group: glofas-reanalyse-v4
+  cancel-in-progress: false
+
+env:
+  TAG: glofas-reanalyse-v4
+  GH_REPO: ${{ github.repository }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      saisons: ${{ steps.plan.outputs.saisons }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy==2.2.6
+      - id: plan
+        env:
+          SAISONS: ${{ inputs.saisons }}
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          sys.path.insert(0, 'scripts')
+          from build_glofas_reanalyse import saisons
+          valeurs = saisons(os.environ['SAISONS'])
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('saisons=' + json.dumps(valeurs) + '\n')
+          PY
+
+  collecte:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions:
+      contents: write
+    strategy:
+      max-parallel: 1
+      fail-fast: true
+      matrix:
+        saison: ${{ fromJson(needs.plan.outputs.saisons) }}
+    env:
+      SAISON: ${{ matrix.saison }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Inventaire et release
+        id: inventaire
+        run: |
+          if ! gh release view "$TAG" --json assets > assets.json 2> release.err; then
+            if grep -qi 'release not found' release.err; then
+              gh release create "$TAG" --title "R-21 bis : réanalyse GloFAS v4" \
+                --notes "Copernicus CEMS EWDS, GloFAS v4 consolidated (LISFLOOD). Débit journalier en m³/s aux mailles des reprévisions R-21 ; saisons du 25 novembre au 5 avril. Source : https://ewds.climate.copernicus.eu/datasets/cems-glofas-historical ; protocole : validation/protocole_r21_diagnostic.md, section 5. Aucun score scientifique."
+              gh release view "$TAG" --json assets > assets.json
+            else
+              cat release.err >&2
+              exit 1
+            fi
+          fi
+          if jq -e --arg f "glofas_reanalyse_${SAISON}.npz" '.assets | any(.name == $f)' assets.json >/dev/null; then
+            echo 'skip=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Installer et vérifier le code hors réseau
+        if: steps.inventaire.outputs.skip != 'true'
+        run: |
+          pip install numpy==2.2.6 requests==2.32.5 xarray==2025.6.1 netCDF4==1.7.2 pyyaml==6.0.2 scipy==1.15.3
+          python tests/test_glofas_reanalyse.py
+      - name: Restaurer toutes les notes et les coordonnées de référence
+        if: steps.inventaire.outputs.skip != 'true'
+        run: |
+          mkdir -p notes references
+          # Inventaire illisible ou note manquante : arrêt avant ménage/soumission.
+          python - <<'PY'
+          import json, re, subprocess
+          with open('assets.json') as f:
+              assets = json.load(f)['assets']
+          for asset in assets:
+              name = asset['name']
+              if name.endswith('.demande.json'):
+                  if not re.fullmatch(r'glofas_reanalyse_20(?:0[3-9]|1[0-6])\.demande\.json', name):
+                      raise ValueError('Note inattendue : ' + name)
+                  subprocess.run(['gh', 'release', 'download', 'glofas-reanalyse-v4',
+                                  '-p', name, '-D', 'notes'], check=True)
+          PY
+          # Téléchargements GitHub séquentiels ; aucun appel à EWDS ici.
+          gh release view reprevisions-glofas-v4 --json assets > references.json
+          python - <<'PY'
+          import json, re, subprocess
+          with open('references.json') as f:
+              names = sorted(a['name'] for a in json.load(f)['assets']
+                             if re.fullmatch(r'glofas_v4_\d{4}_\d{2}\.npz', a['name']))
+          if not names:
+              raise ValueError('Release de référence vide')
+          for name in names:
+              subprocess.run(['gh', 'release', 'download', 'reprevisions-glofas-v4',
+                              '-p', name, '-D', 'references'], check=True)
+          PY
+      - name: Reprendre, extraire et publier la saison
+        if: steps.inventaire.outputs.skip != 'true'
+        env:
+          CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
+        run: |
+          rc=0
+          python scripts/build_glofas_reanalyse.py --saison "$SAISON" \
+            --references references --notes notes --delai-min 300 --publier-demande "$TAG" || rc=$?
+          if [ "$rc" = 75 ]; then
+            echo "::warning::Collecte en attente ; relancer manuellement les saisons non publiées"
+            exit 0
+          fi
+          [ "$rc" = 0 ] || exit "$rc"
+          gh release upload "$TAG" "data/mdg/glofas_reanalyse/glofas_reanalyse_${SAISON}.npz"
+          # La note reste en release pour la traçabilité et pour le ménage conservateur.

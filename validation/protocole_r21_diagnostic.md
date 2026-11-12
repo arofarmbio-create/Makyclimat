@@ -110,8 +110,12 @@ modèle « voit » lorsque la météo est connue. Ce n'est **pas une borne supé
   - **P ≤ 25 %** : référence basse. Hypothèses privilégiées : (A), ou erreur du modèle hydrologique, ou (B) ; ces
     impacts renseignent peu sur la compétence de prévision, et R-21 se lit « peu informatif » plutôt que « GloFAS
     sans compétence ».
-  - **P ≥ 40 %** : la réanalyse repère nettement plus que la prévision à charge comparable. Hypothèse privilégiée :
-    (C), une perte liée à la prévision.
+  - **P ≥ 40 % et P − P_c ≥ 15 points**, avec l'intervalle à 95 % de l'écart apparié P − P_c (bootstrap des
+    saisons, comme R-21, sur les mêmes unités évaluables) entièrement au-dessus de 0 : la réanalyse repère nettement
+    plus que la prévision à charge comparable. Hypothèse privilégiée : (C), une perte liée à la prévision
+    (relecture Codex du 12/11, 16:40).
+  - **P ≥ 40 % sans cette condition sur P − P_c** (le contrôle atteint lui aussi un taux proche) : aucune attribution ;
+    le seuil de 40 % n'est qu'un repère descriptif, et l'écart P − P_c est publié avec son intervalle.
   - **Entre 25 et 40 %** : hypothèses mêlées, à éclairer par D1 et D4.
   - Si plus de 3 plis sur 12 sont hors tolérance de charge, aucune hypothèse n'est privilégiée : écart décrit seulement.
 - Croisement avec D1 : pour chaque unité, classe de la réanalyse contre classe de la prévision (table 5 × 5),
@@ -160,6 +164,9 @@ cartographiées par satellite, indépendantes des déclarations) pour les activa
 - 12/11/2026, 4e version avant tout calcul (relecture Codex de 16:28) : jour valide exigé dans J pour toute classe
   autre que « non évaluable » ; couverture partielle publiée ; comparaisons sur les mêmes unités évaluables, taux du
   contrôle recalculé ; section 11 présentée comme décisions acquises.
+- 12/11/2026, 5e version avant tout calcul (relecture Codex de 16:40) : l'hypothèse (C) n'est privilégiée que si
+  P ≥ 40 % **et** P − P_c ≥ 15 points avec un intervalle bootstrap (saisons) au-dessus de 0 ; sinon le seuil de 40 %
+  reste descriptif, sans attribution.
 - **12/11/2026 — Décisions du porteur du projet** : protocole validé (sous réserve de la relecture de Codex de cette
   version) ; téléchargement de la réanalyse GloFAS autorisé ; observations communales Copernicus EMS réservées au
   test confirmatoire par sous-bassin (section 8).
