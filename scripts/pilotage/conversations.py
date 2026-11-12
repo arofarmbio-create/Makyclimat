@@ -396,7 +396,12 @@ def nouvelle_conversation(exe: Path | None, forcer: bool = False) -> dict:
     if ancien:
         subprocess.run(["taskkill", "/PID", str(ancien), "/T", "/F"], capture_output=True, check=False,
                        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
-    fichier("claude").write_text(json.dumps({"maj": dt.datetime.now().isoformat(timespec="seconds")}), encoding="utf-8")
+    # Relecture Codex (11/11, 21:00) : pendant l'attente, le crochet de la nouvelle session a pu déjà écrire son état
+    # (PID, journal, « au travail ») ; on ne remet à zéro que l'état de l'ancienne session, jamais celui de la nouvelle.
+    actuel = lire("claude")
+    if not actuel.get("session_id") or actuel.get("session_id") == d.get("session_id"):
+        fichier("claude").write_text(json.dumps({"maj": dt.datetime.now().isoformat(timespec="seconds")}),
+                                     encoding="utf-8")
     return {"ok": "Nouvelle conversation Claude ouverte" + (" ; l'ancienne est fermée (son journal est conservé)." if ancien
                                                              else " ; aucune ancienne conversation ouverte à fermer.")}
 

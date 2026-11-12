@@ -115,6 +115,31 @@ def test_ancien_claude_conserve_si_le_nouveau_ne_demarre_pas(d):
         assert "ok" in r and tues and tues[0][:3] == ["taskkill", "/PID", "77"]
 
 
+@avec_etat
+def test_etat_de_la_nouvelle_session_preserve(d):
+    """Relecture Codex (11/11, 21:00) : l'état écrit par la nouvelle session pendant l'attente n'est pas écrasé ;
+    celui de l'ancienne session est remis à zéro."""
+    ancien = {"session_id": "ancienne", "pid": 77, "au_travail": False}
+    nouveau = {"session_id": "nouvelle", "pid": 51, "au_travail": True, "transcript": "t.jsonl"}
+
+    class Console:
+        pid = 50
+
+    def demarre(pid):
+        C.fichier("claude").write_text(json.dumps(nouveau), encoding="utf-8")    # crochet de la nouvelle session
+        return 51
+
+    with patch.object(C, "processus", lambda: {77: (1, "claude.exe")}),             patch.object(C.subprocess, "Popen", lambda *a, **k: Console()),             patch.object(C.subprocess, "run", lambda commande, **k: None):
+        C.fichier("claude").write_text(json.dumps(ancien), encoding="utf-8")
+        with patch.object(C, "attendre_claude", demarre):
+            assert "ok" in C.nouvelle_conversation(Path("claude.exe"))
+        assert C.lire("claude") == nouveau
+        C.fichier("claude").write_text(json.dumps(ancien), encoding="utf-8")
+        with patch.object(C, "attendre_claude", lambda pid: 51):                # la nouvelle n'a rien écrit
+            assert "ok" in C.nouvelle_conversation(Path("claude.exe"))
+        assert set(C.lire("claude")) == {"maj"}
+
+
 def test_javascript_du_tableau_valide():
     """Une erreur de syntaxe JS bloque toute la page (11/11/2026 : apostrophe non protégée)."""
     import re, shutil, subprocess

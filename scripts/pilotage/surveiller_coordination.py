@@ -433,7 +433,8 @@ def lire_sortie(agent, stdout, sortie):
 # Décision du porteur : voir dans le poste de pilotage combien de sessions enfants Claude et Codex lancent, et sur quoi.
 # Chaque lancement garde son agent, son genre, son sujet en clair et sa consigne. Les lancements automatiques
 # (relectures croisées, réveils de Codex) sont plafonnés par jour ; les exécutions autorisées par le porteur ne le sont pas.
-COLONNES = {"consommation": "TEXT", "agent": "TEXT", "genre": "TEXT", "sujet": "TEXT", "consigne": "TEXT"}
+COLONNES = {"consommation": "TEXT", "agent": "TEXT", "genre": "TEXT", "sujet": "TEXT", "consigne": "TEXT",
+            "ordre": "INTEGER"}
 PLAFOND_JOUR = {"relecture": 12, "reveil": 6}     # par agent et par jour (heure de Nairobi)
 RELECTURES_TACHE_JOUR = 3                         # relectures automatiques d'une même tâche par jour
 ARRETE = "Arrêté par le porteur"
@@ -445,6 +446,24 @@ def colonnes_lancements(db):
     for nom, genre in COLONNES.items():
         if nom not in presentes:
             db.execute(f"ALTER TABLE lancements ADD COLUMN {nom} {genre}")
+    db.execute("CREATE TABLE IF NOT EXISTS compteur_lancements (nom TEXT PRIMARY KEY, valeur INTEGER NOT NULL)")
+    db.execute("INSERT OR IGNORE INTO compteur_lancements SELECT 'lancements', COALESCE(MAX(rowid), 0) FROM lancements")
+
+
+def numeroter(db, identifiant):
+    """Numéro d'ordre strictement croissant d'un lancement, jamais réutilisé (avis Codex du 11/11, 20:57-20:58) :
+    une retente supprime une ligne et SQLite peut réattribuer son rowid ; ce compteur, lui, ne recule jamais."""
+    db.execute("""UPDATE compteur_lancements SET valeur = MAX(valeur, (SELECT COALESCE(MAX(rowid), 0)
+                  FROM lancements)) + 1 WHERE nom = 'lancements'""")
+    db.execute("UPDATE lancements SET ordre = (SELECT valeur FROM compteur_lancements WHERE nom = 'lancements') "
+               "WHERE id = ?", (identifiant,))
+
+
+def ordre_courant(db):
+    """Plus grand numéro d'ordre attribué (compteur, ou rowid des lancements anciens non numérotés)."""
+    compteur = (db.execute("SELECT valeur FROM compteur_lancements WHERE nom = 'lancements'").fetchone() or (0,))[0]
+    plus_grand = db.execute("SELECT COALESCE(MAX(COALESCE(ordre, rowid)), 0) FROM lancements").fetchone()[0]
+    return max(compteur, plus_grand)
 
 
 def genre_lancement(identifiant):
@@ -476,7 +495,7 @@ def remise_plafonds(db, agent, jour):
 
 
 def seuil_remise(db, agent, jour):
-    """Numéro d'ordre (rowid) du dernier lancement enregistré au moment de la remise du jour ; 0 sans remise ce jour."""
+    """Numéro d'ordre du dernier lancement enregistré au moment de la remise du jour ; 0 sans remise ce jour."""
     try:
         ligne = db.execute("SELECT depuis, seuil FROM remises_plafond WHERE agent = ?", (agent,)).fetchone()
     except sqlite3.OperationalError:          # table absente, ou ancienne table sans seuil
@@ -486,14 +505,16 @@ def seuil_remise(db, agent, jour):
 
 def effacer_plafonds(db, agent, depuis=None):
     """Remise à zéro des plafonds automatiques d'un agent par le porteur ; seuls les lancements suivants comptent.
-    La frontière est le rowid du dernier lancement enregistré, et non l'heure : les lancements sont notés à la minute,
-    une heure ne sépare donc pas avant et après dans la même minute (avis Codex du 11/11, 19:17 et 19:36)."""
+    La frontière est le numéro d'ordre du dernier lancement enregistré, et non l'heure : les lancements sont notés à la
+    minute, une heure ne sépare donc pas avant et après dans la même minute (avis Codex du 11/11, 19:17 et 19:36). Ce
+    numéro ne recule jamais, contrairement au rowid réutilisable après suppression (avis Codex du 11/11, 20:57)."""
     depuis = depuis or datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M:%S")      # affichage seulement
     with db:
         db.execute("CREATE TABLE IF NOT EXISTS remises_plafond (agent TEXT PRIMARY KEY, depuis TEXT NOT NULL)")
         if "seuil" not in {c[1] for c in db.execute("PRAGMA table_info(remises_plafond)")}:
             db.execute("ALTER TABLE remises_plafond ADD COLUMN seuil INTEGER")
-        seuil = db.execute("SELECT COALESCE(MAX(rowid), 0) FROM lancements").fetchone()[0]
+        colonnes_lancements(db)
+        seuil = ordre_courant(db)
         db.execute("INSERT OR REPLACE INTO remises_plafond (agent, depuis, seuil) VALUES (?, ?, ?)",
                    (agent, depuis, seuil))
     return depuis
@@ -501,10 +522,10 @@ def effacer_plafonds(db, agent, depuis=None):
 
 def lancements_comptes(db, agent, genre, jour, sujet=None):
     """Lancements automatiques d'un genre comptés pour le plafond : du jour, enregistrés après la dernière remise à
-    zéro du jour (rowid supérieur au seuil). Une relecture retentée est réinscrite, donc comptée comme un lancement."""
+    zéro du jour (numéro d'ordre supérieur au seuil). Une relecture retentée est réinscrite, donc comptée comme un lancement."""
     # Identifiants : codex/<genre>-x pour Codex ; <genre>-x ou claude/<genre>-x pour Claude. LIKE est ancré au début.
     motif, motif_alt = (f"codex/{genre}-%",) * 2 if agent == "codex" else (f"{genre}-%", f"claude/{genre}-%")
-    requete = "SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND rowid > ?"
+    requete = "SELECT COUNT(*) FROM lancements WHERE (id LIKE ? OR id LIKE ?) AND debut LIKE ? AND COALESCE(ordre, rowid) > ?"
     parametres = [motif, motif_alt, f"{jour}%", seuil_remise(db, agent, jour)]
     if sujet is not None:
         requete += " AND sujet = ?"
@@ -575,6 +596,8 @@ def lancer_claude(db, dossier, demandes, executables):
                    WHERE NOT EXISTS (SELECT 1 FROM lancements WHERE statut = 'En cours')""",
                 (identifiant, debut, agent, genre_lancement(identifiant), sujet, consigne[:6000]),
             ).rowcount
+            if reserve:
+                numeroter(db, identifiant)
         if reserve:
             break
     else:

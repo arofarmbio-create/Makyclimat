@@ -84,6 +84,23 @@ class Plafond(unittest.TestCase):
         self.ajouter("codex/reveil-apres", "x")                          # après la remise, même minute (10:00)
         self.assertEqual(C.lancements_comptes(self.db, "codex", "reveil", "11/11/2026"), 1)   # avis Codex 19:36
 
+    def test_remise_puis_retente_du_dernier_lancement(self):
+        """Avis Codex (11/11, 20:57 et 20:58) : après une remise, la suppression du dernier lancement (retente) puis une
+        nouvelle insertion réutilisent le rowid ; le numéro d'ordre, lui, ne recule pas et la tentative est comptée."""
+        for i in range(3):
+            self.ajouter(f"codex/relecture-{i}", "Tâche A")
+            C.numeroter(self.db, f"codex/relecture-{i}")
+        C.effacer_plafonds(self.db, "codex", "11/11/2026 10:00:30")
+        self.assertEqual(C.lancements_comptes(self.db, "codex", "relecture", "11/11/2026"), 0)
+        rowid = self.db.execute("SELECT rowid FROM lancements WHERE id = 'codex/relecture-2'").fetchone()[0]
+        self.db.execute("DELETE FROM lancements WHERE id = 'codex/relecture-2'")          # retente
+        self.ajouter("codex/relecture-2", "Tâche A")
+        C.numeroter(self.db, "codex/relecture-2")
+        self.assertEqual(self.db.execute("SELECT rowid FROM lancements WHERE id = 'codex/relecture-2'").fetchone()[0],
+                         rowid)                                                            # rowid bien réutilisé
+        self.assertEqual(C.lancements_comptes(self.db, "codex", "relecture", "11/11/2026"), 1)
+        self.assertEqual(C.lancements_comptes(self.db, "codex", "relecture", "11/11/2026", "Tâche A"), 1)
+
     def test_ancienne_table_de_remise_sans_seuil(self):
         """Une table créée par la version précédente (sans colonne seuil) est complétée à la remise suivante."""
         self.db.execute("CREATE TABLE remises_plafond (agent TEXT PRIMARY KEY, depuis TEXT NOT NULL)")
@@ -168,7 +185,8 @@ class Instantane(unittest.TestCase):
             with sqlite3.connect(base) as db:
                 db.execute(TABLE)
                 C.colonnes_lancements(db)
-                db.execute("INSERT INTO lancements VALUES ('codex/relecture-a', '11/11/2026 10:00', '11/11/2026 10:03', "
+                db.execute("INSERT INTO lancements (id, debut, fin, statut, consommation, agent, genre, sujet, consigne) "
+                           "VALUES ('codex/relecture-a','11/11/2026 10:00', '11/11/2026 10:03', "
                            "'Réponse reçue', 'entrée 1 000 (dont cache 800) · sortie 50', 'codex', 'relecture', 'T', 'c')")
                 db.execute("INSERT INTO lancements (id, debut, statut, consommation) VALUES ('claude/exec-b', "
                            "'11/11/2026 11:00', 'En cours', 'entrée 2 000 (dont cache 0) · sortie 10 · 0.50 $')")
