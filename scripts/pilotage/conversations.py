@@ -163,6 +163,54 @@ def lien_codex() -> str:
     return "codex://threads/new?" + urlencode({"path": str(ROOT), "prompt": consigne})
 
 
+VERROU_DELAI = 5.0          # attente maximale du verrou d'état (s)
+VERROU_PERIME = 30.0        # un verrou plus ancien vient d'un processus tué : il est repris
+
+
+class verrou_etat:
+    """Verrou commun au crochet (noter) et au changement de conversation (relecture Codex du 12/11, 13:10) : la
+    lecture conditionnelle puis l'effacement de l'état ne peuvent plus être entrelacés avec l'écriture du crochet.
+    Fichier créé en exclusif (O_EXCL), donc valable entre processus ; repris s'il est périmé."""
+
+    def __init__(self, agent: str = "claude", sommeil=time.sleep):
+        self.chemin = ETAT / f"session_{agent}.verrou"
+        self.sommeil = sommeil
+        self.tenu = False
+
+    def __enter__(self):
+        fin = time.monotonic() + VERROU_DELAI
+        self.chemin.parent.mkdir(parents=True, exist_ok=True)
+        while True:
+            try:
+                os.close(os.open(self.chemin, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
+                self.tenu = True
+                return self
+            except FileExistsError:
+                try:
+                    if time.time() - self.chemin.stat().st_mtime > VERROU_PERIME:
+                        self.chemin.unlink(missing_ok=True)
+                        continue
+                except OSError:
+                    continue
+                if time.monotonic() >= fin:
+                    return self          # suivi facultatif : on n'arrête jamais le travail sur un verrou
+                self.sommeil(0.05)
+
+    def __exit__(self, *exc):
+        if self.tenu:
+            self.chemin.unlink(missing_ok=True)
+        return False
+
+
+def ecrire_etat(agent: str, donnees: dict) -> None:
+    """Écriture atomique (fichier provisoire puis remplacement) : une lecture concurrente voit l'ancien état ou le
+    nouveau, jamais un fichier à moitié écrit qui se lirait {}."""
+    cible = fichier(agent)
+    provisoire = cible.with_suffix(f".{os.getpid()}.tmp")
+    provisoire.write_text(json.dumps(donnees, ensure_ascii=False), encoding="utf-8")
+    os.replace(provisoire, cible)
+
+
 def lire(agent: str) -> dict:
     try:
         return json.loads(fichier(agent).read_text(encoding="utf-8"))
@@ -173,19 +221,20 @@ def lire(agent: str) -> dict:
 def noter(ev: dict) -> None:
     """Appelé par le crochet de Claude (UserPromptSubmit, SessionStart, Stop)."""
     sid = ev.get("session_id") or ""
-    avant = lire("claude")
-    if avant.get("session_id") == sid and avant.get("pid"):
-        pid, auto = avant["pid"], False
-    else:
-        pid, auto = claude_parent(os.getppid())
-        if auto:
-            return                           # session du surveillant : ne remplace pas la conversation du porteur
-    n = jetons(ev.get("transcript_path") or "")
-    fichier("claude").write_text(json.dumps({
-        "session_id": sid, "pid": pid, "transcript": ev.get("transcript_path") or "",
-        "jetons": n if n is not None else avant.get("jetons") if avant.get("session_id") == sid else None,
-        "au_travail": ev.get("hook_event_name") != "Stop",
-        "maj": dt.datetime.now().isoformat(timespec="seconds")}, ensure_ascii=False), encoding="utf-8")
+    with verrou_etat("claude"):
+        avant = lire("claude")
+        if avant.get("session_id") == sid and avant.get("pid"):
+            pid, auto = avant["pid"], False
+        else:
+            pid, auto = claude_parent(os.getppid())
+            if auto:
+                return                       # session du surveillant : ne remplace pas la conversation du porteur
+        n = jetons(ev.get("transcript_path") or "")
+        ecrire_etat("claude", {
+            "session_id": sid, "pid": pid, "transcript": ev.get("transcript_path") or "",
+            "jetons": n if n is not None else avant.get("jetons") if avant.get("session_id") == sid else None,
+            "au_travail": ev.get("hook_event_name") != "Stop",
+            "maj": dt.datetime.now().isoformat(timespec="seconds")})
 
 
 def charge(agent: str) -> dict:
@@ -398,10 +447,10 @@ def nouvelle_conversation(exe: Path | None, forcer: bool = False) -> dict:
                        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     # Relecture Codex (11/11, 21:00) : pendant l'attente, le crochet de la nouvelle session a pu déjà écrire son état
     # (PID, journal, « au travail ») ; on ne remet à zéro que l'état de l'ancienne session, jamais celui de la nouvelle.
-    actuel = lire("claude")
-    if not actuel.get("session_id") or actuel.get("session_id") == d.get("session_id"):
-        fichier("claude").write_text(json.dumps({"maj": dt.datetime.now().isoformat(timespec="seconds")}),
-                                     encoding="utf-8")
+    with verrou_etat("claude"):
+        actuel = lire("claude")
+        if not actuel.get("session_id") or actuel.get("session_id") == d.get("session_id"):
+            ecrire_etat("claude", {"maj": dt.datetime.now().isoformat(timespec="seconds")})
     return {"ok": "Nouvelle conversation Claude ouverte" + (" ; l'ancienne est fermée (son journal est conservé)." if ancien
                                                              else " ; aucune ancienne conversation ouverte à fermer.")}
 

@@ -140,6 +140,51 @@ def test_etat_de_la_nouvelle_session_preserve(d):
         assert set(C.lire("claude")) == {"maj"}
 
 
+@avec_etat
+def test_crochet_entrelace_avec_l_effacement(d):
+    """Relecture Codex (12/11, 13:10) : le crochet de la nouvelle session qui écrit entre la lecture et l'effacement
+    attend le verrou ; son état est écrit après l'effacement et n'est donc pas perdu."""
+    import threading
+    ancien = {"session_id": "ancienne", "pid": 77, "au_travail": False}
+    C.fichier("claude").write_text(json.dumps(ancien), encoding="utf-8")
+    lire_vrai, fil = C.lire, {}
+
+    class Console:
+        pid = 50
+
+    def lire_entrelace(agent):
+        etat = lire_vrai(agent)
+        if threading.current_thread() is threading.main_thread():
+            fil["lectures"] = fil.get("lectures", 0) + 1
+        if fil.get("lectures") == 2 and "crochet" not in fil:     # 2e lecture : juste avant l'effacement
+            fil["crochet"] = threading.Thread(target=C.noter, args=(
+                {"session_id": "nouvelle", "hook_event_name": "UserPromptSubmit", "transcript_path": ""},))
+            fil["crochet"].start()
+            fil["crochet"].join(0.3)
+            fil["bloque"] = fil["crochet"].is_alive()  # le crochet attend le verrou
+        return etat
+
+    with patch.object(C, "processus", lambda: {77: (1, "claude.exe")}),             patch.object(C.subprocess, "Popen", lambda *a, **k: Console()),             patch.object(C.subprocess, "run", lambda commande, **k: None),             patch.object(C, "attendre_claude", lambda pid: 51),             patch.object(C, "claude_parent", lambda pid: (51, False)),             patch.object(C, "jetons", lambda chemin: None),             patch.object(C, "lire", lire_entrelace):
+        assert "ok" in C.nouvelle_conversation(Path("claude.exe"))
+        fil["crochet"].join(5)
+    etat = lire_vrai("claude")
+    assert fil["bloque"] and etat["session_id"] == "nouvelle" and etat["pid"] == 51, (fil, etat)
+    assert not (d / "session_claude.verrou").exists()
+
+
+def test_verrou_perime_repris(tmp=None):
+    """Un verrou laissé par un processus tué est repris après VERROU_PERIME secondes."""
+    import os
+    dossier = Path(tempfile.mkdtemp())
+    with patch.object(C, "ETAT", dossier):
+        v = dossier / "session_claude.verrou"
+        v.write_text("")
+        os.utime(v, (0, 0))
+        with C.verrou_etat("claude") as verrou:
+            assert verrou.tenu
+        assert not v.exists()
+
+
 def test_javascript_du_tableau_valide():
     """Une erreur de syntaxe JS bloque toute la page (11/11/2026 : apostrophe non protégée)."""
     import re, shutil, subprocess
