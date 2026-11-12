@@ -526,6 +526,29 @@ def test_run_annule_remplace_n_est_pas_un_echec():
     assert not G.annule_et_remplace(ancien, [ancien, {**suivant, "headBranch": "autre"}])
 
 
+def test_arret_protege():
+    """Porteur du projet (12/11/2026) : après une demande d'arrêt, aucun nouveau lancement ; la boucle inactive s'arrête
+    d'elle-même sans attendre la fin de sa durée."""
+    import sqlite3
+    import time
+    from types import SimpleNamespace
+    with tempfile.TemporaryDirectory() as d:
+        dossier = Path(d)
+        (dossier / C.ARRET).write_text("12/11/2026 17:00", encoding="utf-8")
+        db = sqlite3.connect(":memory:")
+        db.execute("CREATE TABLE lancements (id TEXT PRIMARY KEY, debut TEXT, fin TEXT, statut TEXT NOT NULL, consommation TEXT)")
+        lances = []
+        with patch.object(C.subprocess, "run", side_effect=lambda *a, **k: lances.append(a)):
+            C.lancer_claude(db, dossier, [("codex", "codex/relecture-x", "consigne")], {"codex": "codex.exe"})
+        assert lances == [] and db.execute("SELECT COUNT(*) FROM lancements").fetchone()[0] == 0
+        args = SimpleNamespace(source=dossier / "COORDINATION.md", sortie=dossier, claude_exe=None, codex_exe=None,
+                               relectures_auto=False, boucle=True, windows=False)
+        t0 = time.monotonic()
+        with patch.object(C, "verifier", return_value=0):
+            C.boucle(args, time.monotonic() + 3600)
+        assert time.monotonic() - t0 < 5 and not (dossier / C.ARRET).exists()
+
+
 def test_pilotage_gele_sans_relecture_automatique():
     """Décision du porteur (12/11/2026) : une ligne qui ne cite que des fichiers de pilotage ne déclenche plus de
     relecture automatique ; une ligne de recherche (ou mixte) en déclenche toujours une."""

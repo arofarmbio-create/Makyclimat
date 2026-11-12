@@ -182,7 +182,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <div class="surv-ctl" style="margin-top:10px">
       <label>Durée <select id="surv-duree"></select></label>
       <label><input type="checkbox" id="surv-relect" checked> relectures croisées</label>
-      <button class="b vert" id="surv-go">Démarrer</button><button class="b rouge" id="surv-stop">Arrêter</button>
+      <button class="b vert" id="surv-go">Démarrer</button><button class="b rouge" id="surv-stop">Arrêter</button><button class="b" id="surv-kill">Arrêt immédiat</button>
     </div>
     <div class="retour" id="surv-retour"></div>
     <h2 style="margin-top:14px">Exécutions en file <span class="n zero" id="n-exec">0</span></h2><div id="executions"></div>
@@ -274,13 +274,19 @@ function rendreSurveillant(){
   $("p-pause").hidden=!D.pause; if(D.pause) $("p-pause").className="puce ko";
   $("surv-texte").textContent=s.actif?("Actif"+(s.fin?" jusqu'à "+String(s.fin).slice(11,16):"")+" · lance les relectures, exécutions et réveils une à une."):
     "Arrêté : aucune session enfant ne part. Les exécutions autorisées le redémarrent pour 2 h.";
-  $("surv-go").disabled=!!s.actif; $("surv-stop").disabled=!s.actif;
+  $("surv-go").disabled=!!s.actif; $("surv-stop").disabled=!s.actif||!!s.arret_demande; $("surv-kill").disabled=!s.actif;
+  if(s.actif&&s.arret_demande) $("surv-texte").textContent="Arrêt demandé : s'arrêtera après la tâche en cours"+(s.en_cours&&s.en_cours.sujet?" (« "+s.en_cours.sujet+" »)":"")+".";
+  SURV=s;
   var sel=$("surv-duree"); if(!sel.options.length){ (D.durees||[30,60,120,240,480]).forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=m>=60?(m/60)+" h":m+" min";if(m===120)o.selected=true;sel.appendChild(o);}); }
   var ex=D.executions||[]; $("n-exec").textContent=ex.length; $("n-exec").className="n"+(ex.length?"":" zero");
   poser("executions",ex.length?ex.map(function(x){return '<div class="tache"><span class="etq '+x.agent+'">'+NOMS[x.agent]+'</span>'+e(x.demande)+'</div>';}).join(""):'<div class="vide">File vide.</div>');
 }
 $("surv-go").onclick=function(){ post("/api/surveillant/demarrer",{duree:+$("surv-duree").value,relectures:$("surv-relect").checked}).then(function(r){retour($("surv-retour"),r.erreur?r:{ok:"Surveillant démarré."});lire();}); };
-$("surv-stop").onclick=function(){ if(confirm("Arrêter le surveillant (et la session enfant en cours) ?")) post("/api/surveillant/arreter",{}).then(function(r){retour($("surv-retour"),r.erreur?r:{ok:"Surveillant arrêté."});lire();}); };
+var SURV={};
+$("surv-stop").onclick=function(){ post("/api/surveillant/arreter",{}).then(function(r){retour($("surv-retour"),r.erreur?r:{ok:r.ok||"Surveillant arrêté."});lire();}); };
+$("surv-kill").onclick=function(){ var t=SURV.en_cours||{};
+  var msg=t.id?("Arrêt immédiat : la tâche « "+(t.sujet||t.id)+" », en cours depuis "+String(t.debut||"").slice(11,16)+", sera coupée ; ses jetons sont perdus et elle ne sera pas relancée. Continuer ?"):"Arrêt immédiat du surveillant (aucune tâche en cours) ?";
+  if(confirm(msg)) post("/api/surveillant/arreter",{immediat:true}).then(function(r){retour($("surv-retour"),r.erreur?r:{ok:r.ok||"Surveillant arrêté."});lire();}); };
 
 /* ----- sessions mères ----- */
 function anneau(c){

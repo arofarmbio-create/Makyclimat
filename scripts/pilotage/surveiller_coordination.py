@@ -588,6 +588,14 @@ def limite_atteinte(agent):
     return (b.get("pourcent") or 0) >= SEUIL_SUSPENSION
 
 
+ARRET = "arret_demande"   # arrêt protégé (porteur du projet, 12/11/2026) : fichier déposé par le poste
+
+
+def arret_demande(dossier) -> bool:
+    """Vrai si le porteur a demandé l'arrêt : plus aucun nouveau lancement ; la tâche en cours va jusqu'au bout."""
+    return (Path(dossier) / ARRET).exists()
+
+
 def lancer_claude(db, dossier, demandes, executables):
     """Réserve une demande avant l'appel. Un échec ou un arrêt ne la rejoue pas. executables : {agent: binaire}."""
     if not isinstance(executables, dict):
@@ -596,6 +604,8 @@ def lancer_claude(db, dossier, demandes, executables):
     for agent, identifiant, consigne in demandes:
         if not executables.get(agent):
             continue
+        if arret_demande(dossier):
+            return                     # arrêt protégé : rien de nouveau ; la boucle s'arrête après ce passage
         debut = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
         sujet = sujet_lancement(identifiant, consigne)
         if au_plafond(db, agent, identifiant, sujet, debut[:10]):
@@ -852,6 +862,7 @@ def main():
         args.sortie.mkdir(parents=True, exist_ok=True)
         if (autre := lire_instance(args.sortie)) and autre.get("pid") != os.getpid():
             parser.exit(1, f"Surveillant déjà actif (processus {autre['pid']}, depuis {autre.get('debut')}).\n")
+        (args.sortie / ARRET).unlink(missing_ok=True)          # une demande d'arrêt ne vaut que pour la boucle visée
         maintenant = datetime.now(NAIROBI)
         ecrire_si_change(instance, json.dumps({
             "pid": os.getpid(), "debut": maintenant.strftime("%d/%m/%Y %H:%M"),
@@ -883,7 +894,13 @@ def boucle(args, fin):
             print(f"Surveillance : {erreur}", flush=True)
         if not args.boucle or time.monotonic() >= fin:
             return
-        time.sleep(min(15, max(0, fin - time.monotonic())))
+        attente = time.monotonic() + min(15, max(0, fin - time.monotonic()))
+        while time.monotonic() < attente and not arret_demande(args.sortie):
+            time.sleep(0.5)
+        if arret_demande(args.sortie):
+            (args.sortie / ARRET).unlink(missing_ok=True)
+            print("Arrêt demandé par le porteur : aucune tâche en cours, surveillant arrêté.", flush=True)
+            return
         if time.monotonic() >= fin:
             return
 

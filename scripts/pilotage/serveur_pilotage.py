@@ -14,11 +14,13 @@ import os
 import secrets
 import shutil
 import socket
+import sqlite3
 import subprocess
 import sys
 import threading
 import time
 import webbrowser
+from contextlib import closing
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -28,7 +30,7 @@ import conversations  # noqa: E402
 import github_direct  # noqa: E402
 import poste  # noqa: E402
 import tableau_de_bord  # noqa: E402
-from surveiller_coordination import NAIROBI, cle_message, ecrire_si_change, lire_instance  # noqa: E402
+from surveiller_coordination import ARRET, NAIROBI, cle_message, ecrire_si_change, lire_instance  # noqa: E402
 from datetime import datetime  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -71,7 +73,8 @@ def binaire_codex() -> Path | None:
 
 def etat() -> dict:
     instance = lire_instance(ETAT)
-    return {"actif": bool(instance), **(instance or {}), "claude_disponible": bool(binaire_claude()),
+    return {"actif": bool(instance), **(instance or {}), "arret_demande": bool(instance) and (ETAT / ARRET).exists(),
+            "en_cours": lancement_en_cours() if instance else {}, "claude_disponible": bool(binaire_claude()),
             "codex_disponible": bool(binaire_codex()), "jeton": JETON, "durees": DUREES}
 
 
@@ -103,11 +106,36 @@ def demarrer(duree: int, relectures: bool) -> dict:
         return etat() if lire_instance(ETAT) else {"erreur": "Démarrage non confirmé : voir pilotage/etat/coordination/surveillant.log."}
 
 
-def arreter() -> dict:
+def lancement_en_cours() -> dict:
+    """Lancement « En cours » du surveillant (identifiant, sujet, début), ou {}."""
+    try:
+        with closing(sqlite3.connect(ETAT / "coordination.sqlite3")) as db:
+            ligne = db.execute("SELECT id, sujet, debut FROM lancements WHERE statut = 'En cours'").fetchone()
+    except sqlite3.Error:
+        return {}
+    return dict(zip(("id", "sujet", "debut"), ligne)) if ligne else {}
+
+
+def arreter(immediat: bool = False, attente: float = 3.0) -> dict:
+    """Arrêt protégé (porteur du projet, 12/11/2026) : par défaut, le surveillant ne lance plus rien et s'arrête de
+    lui-même après la tâche en cours, dont les jetons ne sont donc pas perdus. `immediat` tue le surveillant et sa
+    session ; la tâche coupée est marquée « Arrêté par le porteur » et n'est pas relancée automatiquement."""
     with _verrou:
         instance = lire_instance(ETAT)
         if not instance:
             return etat()
+        if not immediat:
+            (ETAT / ARRET).write_text(datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M"), encoding="utf-8")
+            fin = time.monotonic() + attente
+            while time.monotonic() < fin and lire_instance(ETAT):
+                time.sleep(0.25)
+            if not lire_instance(ETAT):
+                return {**etat(), "ok": "Surveillant arrêté (aucune tâche en cours)."}
+            tache = lancement_en_cours()
+            return {**etat(), "ok": "Arrêt demandé : aucun nouveau lancement ; le surveillant s'arrêtera seul après "
+                    + (f"« {tache.get('sujet') or tache.get('id')} » (depuis {str(tache.get('debut'))[11:16]})."
+                       if tache else "son passage en cours.")}
+        tache = lancement_en_cours()
         pid = int(instance["pid"])
         if os.name == "nt":                      # /T : arrête aussi une session Claude en cours
             subprocess.run(["taskkill", "/PID", str(pid), "/T", "/F"], capture_output=True, check=False,
@@ -119,7 +147,14 @@ def arreter() -> dict:
                 break
             time.sleep(0.25)
         (ETAT / "surveillant.json").unlink(missing_ok=True)   # un arrêt forcé n'exécute pas le nettoyage du surveillant
-        return etat()
+        (ETAT / ARRET).unlink(missing_ok=True)
+        if tache:                                             # pas de relance automatique d'une tâche coupée exprès
+            with closing(sqlite3.connect(ETAT / "coordination.sqlite3")) as db, db:
+                db.execute("UPDATE lancements SET statut = 'Arrêté par le porteur', fin = ? "
+                           "WHERE id = ? AND statut = 'En cours'",
+                           (datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M"), tache["id"]))
+        return {**etat(), "ok": "Surveillant arrêté immédiatement" + (
+            f" ; « {tache.get('sujet') or tache['id']} » interrompu, non relancé." if tache else ".")}
 
 
 # ------------------------------------------------------------------ décisions et consignes du porteur (option C)
@@ -399,7 +434,7 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         if self.path == "/api/surveillant/demarrer":
             reponse = demarrer(int(corps.get("duree", 60)), bool(corps.get("relectures", True)))
         elif self.path == "/api/surveillant/arreter":
-            reponse = arreter()
+            reponse = arreter(immediat=bool(corps.get("immediat")))
         elif self.path == "/api/decision":
             reponse = decision(str(corps.get("cle", "")), str(corps.get("action", "")), str(corps.get("texte", "")))
         elif self.path == "/api/consigne":
