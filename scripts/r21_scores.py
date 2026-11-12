@@ -53,6 +53,8 @@ def test_a(b, c, n):
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", default="mdg")
+    ap.add_argument("--n-boot", type=int, default=2000)
+    ap.add_argument("--graine", type=int, default=20261112)
     args = ap.parse_args()
     cles, mois = lire(country_data_dir(args.country) / "reforecast")
     publies = {(y, m) for y, m, *_ in mois}
@@ -134,6 +136,15 @@ def main() -> None:
     D = [g.ensemble.to_numpy(float) - g.controle.to_numpy(float) for _, g in U.groupby("episode")]
     cci = cci_anova(D)
     b, c = int(P.b_ensemble_seul.sum()), int(P.c_controle_seul.sum())
+    # Intervalles à 95 % (fiche, section 6, point 3 ; relecture Codex du 12/11, 15:41) : bootstrap des saisons, qui
+    # préserve la dépendance entre districts et épisodes d'une même saison.
+    rng = np.random.default_rng(args.graine)
+    sommes = U.groupby("saison").agg(n=("ensemble", "size"), e=("ensemble", "sum"), c=("controle", "sum"))
+    tir = rng.integers(0, len(sommes), (args.n_boot, len(sommes)))
+    nb, eb, cb = (sommes[k].to_numpy(float)[tir].sum(1) for k in ("n", "e", "c"))
+    ic = {k: np.percentile(v, [2.5, 97.5]) for k, v in (("e", eb / nb), ("c", cb / nb), ("d", (eb - cb) / nb))}
+    pct = lambda x, nd=1: fr(100 * x, nd)
+    intervalle = lambda k: f"[{pct(ic[k][0])} ; {pct(ic[k][1])}]"
     sortie = ROOT / "validation" / "r21_scores.md"
     L = ["# R-21 — Scores de H1 (exploratoire)", "",
          f"Calcul du {dt.date.today():%d/%m/%Y} par [`scripts/r21_scores.py`](../scripts/r21_scores.py), méthode figée de la "
@@ -145,9 +156,10 @@ def main() -> None:
          "## Résultat", "",
          f"- Population figée : {n} unités épisode × district, {U.episode.nunique()} épisodes, {len(P)} saisons ; "
          f"{int((U.riviere == 0).sum())} unités sans maille de rivière retenue (non détectables par les deux méthodes).",
-         f"- Détection 1 à 3 jours avant : **ensemble {fr(100 * pe, 1)} %** ({int(U.ensemble.sum())}), **contrôle "
-         f"{fr(100 * pc, 1)} %** ({int(U.controle.sum())}) ; écart {fr(100 * (pe - pc), 1)} points. Discordances : "
-         f"ensemble seul {b}, contrôle seul {c}.",
+         f"- Détection 1 à 3 jours avant : **ensemble {pct(pe)} %** ({int(U.ensemble.sum())}) {intervalle('e')}, "
+         f"**contrôle {pct(pc)} %** ({int(U.controle.sum())}) {intervalle('c')} ; **écart {pct(pe - pc)} points** "
+         f"{intervalle('d')}. Intervalles à 95 % par bootstrap des saisons ({args.n_boot} tirages, graine "
+         f"{args.graine}). Discordances : ensemble seul {b}, contrôle seul {c}.",
          f"- **Test A** (permutation exacte des signes sur {len(P)} saisons, {2 ** len(P)} combinaisons, unilatéral) : "
          f"T = {fr(t, 2)}, **p = {fr(p, 4)}** ; au seuil de {fr(ALPHA, 2)} : "
          f"{'gain de l’ensemble indiqué (exploratoire)' if p <= ALPHA else 'pas de gain de l’ensemble mis en évidence'}.",
@@ -156,9 +168,9 @@ def main() -> None:
          + (f" ; puissance pour un gain de 30 points : {repere_puissance(cci)}." if np.isfinite(cci) else "."), "",
          f"**Lecture des hypothèses de puissance.** La simulation supposait une détection moyenne du contrôle de "
          f"{fr(100 * P_C, 0)} % et un gain de 30 points. Observé : contrôle {fr(100 * pc, 1)} %, et {b + c} unités "
-         "discordantes seulement : l'information du test tient dans ces discordances. Les repères de puissance "
-         "ci-dessus, conditionnels à ces hypothèses, surestiment donc la puissance réelle pour un gain plausible à ce "
-         "niveau de détection ; l'absence de gain démontré n'est pas une preuve d'absence de gain. La détection est "
+         "discordantes seulement. Les puissances simulées, conditionnelles à ces hypothèses, ne sont pas directement "
+         "transposables aux résultats observés, et la puissance pour un autre gain ou un autre niveau de détection "
+         "n'a pas été évaluée ; l'absence de gain démontré n'est pas une preuve d'absence de gain. La détection est "
          f"nulle pour les deux méthodes dans {int((P.det_ensemble + P.det_controle == 0).sum())} saisons sur {len(P)}.", "",
          "**Réserves.** Statut exploratoire (transportabilité de la CCI des témoins non démontrée). Une absence de fiche "
          "n'est pas une absence d'impact : la charge est mesurée sur des jours sans impact confirmé. Échantillon enrichi "

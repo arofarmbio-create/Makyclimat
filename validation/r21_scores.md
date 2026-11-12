@@ -5,12 +5,12 @@ Calcul du 12/11/2026 par [`scripts/r21_scores.py`](../scripts/r21_scores.py), m�
 ## Résultat
 
 - Population figée : 425 unités épisode × district, 22 épisodes, 12 saisons ; 28 unités sans maille de rivière retenue (non détectables par les deux méthodes).
-- Détection 1 à 3 jours avant : **ensemble 16,0 %** (68), **contrôle 14,8 %** (63) ; écart 1,2 points. Discordances : ensemble seul 8, contrôle seul 3.
+- Détection 1 à 3 jours avant : **ensemble 16,0 %** (68) [7,0 ; 26,8], **contrôle 14,8 %** (63) [6,6 ; 25,5] ; **écart 1,2 points** [-1,0 ; 2,5]. Intervalles à 95 % par bootstrap des saisons (2000 tirages, graine 20261112). Discordances : ensemble seul 8, contrôle seul 3.
 - **Test A** (permutation exacte des signes sur 12 saisons, 4096 combinaisons, unilatéral) : T = 0,39, **p = 0,3125** ; au seuil de 0,05 : pas de gain de l’ensemble mis en évidence.
 - Plis hors tolérance de charge (± 20 %) : 0 sur 12.
 - CCI des différences observée sur les épisodes (section 5, point 3) : 0,065 ; puissance pour un gain de 30 points : τ = 0,0 : hors grille, sous la plus petite CCI simulée (0,12 : 99,8 %) ; τ = 0,1 : hors grille, sous la plus petite CCI simulée (0,14 : 99,2 %) ; τ = 0,2 : hors grille, sous la plus petite CCI simulée (0,19 : 96,4 %).
 
-**Lecture des hypothèses de puissance.** La simulation supposait une détection moyenne du contrôle de 40 % et un gain de 30 points. Observé : contrôle 14,8 %, et 11 unités discordantes seulement : l'information du test tient dans ces discordances. Les repères de puissance ci-dessus, conditionnels à ces hypothèses, surestiment donc la puissance réelle pour un gain plausible à ce niveau de détection ; l'absence de gain démontré n'est pas une preuve d'absence de gain. La détection est nulle pour les deux méthodes dans 5 saisons sur 12.
+**Lecture des hypothèses de puissance.** La simulation supposait une détection moyenne du contrôle de 40 % et un gain de 30 points. Observé : contrôle 14,8 %, et 11 unités discordantes seulement. Les puissances simulées, conditionnelles à ces hypothèses, ne sont pas directement transposables aux résultats observés, et la puissance pour un autre gain ou un autre niveau de détection n'a pas été évaluée ; l'absence de gain démontré n'est pas une preuve d'absence de gain. La détection est nulle pour les deux méthodes dans 5 saisons sur 12.
 
 **Réserves.** Statut exploratoire (transportabilité de la CCI des témoins non démontrée). Une absence de fiche n'est pas une absence d'impact : la charge est mesurée sur des jours sans impact confirmé. Échantillon enrichi en événements (décembre-mars des saisons à fiches) ; 22 épisodes seulement.
 
