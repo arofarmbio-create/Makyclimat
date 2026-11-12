@@ -209,8 +209,8 @@ def save_grid(path: Path, **arrays) -> None:
 
 
 def load_grid(path: Path) -> dict:
-    z = np.load(path, allow_pickle=False)
-    return {k: z[k] for k in z.files}
+    with np.load(path, allow_pickle=False) as z:
+        return {k: z[k] for k in z.files}
 
 
 def sample_grid(arr: np.ndarray, lon0: float, lat0: float, res: float,

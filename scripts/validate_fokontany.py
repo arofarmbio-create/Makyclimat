@@ -166,7 +166,7 @@ def main() -> None:
     annual = None
     p = grid_dir(a.country) / "rx3_annual.npz"
     if p.exists():
-        z = np.load(p, allow_pickle=True)
+        z = np.load(p, allow_pickle=False)
         if (z["codes"] == leaves.pcode.values).all():
             annual = z["rx3"]
     hy = pd.read_csv(DATA_DIR / a.country / "external" / "hydro.csv")

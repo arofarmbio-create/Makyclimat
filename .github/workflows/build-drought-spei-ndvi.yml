@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy pandas pyyaml requests scipy rasterio "cdsapi>=0.7.4" xarray netCDF4 h5netcdf
+      - run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 requests==2.32.5 scipy==1.15.3 rasterio==1.4.3 cdsapi==0.7.7 xarray==2025.6.1 netCDF4==1.7.2 h5netcdf==1.6.1
       - name: Série ${{ matrix.part }}
         env:
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
@@ -60,7 +60,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy pandas pyyaml scipy
+      - run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 scipy==1.15.3
       - name: Validation
         env:
           GH_TOKEN: ${{ github.token }}

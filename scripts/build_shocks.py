@@ -172,7 +172,7 @@ def main() -> None:
     annual = None
     p = grid_dir(args.country) / "rx3_annual.npz"
     if p.exists():
-        z = np.load(p, allow_pickle=True)
+        z = np.load(p, allow_pickle=False)
         if (z["codes"].astype(str) == leaves.pcode.values).all():
             annual = z["rx3"]
     d_all = fetch_ibtracs(since=2000)

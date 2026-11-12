@@ -144,7 +144,7 @@ def main() -> None:
         d, a = loaded.pop(s)
         raw[s] = a[np.isin(d, common)].reshape(-1, len(E.LATS) * len(E.LONS))[:, cells].astype("float32")
         del a
-    tc = np.load(e1 / "e1_tc.npz", allow_pickle=True)
+    tc = np.load(e1 / "e1_tc.npz", allow_pickle=False)
     w = tc["poids"].reshape(len(E.SOURCES), -1)[:, cells].astype(float)
     V = daily_versions(common, raw, w)
     th = pd.read_csv(country_data_dir(args.country) / "flood_thresholds.csv", dtype={"pcode": str})

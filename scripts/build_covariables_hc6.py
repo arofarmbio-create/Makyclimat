@@ -241,8 +241,8 @@ def part_occupation(df: pd.DataFrame, country: str) -> pd.DataFrame:
         ok = False
     if ok:
         print("Globcover 2009 accessible, mais son traitement n'est pas encore écrit : WorldCover utilisé", flush=True)
-    sp = np.load(grid_dir(country) / "soilprops.npz")
-    ms = np.load(grid_dir(country) / "monthly_series.npz")
+    sp = np.load(grid_dir(country) / "soilprops.npz", allow_pickle=False)
+    ms = np.load(grid_dir(country) / "monthly_series.npz", allow_pickle=False)
     lcf = sp["lcfrac"].astype("float32")                                     # (classes, h, w), grille 0,05°
     lon0, lat0, res = float(ms["lon0"]), float(ms["lat0"]), float(ms["res"])
     h, w = lcf.shape[1:]

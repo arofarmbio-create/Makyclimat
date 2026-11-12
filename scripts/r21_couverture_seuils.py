@@ -31,17 +31,17 @@ def lire_mois(files):
     """Maximum du contrôle par mois : {(saison, mois): [fenêtre, maille]} sur l'union des mailles."""
     keys = {}
     for f in files:
-        z = np.load(f)
+        z = np.load(f, allow_pickle=False)
         for a, b in zip(z["lat"], z["lon"]):
             keys.setdefault((round(float(a), 3), round(float(b), 3)), len(keys))
-    windows = np.load(files[0])["windows"]
+    windows = np.load(files[0], allow_pickle=False)["windows"]
     out = {}
     for f in files:
         y, m = map(int, re.search(r"(\d{4})_(\d{2})", f.name).groups())
         s = season_of(dt.date(y, m, 1))
         if s is None or not THR_SEASONS[0] <= s <= THR_SEASONS[1]:
             continue
-        z = np.load(f)
+        z = np.load(f, allow_pickle=False)
         idx = np.array([keys[(round(float(a), 3), round(float(b), 3))] for a, b in zip(z["lat"], z["lon"])])
         a = np.full((len(windows), len(keys)), np.nan, dtype="float32")
         a[:, idx] = z["q"][:, 0].astype("float32").max(axis=0)

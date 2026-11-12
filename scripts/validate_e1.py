@@ -159,7 +159,7 @@ def load_daily(e1_dir, src, years):
         f = e1_dir / f"{src}_{y}.npz"
         if not f.exists():
             continue
-        z = np.load(f)
+        z = np.load(f, allow_pickle=False)
         start = dt.date.fromisoformat(str(z["start"]))
         n = z["pluie"].shape[0]
         days.append(pd.date_range(start, periods=n, freq="D"))

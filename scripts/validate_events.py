@@ -241,7 +241,7 @@ def main() -> None:
     annual = None
     p = grid_dir(args.country) / "rx3_annual.npz"
     if p.exists():
-        z = np.load(p, allow_pickle=True)
+        z = np.load(p, allow_pickle=False)
         if (z["codes"] == leaves.pcode.values).all():
             annual = z["rx3"]
             print(f"climatologie locale des pluies extrêmes : {annual.shape[0]} saisons")

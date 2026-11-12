@@ -65,7 +65,7 @@ def lire(dossier):
     cles, mois = {}, []
     for f in sorted(dossier.glob("glofas_v4_*.npz")):
         y, m = map(int, re.search(r"(\d{4})_(\d{2})", f.name).groups())
-        z = np.load(f)
+        z = np.load(f, allow_pickle=False)
         assert tuple(z["windows"][0]) == (1, 3) and z["members"][0] == "cf"
         idx = np.array([cles.setdefault((round(float(a), 3), round(float(b), 3)), len(cles))
                         for a, b in zip(z["lat"], z["lon"])])

@@ -114,14 +114,14 @@ def cell_table(files, slug):
     """Union des mailles de rivière, district de chaque maille, maxima saisonniers du contrôle [saison, fenêtre, maille]."""
     keys = {}
     for f in files:
-        z = np.load(f)
+        z = np.load(f, allow_pickle=False)
         for a, b in zip(z["lat"], z["lon"]):
             keys.setdefault((round(float(a), 3), round(float(b), 3)), len(keys))
     seasons = np.arange(THR_SEASONS[0], THR_SEASONS[1] + 1)
-    windows = np.load(files[0])["windows"]
+    windows = np.load(files[0], allow_pickle=False)["windows"]
     M = np.full((len(seasons), len(windows), len(keys)), np.nan, dtype="float32")
     for f in files:
-        z = np.load(f)
+        z = np.load(f, allow_pickle=False)
         ss = np.array([season_of(dt.date.fromisoformat(str(t))) or -1 for t in z["init"]])
         idx = np.array([keys[(round(float(a), 3), round(float(b), 3))] for a, b in zip(z["lat"], z["lon"])])
         for s in set(ss) & set(seasons):
@@ -169,7 +169,7 @@ def build_cases(files, keys, dist, seasons, M, windows, obs, q_min):
     rows = []
     thr_cache = {}
     for f in files:
-        z = np.load(f)
+        z = np.load(f, allow_pickle=False)
         idx = np.array([keys[(round(float(a), 3), round(float(b), 3))] for a, b in zip(z["lat"], z["lon"])])
         for i, init in enumerate(z["init"]):
             t0 = dt.date.fromisoformat(str(init))

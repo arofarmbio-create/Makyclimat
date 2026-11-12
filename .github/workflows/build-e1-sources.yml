@@ -70,7 +70,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy pandas pyyaml requests
+      - run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 requests==2.32.5
       - name: Diagnostic IMERG
         env:
           EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
@@ -104,7 +104,7 @@ jobs:
             echo "$f déjà publié"; echo "skip=1" >> "$GITHUB_OUTPUT"
           fi
       - if: steps.done.outputs.skip != '1'
-        run: pip install numpy pandas pyyaml requests scipy rasterio
+        run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 requests==2.32.5 scipy==1.15.3 rasterio==1.4.3
       - name: Attendre un créneau libre pour CHIRPS (mise à jour du site à HH:10 toutes les 6 h, bilan hydrique à 03:40)
         if: steps.done.outputs.skip != '1'
         run: |
@@ -156,7 +156,7 @@ jobs:
             echo "$f déjà publié"; echo "skip=1" >> "$GITHUB_OUTPUT"
           fi
       - if: steps.done.outputs.skip != '1'
-        run: pip install numpy pandas pyyaml requests scipy rasterio
+        run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 requests==2.32.5 scipy==1.15.3 rasterio==1.4.3
       - name: Télécharger et publier
         if: steps.done.outputs.skip != '1'
         env:
@@ -192,7 +192,7 @@ jobs:
             echo "$f déjà publié"; echo "skip=1" >> "$GITHUB_OUTPUT"
           fi
       - if: steps.done.outputs.skip != '1'
-        run: pip install numpy pandas pyyaml requests "cdsapi>=0.7.4" xarray netCDF4 h5netcdf
+        run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 requests==2.32.5 cdsapi==0.7.7 xarray==2025.6.1 netCDF4==1.7.2 h5netcdf==1.6.1
       - name: Télécharger et publier (après ménage de la file Copernicus du compte)
         if: steps.done.outputs.skip != '1'
         env:
@@ -213,7 +213,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy pandas pyyaml requests
+      - run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 requests==2.32.5
       - name: Stations GSOD de Madagascar
         env:
           GH_TOKEN: ${{ github.token }}

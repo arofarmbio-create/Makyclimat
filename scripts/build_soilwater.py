@@ -265,7 +265,7 @@ def rain_series(grid, cfg, country, fetch):
             have[(yy, m)] = np.asarray(ms["arr"][yi, k], dtype="float32")
     cache_path = grid_dir(country) / "rain_offseason.npz"          # mois hors saison déjà téléchargés (cache, hors git)
     if cache_path.exists():
-        cz = np.load(cache_path)
+        cz = np.load(cache_path, allow_pickle=False)
         for k in cz.files:
             y_, m_ = int(k[1:5]), int(k[6:8])
             if (y_, m_) not in have and cz[k].shape == (grid["h"], grid["w"]):
@@ -291,7 +291,7 @@ def rain_series(grid, cfg, country, fetch):
             if a is not None:
                 have[x] = got[x] = a
     if got:
-        old = dict(np.load(cache_path)) if cache_path.exists() else {}
+        old = dict(np.load(cache_path, allow_pickle=False)) if cache_path.exists() else {}
         old.update({f"m{y_:04d}_{m_:02d}": have[(y_, m_)].astype("float16") for (y_, m_) in have if m_ not in smonths})
         np.savez_compressed(cache_path, **old)
     # on s'arrête au premier mois manquant (série continue)

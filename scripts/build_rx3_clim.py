@@ -27,7 +27,7 @@ def main() -> None:
     path = grid_dir(a.country) / "rx3_annual.npz"
     done = {}
     if path.exists():
-        z = np.load(path, allow_pickle=True)
+        z = np.load(path, allow_pickle=False)
         if len(z["codes"]) == len(leaves) and (z["codes"] == leaves.pcode.values).all():
             done = {int(s): m for s, m in zip(z["seasons"], z["rx3"])}
     sampler = None

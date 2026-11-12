@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - run: pip install numpy pandas pyyaml requests geopandas pyogrio shapely rasterio scipy scikit-learn pytest xarray
+      - run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 requests==2.32.5 geopandas==1.0.1 pyogrio==0.10.0 shapely==2.0.7 rasterio==1.4.3 scipy==1.15.3 scikit-learn==1.6.1 pytest==8.3.5 xarray==2025.6.1
       - run: npm install --no-save jsdom
       - name: "Fichiers de workflow lisibles (un deux-points dans un nom non cité les rend invalides, 02/11/2026)"
         run: python -c "import glob, yaml; [yaml.safe_load(open(f, encoding='utf-8')) for f in glob.glob('.github/workflows/*.yml')]; print('workflows OK')"
@@ -69,6 +69,9 @@ jobs:
           python tests/test_spei.py
           python tests/test_planning.py
           python tests/test_validate.py
+          python tests/test_npz_safety.py
+          python tests/test_workflow_dependencies.py
+          python tests/test_publication_guard.py
           python tests/test_cds_retrieve.py
           python tests/test_e1_sources.py
           python tests/test_e1_fusion.py

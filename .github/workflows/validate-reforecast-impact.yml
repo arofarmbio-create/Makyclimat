@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Installer les dépendances
-        run: pip install numpy pandas pyyaml shapely
+        run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 shapely==2.0.7
       - name: Reprévisions réduites
         env:
           GH_TOKEN: ${{ github.token }}

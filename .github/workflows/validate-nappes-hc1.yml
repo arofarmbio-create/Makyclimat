@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy pandas pyyaml requests scipy rasterio shapely
+      - run: pip install numpy==2.2.6 pandas==2.2.3 pyyaml==6.0.2 requests==2.32.5 scipy==1.15.3 rasterio==1.4.3 shapely==2.0.7
       - name: Carte de Fan et al. (cache du workflow 21, licence sans republication)
         uses: actions/cache/restore@v4
         with:

@@ -29,7 +29,7 @@ def main():
     units = read_units(a.country)
     leaves = units[units.level == 4].reset_index(drop=True)
     bbox = load_config(a.country)["map"]["bbox"]
-    z = np.load(grid_dir(a.country) / "rx3_annual.npz", allow_pickle=True)
+    z = np.load(grid_dir(a.country) / "rx3_annual.npz", allow_pickle=False)
     annual = z["rx3"]
     assert (z["codes"].astype(str) == leaves.pcode.values).all()
     hy = pd.read_csv(DATA_DIR / a.country / "external" / "hydro.csv")

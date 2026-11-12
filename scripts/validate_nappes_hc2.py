@@ -62,7 +62,7 @@ def point_features(country, pts: pd.DataFrame, couches) -> pd.DataFrame:
     c = load_grid(grid_dir(country) / "clim_monthly.npz")
     ann = np.nansum(np.asarray(c["clim"], dtype=float), axis=0)
     out["pluie_mm"] = grid_sample(ann, float(c["lon0"]), float(c["lat0"]), float(c["res"]), lons, lats)
-    rel = np.load(country_data_dir(country) / "e1" / "relief_01deg.npz")
+    rel = np.load(country_data_dir(country) / "e1" / "relief_01deg.npz", allow_pickle=False)
     keys = {k.lower(): k for k in rel.files}
     la, lo = rel[keys.get("lat", "lat")], rel[keys.get("lon", "lon")]
     ii = np.abs(la[None, :] - lats[:, None]).argmin(1)

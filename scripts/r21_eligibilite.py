@@ -74,7 +74,7 @@ def main() -> None:
     for f in sorted(dossier.glob("glofas_v4_*.npz")):
         y, m = map(int, re.search(r"(\d{4})_(\d{2})", f.name).groups())
         publies.add((y, m))
-        inits |= {dt.date.fromisoformat(str(t)) for t in np.load(f)["init"]}
+        inits |= {dt.date.fromisoformat(str(t)) for t in np.load(f, allow_pickle=False)["init"]}
     f = episodes(fiches(args.country))
     tous = fiches(args.country, filtre_dommages=False)
     districts = sorted(set(read_units(args.country).adm2.dropna()) - {""})

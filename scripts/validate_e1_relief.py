@@ -82,8 +82,8 @@ def main() -> None:
     ap.add_argument("--tc", default=None)
     args = ap.parse_args()
     e1 = country_data_dir(args.country) / "e1"
-    tc = np.load(Path(args.tc) if args.tc else e1 / "e1_tc.npz", allow_pickle=True)
-    rel = np.load(e1 / "relief_01deg.npz")
+    tc = np.load(Path(args.tc) if args.tc else e1 / "e1_tc.npz", allow_pickle=False)
+    rel = np.load(e1 / "relief_01deg.npz", allow_pickle=False)
     if not (np.allclose(tc["lat"], rel["lat"]) and np.allclose(tc["lon"], rel["lon"])):
         raise SystemExit("grilles différentes entre la triple collocation et le relief")
     sources = [str(s) for s in tc["sources"]]

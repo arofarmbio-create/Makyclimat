@@ -52,7 +52,7 @@ def load(country):
     th = pd.read_csv(country_data_dir(country) / "flood_thresholds.csv", dtype={"pcode": str})
     units = read_units(country)
     lv = units[(units.level == 4) & units.adm3.isin(set(th.pcode))]
-    zs = [np.load(f) for f in files]
+    zs = [np.load(f, allow_pickle=False) for f in files]
     # Les saisons n'ont pas toutes la même emprise (périmètre élargi puis réduit) : on garde la zone commune à toutes et on
     # retrouve chaque maille par ses coordonnées dans chaque fichier (correction du 09/11/2026).
     la0, la1 = max(z["lat"].min() for z in zs) - 0.05, min(z["lat"].max() for z in zs) + 0.05

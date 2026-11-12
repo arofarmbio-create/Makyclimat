@@ -77,7 +77,7 @@ def main() -> None:
         centre, system = cs.split(":")
         out = out_dir / f"{centre}_{system}.npz"
         if out.exists():
-            z = dict(np.load(out))
+            z = dict(np.load(out, allow_pickle=False))
             if year in z["years"]:
                 print(f"{out.name} : déjà à jour ({year})")
                 continue

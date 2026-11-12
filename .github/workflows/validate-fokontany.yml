@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Installer les dépendances
-        run: pip install -r requirements.txt geopandas pyogrio
+        run: pip install -r requirements.txt geopandas==1.0.1 pyogrio==0.10.0
       - name: Validation fokontany
         shell: bash
         run: python scripts/validate_fokontany.py --country "${{ github.event.inputs.country || 'mdg' }}" 2>&1 | tee validation/_journal_ems.txt

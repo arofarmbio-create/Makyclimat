@@ -85,7 +85,7 @@ def main(country="mdg", today=None, rx3=None, cn2=None):
         return None
     P, dates, t0, fetched = fr
     if rx3 is None:
-        z = np.load(grid_dir(country) / "rx3_annual.npz", allow_pickle=True)
+        z = np.load(grid_dir(country) / "rx3_annual.npz", allow_pickle=False)
         if list(z["codes"]) != list(leaves.pcode):
             raise SystemExit("rx3_annual.npz ne correspond pas aux fokontany actuels : relancer build_rx3_clim.py")
         rx3 = z["rx3"]

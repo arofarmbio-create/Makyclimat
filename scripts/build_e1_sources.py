@@ -352,7 +352,7 @@ def main() -> None:
     path = out_dir / f"{args.source}_{args.year}.npz"
     part = {"chirps": part_chirps, "imerg": part_imerg, "era5": part_era5}[args.source]
     if args.completer and path.exists():
-        old = np.load(path)
+        old = np.load(path, allow_pickle=False)
         pr = np.full((len(days), NY, NX), np.nan, "float32")
         pr[: min(len(days), len(old["pluie"]))] = old["pluie"][: len(days)]
         todo = empty_days(pr)

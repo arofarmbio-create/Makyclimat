@@ -29,7 +29,7 @@ RNG = np.random.default_rng(20261029)
 
 def system_series(path, units):
     """Cumul régional de la moyenne d'ensemble par cible -> {cible: DataFrame(index = année de fin de saison, colonnes = adm1)}."""
-    z = np.load(path)
+    z = np.load(path, allow_pickle=False)
     ens = np.nanmean(z["pluie"].astype("float32"), axis=1)                      # année, échéance, lat, lon
     lat, lon = z["lat"], z["lon"]
     leaves = units[units.level == 4].reset_index(drop=True)

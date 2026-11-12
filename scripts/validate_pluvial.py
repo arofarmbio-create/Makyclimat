@@ -119,7 +119,7 @@ def main(country="mdg", fetch=chirps_days, rx3=None, cn2=None, today=None, event
     sel = leaves_all.adm3.isin(set(th.pcode)).to_numpy()
     leaves = leaves_all[sel].reset_index(drop=True)
     if rx3 is None:
-        z = np.load(grid_dir(country) / "rx3_annual.npz", allow_pickle=True)
+        z = np.load(grid_dir(country) / "rx3_annual.npz", allow_pickle=False)
         if list(z["codes"]) != list(leaves_all.pcode):
             raise SystemExit("rx3_annual.npz ne correspond pas aux fokontany actuels : relancer build_rx3_clim.py")
         rx3 = z["rx3"][:, sel]
