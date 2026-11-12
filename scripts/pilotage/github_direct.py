@@ -73,6 +73,18 @@ def lire_release():
 
 
 ECHECS = ("failure", "cancelled", "timed_out", "startup_failure")
+
+
+def annule_et_remplace(run, runs):
+    """Vrai pour un run annulé parce qu'un run plus récent du même workflow, sur la même branche, l'a remplacé
+    (réglage cancel-in-progress). Ce n'est pas un échec : le run suivant teste le même code et sera lui-même
+    signalé s'il échoue. Filtré ici sans modèle (règle de sobriété 5 ; deux diagnostics à ~400 000 jetons le
+    11/11 pour ce seul cas)."""
+    if run.get("conclusion") != "cancelled":
+        return False
+    return any(r is not run and r.get("workflowDatabaseId") == run.get("workflowDatabaseId")
+               and r.get("headBranch") == run.get("headBranch") and r.get("createdAt", "") > run.get("createdAt", "")
+               for r in runs)
 _chemins: dict[int, str] = {}    # identifiant de workflow -> chemin du fichier (.github/workflows/…)
 
 
@@ -91,7 +103,7 @@ def actualiser(avis=None, avec_release=True, echec=None):
     maintenant = datetime.now(timezone.utc)
     try:
         champs = ("databaseId,workflowName,workflowDatabaseId,displayTitle,status,conclusion,createdAt,startedAt,"
-                  "updatedAt,event,url")
+                  "updatedAt,event,url,headBranch")
         runs = gh("run", "list", "-L", "12", "--json", champs)
         # Un run long (R-21 : plusieurs jours) sort des 12 derniers : on ajoute à part les runs encore actifs ou en file.
         connus = {r["databaseId"] for r in runs}
@@ -141,7 +153,7 @@ def actualiser(avis=None, avec_release=True, echec=None):
             if precedent and precedent != "completed" and run["status"] == "completed":
                 if avis:
                     avis(f"GitHub : {run['workflowName'][:60]} — {(run.get('conclusion') or 'terminé')}")
-                if echec and run.get("conclusion") in ECHECS:
+                if echec and run.get("conclusion") in ECHECS and not annule_et_remplace(run, runs):
                     try:
                         transmis = echec({**ligne, "chemin": chemin_workflow(run.get("workflowDatabaseId"))})
                     except Exception as erreur:      # le suivi GitHub ne doit jamais s'arrêter sur un incident d'écriture

@@ -464,3 +464,41 @@ if __name__ == "__main__":
         if nom.startswith("test_"):
             fonction()
     print("OK : tests pilotage")
+
+
+def test_relecture_une_par_commit_et_suspendue_par_message():
+    """12/11/2026 : deux lignes qui citent le même commit sont relues une fois ; un commit déjà soumis à Codex par
+    message n'est pas relu une seconde fois par ligne (le 11/11 : relecture groupée puis six relectures par ligne)."""
+    ligne_b = "| Outil C | Claude | À relire | [Parcours](scripts/pilotage/parcours.py) | Autre contrôle. | — | — |"
+    texte = COPIE.replace("| Outil B |", ligne_b + "\n| Outil B |")
+    commits = {"Outil A": "abc1234", "Outil C": "abc1234"}
+    with patch.object(C, "commit_cite", side_effect=lambda p, s: "abc1234"), \
+            patch.object(C, "contexte_diff", return_value="commit abc1234\n+ligne\n"):
+        demandes = [d for d in C.demandes_claude(texte, True, ("codex",))]
+        assert len(demandes) == 1 and "Outil A + Outil C" in demandes[0][2], demandes
+        message = "- 12/11/2026 09:00 · Claude → Codex · Relecture groupée de `abc1234`. · lien\n"
+        suspendu = texte.replace("Réserver cette section", message + "\nRéserver cette section")
+        assert list(C.demandes_claude(suspendu, True, ("codex",))) == []
+        autre = suspendu.replace("Claude → Codex", "Claude → porteur du projet")     # message non adressé à Codex
+        assert len(list(C.demandes_claude(autre, True, ("codex",)))) == 1
+    assert commits                                                                    # lignes du même commit
+    seule = next(l for l in COPIE.splitlines() if l.startswith("| Outil A"))
+    with patch.object(C, "commit_cite", return_value="abc1234"), \
+            patch.object(C, "contexte_diff", return_value="commit abc1234\n+ligne\n"):
+        (_, ident_seul, _), = C.relecture_auto(seule, "codex")
+        (_, ident_groupe, _), = C.relecture_groupee([seule], "codex")
+    assert ident_seul == ident_groupe                    # une ligne seule garde son identifiant : rien n'est relancé
+
+
+def test_run_annule_remplace_n_est_pas_un_echec():
+    """12/11/2026 : un run annulé par cancel-in-progress, remplacé par un run plus récent du même workflow sur la même
+    branche, n'est pas transmis en diagnostic (deux diagnostics à ~400 000 jetons le 11/11)."""
+    import github_direct as G
+    ancien = {"databaseId": 1, "workflowDatabaseId": 9, "headBranch": "main", "conclusion": "cancelled",
+              "createdAt": "2026-11-11T17:40:00Z"}
+    suivant = {"databaseId": 2, "workflowDatabaseId": 9, "headBranch": "main", "conclusion": "",
+               "createdAt": "2026-11-11T17:46:00Z"}
+    assert G.annule_et_remplace(ancien, [ancien, suivant])
+    assert not G.annule_et_remplace(ancien, [ancien])                                   # annulé sans remplaçant
+    assert not G.annule_et_remplace({**ancien, "conclusion": "failure"}, [ancien, suivant])
+    assert not G.annule_et_remplace(ancien, [ancien, {**suivant, "headBranch": "autre"}])

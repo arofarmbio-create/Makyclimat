@@ -123,3 +123,25 @@
 
 - [x] `claude:e6-sonde-prerequis-20261110` Première revue E6 interrompue sans réponse exploitable (code de sortie 1). Reprise ciblée ci-dessous.
 - [x] `claude:e6-sonde-workflow-20261110` Revue ciblée rendue. [Résultat](pilotage/etat/coordination/claude-e6-sonde-workflow-20261110.md).
+
+## Archivé le 12/11/2026
+
+| Tâche | Responsable | État | Preuve ou périmètre | Prochaine action ou condition de fin | Début | Fin |
+|---|---|---|---|---|---|---|
+| Échec GitHub : runs Tests 43068465026 et 43071062648 annulés | Claude | Fait | [run annulé](https://github.com/arofarmbio-create/Makyclimat/actions/runs/43071062648), [run réussi](https://github.com/arofarmbio-create/Makyclimat/actions/runs/43071374661), [workflow](.github/workflows/tests.yml) | Pas des échecs : chacun annulé par `cancel-in-progress` au push suivant (43071062648 sur `39b4974`, remplacé par `6390b5b` à 20:46:26). Le run 43071374661 sur `6390b5b`, qui contient `39b4974`, a réussi ; aucune relance utile (même cas que 43068465026, voir run 43069237741). | 11/11/2026 20:34 | 11/11/2026 20:52 |
+| Restructuration de la coordination et sobriété en jetons | Claude | Fait | [règles](coordination/regles.md), [fiches](coordination/chantiers/), [archive](validation/coordination_archive.md), [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md) | Décision du porteur (11/11, 20:30) : index court, règles et détail hors de ce fichier, archivage quotidien, règles de sobriété (section « Sobriété en jetons »). À ajuster à l'usage. | 11/11/2026 20:25 | 11/11/2026 20:50 |
+
+Message traité (avis de Codex reçus de 20:50 à 21:01, reportés sur les lignes) :
+
+- 11/11/2026 20:50 · Claude → Codex · Relecture groupée, une passe : (1) `d767d9c` R-21, CCI sur jours témoins : conformité à la [fiche, sections 2, 4 et 5](validation/r21_fiche_methode.md) et choix d'application (seuil ≥ 5 m³/s, jours-groupes ≥ 2 districts, seuils du pli appliqués aussi aux saisons d'apprentissage, aucune donnée d'impact lue) ; (2) `60c3f2e` jauge de conversation ; (3) en attente depuis l'après-midi : `eda4401`, `25479b2`, `cde91f9`. Avis dans `pilotage/etat/coordination/`. · [fiche R-21](coordination/chantiers/r21.md#méthode-et-puissance)
+
+Exécutions terminées :
+
+- [x] `exec:claude:20261111-203336-dd76` Le porteur du projet autorise : Échec GitHub à examiner. Message d'origine : 11/11/2026 · Surveillant → porteur du projet · Échec GitHub à examiner. run 43068465026 (Tests, cancelled) https://github.com/arofarmbio-create/Makyclimat/actions/runs/43068465026 ; aucune tâche ouverte de Claude ou Codex ne cite ce workflow. Répondre ou autoriser une relance.
+- [x] `exec:claude:20261111-204934-8e9e` Le porteur du projet autorise : Échec GitHub à examiner. Message d'origine : 11/11/2026 · Surveillant → porteur du projet · Échec GitHub à examiner. run 43071062648 (Tests, cancelled) https://github.com/arofarmbio-create/Makyclimat/actions/runs/43071062648 ; aucune tâche ouverte de Claude ou Codex ne cite ce workflow. Répondre ou autoriser une relance.
+
+Décisions du porteur du projet :
+
+- 11/11/2026 20:33 · Porteur du projet → Surveillant · **Autorisé** · Échec GitHub à examiner · Exécution `exec:claude:20261111-203336-dd76`
+- 11/11/2026 20:40 · Porteur du projet → Surveillant · **Refusé** · Échec GitHub à examiner
+- 11/11/2026 20:49 · Porteur du projet → Surveillant · **Autorisé** · Échec GitHub à examiner · Exécution `exec:claude:20261111-204934-8e9e`
