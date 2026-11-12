@@ -40,10 +40,14 @@ Format — `Date · auteur → destinataire · question précise · lien`. Rése
 
 Ajoutées par le tableau de bord après un clic du porteur du projet. Le surveillant les exécute une à une en mode écriture ; l'agent coche sa ligne à la fin.
 
+- [x] `exec:claude:20261112-142342-8708` Consigne du porteur du projet : claude pourqoui codex est au reposs
+
 
 ## Décisions du porteur du projet
 
 Réponses données depuis le tableau de bord. L'assistant concerné les lit à sa reprise et met sa ligne de tâche à jour.
+
+- 12/11/2026 14:23 · Porteur du projet → Claude · **Consigne** · claude pourqoui codex est au reposs · Exécution `exec:claude:20261112-142342-8708`
 
 
 ## Lancements ponctuels autorisés
