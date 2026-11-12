@@ -56,8 +56,8 @@ loin des 30 points jugés pertinents.
    puissance pour un autre gain n'a pas été évaluée. La CCI observée sur les épisodes (0,065) est, elle, proche de
    celle des témoins (0,045).
 4. Résultat cohérent avec R-23 (l'intensité IMERG ne repère pas les jours d'inondation) et avec le pilote GloFAS
-   (un événement sur trois en vigilance, aucun en alerte, audit du 09/11) : **à Madagascar, les produits mondiaux
-   repèrent mal les impacts déclarés à l'échelle du district.**
+   (un événement sur trois en vigilance, aucun en alerte, audit du 09/11). Ces résultats, sur leurs échantillons,
+   vont dans le même sens, sans permettre de généraliser à tous les produits mondiaux (avis Codex du 12/11).
 
 ## 5. Limites
 
