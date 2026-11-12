@@ -281,6 +281,17 @@ def groupes_relecture(texte, agents):
     return groupes
 
 
+# Gel du pilotage (décision du porteur du projet, 12/11/2026) : les relectures automatiques sont réservées à la
+# recherche (méthodes, données, workflows de données). Une ligne dont tous les fichiers cités relèvent de l'outil de
+# pilotage n'en déclenche plus ; une relecture de pilotage passe par un message explicite Claude → Codex.
+PILOTAGE = ("scripts/pilotage/", "pilotage/", "coordination/", "COORDINATION.md", "tests/test_pilotage.py",
+            "tests/test_poste.py", "tests/test_conversations.py", "CLAUDE.md", "AGENTS.md")
+
+
+def pilotage_seul(chemins):
+    return bool(chemins) and all(c.startswith(PILOTAGE) for c in chemins)
+
+
 def a_relire(ligne, relecteur):
     """Ligne « À relire » de l'autre assistant, avec fichiers cités et commit cité ; None sinon."""
     champs = [champ.strip() for champ in re.split(r"(?<!\\)\|", ligne)[1:-1]]
@@ -293,6 +304,8 @@ def a_relire(ligne, relecteur):
     tache, responsable, _, preuve, suite = champs[:5]
     chemins = chemins_cites(preuve, suite)
     if not chemins:            # rien d'autre que du suivi : pas de relecture automatique
+        return None
+    if pilotage_seul(chemins):  # pilotage gelé (12/11/2026) : relecture sur message explicite seulement
         return None
     commit = commit_cite(preuve, suite)
     if not commit:             # une relecture par version livrée : l'auteur cite le commit à relire (11/11/2026)

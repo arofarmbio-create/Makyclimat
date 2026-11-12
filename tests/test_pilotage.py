@@ -21,7 +21,7 @@ COPIE = """# Coordination
 
 | Tâche | Responsable | État | Preuve ou périmètre | Prochaine action ou condition de fin | Début | Fin |
 |---|---|---|---|---|---|---|
-| Outil A | Claude | À relire | [Parcours](scripts/pilotage/parcours.py) | Vérifier le rendu. | — | — |
+| Outil A | Claude | À relire | [Script](scripts/r21_scores.py) | Vérifier le rendu. | — | — |
 | Outil B | Codex | À relire | `COORDINATION.md` | Suivi seulement. | — | — |
 
 ## Messages et décisions en attente
@@ -186,7 +186,7 @@ def test_identifiant_par_commit_resolu():
     """Relecture Codex du 12/11 (11:14) : une relecture par version livrée. Un nouveau commit relance une relecture ;
     ni la composition du groupe, ni l'ordre des lignes, ni leurs noms ne changent l'identifiant d'un même commit."""
     a = next(l for l in COPIE.splitlines() if l.startswith("| Outil A"))
-    c = "| Outil C | Claude | À relire | [Parcours](scripts/pilotage/parcours.py) | Autre contrôle. | — | — |"
+    c = "| Outil C | Claude | À relire | [Script](scripts/r21_scores.py) | Autre contrôle. | — | — |"
     with patch.object(C, "contexte_diff", return_value="+x\n"):
         with patch.object(C, "commit_cite", return_value="abc1234"):
             (_, groupe, _), = C.relecture_groupee([a, c], "codex")
@@ -488,7 +488,7 @@ def test_redemarrage_sans_tentative_supplementaire():
 def test_relecture_une_par_commit_et_suspendue_par_message():
     """12/11/2026 : deux lignes qui citent le même commit sont relues une fois ; un commit déjà soumis à Codex par
     message n'est pas relu une seconde fois par ligne (le 11/11 : relecture groupée puis six relectures par ligne)."""
-    ligne_b = "| Outil C | Claude | À relire | [Parcours](scripts/pilotage/parcours.py) | Autre contrôle. | — | — |"
+    ligne_b = "| Outil C | Claude | À relire | [Script](scripts/r21_scores.py) | Autre contrôle. | — | — |"
     texte = COPIE.replace("| Outil B |", ligne_b + "\n| Outil B |")
     commits = {"Outil A": "abc1234", "Outil C": "abc1234"}
     with patch.object(C, "commit_cite", side_effect=lambda p, s: "abc1234"), \
@@ -524,6 +524,18 @@ def test_run_annule_remplace_n_est_pas_un_echec():
     assert not G.annule_et_remplace(ancien, [ancien])                                   # annulé sans remplaçant
     assert not G.annule_et_remplace({**ancien, "conclusion": "failure"}, [ancien, suivant])
     assert not G.annule_et_remplace(ancien, [ancien, {**suivant, "headBranch": "autre"}])
+
+
+def test_pilotage_gele_sans_relecture_automatique():
+    """Décision du porteur (12/11/2026) : une ligne qui ne cite que des fichiers de pilotage ne déclenche plus de
+    relecture automatique ; une ligne de recherche (ou mixte) en déclenche toujours une."""
+    with patch.object(C, "commit_cite", return_value="abc1234"):
+        pil = "| Outil P | Claude | À relire | [surveillant](scripts/pilotage/surveiller_coordination.py), [test](tests/test_pilotage.py) | x. | — | — |"
+        assert C.a_relire(pil, "codex") is None
+        rech = "| R-99 | Claude | À relire | [script](scripts/r21_scores.py) | x. | — | — |"
+        assert C.a_relire(rech, "codex")["chemins"] == ["scripts/r21_scores.py"]
+        mixte = "| R-98 | Claude | À relire | [script](scripts/r21_scores.py), [fiche](coordination/chantiers/r21.md) | x. | — | — |"
+        assert C.a_relire(mixte, "codex") is not None
 
 
 if __name__ == "__main__":

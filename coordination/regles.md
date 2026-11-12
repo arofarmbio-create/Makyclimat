@@ -63,6 +63,7 @@ Constat du 11/11 : seuls les tours de modèle coûtent ; une session Codex coût
 9. **Plafond d'escalade.** Plus de 3 relances entre Claude et Codex sur un même sujet dans l'heure : on s'arrête et le sujet devient une décision du porteur.
 10. **Un seul agent actif par chantier** à la fois.
 11. **Lectures ciblées.** Chercher le passage utile d'un gros fichier plutôt que le relire en entier ; ne lire que la fin des journaux.
+12. **Pilotage gelé, Codex au service de la recherche** (porteur du projet, 12/11/2026, après l'audit des lancements des 11 et 12/11 : environ 10 % des jetons de Codex sur la thèse, 60 % sur l'outil de coordination). (a) L'outil de pilotage (`scripts/pilotage/`, tableau de bord, surveillant, crochets) ne reçoit plus de nouvelles fonctions ; seulement des corrections de vraie panne. (b) Les relectures automatiques sont réservées à la recherche : méthodes, scripts de calcul, données et workflows de données ; une ligne qui ne cite que des fichiers de pilotage n'en déclenche plus (surveillant, `pilotage_seul`). Une correction de pilotage qui mérite une relecture passe par un message Claude → Codex. (c) Le travail de Codex va en priorité aux relectures de méthode avant calcul, aux workflows de données et aux points ouverts de l'[audit du 09/11](../validation/audit_codex_2026-11-09.md).
 
 ## Où lire l'état du projet (au lieu des conversations)
 
