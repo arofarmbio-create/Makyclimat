@@ -182,3 +182,4 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
   - Maintenir le verrou de calcul tant que ces choix, l'analyse de puissance et leur traduction dans le code
     n'ont pas été documentés et relus.
 - **12/11/2026 — Statut de H1 : exploratoire** (décision du porteur du projet, avant tout score, au vu de la sensibilité sur jours témoins : transportabilité de la CCI non démontrée). Scores calculés selon la fiche de méthode ([résultat](r21_scores.md)).
+- **12/11/2026 — Clôture ([rapport](r21_rapport.md)). Écart déclaré** : les analyses secondaires (AUC, Brier, fiabilité, valeur économique) ne sont pas calculées ; elles reposeraient sur les mêmes 425 unités à détection très faible (environ 15 %) et l'ancien script n'est pas aligné sur la population figée (il reste verrouillé). Les calculer demanderait une décision du porteur du projet.
