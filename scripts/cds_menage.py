@@ -34,6 +34,8 @@ def stale_jobs(jobs: list[dict], now: dt.datetime, age_min: float, garder=()) ->
             created = dt.datetime.fromisoformat(str(j.get("created", "")).replace("Z", "+00:00"))
         except ValueError:
             continue
+        if created.tzinfo is None:                   # Copernicus date ses demandes sans fuseau, en UTC (run 43216795187)
+            created = created.replace(tzinfo=dt.timezone.utc)
         if j.get("status") == "accepted" and (now - created).total_seconds() / 60 > age_min:
             out.append(j)
     return out

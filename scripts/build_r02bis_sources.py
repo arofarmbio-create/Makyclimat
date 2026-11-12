@@ -120,13 +120,34 @@ def requete_rafales(w) -> dict:
             "area": MDG, "data_format": "netcdf", "download_format": "unarchived"}
 
 
-def statut(session, entetes, job) -> tuple[str, dict]:
-    r = session.get(f"{CDS}/jobs/{job}", headers=entetes, timeout=60)
-    if r.status_code == 404:
-        return "deleted", {}
-    r.raise_for_status()
-    d = r.json()
-    return d.get("status", "?"), d
+def statut(session, entetes, job, essais=5, pause=60, dormir=time.sleep) -> tuple[str, dict]:
+    """État d'une demande. Run 43216795187 (12/11/2026) : une coupure réseau isolée (« Remote end closed connection »)
+    après 3 h de suivi avait fait échouer EMSR565 ; coupures et erreurs 5xx sont réessayées `essais` fois."""
+    for i in range(essais):
+        try:
+            r = session.get(f"{CDS}/jobs/{job}", headers=entetes, timeout=60)
+        except OSError as e:                                 # requests.RequestException hérite d'OSError
+            erreur = e
+        else:
+            if r.status_code == 404:
+                return "deleted", {}
+            if r.status_code < 500:
+                r.raise_for_status()
+                d = r.json()
+                return d.get("status", "?"), d
+            erreur = RuntimeError(f"HTTP {r.status_code}")
+        if i < essais - 1:
+            print(f"  suivi de {job} : {erreur}, nouvel essai dans {pause} s", flush=True)
+            dormir(pause)
+    raise erreur
+
+
+def motif_echec(session, entetes, job) -> str:
+    """Motif donné par Copernicus pour une demande échouée ou refusée (page des résultats), sans faire échouer."""
+    try:
+        return session.get(f"{CDS}/jobs/{job}/results", headers=entetes, timeout=60).text[:800]
+    except OSError as e:
+        return f"motif illisible ({e})"
 
 
 def demande_reprenable(session, entetes, jeu, requete, fichier: Path, delai_s: float, publier=None, pause=60,
@@ -140,7 +161,7 @@ def demande_reprenable(session, entetes, jeu, requete, fichier: Path, delai_s: f
     if fichier.exists():
         note = json.loads(fichier.read_text(encoding="utf-8"))
         if note.get("jeu") == jeu and note.get("requete") == requete:
-            etat, _ = statut(session, entetes, note["jobID"])
+            etat, _ = statut(session, entetes, note["jobID"], dormir=dormir)
             if etat in ECHECS:
                 print(f"  demande notée {note['jobID']} : {etat}, nouvelle soumission", flush=True)
             else:
@@ -160,7 +181,7 @@ def demande_reprenable(session, entetes, jeu, requete, fichier: Path, delai_s: f
             publier(fichier)
     t0, dernier, vu = horloge(), None, None
     while True:
-        etat, d = statut(session, entetes, job)
+        etat, d = statut(session, entetes, job, dormir=dormir)
         if etat != vu or horloge() - dernier >= 1800:              # suivi visible (le client était muet)
             print(f"  {dt.datetime.now(dt.timezone.utc):%H:%M} UTC : demande {job} {etat}", flush=True)
             vu, dernier = etat, horloge()
@@ -169,7 +190,8 @@ def demande_reprenable(session, entetes, jeu, requete, fichier: Path, delai_s: f
             r.raise_for_status()
             return urllib.parse.urljoin(f"{CDS}/jobs/{job}/results", r.json()["asset"]["value"]["href"])
         if etat in ECHECS:
-            raise RuntimeError(f"demande {job} : {etat} {json.dumps(d, ensure_ascii=False)[:800]}")
+            raise RuntimeError(f"demande {job} : {etat} {json.dumps(d, ensure_ascii=False)[:800]} ; "
+                               f"motif : {motif_echec(session, entetes, job)}")
         if horloge() - t0 >= delai_s:
             return None
         dormir(pause)

@@ -102,6 +102,10 @@ st = M.stale_jobs(jobs, NOW, 30)
 check("ménage : demande en file depuis 5 h annulée, récente et en cours épargnées", [j["jobID"] for j in st] == ["a"])
 check("ménage : demande gardée (collecte reprenable des rafales) jamais annulée",
       M.stale_jobs(jobs, NOW, 30, garder={"a"}) == [])
+# Run 43216795187 (12/11/2026) : Copernicus date les demandes sans fuseau ; le ménage plantait (naïf - conscient)
+naives = [{"jobID": "n", "processID": "era5", "status": "accepted", "created": "2026-11-12T12:05:13.307866"}]
+check("ménage : date sans fuseau lue en UTC (plus d'erreur naïf/conscient)",
+      [j["jobID"] for j in M.stale_jobs(naives, dt.datetime(2026, 11, 12, 15, 32, tzinfo=dt.timezone.utc), 30)] == ["n"])
 
 # Relecture Codex du 12/11 (14:55) : deux activations successives ; la demande d'EMSR564, encore en file à l'échéance,
 # est épargnée par le ménage du job suivant (EMSR565) ; une note illisible arrête tout.

@@ -111,6 +111,34 @@ with tempfile.TemporaryDirectory() as d:
     except RuntimeError as e:
         ok = "failed" in str(e)
     check("échec pendant le suivi : erreur visible (la note sera écartée au lancement suivant)", ok)
+
+# Run 43216795187 (12/11/2026) : coupure réseau pendant le suivi d'EMSR565 ; elle est réessayée, pas fatale
+class APICoupee(FausseAPI):
+    def __init__(self, coupures, etats=None):
+        super().__init__(etats)
+        self.coupures = coupures
+
+    def get(self, url, headers=None, timeout=None):
+        if self.coupures and "/results" not in url:
+            self.coupures -= 1
+            raise ConnectionError("Remote end closed connection without response")
+        return super().get(url, headers, timeout)
+
+
+with tempfile.TemporaryDirectory() as d:
+    f = Path(d) / "rafales_X.demande.json"
+    api = APICoupee(2, {"j1": ["running", "successful"]})
+    href, _ = collecte(api, f, REQ)
+    check("coupures réseau isolées pendant le suivi : réessayées, résultat obtenu",
+          href == "https://resultat/j1.nc" and len(api.soumises) == 1)
+    f.unlink()
+    api = APICoupee(99, {"j1": ["accepted"]})
+    try:
+        collecte(api, f, REQ)
+        ok = False
+    except ConnectionError:
+        ok = True
+    check("coupure durable : erreur après 5 essais", ok and api.coupures == 99 - 5)
 check("requête ERA5 : un jour par date de la fenêtre, 24 heures",
       R.requete_rafales(type("W", (), {"debut": dt.date(2022, 1, 31), "fin": dt.date(2022, 2, 2)})())["day"]
       == ["01", "02", "31"])
