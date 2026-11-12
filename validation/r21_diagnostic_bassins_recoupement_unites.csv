@@ -1,0 +1,570 @@
+saison,episode,territoire,districts,riviere,classe_controle,couverture_controle,couverture_faible_controle,detecte_pm1_controle,classe_ensemble,couverture_ensemble,couverture_faible_ensemble,detecte_pm1_ensemble,classe_reanalyse,couverture_reanalyse,couverture_faible_reanalyse,detecte_pm1_reanalyse,detecte_k1
+2003,0,1,"['MG11102', 'MG11103', 'MG11104', 'MG11106', 'MG11107', 'MG11115', 'MG11117', 'MG11118', 'MG11119', 'MG11120', 'MG11121', 'MG11122', 'MG11123', 'MG12110', 'MG13105', 'MG13112', 'MG14111', 'MG33312']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2003,0,10,"['MG14111', 'MG54510', 'MG54511']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,0,103,"['MG54508', 'MG54510']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,11,"['MG11107', 'MG33312']",True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2003,0,18,"['MG22203', 'MG26206']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,19,"['MG54508', 'MG54509']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,2,"['MG21201', 'MG21205', 'MG21219', 'MG22202', 'MG22203', 'MG22223', 'MG51503']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,0,23,['MG71717'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2003,0,26,"['MG21205', 'MG27210', 'MG27211', 'MG27212']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,27,"['MG51503', 'MG54508', 'MG54509']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,3,"['MG12108', 'MG12109', 'MG12116', 'MG12118', 'MG13105', 'MG13112', 'MG14111', 'MG22202', 'MG22203', 'MG22223', 'MG51503', 'MG54509', 'MG54510', 'MG54511']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,0,37,"['MG26206', 'MG27210', 'MG27211']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,44,"['MG26206', 'MG27210']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,56,"['MG25214', 'MG25215']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,57,['MG71717'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2003,0,6,['MG14111'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2003,0,60,['MG71717'],True,d,1.0,False,True,d,1.0,False,True,e,1.0,False,True,True
+2003,0,67,['MG25214'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,69,['MG54508'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,7,"['MG11106', 'MG11107', 'MG11115', 'MG12110', 'MG12114', 'MG12116', 'MG12118']",True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2003,0,71,"['MG54508', 'MG54509']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,72,"['MG25214', 'MG25215']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,8,"['MG25214', 'MG25215']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,87,['MG25214'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,89,['MG54508'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,91,"['MG54508', 'MG54509']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,97,['MG27210'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,0,98,['MG54508'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,1,1,"['MG11102', 'MG11104', 'MG11106', 'MG11107', 'MG11115', 'MG11117', 'MG11118', 'MG11119', 'MG11120', 'MG11121', 'MG11122', 'MG11123', 'MG12110', 'MG13105', 'MG13112', 'MG14111', 'MG33312', 'MG33313', 'MG41405', 'MG41406', 'MG43404', 'MG43408', 'MG43416']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,10,"['MG14111', 'MG44420', 'MG54510', 'MG54511']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,100,['MG53515'],True,b,1.0,False,False,b,1.0,False,False,n,0.0,True,False,False
+2003,1,102,['MG42409'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,103,"['MG54508', 'MG54510']",True,c,1.0,False,False,d,1.0,False,True,d,1.0,False,True,False
+2003,1,104,"['MG34303', 'MG34304']",True,d,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,105,['MG44402'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,106,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,108,"['MG44420', 'MG44421']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,11,"['MG11107', 'MG32315', 'MG33312', 'MG33313', 'MG33316']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,12,"['MG42411', 'MG42412', 'MG42413', 'MG42414']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,13,['MG53517'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,1,14,['MG44402'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,15,"['MG44417', 'MG44421']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,16,"['MG51505', 'MG51512']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,17,['MG31307'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,18,"['MG22204', 'MG26206']",True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2003,1,19,"['MG54508', 'MG54509']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,2,"['MG21201', 'MG22202', 'MG22223', 'MG24216', 'MG24221', 'MG51503', 'MG51504', 'MG51505', 'MG51512', 'MG54502']",True,d,1.0,False,True,d,1.0,False,True,c,1.0,False,False,False
+2003,1,20,['MG51506'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,1,22,"['MG34303', 'MG42412', 'MG42414']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,23,['MG71717'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,24,"['MG42414', 'MG72711', 'MG72712']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,25,"['MG41405', 'MG41406', 'MG41415', 'MG42409', 'MG42423', 'MG43408']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,26,['MG27210'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2003,1,27,"['MG51503', 'MG54502', 'MG54508', 'MG54509']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,28,"['MG44420', 'MG44421']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,29,"['MG44402', 'MG44417', 'MG44421']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,3,"['MG12109', 'MG12116', 'MG12118', 'MG13105', 'MG13112', 'MG13113', 'MG14111', 'MG22202', 'MG22204', 'MG22223', 'MG51503', 'MG54509', 'MG54510', 'MG54511']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,31,"['MG32318', 'MG42410']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,32,['MG51506'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,1,33,"['MG34303', 'MG72710', 'MG72712']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,34,"['MG31310', 'MG33313']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,35,['MG51504'],True,d,1.0,False,True,d,1.0,False,True,c,1.0,False,False,False
+2003,1,37,"['MG26206', 'MG27210']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,1,38,"['MG34304', 'MG42410']",True,d,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2003,1,39,"['MG31310', 'MG32315', 'MG33313']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,4,"['MG24216', 'MG51506', 'MG51512', 'MG53517']",True,b,1.0,False,False,d,1.0,False,True,c,1.0,False,False,False
+2003,1,40,['MG41403'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,41,"['MG42414', 'MG72710', 'MG72711', 'MG72712']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,42,['MG53515'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,43,['MG51512'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,44,"['MG26206', 'MG27210']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,1,45,['MG51504'],True,d,1.0,False,True,d,1.0,False,True,b,1.0,False,False,False
+2003,1,47,['MG31307'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,5,"['MG33316', 'MG42409', 'MG42410', 'MG42411', 'MG42412', 'MG42413', 'MG42414', 'MG42423']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,50,['MG34303'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,52,['MG54502'],True,d,1.0,False,True,d,1.0,False,True,b,1.0,False,False,False
+2003,1,53,['MG42411'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,54,['MG32318'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,55,['MG44421'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,56,"['MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,57,['MG71717'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,58,"['MG41403', 'MG44402']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,6,"['MG14111', 'MG41403', 'MG41405', 'MG41406', 'MG41407', 'MG43416', 'MG44417']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,60,['MG71717'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,61,['MG31307'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,62,['MG41403'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,63,['MG54502'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,66,"['MG32318', 'MG34304']",True,e,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2003,1,67,['MG25214'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,68,['MG44421'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,69,"['MG54502', 'MG54508']",True,d,1.0,False,True,d,1.0,False,True,b,1.0,False,False,False
+2003,1,7,"['MG11106', 'MG11107', 'MG11115', 'MG12110', 'MG12114', 'MG12116', 'MG12118', 'MG31309', 'MG33313']",True,c,1.0,False,False,d,1.0,False,True,c,1.0,False,False,False
+2003,1,70,"['MG34303', 'MG34304']",True,d,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,71,"['MG54508', 'MG54509']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,72,"['MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,73,['MG44421'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,74,['MG44421'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,75,"['MG41406', 'MG41415']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,76,['MG72711'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,78,['MG32318'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,8,"['MG24216', 'MG24221', 'MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,80,['MG34303'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,82,['MG42411'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,83,['MG31310'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,84,"['MG41406', 'MG41415']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,85,['MG41415'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,86,['MG53515'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,1,87,['MG25214'],True,b,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,88,['MG44420'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,89,"['MG54502', 'MG54508']",True,d,1.0,False,True,d,1.0,False,True,c,1.0,False,False,False
+2003,1,9,['MG53515'],True,b,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2003,1,90,"['MG34303', 'MG72710']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2003,1,91,"['MG54508', 'MG54509']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,92,['MG41406'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,94,['MG31307'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2003,1,96,['MG54502'],True,d,1.0,False,True,d,1.0,False,True,c,1.0,False,False,False
+2003,1,97,['MG27210'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2003,1,98,['MG54508'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2003,1,99,"['MG44402', 'MG44421']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2004,2,1,['MG33312'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2004,2,11,['MG33312'],True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2004,2,25,['MG41415'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2004,2,75,['MG41415'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2004,2,84,['MG41415'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2004,2,85,['MG41415'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2004,3,11,['MG33314'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2004,3,17,['MG33314'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2004,3,47,['MG33314'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2004,3,56,['MG25215'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,False
+2004,3,61,['MG33314'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2004,3,7,['MG33314'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2004,3,72,['MG25215'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2004,3,8,['MG25215'],True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,False
+2006,4,1,['MG33313'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2006,4,102,['MG42409'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,104,"['MG34303', 'MG34304']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,106,['MG34303'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,11,"['MG32305', 'MG33313']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,12,"['MG42411', 'MG42412', 'MG42413', 'MG42414', 'MG71719']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,22,"['MG34303', 'MG42412', 'MG42414']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,23,['MG71717'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2006,4,24,['MG42414'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,25,"['MG42409', 'MG42423']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,26,"['MG25213', 'MG25217']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,30,"['MG25213', 'MG25217']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,31,"['MG32318', 'MG42410']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,33,"['MG34303', 'MG72710']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,34,['MG33313'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,36,['MG71719'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2006,4,38,"['MG34304', 'MG42410']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,39,['MG33313'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,41,"['MG42414', 'MG72710']",True,c,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,47,['MG31311'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2006,4,5,"['MG42409', 'MG42410', 'MG42411', 'MG42412', 'MG42413', 'MG42414', 'MG42423']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,50,['MG34303'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,53,"['MG42411', 'MG71719']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,54,['MG32318'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,56,"['MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,57,['MG71717'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,60,['MG71717'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2006,4,61,['MG31311'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,66,"['MG32318', 'MG34304']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,67,"['MG25214', 'MG25222']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,7,"['MG31311', 'MG33313']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,70,"['MG34303', 'MG34304']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,72,"['MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,78,"['MG32305', 'MG32318']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,79,"['MG25213', 'MG25217']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,8,"['MG25214', 'MG25215', 'MG25217', 'MG25222']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,80,['MG34303'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,82,['MG42411'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,87,"['MG25213', 'MG25214', 'MG25217']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,4,90,"['MG34303', 'MG72710']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,4,94,['MG31311'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2006,5,12,['MG42413'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,5,24,"['MG72711', 'MG72712']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2006,5,33,['MG72712'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2006,5,41,"['MG72711', 'MG72712']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2006,5,5,['MG42413'],True,d,1.0,False,False,d,1.0,False,False,c,1.0,False,False,False
+2006,5,76,['MG72711'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,6,1,"['MG11102', 'MG11103', 'MG11117', 'MG11118', 'MG11119', 'MG11120', 'MG11121', 'MG11122', 'MG11123', 'MG14111', 'MG33312', 'MG33313', 'MG41405', 'MG41406', 'MG43404', 'MG43416']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,10,"['MG14111', 'MG54510', 'MG54511']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,102,['MG42409'],True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,False
+2007,6,103,"['MG54508', 'MG54510']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,104,['MG34304'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,6,11,"['MG32305', 'MG32315', 'MG33312', 'MG33313', 'MG33314', 'MG33316']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,12,"['MG42411', 'MG42414', 'MG71719']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,17,"['MG31306', 'MG31307', 'MG33314']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,18,"['MG22204', 'MG26207', 'MG26209']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,19,"['MG54508', 'MG54509']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,2,"['MG21201', 'MG21220', 'MG24221']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,22,['MG42414'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,6,23,['MG71717'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,24,['MG42414'],True,c,1.0,False,False,d,1.0,False,False,c,1.0,False,False,False
+2007,6,25,"['MG41405', 'MG41406', 'MG41415', 'MG42409', 'MG42423']",True,d,1.0,False,False,e,1.0,False,True,e,1.0,False,True,True
+2007,6,26,['MG25213'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2007,6,27,"['MG54508', 'MG54509']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,3,"['MG14111', 'MG22204', 'MG54509', 'MG54510', 'MG54511']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,30,['MG25213'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,31,"['MG32318', 'MG42410']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,34,"['MG31310', 'MG33313']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,36,['MG71719'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,6,37,"['MG21220', 'MG26209']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2007,6,38,"['MG34304', 'MG42410']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,39,"['MG31310', 'MG32315', 'MG33313']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,41,['MG42414'],True,d,1.0,False,False,d,1.0,False,False,c,1.0,False,False,False
+2007,6,44,"['MG21220', 'MG26209']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2007,6,47,"['MG31307', 'MG31311', 'MG33314']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,48,['MG26207'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,49,['MG26207'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,5,"['MG33316', 'MG42409', 'MG42410', 'MG42411', 'MG42414', 'MG42423']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,53,"['MG42411', 'MG71719']",True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,True
+2007,6,54,['MG32318'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,56,['MG25215'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,57,['MG71717'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,59,"['MG26207', 'MG26209']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,6,"['MG14111', 'MG41405', 'MG41406', 'MG41407', 'MG43416']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,60,['MG71717'],True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,True
+2007,6,61,"['MG31307', 'MG31311', 'MG33314']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,66,"['MG32318', 'MG34304']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,69,['MG54508'],True,c,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2007,6,7,"['MG31311', 'MG33313', 'MG33314']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,70,['MG34304'],True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,True
+2007,6,71,"['MG54508', 'MG54509']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,72,['MG25215'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,75,"['MG41406', 'MG41415']",True,c,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2007,6,78,"['MG32305', 'MG32318']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,79,['MG25213'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,8,"['MG24221', 'MG25215']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,82,['MG42411'],True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,True
+2007,6,83,"['MG31301', 'MG31310']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,84,"['MG41406', 'MG41415']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,85,['MG41415'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,6,87,['MG25213'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,89,['MG54508'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,91,"['MG54508', 'MG54509']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,6,92,['MG41406'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,6,94,"['MG31307', 'MG31311']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2007,6,98,['MG54508'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,7,1,"['MG11118', 'MG11119', 'MG11120', 'MG11121', 'MG11122', 'MG11123', 'MG33312', 'MG41405']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,7,105,['MG44402'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,7,11,['MG33312'],True,d,1.0,False,False,d,1.0,False,False,c,1.0,False,False,False
+2007,7,14,['MG44402'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,7,25,"['MG41405', 'MG41415', 'MG42423']",True,c,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2007,7,29,['MG44402'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,7,40,['MG41403'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,7,5,['MG42423'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,7,58,"['MG41403', 'MG44402']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,7,6,"['MG41403', 'MG41405']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,7,62,['MG41403'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2007,7,75,['MG41415'],True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,False
+2007,7,84,['MG41415'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2007,7,85,['MG41415'],True,c,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2007,7,99,['MG44402'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2009,9,103,['MG54508'],True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,True
+2009,9,108,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2009,9,15,['MG44421'],True,e,1.0,False,True,c,1.0,False,False,c,1.0,False,False,False
+2009,9,19,"['MG54508', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2009,9,2,"['MG24216', 'MG24218', 'MG51503', 'MG51504', 'MG54502']",True,e,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2009,9,27,"['MG51503', 'MG54502', 'MG54508', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2009,9,28,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2009,9,29,['MG44421'],True,e,1.0,False,True,c,1.0,False,False,b,1.0,False,False,False
+2009,9,3,"['MG51503', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2009,9,30,['MG24218'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2009,9,31,['MG42410'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,34,['MG31310'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,35,['MG51504'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,38,['MG42410'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2009,9,39,['MG31310'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2009,9,4,['MG24216'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,45,['MG51504'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,5,['MG42410'],True,c,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2009,9,52,['MG54502'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,55,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2009,9,63,['MG54502'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,68,['MG44421'],True,b,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2009,9,69,"['MG54502', 'MG54508']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2009,9,71,"['MG54508', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2009,9,73,['MG44421'],True,b,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2009,9,74,['MG44421'],True,c,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,8,"['MG24216', 'MG24218']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2009,9,83,"['MG31301', 'MG31310']",True,c,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,89,"['MG54502', 'MG54508']",True,e,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2009,9,91,"['MG54508', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2009,9,96,['MG54502'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2009,9,98,['MG54508'],True,e,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2009,9,99,['MG44421'],True,e,1.0,False,True,c,1.0,False,False,b,1.0,False,False,False
+2009,10,1,['MG33313'],True,e,1.0,False,True,c,1.0,False,False,c,1.0,False,False,False
+2009,10,11,['MG33313'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2009,10,18,"['MG21208', 'MG26206', 'MG26207', 'MG26209']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2009,10,2,['MG21208'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2009,10,26,"['MG25213', 'MG25217', 'MG27210', 'MG27211', 'MG27212']",True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,True
+2009,10,30,"['MG25213', 'MG25217']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2009,10,34,['MG33313'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2009,10,37,"['MG26206', 'MG26209', 'MG27210', 'MG27211']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2009,10,39,['MG33313'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2009,10,44,"['MG21208', 'MG26206', 'MG26209', 'MG27210']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2009,10,48,['MG26207'],True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,True
+2009,10,49,['MG26207'],True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,True
+2009,10,56,"['MG25214', 'MG25215']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2009,10,59,"['MG26207', 'MG26209']",True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,True
+2009,10,67,"['MG25214', 'MG25222']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2009,10,7,['MG33313'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2009,10,72,"['MG25214', 'MG25215']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2009,10,79,"['MG25213', 'MG25217']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2009,10,8,"['MG25214', 'MG25215', 'MG25217', 'MG25222']",True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,False,False
+2009,10,87,"['MG25213', 'MG25214', 'MG25217']",True,e,1.0,False,True,d,1.0,False,False,d,1.0,False,False,False
+2009,10,97,['MG27210'],True,d,1.0,False,False,d,1.0,False,False,e,1.0,False,True,False
+2010,11,100,['MG53515'],True,b,1.0,False,False,b,1.0,False,False,n,0.0,True,False,False
+2010,11,104,['MG34304'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,108,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,11,"['MG32305', 'MG32315']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,12,['MG42411'],True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,True
+2010,11,13,['MG51507'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2010,11,15,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,2,['MG54502'],True,d,1.0,False,True,d,1.0,False,True,e,1.0,False,True,False
+2010,11,20,['MG51507'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,21,['MG52516'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,26,"['MG25213', 'MG25217', 'MG27212']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,27,['MG54502'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,28,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,29,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,30,"['MG25213', 'MG25217']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,31,"['MG32318', 'MG42410']",True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2010,11,32,['MG51507'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,33,['MG72710'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,38,"['MG34304', 'MG42410']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,39,['MG32315'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,4,['MG51507'],True,e,1.0,False,True,e,1.0,False,True,d,1.0,False,True,False
+2010,11,40,['MG41403'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,41,['MG72710'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,42,['MG53515'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,5,"['MG42410', 'MG42411']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2010,11,51,['MG51507'],True,b,1.0,False,False,b,1.0,False,False,n,0.0,True,False,False
+2010,11,52,['MG54502'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,53,['MG42411'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,54,['MG32318'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2010,11,55,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,56,"['MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,58,['MG41403'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,6,['MG41403'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,62,['MG41403'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,63,['MG54502'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,66,"['MG32318', 'MG34304']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,67,"['MG25214', 'MG25222']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,68,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,69,['MG54502'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,70,['MG34304'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,72,"['MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,73,['MG44421'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,74,['MG44421'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,78,"['MG32305', 'MG32318']",True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2010,11,79,"['MG25213', 'MG25217']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,8,"['MG25214', 'MG25215', 'MG25217', 'MG25222']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2010,11,82,['MG42411'],True,e,1.0,False,True,c,1.0,False,False,e,1.0,False,True,True
+2010,11,86,['MG53515'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,87,"['MG25213', 'MG25214', 'MG25217']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,11,89,['MG54502'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,9,"['MG52516', 'MG53515']",True,d,1.0,False,True,d,1.0,False,True,d,1.0,False,True,False
+2010,11,90,['MG72710'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,96,['MG54502'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2010,11,99,['MG44421'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2010,12,104,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,12,106,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,12,22,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2010,12,33,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,12,50,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,12,70,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,12,80,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2010,12,90,['MG34303'],True,e,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2011,13,1,"['MG11102', 'MG11103', 'MG11104', 'MG11106', 'MG11107', 'MG11115', 'MG11117', 'MG11118', 'MG11119', 'MG11120', 'MG11121', 'MG11122', 'MG11123', 'MG12110', 'MG13105', 'MG13112', 'MG33313']",True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2011,13,10,"['MG54510', 'MG54511']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,101,['MG52513'],False,a,0.0,True,False,a,0.0,True,False,a,0.0,True,False,False
+2011,13,103,['MG54510'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,107,['MG31308'],True,b,1.0,False,False,b,1.0,False,False,e,1.0,False,True,False
+2011,13,11,"['MG11107', 'MG33313', 'MG33314']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,13,['MG52513'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,17,"['MG31306', 'MG31307', 'MG33314']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,18,"['MG21208', 'MG22203', 'MG26206', 'MG26207']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,2,"['MG21208', 'MG21219', 'MG22203', 'MG22223', 'MG51504']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,21,['MG52513'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,25,"['MG41415', 'MG42423']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,3,"['MG12116', 'MG12120', 'MG13105', 'MG13112', 'MG13113', 'MG22203', 'MG22223', 'MG54510', 'MG54511']",True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2011,13,34,"['MG31310', 'MG33313']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,35,['MG51504'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,37,['MG26206'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,39,"['MG31310', 'MG33313']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,44,"['MG21208', 'MG26206']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,45,['MG51504'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,47,"['MG31307', 'MG31311', 'MG33314']",True,b,1.0,False,False,b,1.0,False,False,e,1.0,False,True,False
+2011,13,48,['MG26207'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,49,"['MG26207', 'MG31308']",True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2011,13,5,['MG42423'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,59,['MG26207'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,61,"['MG31307', 'MG31311', 'MG33314', 'MG33317']",True,c,1.0,False,False,b,1.0,False,False,e,1.0,False,True,True
+2011,13,7,"['MG11106', 'MG11107', 'MG11115', 'MG12110', 'MG12114', 'MG12116', 'MG31308', 'MG31311', 'MG33313', 'MG33314', 'MG33317']",True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,True
+2011,13,75,['MG41415'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2011,13,77,['MG52513'],False,a,0.0,True,False,a,0.0,True,False,a,0.0,True,False,False
+2011,13,83,"['MG31301', 'MG31310']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,84,['MG41415'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2011,13,85,['MG41415'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2011,13,94,"['MG31307', 'MG31308', 'MG31311']",True,c,1.0,False,False,b,1.0,False,False,e,1.0,False,True,True
+2012,15,1,['MG11115'],True,b,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2012,15,7,['MG11115'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2012,16,107,['MG31308'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,17,['MG31307'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,18,"['MG26207', 'MG26209']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,37,['MG26209'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,44,['MG26209'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,47,"['MG31307', 'MG31311']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,48,['MG26207'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,49,"['MG26207', 'MG31308']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,59,"['MG26207', 'MG26209']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,61,"['MG31307', 'MG31311']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,16,7,"['MG31308', 'MG31311']",True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2012,16,94,"['MG31307', 'MG31308', 'MG31311']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,17,1,"['MG11102', 'MG11103', 'MG11117', 'MG11118', 'MG11119', 'MG11120', 'MG11121', 'MG11122', 'MG11123']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2012,17,104,['MG34303'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,17,106,['MG34303'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,17,22,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2012,17,31,['MG32318'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2012,17,33,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2012,17,47,['MG31311'],True,d,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2012,17,50,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2012,17,54,['MG32318'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2012,17,61,['MG31311'],True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,True
+2012,17,66,['MG32318'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2012,17,7,['MG31311'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2012,17,70,['MG34303'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2012,17,78,['MG32318'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2012,17,80,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2012,17,90,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2012,17,94,['MG31311'],True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,True
+2013,19,1,"['MG41406', 'MG43408']",True,d,1.0,False,True,d,1.0,False,True,c,1.0,False,False,False
+2013,19,12,['MG42411'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2013,19,25,"['MG41406', 'MG43408']",True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2013,19,40,['MG41403'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2013,19,5,['MG42411'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2013,19,53,['MG42411'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2013,19,58,['MG41403'],True,e,1.0,False,True,d,1.0,False,True,e,1.0,False,True,True
+2013,19,6,"['MG41403', 'MG41406', 'MG41407']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2013,19,62,['MG41403'],True,e,1.0,False,True,d,1.0,False,True,e,1.0,False,True,True
+2013,19,75,['MG41406'],True,d,1.0,False,True,c,1.0,False,False,b,1.0,False,False,False
+2013,19,82,['MG42411'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2013,19,84,['MG41406'],True,c,1.0,False,False,d,1.0,False,True,b,1.0,False,False,False
+2013,19,92,['MG41406'],True,d,1.0,False,True,d,1.0,False,True,b,1.0,False,False,False
+2014,20,1,"['MG11102', 'MG11103', 'MG11104', 'MG11115', 'MG11117', 'MG11118', 'MG11119', 'MG11120', 'MG11121', 'MG11122', 'MG11123', 'MG14111', 'MG33312', 'MG33313', 'MG41405', 'MG41406', 'MG43404']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2014,20,10,"['MG14111', 'MG54510', 'MG54511']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,100,['MG53515'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,102,['MG42409'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,103,"['MG54508', 'MG54510']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,105,['MG44402'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,11,"['MG33312', 'MG33313']",True,d,1.0,False,False,d,1.0,False,False,c,1.0,False,False,False
+2014,20,12,"['MG42413', 'MG42414', 'MG71719']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2014,20,14,['MG44402'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,18,"['MG22203', 'MG26207', 'MG26209']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,19,"['MG54508', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,2,"['MG21201', 'MG21224', 'MG22202', 'MG22203', 'MG24221']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,22,['MG42414'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,24,['MG42414'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,25,"['MG41405', 'MG41406', 'MG41415', 'MG42409', 'MG42423']",True,c,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2014,20,26,"['MG21224', 'MG25213', 'MG25217', 'MG27210', 'MG27211', 'MG27212']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,27,"['MG54508', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,29,['MG44402'],True,c,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2014,20,3,"['MG13113', 'MG14111', 'MG22202', 'MG22203', 'MG54509', 'MG54510', 'MG54511']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,30,"['MG25213', 'MG25217']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,34,['MG33313'],True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2014,20,36,['MG71719'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2014,20,37,"['MG21224', 'MG26209', 'MG27210', 'MG27211']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,39,['MG33313'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,41,['MG42414'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,42,['MG53515'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,44,"['MG26209', 'MG27210']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,48,['MG26207'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,49,['MG26207'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,5,"['MG42409', 'MG42413', 'MG42414', 'MG42423']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2014,20,53,['MG71719'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2014,20,58,['MG44402'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,59,"['MG26207', 'MG26209']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,6,"['MG14111', 'MG41405', 'MG41406']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2014,20,69,['MG54508'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,7,"['MG11115', 'MG12114', 'MG33313']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,71,"['MG54508', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,75,"['MG41406', 'MG41415']",True,c,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2014,20,79,"['MG25213', 'MG25217']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,8,"['MG24221', 'MG25217']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,84,"['MG41406', 'MG41415']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,85,['MG41415'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,86,['MG53515'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,87,"['MG25213', 'MG25217']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2014,20,89,['MG54508'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,9,['MG53515'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,91,"['MG54508', 'MG54509']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,92,['MG41406'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,97,['MG27210'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,20,98,['MG54508'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,20,99,['MG44402'],True,c,1.0,False,False,c,1.0,False,False,d,1.0,False,False,False
+2014,21,16,"['MG51501', 'MG51520']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,21,2,"['MG51503', 'MG51504']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,21,20,['MG51506'],True,e,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2014,21,27,['MG51503'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,21,3,['MG51503'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,21,32,"['MG51506', 'MG51520']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2014,21,35,"['MG51504', 'MG51520']",True,c,1.0,False,False,c,1.0,False,False,e,1.0,False,True,True
+2014,21,4,"['MG51506', 'MG51520']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2014,21,43,['MG51520'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2014,21,45,"['MG51504', 'MG51520']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2015,23,1,"['MG33312', 'MG41405', 'MG43404']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2015,23,11,['MG33312'],True,e,1.0,False,True,e,1.0,False,True,c,1.0,False,False,False
+2015,23,25,"['MG41405', 'MG42423']",True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2015,23,5,['MG42423'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2015,23,6,['MG41405'],True,e,1.0,False,True,e,1.0,False,True,e,1.0,False,True,True
+2016,24,1,"['MG11102', 'MG11103', 'MG11106', 'MG11117', 'MG11118', 'MG11119', 'MG11120', 'MG11121', 'MG11122', 'MG11123', 'MG33312', 'MG33313']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,100,['MG53515'],True,b,1.0,False,False,b,1.0,False,False,n,0.0,True,False,False
+2016,24,104,"['MG34303', 'MG34304']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,106,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,11,"['MG32305', 'MG32315', 'MG33312', 'MG33313', 'MG33314']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,12,"['MG42411', 'MG42412', 'MG42414', 'MG71719']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,17,"['MG31306', 'MG31307', 'MG33314']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,18,"['MG21208', 'MG22203', 'MG22204', 'MG26206', 'MG26209']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,2,"['MG21208', 'MG22203', 'MG22223', 'MG24221']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,21,['MG52516'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2016,24,22,"['MG34303', 'MG42412', 'MG42414']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,23,"['MG71713', 'MG71717']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,24,"['MG42414', 'MG72711']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,25,['MG42423'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2016,24,26,"['MG25213', 'MG27210', 'MG27212']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,3,"['MG22203', 'MG22204', 'MG22223']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,30,['MG25213'],True,c,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2016,24,31,"['MG32318', 'MG42410']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,33,"['MG34303', 'MG72710']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2016,24,34,"['MG31310', 'MG33313']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,36,['MG71719'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,37,"['MG26206', 'MG26209', 'MG27210']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,38,"['MG34304', 'MG42410']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,39,"['MG31310', 'MG32315', 'MG33313']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,4,['MG51521'],True,d,1.0,False,True,d,1.0,False,True,c,1.0,False,False,False
+2016,24,41,"['MG42414', 'MG72710', 'MG72711']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,42,['MG53515'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,44,"['MG21208', 'MG26206', 'MG26209', 'MG27210']",True,c,1.0,False,False,c,1.0,False,False,b,1.0,False,False,False
+2016,24,47,"['MG31307', 'MG31311', 'MG33314']",True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2016,24,5,"['MG42410', 'MG42411', 'MG42412', 'MG42414', 'MG42423']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,50,['MG34303'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,53,"['MG42411', 'MG71719']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,54,['MG32318'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,56,"['MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,57,"['MG71713', 'MG71717']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2016,24,59,['MG26209'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2016,24,60,['MG71717'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,61,"['MG31307', 'MG31311', 'MG33314']",True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2016,24,65,['MG71713'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
+2016,24,66,"['MG32318', 'MG34304']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,67,"['MG25214', 'MG25222']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,7,"['MG11106', 'MG31311', 'MG33313', 'MG33314']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,70,"['MG34303', 'MG34304']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,72,"['MG25214', 'MG25215']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,76,['MG72711'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,78,"['MG32305', 'MG32318']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,79,['MG25213'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2016,24,8,"['MG24221', 'MG25214', 'MG25215', 'MG25222']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,80,['MG34303'],True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2016,24,82,['MG42411'],True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,83,"['MG31301', 'MG31310']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2016,24,86,['MG53515'],True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2016,24,87,"['MG25213', 'MG25214']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,9,"['MG52516', 'MG53515']",True,c,1.0,False,False,c,1.0,False,False,c,1.0,False,False,False
+2016,24,90,"['MG34303', 'MG72710']",True,d,1.0,False,False,d,1.0,False,False,d,1.0,False,False,False
+2016,24,94,"['MG31307', 'MG31311']",True,b,1.0,False,False,b,1.0,False,False,b,1.0,False,False,False
+2016,24,97,['MG27210'],True,b,1.0,False,False,b,1.0,False,False,c,1.0,False,False,False
