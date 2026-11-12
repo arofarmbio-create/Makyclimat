@@ -167,6 +167,8 @@ cartographiées par satellite, indépendantes des déclarations) pour les activa
 - 12/11/2026, 5e version avant tout calcul (relecture Codex de 16:40) : l'hypothèse (C) n'est privilégiée que si
   P ≥ 40 % **et** P − P_c ≥ 15 points avec un intervalle bootstrap (saisons) au-dessus de 0 ; sinon le seuil de 40 %
   reste descriptif, sans attribution.
+- 12/11/2026, 6e version avant tout calcul : section 12, choix de codage (valeurs manquantes, départage de k,
+  bassins témoins, unités sans rivière, D4), fixés par Claude par délégation du porteur sur les questions de Codex.
 - **12/11/2026 — Décisions du porteur du projet** : protocole validé (sous réserve de la relecture de Codex de cette
   version) ; téléchargement de la réanalyse GloFAS autorisé ; observations communales Copernicus EMS réservées au
   test confirmatoire par sous-bassin (section 8).
@@ -185,3 +187,25 @@ le 29/10/2026.
 1. Protocole validé, sous réserve de la relecture de Codex de la version en vigueur.
 2. Téléchargement de la réanalyse GloFAS (D2) autorisé : environ 14 demandes Copernicus (EWDS), une à la fois.
 3. Observations communales Copernicus EMS réservées au test confirmatoire par sous-bassin (section 8).
+
+## 12. Choix de codage fixés avant calcul (12/11/2026, 17:45, Claude par délégation du porteur)
+
+Réponses aux questions de Codex (fiche R-21, « Code du diagnostic »), fixées **avant toute lecture de détection**.
+Règle générale : reprendre R-21 à l'identique et, à défaut, l'option la plus prudente.
+
+1. **Valeurs manquantes (D1, D2).** Contrôle et ensemble : les fonctions de `scripts/r21_scores.py` sont reprises
+   telles quelles (même traitement des NaN que R-21 : NaN = pas de dépassement). Réanalyse : une fenêtre n'est
+   valide que si **tous ses jours** sont présents ; sinon l'initialisation compte comme « non évaluable » pour la
+   réanalyse (classe n si aucune autre n'est valide). Une maille dont le seuil est NaN ne déclenche jamais d'alerte.
+   Un bloc mensuel entièrement NaN est retiré du calcul de Gumbel ; la règle « au moins 30 blocs » s'applique après ce retrait.
+2. **Facteur k (D2).** À écart de charge égal, on retient le k **le plus proche de 1**, puis le plus petit. Charge
+   cible nulle ou pli sans témoin valide commun : k = 1, pli déclaré **hors tolérance** (compté dans la règle des
+   3 plis sur 12).
+3. **Bassins (D3a).** Bassins témoins d'un mois : ceux qui ne recoupent **aucun** district déclaré ce mois-là, comme
+   les districts témoins de R-21. k est **recalibré** sur les jours-bassins témoins, avec la règle 2. Jours d'une unité
+   épisode × bassin : union des dates des fiches des seuls districts rattachés à ce bassin (règle des 20 %).
+4. **Unités sans rivière.** Comme dans R-21, elles restent au dénominateur de P et de P_c, comptées non détectées
+   (comparabilité avec les 16,0 % et 14,8 %). Sensibilité publiée : P et P_c sans ces unités. Le croisement de D1 est
+   une table 6 × 6 (a à e, plus n).
+5. **Contexte cyclonique (D4).** Le complément CHIRPS est **différé** (descriptif, non nécessaire aux règles de lecture).
+   Distance : positions IBTrACS publiées (pas de 3 heures), sans autre interpolation.
