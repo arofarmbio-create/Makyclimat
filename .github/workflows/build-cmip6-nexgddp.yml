@@ -88,19 +88,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Projections NEX-GDDP-CMIP6 par région (Madagascar)" \
-            --notes "Agrégats mensuels par région (adm1) de NEX-GDDP-CMIP6 v2.0 (NASA NEX, doi:10.7917/OFSG3345), pr en mm/mois, tas et tasmax en °C. Licences par modèle et sources : data/mdg/cmip6_modeles.json. Agrégats historiques : CC BY 4.0 (CC0 pour GISS-E2-1-G) ; agrégats SSP : CC BY-SA 4.0 (attribut cmip6_license des fichiers SSP). Citer NEX-GDDP-CMIP6 et chaque groupe de modélisation CMIP6. scripts/build_cmip6_nexgddp.py, validation/protocole_cmip6.md." || true
           mkdir -p data/mdg/cmip6_nexgddp
           gh release download "$TAG" --pattern "${MODELE}_${SCENARIO}*" --dir data/mdg/cmip6_nexgddp || true
       - name: Lire et agréger (reprise sur les années déjà publiées)
         if: github.event.inputs.probe != 'true'
         timeout-minutes: 320
         run: python scripts/build_cmip6_nexgddp.py --modele "$MODELE" --scenario "$SCENARIO"
-      - name: Publier dans la release (même après un échec ou un arrêt, pour reprendre ensuite)
-        if: always() && github.event.inputs.probe != 'true'
+      - name: Publier dans la release après une extraction réussie
+        if: success() && github.event.inputs.probe != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Projections NEX-GDDP-CMIP6 par région (Madagascar)" \
+            --notes "Agrégats mensuels par région (adm1) de NEX-GDDP-CMIP6 v2.0 (NASA NEX, doi:10.7917/OFSG3345), pr en mm/mois, tas et tasmax en °C. Licences par modèle et sources : data/mdg/cmip6_modeles.json. Agrégats historiques : CC BY 4.0 (CC0 pour GISS-E2-1-G) ; agrégats SSP : CC BY-SA 4.0 (attribut cmip6_license des fichiers SSP). Citer NEX-GDDP-CMIP6 et chaque groupe de modélisation CMIP6. scripts/build_cmip6_nexgddp.py, validation/protocole_cmip6.md."
           base="data/mdg/cmip6_nexgddp/${MODELE}_${SCENARIO}"
           for f in "${base}.csv" "${base}_meta.json"; do
             if [ -f "$f" ]; then gh release upload "$TAG" "$f" --clobber; fi

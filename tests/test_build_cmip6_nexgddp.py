@@ -7,6 +7,8 @@ from __future__ import annotations
 
 import io
 import sys
+import tempfile
+from unittest.mock import patch
 from pathlib import Path
 
 import numpy as np
@@ -78,7 +80,8 @@ def fake_nc3(var="pr", n=365, cal="noleap", units_v="kg m-2 s-1", value=2.0 / 86
     from scipy.io import netcdf_file
     buf = io.BytesIO()
     f = netcdf_file(buf, "w", version=1)
-    f.cmip6_license = lic
+    if lic is not None:
+        f.cmip6_license = lic
     f.version = "2.0"
     f.createDimension("time", n)
     f.createDimension("lat", 2)
@@ -142,6 +145,68 @@ try:
     check("licence non admise : arrêt", False)
 except SystemExit:
     check("licence non admise : arrêt", True)
+
+# --- URL NCSS
+for scenario in ("historical", "ssp245"):
+    for lic in (None, "", "   ", "Non-commercial only"):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            with patch.object(C, "read_units", return_value=units), \
+                 patch.object(C, "fetch", return_value=fake_nc3(lic=lic)), \
+                 patch.object(C, "daily_to_monthly") as aggregate:
+                try:
+                    C.run("ACCESS-CM2", scenario, 2001, 2001, ["pr"], out)
+                    check(f"{scenario}, licence {lic!r} : arrêt", False)
+                except SystemExit:
+                    check(f"{scenario}, licence {lic!r} : arrêt avant agrégation et écriture",
+                          not aggregate.called and not list(out.iterdir()))
+
+for lic in ("CC0 1.0", "CC BY 4.0", "CC-BY-SA 4.0"):
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp)
+        with patch.object(C, "read_units", return_value=units), \
+             patch.object(C, "fetch", return_value=fake_nc3(lic=lic)), \
+             patch.object(C.time, "sleep"):
+            C.run("ACCESS-CM2", "historical", 2001, 2001, ["pr"], out)
+        import json
+        saved = json.loads((out / "ACCESS-CM2_historical_meta.json").read_text(encoding="utf-8"))
+        check(f"licence {lic} admise : CSV et provenance consignés",
+              len(pd.read_csv(out / "ACCESS-CM2_historical.csv")) == 24
+              and saved["fichiers"]["pr/2001"]["licence"] == lic
+              and "cmip6_license" in saved["fichiers"]["pr/2001"]["source_licence"])
+
+# Une erreur tardive reste un échec : les années valides locales ne sont pas publiées.
+with tempfile.TemporaryDirectory() as tmp:
+    out = Path(tmp)
+    with patch.object(C, "read_units", return_value=units), \
+         patch.object(C, "fetch", side_effect=[fake_nc3(), fake_nc3(lic=None)]), \
+         patch.object(C.time, "sleep"):
+        try:
+            C.run("ACCESS-CM2", "ssp245", 2001, 2002, ["pr"], out)
+            check("échec tardif propagé", False)
+        except SystemExit:
+            check("échec tardif : aucune ligne de l'année refusée",
+                  set(pd.read_csv(out / "ACCESS-CM2_ssp245.csv").annee) == {2001})
+    metaf = out / "ACCESS-CM2_ssp245_meta.json"
+    metaf.write_text('{"fichiers": {"pr/2001": {"licence": "absente de la réponse NCSS"}}}', encoding="utf-8")
+    before = (out / "ACCESS-CM2_ssp245.csv").read_bytes()
+    with patch.object(C, "read_units", return_value=units), patch.object(C, "fetch") as fetch:
+        try:
+            C.run("ACCESS-CM2", "ssp245", 2001, 2001, ["pr"], out)
+            check("ancienne reprise sans licence refusée", False)
+        except SystemExit:
+            check("ancienne reprise sans licence refusée sans requête ni écriture",
+                  not fetch.called and (out / "ACCESS-CM2_ssp245.csv").read_bytes() == before)
+
+import yaml
+workflow = yaml.safe_load((Path(__file__).resolve().parents[1] /
+                          ".github/workflows/build-cmip6-nexgddp.yml").read_text(encoding="utf-8"))
+steps = workflow["jobs"]["nexgddp"]["steps"]
+publish = [step for step in steps if "gh release upload" in step.get("run", "")]
+check("publication uniquement après succès, aucune création de release avant extraction",
+      len(publish) == 1 and publish[0]["if"] == "success() && github.event.inputs.probe != 'true'"
+      and all("gh release create" not in step.get("run", "") for step in steps if step is not publish[0])
+      and not any(step.get("continue-on-error", False) for step in steps))
 
 # --- URL NCSS
 u = C.ncss_url("ACCESS-CM2", "historical", "r1i1p1f1", "gn", "pr", 2014)

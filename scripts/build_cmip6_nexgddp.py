@@ -181,8 +181,7 @@ def process_file(modele, scenario, membre, grille, var, annee, units, session=No
     nc = read_nc3(fetch(ncss_url(modele, scenario, membre, grille, var, annee), session), var)
     lic = nc["attrs"].get("cmip6_license", "").strip()
     if not lic:
-        lic = "absente de la réponse NCSS"
-        print(f"  attention : cmip6_license non recopiée ({modele} {scenario} {var} {annee})", flush=True)
+        raise SystemExit(f"licence absente ou vide dans {modele} {scenario} {var} {annee} ; arrêt")
     elif not licence_ok(lic):
         raise SystemExit(f"licence non admise dans {modele} {scenario} {var} {annee} : « {lic} » ; arrêt")
     months = month_of_day(nc["data"].shape[0], nc["calendar"], annee)
@@ -190,7 +189,8 @@ def process_file(modele, scenario, membre, grille, var, annee, units, session=No
     reg = regional_means(monthly, nc["lat"], nc["lon"], units)
     rows = [{"modele": modele, "scenario": scenario, "region": pc, "annee": annee, "mois": m + 1, "variable": var,
              "valeur": round(float(v[m]), 3)} for pc, v in sorted(reg.items()) for m in range(12)]
-    info = {"licence": lic, "calendrier": nc["calendar"], "version": nc["attrs"].get("version", ""),
+    info = {"licence": lic, "source_licence": "attribut global cmip6_license de la réponse NCSS",
+            "calendrier": nc["calendar"], "version": nc["attrs"].get("version", ""),
             "forme": list(nc["data"].shape), "lat": [float(nc["lat"].min()), float(nc["lat"].max())],
             "lon": [float(nc["lon"].min()), float(nc["lon"].max())]}
     return rows, info
@@ -205,6 +205,11 @@ def run(modele, scenario, debut, fin, variables, out_dir=OUT_DIR):
     done = pd.read_csv(csv) if csv.exists() else pd.DataFrame(columns=COLUMNS)
     have = set(zip(done.variable, done.annee.astype(int))) if len(done) else set()
     meta = json.loads(metaf.read_text(encoding="utf-8")) if metaf.exists() else {"fichiers": {}}
+    # Ne pas republier silencieusement une ancienne extraction sans licence vérifiée.
+    for var, annee in have:
+        lic = meta["fichiers"].get(f"{var}/{annee}", {}).get("licence", "")
+        if not isinstance(lic, str) or not licence_ok(lic):
+            raise SystemExit(f"licence absente ou non admise dans la reprise {modele} {scenario} {var} {annee} ; arrêt")
     import requests
     s = requests.Session()
     for var in variables:
