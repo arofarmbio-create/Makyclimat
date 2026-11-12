@@ -24,9 +24,36 @@ OUTILS = {
 
 
 ENVELOPPES = {"bash", "sh", "powershell", "pwsh", "cmd"}       # « bash -lc "…" » : on lit la commande intérieure
-SOUS_COMMANDES = {"git": 1, "gh": 2, "npm": 1, "pip": 1, "uv": 1, "codex": 1}
+# Sous-commandes affichables, par programme (relecture Codex du 11/11, 20:55) : seuls ces mots, placés juste après le
+# programme, sont montrés. Une option (« git -C chemin status », « gh --hostname serveur run ») arrête la lecture, si
+# bien qu'aucune valeur d'option ni aucun argument libre n'apparaît.
+SOUS_COMMANDES = {
+    "git": [{"status", "diff", "log", "show", "add", "commit", "push", "pull", "fetch", "branch", "checkout",
+             "switch", "restore", "rev-parse", "ls-files", "stash", "merge", "rebase", "remote", "blame", "grep",
+             "reset", "tag", "cat-file", "mv", "rm"}],
+    "gh": [{"run", "api", "release", "workflow", "pr", "issue", "repo", "auth", "cache"},
+           {"view", "list", "download", "rerun", "watch", "create", "cancel", "run", "delete", "upload", "status",
+            "edit", "merge", "checks", "diff", "enable", "disable"}],
+    "npm": [{"install", "run", "test", "ci"}],
+    "pip": [{"install", "list", "show", "freeze"}],
+    "uv": [{"run", "pip", "sync"}],
+    "codex": [{"exec"}],
+}
 NOM_SUR = re.compile(r"^[\w.+-]{1,40}$")
-SCRIPT_SUR = re.compile(r"^[\w./\\-]{1,120}\.(py|ps1|cmd|bat|sh)$", re.I)
+SCRIPT_SUR = re.compile(r"^[\w./\-]{1,120}\.(py|ps1|cmd|bat|sh)$", re.I)
+OPTION_COMMANDE = {"powershell": {"-command", "-c"}, "pwsh": {"-command", "-c"}, "cmd": {"/c", "/k"}}
+
+
+def interieur(enveloppe, mots):
+    """Commande portée par une enveloppe : argument de -Command (PowerShell), de /c (cmd) ou de -c, -lc… (bash, sh).
+    None si la forme n'est pas reconnue : le panneau garde alors le libellé générique."""
+    for i, mot in enumerate(mots[1:], 1):
+        bas = mot.lower()
+        if bas in OPTION_COMMANDE.get(enveloppe, set()) or (
+                enveloppe in {"bash", "sh"} and re.fullmatch(r"-[a-z]*c", bas)):
+            reste = mots[i + 1:]
+            return " ".join(reste) if reste else None
+    return None
 
 
 def programme(commande):
@@ -40,14 +67,18 @@ def programme(commande):
     except ValueError:
         mots = str(commande).split()
     for _ in range(2):  # au plus deux enveloppes (powershell -Command "bash -lc …" est improbable)
-        if mots and Path(mots[0]).stem.lower() in ENVELOPPES:
-            interieur = next((m for m in mots[1:] if not m.startswith(("-", "/"))), None)
-            if interieur is None:
-                break
-            try:
-                mots = shlex.split(interieur.replace("\\", "/"), posix=True)
-            except ValueError:
-                mots = interieur.split()
+        if not mots:
+            break
+        enveloppe = Path(mots[0].replace("\\", "/")).stem.lower()
+        if enveloppe not in ENVELOPPES:
+            break
+        texte = interieur(enveloppe, mots)
+        if texte is None:
+            return None
+        try:
+            mots = shlex.split(texte.replace("\\", "/"), posix=True)
+        except ValueError:
+            mots = texte.split()
     mots = [m for m in mots if "=" not in m or m.startswith("-")]    # variables d'environnement en tête
     if not mots:
         return None
@@ -62,12 +93,11 @@ def programme(commande):
             return "python"
         script = next((m for m in mots[1:] if SCRIPT_SUR.match(m)), None)
         return f"python {script}" if script else "python"
-    n = SOUS_COMMANDES.get(nom, 0)
     suite = []
-    for m in [m for m in mots[1:] if not m.startswith("-")][:n]:
-        if not NOM_SUR.match(m):
+    for autorises, mot in zip(SOUS_COMMANDES.get(nom, []), mots[1:]):
+        if mot not in autorises:
             break
-        suite.append(m)
+        suite.append(mot)
     return " ".join([nom, *suite])
 
 

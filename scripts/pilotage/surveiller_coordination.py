@@ -177,8 +177,16 @@ def reveille_codex(genre, cibles, message):
     ou « Clos » ne produisait que des avis redondants (6 réveils inutiles le 11/11 entre 19:17 et 19:25)."""
     if "codex" not in cibles or genre != "message":
         return False
-    auteur = message.partition("→")[0].rsplit("·", 1)[-1].strip().casefold()
-    return auteur in {"claude", "claude code"}
+    return auteur_message(message) in AUTEURS["claude"]
+
+
+AUTEURS = {"claude": {"claude", "claude code"}, "codex": {"codex"}}
+
+
+def auteur_message(message):
+    """Auteur d'un message « date · auteur → destinataire · … », en minuscules, sans gras ni tiret de liste.
+    Même lecture pour le réveil de Codex et pour la suspension des relectures (relecture Codex du 12/11, 11:14)."""
+    return message.partition("→")[0].rsplit("·", 1)[-1].strip(" *-").casefold()
 
 
 REVEIL_PERIME_MIN = 60         # un réveil resté en file plus d'une heure (plafond, réseau, pause) est abandonné
@@ -238,8 +246,8 @@ def commits_demandes(texte, relecteur):
         if ligne.startswith("## "):
             section = ligne[3:]
         elif section.startswith("Messages") and ligne.startswith("- "):
-            sens = re.search(r"(\w[\w ]*?)\s*→\s*(\w+)", ligne)
-            if sens and sens[1].strip().casefold().endswith(autre) and sens[2].casefold() == relecteur:
+            destinataire = ligne.partition("→")[2].split("·", 1)[0].strip(" *").casefold()
+            if "→" in ligne and auteur_message(ligne) in AUTEURS[autre] and destinataire == relecteur:
                 commits.update(re.findall(r"`([0-9a-f]{7,40})`", ligne))
     return commits
 
@@ -292,6 +300,11 @@ def a_relire(ligne, relecteur):
     return {"tache": tache, "responsable": responsable, "suite": suite, "chemins": chemins, "commit": commit}
 
 
+def resoudre(commit):
+    """Empreinte complète d'un commit cité (préfixe court accepté) ; le texte cité tel quel si Git ne le connaît pas."""
+    return git("rev-parse", "--verify", "-q", f"{commit}^{{commit}}").strip() or commit
+
+
 def relecture_auto(ligne, relecteur="claude"):
     """Une ligne « À relire » de l'autre assistant déclenche une relecture en lecture seule par le relecteur."""
     yield from relecture_groupee([ligne], relecteur)
@@ -299,8 +312,9 @@ def relecture_auto(ligne, relecteur="claude"):
 
 def relecture_groupee(lignes, relecteur="claude"):
     """Une relecture pour une ou plusieurs lignes « À relire » qui citent le même commit.
-    Le diff des fichiers cités est fourni d'emblée (économie de tokens) et l'identifiant dépend de ce diff :
-    reformuler la ligne ne relance rien, une nouvelle modification du code relance une relecture."""
+    Le diff des fichiers cités est fourni d'emblée (économie de tokens). L'identifiant ne dépend que du commit résolu
+    (relecture Codex du 12/11, 11:14) : ni la reformulation, ni l'ordre des lignes, ni la composition du groupe (une
+    ligne passée à « Fait ») ne relancent la relecture d'un commit déjà relu ; un nouveau commit en relance une."""
     items = [item for ligne in lignes if (item := a_relire(ligne, relecteur))]
     if not items:
         return
@@ -312,9 +326,7 @@ def relecture_groupee(lignes, relecteur="claude"):
     tache = " + ".join(item["tache"] for item in items)
     responsable = items[0]["responsable"]
     suite = " / ".join(item["suite"] for item in items)
-    # Empreinte sur les seules lignes ajoutées ou retirées : commiter un travail déjà relu ne relance pas de relecture.
-    modifiees = "\n".join(l for l in diff.splitlines() if l[:1] in "+-" and not l.startswith(("+++", "---")))
-    empreinte = hashlib.sha256(" ".join((tache, modifiees or "|".join(chemins))).encode()).hexdigest()[:12]
+    empreinte = hashlib.sha256(resoudre(commit).encode()).hexdigest()[:12]
     identifiant = f"relecture-{empreinte}" if relecteur == "claude" else f"codex/relecture-{empreinte}"
     diff = tronquer(diff)
     yield relecteur, identifiant, (

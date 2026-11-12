@@ -182,20 +182,21 @@ def test_lecture_des_tokens_et_fichiers():
     shutil.rmtree(dossier, ignore_errors=True)
 
 
-def test_empreinte_sur_diff_complet():
-    """Relecture Codex : une correction au-delà de la troncature doit changer l'identifiant de relecture."""
+def test_identifiant_par_commit_resolu():
+    """Relecture Codex du 12/11 (11:14) : une relecture par version livrée. Un nouveau commit relance une relecture ;
+    ni la composition du groupe, ni l'ordre des lignes, ni leurs noms ne changent l'identifiant d'un même commit."""
     a = next(l for l in COPIE.splitlines() if l.startswith("| Outil A"))
-    original = C.contexte_diff
-    try:
-        base = "+x\n" * (C.DIFF_MAX // 3 + 100)
+    c = "| Outil C | Claude | À relire | [Parcours](scripts/pilotage/parcours.py) | Autre contrôle. | — | — |"
+    with patch.object(C, "contexte_diff", return_value="+x\n"):
         with patch.object(C, "commit_cite", return_value="abc1234"):
-            C.contexte_diff = lambda chemins, commit="": base + "+fin 1\n"
-            (_, id1, consigne), = C.relecture_auto(a, "codex")
-            C.contexte_diff = lambda chemins, commit="": base + "+fin 2\n"
-            (_, id2, _), = C.relecture_auto(a, "codex")
-    finally:
-        C.contexte_diff = original
-    assert id1 != id2 and "diff tronqué" in consigne
+            (_, groupe, _), = C.relecture_groupee([a, c], "codex")
+            (_, inverse, _), = C.relecture_groupee([c, a], "codex")
+            (_, seule, _), = C.relecture_auto(c, "codex")              # A passée à « Fait » : B seule
+        with patch.object(C, "commit_cite", return_value="def5678"):
+            (_, nouveau, _), = C.relecture_auto(c, "codex")
+    assert groupe == inverse == seule != nouveau
+    vrai = C.git("rev-parse", "HEAD").strip()
+    assert C.resoudre(vrai[:7]) == vrai and C.resoudre("zzz") == "zzz"
 
 
 def test_ecriture_concurrente_non_ecrasee():
@@ -367,6 +368,25 @@ def test_crochet_codex_programme_sans_arguments():
     g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash",
                       "tool_input": {"command": ["powershell.exe", "-Command", "Get-ChildItem SECRET"]}})
     assert t == "Lance get-childitem", t
+    fuites = {                     # relecture Codex du 11/11 (20:55) : valeurs d'options et enveloppe Windows
+        "gh api SECRET": "Lance gh api",
+        "git -C SECRET status": "Lance git",
+        "gh --hostname SECRET run view 1": "Lance gh",
+        "git SECRET": "Lance git",
+        "gh run SECRET": "Lance gh run",
+    }
+    for commande, attendu in fuites.items():
+        g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash", "tool_input": {"command": commande}})
+        assert t == attendu and "SECRET" not in t, (commande, t)
+    for commande in (["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", "git status"],
+                     "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"git status --short\"",
+                     [r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe", "-Command", "git status"],
+                     "cmd /c git status"):
+        g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash", "tool_input": {"command": commande}})
+        assert t == "Lance git status", (commande, t)
+    g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash",
+                      "tool_input": {"command": ["powershell.exe", "-File", "SECRET.ps1"]}})
+    assert t == "Commande locale lancée", t           # forme non reconnue : libellé générique
     g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash", "tool_input": {"command": "\"unterminated"}})
     assert g == "commande" and "unterminated" not in t or t.startswith("Lance")
 
@@ -459,11 +479,6 @@ def test_redemarrage_sans_tentative_supplementaire():
     assert restants == {"codex/relecture-epuisee"}                               # plafond atteint : conservée
 
 
-if __name__ == "__main__":
-    for nom, fonction in list(globals().items()):
-        if nom.startswith("test_"):
-            fonction()
-    print("OK : tests pilotage")
 
 
 def test_relecture_une_par_commit_et_suspendue_par_message():
@@ -479,6 +494,9 @@ def test_relecture_une_par_commit_et_suspendue_par_message():
         message = "- 12/11/2026 09:00 · Claude → Codex · Relecture groupée de `abc1234`. · lien\n"
         suspendu = texte.replace("Réserver cette section", message + "\nRéserver cette section")
         assert list(C.demandes_claude(suspendu, True, ("codex",))) == []
+        code = suspendu.replace("Claude → Codex", "Claude Code → Codex")         # même auteur que pour le réveil
+        assert list(C.demandes_claude(code, True, ("codex",))) == []
+        assert C.reveille_codex("message", {"codex"}, message) and C.reveille_codex("message", {"codex"}, "- " + message[2:].replace("Claude", "**Claude Code", 1))
         autre = suspendu.replace("Claude → Codex", "Claude → porteur du projet")     # message non adressé à Codex
         assert len(list(C.demandes_claude(autre, True, ("codex",)))) == 1
     assert commits                                                                    # lignes du même commit
@@ -502,3 +520,10 @@ def test_run_annule_remplace_n_est_pas_un_echec():
     assert not G.annule_et_remplace(ancien, [ancien])                                   # annulé sans remplaçant
     assert not G.annule_et_remplace({**ancien, "conclusion": "failure"}, [ancien, suivant])
     assert not G.annule_et_remplace(ancien, [ancien, {**suivant, "headBranch": "autre"}])
+
+
+if __name__ == "__main__":
+    for nom, fonction in list(globals().items()):
+        if nom.startswith("test_"):
+            fonction()
+    print("OK : tests pilotage")
