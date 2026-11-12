@@ -182,6 +182,20 @@ class Tests(unittest.TestCase):
         out = R.extraire(ds, 2003, np.array([-15.025]), np.array([45.125]))
         np.testing.assert_equal(out['q'][:, 0], self.jeu().dis24.values[1:-1, 0, 2])
 
+    def test_statut_reessaie_les_erreurs_5xx(self):
+        """Run 43236237171 (12/11) : une erreur 500 passagère d'EWDS ne doit pas faire échouer la saison."""
+        class Instable:
+            def __init__(self, codes):
+                self.codes = codes
+            def get(self, url, **kwargs):
+                code = self.codes.pop(0)
+                return Rep({"status": "running"}, code)
+        pauses = []
+        self.assertEqual(R.statut(Instable([500, 502, 200]), {}, "j1", dormir=pauses.append), "running")
+        self.assertEqual(len(pauses), 2)
+        with self.assertRaises(RuntimeError):
+            R.statut(Instable([500] * 5), {}, "j1", dormir=pauses.append)
+
     def test_nom_inconnu_et_dimension_unitaire(self):
         """Run 43230289148 (12/11) : nom de variable hors liste ; on prend la seule variable spatiale."""
         ds = self.jeu().rename({'dis24': 'nom_nouveau'}).expand_dims(surface=[0.0], axis=1)

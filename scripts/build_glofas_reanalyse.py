@@ -59,8 +59,13 @@ def lire_note(path):
     return note
 
 
-def statut(session, entetes, job):
-    r = session.get(f"{BASE}/jobs/{job}", headers=entetes, timeout=60)
+def statut(session, entetes, job, essais=5, dormir=time.sleep):
+    # Erreur 5xx passagère d'EWDS (run 43236237171, saison 2006, 12/11) : on réessaie avant d'abandonner.
+    for essai in range(essais):
+        r = session.get(f"{BASE}/jobs/{job}", headers=entetes, timeout=60)
+        if r.status_code < 500 or essai == essais - 1:
+            break
+        dormir(30 * (essai + 1))
     if r.status_code == 404:
         return "deleted"
     r.raise_for_status()
