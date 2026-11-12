@@ -169,6 +169,8 @@ cartographiées par satellite, indépendantes des déclarations) pour les activa
   reste descriptif, sans attribution.
 - 12/11/2026, 6e version avant tout calcul : section 12, choix de codage (valeurs manquantes, départage de k,
   bassins témoins, unités sans rivière, D4), fixés par Claude par délégation du porteur sur les questions de Codex.
+- 12/11/2026 21:50, 7e version avant tout calcul (relecture attitrée, tour 1) : D4 sur les positions IBTrACS à 6 heures
+  (heures synoptiques, filtres de la carte), comme le code ; plus de mention d'un pas de 3 heures.
 - **12/11/2026 — Décisions du porteur du projet** : protocole validé (sous réserve de la relecture de Codex de cette
   version) ; téléchargement de la réanalyse GloFAS autorisé ; observations communales Copernicus EMS réservées au
   test confirmatoire par sous-bassin (section 8).
@@ -208,4 +210,6 @@ Règle générale : reprendre R-21 à l'identique et, à défaut, l'option la pl
    (comparabilité avec les 16,0 % et 14,8 %). Sensibilité publiée : P et P_c sans ces unités. Le croisement de D1 est
    une table 6 × 6 (a à e, plus n).
 5. **Contexte cyclonique (D4).** Le complément CHIRPS est **différé** (descriptif, non nécessaire aux règles de lecture).
-   Distance : positions IBTrACS publiées (pas de 3 heures), sans autre interpolation.
+   Distance : positions IBTrACS aux heures synoptiques (00, 06, 12, 18 UTC), avec les filtres de
+   `scripts/build_cyclones.py` (même source que la carte) ; les positions intermédiaires à 3 heures, interpolées par
+   IBTrACS, ne sont pas utilisées (7e version, relecture attitrée du 12/11, 21:41).
