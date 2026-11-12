@@ -182,6 +182,16 @@ class Tests(unittest.TestCase):
         out = R.extraire(ds, 2003, np.array([-15.025]), np.array([45.125]))
         np.testing.assert_equal(out['q'][:, 0], self.jeu().dis24.values[1:-1, 0, 2])
 
+    def test_nom_inconnu_et_dimension_unitaire(self):
+        """Run 43230289148 (12/11) : nom de variable hors liste ; on prend la seule variable spatiale."""
+        ds = self.jeu().rename({'dis24': 'nom_nouveau'}).expand_dims(surface=[0.0], axis=1)
+        ds['heure'] = ('time', np.zeros(ds.sizes['time']))       # variable non spatiale ignorée
+        out = R.extraire(ds, 2003, np.array([-15.025]), np.array([45.125]))
+        np.testing.assert_equal(out['q'][:, 0], self.jeu().dis24.values[1:-1, 0, 2])
+        ds['autre'] = ds['nom_nouveau']
+        with self.assertRaisesRegex(ValueError, 'ambiguë'):
+            R.extraire(ds, 2003, np.array([-15.025]), np.array([45.125]))
+
     def test_refus_jours_et_mailles_manquants(self):
         for ds in (self.jeu().isel(time=slice(3, None)),
                    xr.concat([self.jeu(), self.jeu().isel(time=[3])], dim='time')):

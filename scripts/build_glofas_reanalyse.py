@@ -161,10 +161,17 @@ def mailles(dossier):
 
 def extraire(ds, saison, lat, lon):
     import xarray as xr
-    noms = [v for v in ("dis24", "dis", "average_river_discharge_in_the_last_24_hours") if v in ds.data_vars]
+    # Le nom de la variable dépend de l'API (run 43230289148 du 12/11 : aucun des noms connus). On garde un nom connu
+    # s'il est présent, sinon la seule variable spatiale du fichier ; les dimensions de taille 1 (step, surface…)
+    # sont retirées. Le contenu du fichier est journalisé pour la traçabilité.
+    print("NetCDF EWDS :", {v: dict(ds[v].sizes) for v in ds.data_vars}, flush=True)
+    connus = ("dis24", "avg_dis24", "dis", "average_river_discharge_in_the_last_24_hours")
+    noms = [v for v in connus if v in ds.data_vars] or [
+        v for v in ds.data_vars if {"latitude", "longitude"} <= set(ds[v].dims)]
     if len(noms) != 1:
-        raise ValueError("Variable de débit absente ou ambiguë")
+        raise ValueError(f"Variable de débit absente ou ambiguë : {list(ds.data_vars)}")
     q = ds[noms[0]]
+    q = q.squeeze([d for d in q.dims if q.sizes[d] == 1 and d not in ("latitude", "longitude")])
     t = "valid_time" if "valid_time" in q.coords else "time"
     if q[t].ndim != 1:
         raise ValueError("Temps de validité non unidimensionnel")
