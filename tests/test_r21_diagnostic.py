@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import unittest
 import warnings
+import tempfile
 from unittest.mock import patch
 
 import numpy as np
@@ -229,6 +230,120 @@ class DiagnosticTests(unittest.TestCase):
              patch.object(d, "seuils_reanalyse", return_value=({2003: np.array([10., 10.])}, 30)):
             r = d.diagnostic(M, R, A, ["a"], jours, np.ones((len(jours), 1), bool), U, pis={2003: .38})
         self.assertEqual(r["unites"].classe_reanalyse.iloc[0], "b")
+
+
+class FichiersTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+
+    def reanalyses(self):
+        from build_glofas_reanalyse import dates_saison
+        for s in range(2003, 2017):
+            dates = dates_saison(s).astype(str)
+            np.savez(self.root / f"glofas_reanalyse_{s}.npz", dates=dates,
+                     lat=[-20., -19.], lon=[48., 47.],
+                     q=np.tile([20., 10.], (len(dates), 1)).astype("float32"))
+
+    def test_reanalyse_complete_et_permutation_mailles(self):
+        self.reanalyses()
+        dates, q = d.lire_reanalyse(self.root, [(-19., 47.), (-20., 48.)])
+        self.assertEqual(dates[0], dt.date(2003, 11, 25))
+        self.assertEqual(dates[-1], dt.date(2017, 4, 5))
+        np.testing.assert_array_equal(q[0], [10, 20])
+        with self.assertRaisesRegex(ValueError, "Mailles"):
+            d.lire_reanalyse(self.root, [(-19., 47.)])
+
+    def test_reanalyse_manquante_avant_calcul(self):
+        with patch.object(d, "diagnostic", side_effect=AssertionError("calcul interdit")):
+            with self.assertRaisesRegex(ValueError, "2003.*2016"):
+                d.lire_reanalyse(self.root, [(-19., 47.)])
+
+    def test_reanalyse_dates_et_pickle_refuses(self):
+        self.reanalyses()
+        f = self.root / "glofas_reanalyse_2003.npz"
+        np.savez(f, dates=["2003-11-25"], lat=[-19.], lon=[47.], q=[[10.]])
+        with self.assertRaisesRegex(ValueError, "Dates"):
+            d.lire_reanalyse(self.root, [(-19., 47.)])
+        np.savez(f, dates=np.array(["2003-11-25"], dtype=object), lat=[-19.], lon=[47.], q=[[10.]])
+        with self.assertRaisesRegex(ValueError, "allow_pickle=False"):
+            d.lire_reanalyse(self.root, [(-19., 47.)])
+
+    def ibtracs(self):
+        from build_cyclones import USECOLS
+        f = self.root / "ibtracs.csv"
+        rows = [["s", 2004, "TEST", f"2004-01-10 {h:02}:00:00", "TS", -19, 47, 40, 42, "MAIN"]
+                for h in (0, 3, 6)]
+        pd.DataFrame([["unit"] * len(USECOLS), *rows], columns=USECOLS).to_csv(f, index=False)
+        return f
+
+    def test_ibtracs_filtres_importes_et_heures_conservees(self):
+        from build_cyclones import clean
+        with patch("build_cyclones.configuration", return_value={"since": 1980, "bbox": [38, -30, 58, -6]}), \
+             patch("build_cyclones.clean", wraps=clean) as filtre:
+            positions = d.lire_positions(self.ibtracs())
+        self.assertEqual([t.hour for t, _, _ in positions], [0, 6])
+        filtre.assert_called_once()
+
+    def test_calendrier_ne_cree_pas_de_temoins_sur_mois_absent(self):
+        t = dt.date(2004, 1, 1)
+        u = [dict(dates=[t])]
+        jours, base, touches = d.calendrier(mois(np.ones((11, 1)), t),
+                                           pd.DataFrame({"d": [t], "adm2": ["a"]}), u)
+        self.assertIn(dt.date(2003, 12, 29), jours)
+        self.assertNotIn(dt.date(2003, 12, 29), base)
+        self.assertEqual(len(base), 31)
+        self.assertEqual(touches[(2004, 1)], {"a"})
+
+    def test_atlas_zero_sans_bassin_population_conservee(self):
+        pd.DataFrame({"level": [4, 4], "pcode": ["a", "b"], "adm2": ["d", "d"],
+                      "adm3": ["c", "c"], "pop": [10, 90]}).to_csv(self.root / "u.csv", index=False)
+        pd.DataFrame({"pcode": ["a", "b"], "basin": [1, 0], "subbasin": [0, 0]}).to_csv(
+            self.root / "h.csv", index=False)
+        liens = d.rattachements(d.lire_atlas(self.root / "u.csv", self.root / "h.csv"))
+        self.assertEqual(liens.bassin.tolist(), ["1"])
+        self.assertEqual(liens.part.tolist(), [.1])
+        self.assertFalse(liens.principal.iloc[0])
+        self.assertEqual(liens.sous_bassins.iloc[0], [])
+
+    def test_chargement_execution_et_sorties_sur_fichiers_synthetiques(self):
+        self.reanalyses()
+        for s in range(2003, 2017):
+            for m in (12, 1, 2, 3):
+                y = s if m == 12 else s + 1
+                np.savez(self.root / f"glofas_v4_{y}_{m:02}.npz", windows=[[1, 3]],
+                         members=["cf"] + [f"pf{i}" for i in range(10)],
+                         lat=[-19., -20.], lon=[47., 48.], init=[f"{y}-{m:02}-10"],
+                         q=np.full((1, 11, 1, 2), 10., dtype="float32"))
+        pd.DataFrame({"level": [4, 4], "pcode": ["f1", "f2"], "adm2": ["a", "b"],
+                      "adm3": ["c1", "c2"], "lat": [-19, -20], "lon": [47, 48],
+                      "pop": [100, 100]}).to_csv(self.root / "units.csv", index=False)
+        pd.DataFrame({"pcode": ["f1", "f2"], "basin": ["01", "02"],
+                      "subbasin": ["001", "002"]}).to_csv(self.root / "hydro_units.csv", index=False)
+        eligible = self.root / "eligible.csv"
+        pd.DataFrame({"eligible": [1], "episode": [0], "adm2": ["a"], "saison": [2003],
+                      "fiches": [1]}).to_csv(eligible, index=False)
+        fiches = pd.DataFrame({"d": [dt.date(2004, 1, 11)], "adm2": ["a"], "saison": [2003]})
+        lecteur = d.lire_unites
+        with patch("common.country_data_dir", return_value=self.root), \
+             patch("common.locate_points", return_value=["f1", "f2"]), \
+             patch("r21_scores.fiches", return_value=fiches), \
+             patch.object(d, "lire_unites", side_effect=lambda f, g: lecteur(f, g, (1, 1, 1))), \
+             patch("build_cyclones.configuration", return_value={"since": 1980, "bbox": [38, -30, 58, -6]}):
+            e = d.charger("mdg", self.root, self.root, self.ibtracs(), eligible)
+            r, contexte, groupes = d.executer(e)
+            d.ecrire(self.root / "sorties", e, r, contexte, groupes)
+        self.assertEqual(r["districts"]["unites"].classe_controle.tolist(), ["e"])
+        self.assertEqual(r["bassins"]["plis"].pi.tolist(), r["districts"]["plis"].pi.tolist())
+        self.assertEqual(contexte.contexte.tolist(), ["<100 km"])
+        self.assertEqual(e["liens"].bassin.tolist(), ["01", "02"])
+        rapport = (self.root / "sorties/r21_diagnostic.md").read_text(encoding="utf-8")
+        self.assertIn("CHIRPS différé", rapport)
+        self.assertIn("D4", rapport)
+        self.assertEqual(len(list((self.root / "sorties").glob("*.csv"))), 23)
+        with self.assertRaisesRegex(ValueError, "Population figée"):
+            lecteur(eligible, fiches)
 
 
 if __name__ == "__main__":

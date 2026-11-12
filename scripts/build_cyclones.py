@@ -37,6 +37,13 @@ KM_LAT = 110.57
 KM_LON0 = 111.32
 
 
+def configuration(country):
+    """Filtres partagés par la carte et le diagnostic R-21 bis."""
+    return {**{"since": 1980, "radius_km": 100, "min_kt": 34,
+               "bbox": [38.0, -30.0, 58.0, -6.0]},
+            **load_config(country).get("cyclones", {})}
+
+
 def category(kt: float) -> str:
     for lim, name in SCALE:
         if kt < lim:
@@ -160,7 +167,7 @@ def nearest_unit_km(storms: pd.DataFrame, units: pd.DataFrame) -> dict:
 
 
 def run(country: str, raw: pd.DataFrame | None = None) -> dict:
-    cfg = {**{"since": 1980, "radius_km": 100, "min_kt": 34, "bbox": [38.0, -30.0, 58.0, -6.0]}, **load_config(country).get("cyclones", {})}
+    cfg = configuration(country)
     units = read_units(country)
     d = clean(fetch() if raw is None else raw, int(cfg["since"]), cfg["bbox"])
     src = "IBTrACS v04r01 (NOAA/NCEI) : trajectoires officielles ; proximité au centre du système, pas un champ de vent"

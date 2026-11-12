@@ -1,0 +1,69 @@
+name: R-21 bis - Diagnostic exploratoire
+
+# Livraison de code uniquement ; lancement soumis à autorisation distincte.
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: "Après autorisation du porteur et relecture du protocole, saisir R21BIS"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r21-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Valider la confirmation
+        env:
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: test "$CONFIRMATION" = R21BIS
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Dépendances figées
+        run: pip install numpy==2.2.6 pandas==2.2.3 scipy==1.15.3 pyyaml==6.0.2 shapely==2.0.7 requests==2.32.5
+      - name: Tests synthétiques
+        run: python tests/test_r21_diagnostic.py
+      - name: Releases publiques (séquentiel)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p data/mdg/reforecast data/mdg/reanalyse
+          gh release download reprevisions-glofas-v4 --pattern 'glofas_v4_*.npz' --dir data/mdg/reforecast
+          gh release download glofas-reanalyse-v4 --pattern 'glofas_reanalyse_*.npz' --dir data/mdg/reanalyse
+          for saison in $(seq 2003 2016); do
+            test -s "data/mdg/reanalyse/glofas_reanalyse_${saison}.npz"
+          done
+      - name: Source IBTrACS partagée, CSV horodaté public
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          import requests
+          sys.path.insert(0, 'scripts')
+          from build_cyclones import URL
+          r = requests.get(URL, timeout=600, headers={'User-Agent': 'MakyClimat (recherche doctorale)'})
+          r.raise_for_status()
+          Path('data/mdg/ibtracs.SI.list.v04r01.csv').write_bytes(r.content)
+          PY
+      - name: Fiches DesInventar (jamais publiées)
+        run: python scripts/connector_desinventar.py --country mdg
+      - name: Diagnostic
+        run: python scripts/r21_diagnostic.py --country mdg
+      - name: Livrables à relire (aucun commit automatique)
+        uses: actions/upload-artifact@v4
+        with:
+          name: r21-diagnostic
+          path: |
+            validation/r21_diagnostic.md
+            validation/r21_diagnostic_*.csv
+          if-no-files-found: error

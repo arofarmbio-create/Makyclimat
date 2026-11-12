@@ -1,16 +1,20 @@
 """R-21 bis, D1–D4, protocole version 6, section 12.
 
-API en mémoire : aucun fichier réel n'est chargé à l'import ou à l'exécution.
+API en mémoire et commande de chargement explicite ; aucun fichier lu à l'import.
 Les mois ont le format de r21_scores.lire ; A associe mailles et districts
 (ou bassins). Les unités portent episode, saison, territoire, dates.
 Les appelants fournissent les unités éligibles et les jours témoins R-21.
-Le branchement aux données et l'exécution scientifique restent à autoriser.
+L'exécution scientifique reste soumise à autorisation, indépendamment du code.
 CHIRPS et les observations EMS ne sont jamais lus ici.
 """
 from __future__ import annotations
 
 import datetime as dt
 import math
+import argparse
+import calendar
+import json
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -376,5 +380,208 @@ def diagnostic_contexte(unites, dates_unites, centres, positions):
     return U, {c: comparer(g) for c, g in U.groupby("contexte")}
 
 
+def lire_reanalyse(dossier, cles):
+    """Exige les 14 saisons complètes et aligne les colonnes sur l'union R-21.
+
+    NaN autorisé (traité en classe n), dates ou mailles absentes interdites.
+    Une permutation des mailles est réordonnée, jamais assimilée par position.
+    """
+    from build_glofas_reanalyse import dates_saison
+    fichiers = [Path(dossier) / f"glofas_reanalyse_{s}.npz" for s in range(2003, 2017)]
+    absents = [p.name for p in fichiers if not p.is_file()]
+    if absents:
+        raise ValueError("Saisons de réanalyse manquantes : " + ", ".join(absents))
+    dates, valeurs = [], []
+    for s, fichier in zip(range(2003, 2017), fichiers):
+        with np.load(fichier, allow_pickle=False) as z:
+            lat, lon, q = z["lat"], z["lon"], z["q"]
+            jj = [dt.date.fromisoformat(str(t)) for t in z["dates"]]
+            attendues = [dt.date.fromisoformat(str(t)) for t in dates_saison(s)]
+            if jj != attendues:
+                raise ValueError(f"Dates incomplètes ou désordonnées : {fichier.name}")
+            if lat.ndim != 1 or lon.shape != lat.shape or q.shape != (len(jj), len(lat)):
+                raise ValueError(f"Dimensions incompatibles : {fichier.name}")
+            if not np.isfinite(lat).all() or not np.isfinite(lon).all() or np.isinf(q).any():
+                raise ValueError(f"Valeurs invalides : {fichier.name}")
+            keys = [(round(float(a), 3), round(float(b), 3)) for a, b in zip(lat, lon)]
+            if len(set(keys)) != len(keys) or set(keys) != set(cles):
+                raise ValueError(f"Mailles différentes de R-21 : {fichier.name}")
+            index = {k: i for i, k in enumerate(keys)}
+            valeurs.append(q[:, [index[k] for k in cles]].astype("float32"))
+            dates.extend(jj)
+    return dates, np.concatenate(valeurs)
+
+
+def lire_positions(fichier, country="mdg"):
+    from build_cyclones import USECOLS, clean, configuration
+    cfg = configuration(country)
+    raw = pd.read_csv(fichier, skiprows=[1], usecols=USECOLS, low_memory=False)
+    positions = clean(raw, int(cfg["since"]), cfg["bbox"])
+    if positions.empty:
+        raise ValueError("IBTrACS : aucune position après les filtres partagés")
+    return [(t.to_pydatetime(), float(a), float(b))
+            for t, a, b in zip(positions.time, positions.LAT, positions.LON)]
+
+
+def lire_atlas(units_path, hydro_path):
+    u = pd.read_csv(units_path, dtype={k: str for k in ("pcode", "adm2", "adm3")})
+    h = pd.read_csv(hydro_path, dtype=str)
+    u = u[u.level == 4].copy()
+    if u.empty or u.pcode.duplicated().any() or h.pcode.duplicated().any():
+        raise ValueError("Atlas vide ou codes de fokontany dupliqués")
+    u = u.merge(h[["pcode", "basin", "subbasin"]], on="pcode", how="left",
+                validate="one_to_one", indicator=True)
+    if (u._merge != "both").any() or u[["adm2", "adm3"]].isna().any().any():
+        raise ValueError("Atlas : fokontany sans rattachement")
+    # build_hydro.unit_stats réserve 0 à l'absence de bassin/sous-bassin.
+    # Leur population reste au dénominateur du district, sans créer un bassin 0.
+    for col in ("basin", "subbasin"):
+        u.loc[pd.to_numeric(u[col], errors="raise") == 0, col] = np.nan
+    return u.rename(columns={"pop": "population", "basin": "bassin",
+                             "subbasin": "sous_bassin", "adm3": "commune"})
+
+
+def lire_unites(fichier, fiches_episodes, population=(425, 22, 12)):
+    el = pd.read_csv(fichier, dtype={"adm2": str})
+    el = el[el.eligible == 1]
+    if el.duplicated(["episode", "adm2"]).any():
+        raise ValueError("Unités R-21 dupliquées")
+    if (len(el), el.episode.nunique(), el.saison.nunique()) != population:
+        raise ValueError("Population figée R-21 modifiée")
+    groupes = dict(list(fiches_episodes.groupby(["episode", "adm2"])))
+    unites = []
+    for r in el.itertuples():
+        g = groupes.get((r.episode, r.adm2))
+        if g is None or len(g) != r.fiches or set(g.saison) != {r.saison}:
+            raise ValueError("Unités recalculées différentes de l'éligibilité R-21")
+        unites.append(dict(episode=int(r.episode), saison=int(r.saison),
+                           territoire=r.adm2, dates=sorted(set(g.d))))
+    return unites
+
+
+def calendrier(mois, tous, unites):
+    """Support témoin R-21 exact ; J±3 ajouté sans créer de nouveaux témoins."""
+    from r21_scores import MOIS, SAISONS, EXCLUES
+    publies = {(y, m) for y, m, *_ in mois}
+    base = set()
+    for y, m in sorted(publies):
+        s = season_of(dt.date(y, m, 1))
+        if m in MOIS and SAISONS[0] <= s <= SAISONS[1] and s not in EXCLUES and not (y == 2019 and m <= 3):
+            base.update(dt.date(y, m, j) for j in range(1, calendar.monthrange(y, m)[1] + 1))
+    jours = sorted(base | {d for u in unites for d in etendre(u["dates"], 3)})
+    touches = {(y, m): set(tous[[d.year == y and d.month == m for d in tous.d]].adm2)
+               for y, m in {(d.year, d.month) for d in jours}}
+    return jours, base, touches
+
+
+def matrice(codes, territoires):
+    from scipy import sparse
+    index = {t: i for i, t in enumerate(territoires)}
+    rows = [i for i, c in enumerate(codes) if c in index]
+    return sparse.csr_matrix((np.ones(len(rows), "float32"),
+                              (rows, [index[codes[i]] for i in rows])),
+                             shape=(len(codes), len(territoires)))
+
+
+def charger(country, previsions, reanalyse, ibtracs, eligibilite):
+    from common import country_data_dir, locate_points
+    from r21_scores import lire, fiches, episodes
+    cles, mois = lire(Path(previsions))
+    if not mois:
+        raise ValueError("Aucune reprévision")
+    dates, q = lire_reanalyse(reanalyse, cles)  # garde avant tout calcul
+    atlas = lire_atlas(country_data_dir(country) / "units.csv",
+                       country_data_dir(country) / "hydro_units.csv")
+    unites = lire_unites(eligibilite, episodes(fiches(country)))
+    jours, base, touches = calendrier(mois, fiches(country, filtre_dommages=False), unites)
+    codes = locate_points(country, [k[1] for k in cles], [k[0] for k in cles])
+    lookup = atlas.set_index("pcode")
+    if any(c and c not in lookup.index for c in codes):
+        raise ValueError("Maille localisée dans un fokontany absent de l'atlas")
+    dist = [lookup.at[c, "adm2"] if c else "" for c in codes]
+    bassin = [lookup.at[c, "bassin"] if c else "" for c in codes]
+    districts = sorted(set(dist) - {""})
+    liens = rattachements(atlas)
+    bassins = sorted(set(liens.bassin))
+    tem = np.array([[a not in touches[(j.year, j.month)] and j in base for a in districts]
+                    for j in jours], bool)
+    tb = temoins_bassins(jours, bassins, touches, liens)
+    tb &= np.array([j in base for j in jours])[:, None]
+    centres = centroides(atlas)
+    if any(u["territoire"] not in centres for u in unites):
+        raise ValueError("District éligible absent des centroïdes")
+    return dict(mois=mois, reanalyse=fenetres_reanalyse(mois, dates, q), jours=jours,
+                unites=unites, territoires=districts, A=matrice(dist, districts), temoins=tem,
+                bassins=bassins, B=matrice(bassin, bassins), temoins_b=tb, liens=liens,
+                centres=centres, positions=lire_positions(ibtracs, country))
+
+
+def executer(entrees):
+    e = entrees
+    district = diagnostic(**{k: e[k] for k in
+                              ("mois", "reanalyse", "A", "territoires", "jours", "temoins", "unites")})
+    pis = dict(zip(district["plis"].saison, district["plis"].pi))
+    resultats = {"districts": district}
+    for nom, sensibilite in (("bassins", False), ("bassins_recoupement", True)):
+        u = unites_bassins(e["unites"], e["liens"], sensibilite)
+        if not u:
+            raise ValueError("Aucune unité bassin : atlas incompatible")
+        resultats[nom] = diagnostic(e["mois"], e["reanalyse"], e["B"], e["bassins"],
+                                    e["jours"], e["temoins_b"], u, pis=pis)
+    dates = {(u["episode"], u["territoire"]): u["dates"] for u in e["unites"]}
+    contexte, groupes = diagnostic_contexte(district["unites"], dates, e["centres"], e["positions"])
+    return resultats, contexte, groupes
+
+
+def ecrire(sortie, entrees, resultats, contexte, groupes):
+    """Sorties agrégées seulement ; aucune fiche brute ou observation EMS."""
+    from build_cyclones import URL
+    sortie = Path(sortie)
+    sortie.mkdir(parents=True, exist_ok=True)
+    texte = ["# R-21 bis — Diagnostic exploratoire", "",
+             "Protocole : protocole_r21_diagnostic.md, sections 4–7 et 12. "
+             "Référence conditionnelle au modèle et aux seuils ; aucune attribution causale acquise.", "",
+             "Bootstrap par saison : 2 000 tirages, graine 20261112. "
+             "Comparaisons sur support commun ; a conservé, n exclu. CHIRPS différé ; EMS réservé.", "",
+             f"IBTrACS horodaté : {URL} ; filtres partagés de build_cyclones (positions à 6 h, sans interpolation).", "",
+             "Mailles rattachées aux bassins par leur fokontany (même localisation que R-21), "
+             "puis hydro_units.csv. Les jours ajoutés pour J±3 ne sont pas des témoins supplémentaires.", ""]
+    for nom, r in resultats.items():
+        prefix = f"r21_diagnostic_{nom}"
+        for tab in ("unites", "plis"):
+            r[tab].to_csv(sortie / f"{prefix}_{tab}.csv", index=False, encoding="utf-8")
+        for methode, table in r["croisements"].items():
+            table.to_csv(sortie / f"{prefix}_croisement_{methode}.csv", encoding="utf-8")
+        for methode, effectifs in r["effectifs"].items():
+            effectifs.rename("effectif").to_csv(sortie / f"{prefix}_effectifs_{methode}.csv", encoding="utf-8")
+        texte += [f"## {nom}", "", r["lecture"], "",
+                  f"Plis hors tolérance : {int(r['plis'].hors_tolerance.sum())}.", ""]
+        for comparaison, valeurs in r["comparaisons"].items():
+            texte += [f"### {comparaison}", "", "```json",
+                      json.dumps(valeurs, ensure_ascii=False, indent=2), "```", ""]
+    entrees["liens"].to_csv(sortie / "r21_diagnostic_rattachements.csv", index=False, encoding="utf-8")
+    contexte.to_csv(sortie / "r21_diagnostic_contexte.csv", index=False, encoding="utf-8")
+    texte += ["## D3 — Comparaison par épisode", "", "```json",
+              json.dumps(comparer_echelles(resultats["districts"]["unites"], resultats["bassins"]["unites"]),
+                         ensure_ascii=False, indent=2), "```", "",
+              "## D4 — Contexte cyclonique", "", "```json",
+              json.dumps(groupes, ensure_ascii=False, indent=2), "```", ""]
+    (sortie / "r21_diagnostic.md").write_text("\n".join(texte), encoding="utf-8")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--country", choices=["mdg"], default="mdg")
+    ap.add_argument("--previsions", type=Path, default=Path("data/mdg/reforecast"))
+    ap.add_argument("--reanalyse", type=Path, default=Path("data/mdg/reanalyse"))
+    ap.add_argument("--ibtracs", type=Path, default=Path("data/mdg/ibtracs.SI.list.v04r01.csv"))
+    ap.add_argument("--eligibilite", type=Path, default=Path("validation/r21_eligibilite.csv"))
+    ap.add_argument("--sortie", type=Path, default=Path("validation"))
+    args = ap.parse_args()
+    entrees = charger(args.country, args.previsions, args.reanalyse, args.ibtracs, args.eligibilite)
+    resultats, contexte, groupes = executer(entrees)
+    ecrire(args.sortie, entrees, resultats, contexte, groupes)
+
+
 if __name__ == "__main__":
-    raise SystemExit("API en mémoire uniquement ; aucun calcul réel autorisé par cette livraison.")
+    main()
