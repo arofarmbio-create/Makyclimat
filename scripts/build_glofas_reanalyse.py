@@ -122,12 +122,21 @@ def menage(session, entetes, dossier, courante, now=None):
     notes = [lire_note(p) for p in sorted(dossier.glob("*.demande.json"))]
     garder = {n["jobID"] for n in notes}
     propre = lire_note(courante)["jobID"] if courante.exists() else None
-    r = session.get(f"{BASE}/jobs", params={"status": ["accepted", "running"], "limit": 100},
-                    headers=entetes, timeout=60)
-    r.raise_for_status()
-    data = r.json()
-    jobs = data["jobs"]
-    if len(jobs) >= 100 or any(l.get("rel") == "next" for l in data.get("links", [])):
+    # EWDS peut renvoyer un lien « next » même sous la limite (run 43251343898, 12/11) : on suit la pagination,
+    # bornée à 20 pages, et on ne garde que les demandes actives. Inventaire non terminé → arrêt, comme avant.
+    jobs, url, params = [], f"{BASE}/jobs", {"status": ["accepted", "running"], "limit": 100}
+    for _ in range(20):
+        r = session.get(url, params=params, headers=entetes, timeout=60)
+        r.raise_for_status()
+        data = r.json()
+        jobs += [j for j in data["jobs"] if j.get("status") in ("accepted", "running")]
+        suivant = next((l.get("href") for l in data.get("links", []) if l.get("rel") == "next"), None)
+        if not suivant or not data["jobs"]:
+            if len(data["jobs"]) >= 100:     # page pleine sans suite : inventaire douteux
+                raise RuntimeError("Inventaire EWDS incomplet : arrêt avant ménage")
+            break
+        url, params = urllib.parse.urljoin(url, suivant), None
+    else:
         raise RuntimeError("Inventaire EWDS incomplet : arrêt avant ménage")
     now = now or dt.datetime.now(dt.timezone.utc)
     libre = True

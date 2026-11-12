@@ -147,6 +147,25 @@ class Tests(unittest.TestCase):
             R.menage(self.api, {}, self.d/'absent', self.note)
         self.assertEqual(self.api.deletes, [])
 
+    def test_menage_suit_la_pagination(self):
+        """Run 43251343898 (12/11) : un lien « next » ne bloque plus ; une demande active en page 2 est vue."""
+        class Pages:
+            def __init__(self, pages):
+                self.pages, self.deletes = pages, []
+            def get(self, url, **kwargs):
+                return Rep(self.pages.pop(0))
+            def delete(self, url, **kwargs):
+                self.deletes.append(url)
+                return Rep({})
+        suite = [{"rel": "next", "href": "/api/retrieve/v1/jobs?page=2"}]
+        actif = {"jobID": "autre", "status": "running", "processID": R.JEU, "created": "2026-11-12T00:00:00Z"}
+        api = Pages([{"jobs": [{"jobID": "x", "status": "successful"}], "links": suite}, {"jobs": [actif], "links": []}])
+        self.assertFalse(R.menage(api, {}, self.d, self.note))
+        api = Pages([{"jobs": [{"jobID": "x", "status": "successful"}], "links": suite}] * 20)
+        with self.assertRaisesRegex(RuntimeError, 'Inventaire'):
+            R.menage(api, {}, self.d, self.note)
+        self.assertEqual(api.deletes, [])
+
     def test_suivi_attend_puis_rend_la_main(self):
         temps = [0]
         def dormir(s):
