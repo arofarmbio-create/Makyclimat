@@ -78,10 +78,17 @@ jobs:
         run: |
           p="${{ github.event.inputs.part }}"; ev="${{ matrix.event }}"; d="data/$COUNTRY/r02bis"
           if [ "$p" = "rafales" ]; then
-            mkdir -p "$d"
-            gh release download "$TAG" -p "rafales_${ev}.demande.json" -D "$d" --clobber 2>/dev/null || true
-            garder=$(jq -r '.jobID // empty' "$d/rafales_${ev}.demande.json" 2>/dev/null || true)
-            python scripts/cds_menage.py --age-min 30 ${garder:+--garder "$garder"} || true
+            # Relecture Codex du 12/11 (14:55) : toutes les notes (toutes activations) sont épargnées par le ménage ;
+            # une erreur de lecture de la release ou d'une note arrête le job avant le ménage et toute soumission.
+            mkdir -p "$d" notes
+            noms=$(gh release view "$TAG" --json assets -q '.assets[].name')
+            for n in $(printf '%s\n' "$noms" | grep '^rafales_.*\.demande\.json$' || true); do
+              gh release download "$TAG" -p "$n" -D notes --clobber
+            done
+            [ -f "notes/rafales_${ev}.demande.json" ] && cp "notes/rafales_${ev}.demande.json" "$d/"
+            mrc=0
+            python scripts/cds_menage.py --age-min 30 --garder-notes notes || mrc=$?
+            [ "$mrc" = 3 ] && exit 3                         # note illisible : ni ménage ni soumission
             rc=0
             python scripts/build_r02bis_sources.py --country "$COUNTRY" --part rafales --event "$ev" \
               --delai-min 320 --publier-demande "$TAG" || rc=$?

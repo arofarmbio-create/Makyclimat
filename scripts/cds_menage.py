@@ -5,13 +5,19 @@ Pourquoi (02/11/2026) : une demande C3S restée en file près de 5 heures, laiss
 refuser toutes les demandes ERA5-Land du compte (« Maximum number queued requests »), alors que la file ERA5-Land
 du compte était vide. Les demandes en cours de calcul (« running ») ne sont jamais annulées, ni celles passées par
 --garder (12/11/2026 : collecte reprenable des rafales R-40, la demande en file est reprise par le lancement suivant).
-Usage : python scripts/cds_menage.py [--age-min 30] [--garder ID ...] [--liste-seulement]
+Relecture Codex du 12/11 (14:55) : toutes les demandes notées (--garder-notes, notes rafales_*.demande.json de toutes
+les activations) sont épargnées, pas seulement celle de l'activation courante ; une note illisible arrête tout (code 3)
+au lieu d'être prise pour une absence.
+Usage : python scripts/cds_menage.py [--age-min 30] [--garder ID ...] [--garder-notes DOSSIER] [--liste-seulement]
 """
 from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
 import os
+import sys
+from pathlib import Path
 
 import requests
 
@@ -33,12 +39,32 @@ def stale_jobs(jobs: list[dict], now: dt.datetime, age_min: float, garder=()) ->
     return out
 
 
+def ids_notes(dossier) -> set[str]:
+    """Identifiants des demandes notées dans un dossier (*.demande.json). Une note illisible lève ValueError."""
+    ids = set()
+    for f in sorted(Path(dossier).glob("*.demande.json")):
+        try:
+            ids.add(str(json.loads(f.read_text(encoding="utf-8"))["jobID"]))
+        except (OSError, ValueError, KeyError, TypeError) as e:
+            raise ValueError(f"note illisible : {f.name} ({e})") from e
+    return ids
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--age-min", type=float, default=30)
     ap.add_argument("--garder", nargs="*", default=[], help="identifiants de demandes à ne jamais annuler")
+    ap.add_argument("--garder-notes", help="dossier des notes *.demande.json dont les demandes sont à épargner")
     ap.add_argument("--liste-seulement", action="store_true")
     args = ap.parse_args()
+    garder = set(args.garder)
+    if args.garder_notes:
+        try:
+            garder |= ids_notes(args.garder_notes)
+        except ValueError as e:
+            print(f"::error::{e} : ménage annulé", flush=True)
+            sys.exit(3)
+        print(f"{len(garder)} demande(s) notée(s) épargnée(s)")
     h = {"PRIVATE-TOKEN": os.environ["CDS_API_KEY"]}
     r = requests.get(f"{BASE}/retrieve/v1/jobs", params={"status": ["accepted", "running"], "limit": 100}, headers=h, timeout=60)
     r.raise_for_status()
@@ -49,7 +75,7 @@ def main() -> None:
         print(f"  {j.get('processID')} : {j.get('status')}, créée {j.get('created')}")
     if args.liste_seulement:
         return
-    for j in stale_jobs(jobs, now, args.age_min, set(args.garder)):
+    for j in stale_jobs(jobs, now, args.age_min, garder):
         d = requests.delete(f"{BASE}/retrieve/v1/jobs/{j['jobID']}", headers=h, timeout=60)
         print(f"  annulée : {j.get('processID')} (HTTP {d.status_code})")
 

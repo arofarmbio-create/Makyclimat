@@ -103,5 +103,26 @@ check("ménage : demande en file depuis 5 h annulée, récente et en cours épar
 check("ménage : demande gardée (collecte reprenable des rafales) jamais annulée",
       M.stale_jobs(jobs, NOW, 30, garder={"a"}) == [])
 
+# Relecture Codex du 12/11 (14:55) : deux activations successives ; la demande d'EMSR564, encore en file à l'échéance,
+# est épargnée par le ménage du job suivant (EMSR565) ; une note illisible arrête tout.
+import json  # noqa: E402
+import tempfile  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+with tempfile.TemporaryDirectory() as d:
+    (Path(d) / "rafales_EMSR564.demande.json").write_text(json.dumps({"jobID": "j564"}), encoding="utf-8")
+    (Path(d) / "rafales_EMSR565.demande.json").write_text(json.dumps({"jobID": "j565"}), encoding="utf-8")
+    file_compte = [job("j564", "era5", "accepted", 6), job("j565", "era5", "accepted", 0.1), job("x", "era5", "accepted", 6)]
+    garde = M.ids_notes(d)
+    check("deux activations : les deux demandes notées sont épargnées, l'orpheline annulée",
+          garde == {"j564", "j565"} and [j["jobID"] for j in M.stale_jobs(file_compte, NOW, 30, garde)] == ["x"])
+    (Path(d) / "rafales_EMSR645.demande.json").write_text("{tronqué", encoding="utf-8")
+    try:
+        M.ids_notes(d)
+        ok = False
+    except ValueError as e:
+        ok = "EMSR645" in str(e)
+    check("note illisible : erreur (le ménage s'arrête au lieu de la prendre pour une absence)", ok)
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)
