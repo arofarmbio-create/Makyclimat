@@ -1,6 +1,6 @@
 # R-21 — Population éligible (épisodes, districts, témoins)
 
-Calcul du 11/11/2026 par [`scripts/r21_eligibilite.py`](../scripts/r21_eligibilite.py) ; 59 mois GloFAS en local. Détail par unité : [`r21_eligibilite.csv`](r21_eligibilite.csv). Aucun score calculé.
+Calcul du 12/11/2026 par [`scripts/r21_eligibilite.py`](../scripts/r21_eligibilite.py) ; 59 mois GloFAS en local. Détail par unité : [`r21_eligibilite.csv`](r21_eligibilite.csv). Aucun score calculé.
 
 ## Unités épisode × district
 

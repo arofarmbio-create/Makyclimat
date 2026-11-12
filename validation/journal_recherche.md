@@ -1268,3 +1268,14 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   0,154, sous le seuil de 0,46 (ligne 0,12-0,21 du tableau : 96 à 100 % de puissance). Réserve forte : les deux
   méthodes ne diffèrent que dans 4 % des unités témoins, loin des 30 points de gain supposés sur les épisodes ; la
   transportabilité reste non démontrée. Statut de H1 : décision du porteur avant les scores.
+- 🔧 (12/11) **CCI sur jours témoins, corrections après relecture Codex** (avis du 11/11, 20:50 et 21:01) : (1)
+  puissances publiées explicitement, par interpolation sur la grille simulée de chaque τ : borne haute 0,054 hors
+  grille (sous la plus petite CCI simulée, 0,12 à 0,19 selon τ, où la puissance vaut 96,4 à 99,8 %), donc pas de
+  puissance directement évaluée ; borne + 0,10 = 0,154 : 98,8 % (τ = 0), 98,6 % (τ = 0,1), hors grille pour τ = 0,2.
+  La mention « 96 à 100 % » de l'entrée précédente était une lecture de ligne du tableau, pas une évaluation. (2)
+  Réserve corrigée : le bootstrap de saisons entières préserve les dépendances au sein des saisons et suppose les
+  saisons indépendantes entre elles. (3) DesInventar lu sur quatre colonnes seulement (type, date, district, date
+  douteuse), plus aucune colonne de dommages chargée ; avant, le fichier entier était lu sans exploiter ces colonnes.
+  (4) Commentaire de fin d'épisode aligné sur le code et la fiche : un épisode se termine après 3 jours sans alerte.
+  Calcul relancé (graine fixe) : résultats identiques, CCI 0,045 [0,035 ; 0,054] ; éligibilité inchangée (425 unités,
+  22 épisodes).

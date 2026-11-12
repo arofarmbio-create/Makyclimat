@@ -1,6 +1,7 @@
 """R-21 : CCI des différences de détection estimée sur jours témoins, avant tout score (fiche de méthode, section 5).
 
-Analyse de sensibilité : aucune unité d'impact n'est lue. Les fiches DesInventar ne servent qu'à (1) désigner les
+Analyse de sensibilité : aucune unité d'impact n'est lue. Les fiches DesInventar ne sont lues que sur quatre colonnes
+(type, date, district, date douteuse ; aucune colonne de dommages) et ne servent qu'à (1) désigner les
 jours-districts témoins (aucune fiche de cyclone ou d'inondation dans le mois, filtre de dommages non appliqué) et
 (2) reprendre les groupes de districts des épisodes éligibles (validation/r21_eligibilite.csv, colonnes episode et
 adm2 seulement). Aucune détection d'épisode réel n'est calculée.
@@ -12,12 +13,16 @@ Chaîne (fiche, sections 2, 4 et 5) :
 - alerte d'un district à une initialisation : contrôle si une maille dépasse ; ensemble si la part des 11 membres
   ayant au moins une maille en dépassement atteint le seuil de probabilité pi ; un jour d est en alerte si une
   initialisation de 1 à 3 jours avant alerte ;
-- charge : épisodes d'alerte (nouvel épisode après plus de 3 jours sans alerte) pour 100 jours-districts témoins ;
+- charge : épisodes d'alerte pour 100 jours-districts témoins ; un épisode se termine après 3 jours sans alerte
+  (fiche, section 4), donc deux alertes distantes de plus de 3 jours ouvrent deux épisodes ;
   pour chaque pli (saison testée s), seuils sans s, charge cible = contrôle sur les autres saisons, pi (pas de 0,02)
   le plus proche, écart toléré de 20 % ;
 - CCI : jours-groupes = (jour témoin de la saison testée, districts témoins avec maille de rivière d'un groupe
   d'épisode réel), au moins 2 districts et au moins une alerte de l'une des méthodes ; D = alerte ensemble - alerte
-  contrôle ; CCI par ANOVA à un facteur (effectifs inégaux) ; intervalle à 95 % par bootstrap des saisons.
+  contrôle ; CCI par ANOVA à un facteur (effectifs inégaux) ; intervalle à 95 % par bootstrap des saisons ;
+- puissance : repères lus sur la grille simulée (validation/r21_puissance.md, population finale, gain de 30 points)
+  pour la borne haute et la borne haute + 0,10, par interpolation linéaire entre scénarios d'un même τ ; une valeur
+  hors de la grille n'a pas de puissance directement évaluée.
 
 Sorties : validation/r21_cci_temoins.md et validation/r21_cci_temoins.csv (un pli par ligne).
 Usage : python scripts/r21_cci_temoins.py --country mdg [--n-boot 2000]
@@ -46,8 +51,13 @@ N_BLOCS = 30
 Q_MIN = 5.0
 PIS = np.round(np.arange(0.02, 1.0001, 0.02), 2)
 TOLERANCE = 0.20
-FIN_EPISODE = 3                       # jours sans alerte qui closent un épisode d'alerte
+FIN_EPISODE = 3                       # 3 jours sans alerte closent un épisode : nouvel épisode si écart > 3 jours
 CCI_SEUIL = 0.46                      # seuil de puissance de 80 % (fiche, section 5)
+# Grille simulée, population finale (425 unités, 22 épisodes, 12 saisons), gain de 30 points, test A :
+# (τ, CCI des différences, puissance %), reprise de validation/r21_puissance.md (calcul du 11/11/2026).
+GRILLE = ((0.0, 0.12, 99.8), (0.0, 0.26, 95.5), (0.0, 0.37, 89.1), (0.0, 0.49, 83.2), (0.0, 0.80, 70.6),
+          (0.1, 0.14, 99.2), (0.1, 0.28, 93.5), (0.1, 0.38, 88.3), (0.1, 0.50, 82.2), (0.1, 0.81, 68.4),
+          (0.2, 0.19, 96.4), (0.2, 0.33, 88.7), (0.2, 0.42, 83.2), (0.2, 0.54, 78.0), (0.2, 0.82, 65.5))
 
 
 def lire(dossier):
@@ -118,6 +128,24 @@ def charge(flag, temoin, jours):
             n_ep += 1 + int((np.diff(a) > FIN_EPISODE).sum())
     n = temoin.sum()
     return 100 * n_ep / n if n else np.nan
+
+
+def repere_puissance(cci):
+    """Repère de puissance pour une CCI, par τ : interpolation linéaire entre les deux scénarios simulés qui
+    l'encadrent ; hors de la grille, aucune puissance n'est évaluée et le scénario le plus proche est cité."""
+    morceaux = []
+    for tau in sorted({t for t, _, _ in GRILLE}):
+        pts = sorted((c, p) for t, c, p in GRILLE if t == tau)
+        if cci < pts[0][0]:
+            morceaux.append(f"τ = {fr(tau, 1)} : hors grille, sous la plus petite CCI simulée "
+                            f"({fr(pts[0][0], 2)} : {fr(pts[0][1], 1)} %)")
+        elif cci > pts[-1][0]:
+            morceaux.append(f"τ = {fr(tau, 1)} : hors grille, au-dessus de la plus grande CCI simulée")
+        else:
+            (c0, p0), (c1, p1) = next((a, b) for a, b in zip(pts, pts[1:]) if a[0] <= cci <= b[0])
+            morceaux.append(f"τ = {fr(tau, 1)} : {fr(p0 + (p1 - p0) * (cci - c0) / (c1 - c0), 1)} % "
+                            f"(entre {fr(c0, 2)} et {fr(c1, 2)})")
+    return " ; ".join(morceaux)
 
 
 def fr(x, nd=3):
@@ -225,14 +253,19 @@ def main() -> None:
          f"Calcul du {dt.date.today():%d/%m/%Y} par [`scripts/r21_cci_temoins.py`](../scripts/r21_cci_temoins.py), "
          f"{len(mois)} mois GloFAS v4, {n_blocs} blocs mensuels décembre-mars, {len(groupes)} groupes de districts "
          "d'épisodes éligibles. Méthode : [fiche, section 5](r21_fiche_methode.md). **Aucune unité d'impact n'est "
-         "lue ; le verrou des scores est maintenu.** Détail par pli : [`r21_cci_temoins.csv`](r21_cci_temoins.csv).", "",
+         "lue** (DesInventar lu sur quatre colonnes : type, date, district, date douteuse) **; le verrou des scores est "
+         "maintenu.** Détail par pli : [`r21_cci_temoins.csv`](r21_cci_temoins.csv).", "",
          "## Résultat", "",
          f"- **CCI des différences : {fr(est)}**, intervalle à 95 % par bootstrap des saisons "
          f"({args.n_boot} tirages) : **{fr(lo)} à {fr(hi)}** ; borne haute + 0,10 : {fr(hi + 0.10)}.",
          f"- Seuil de 80 % de puissance (population finale, 30 points) : CCI ≤ {fr(CCI_SEUIL, 2)}. "
          f"Borne haute {'sous' if hi <= CCI_SEUIL else 'au-dessus de'} ce seuil ; borne haute + 0,10 "
-         f"{'sous' if hi + 0.10 <= CCI_SEUIL else 'au-dessus de'} ce seuil. Puissance à lire sur le tableau de la "
-         "[fiche, section 5](r21_fiche_methode.md#5-test-et-puissance-2e-version-après-les-relectures-de-codex-de-1245-1325-et-1328).",
+         f"{'sous' if hi + 0.10 <= CCI_SEUIL else 'au-dessus de'} ce seuil.",
+         f"- Puissance du test A ([grille simulée](r21_puissance.md), population finale, gain de 30 points), "
+         f"interpolation linéaire entre scénarios d'un même τ ; une valeur hors de la grille n'a pas de puissance "
+         f"directement évaluée et seul le scénario simulé le plus proche est cité :",
+         f"  - borne haute {fr(hi)} : {repere_puissance(hi)} ;",
+         f"  - borne haute + 0,10 = {fr(hi + 0.10)} : {repere_puissance(hi + 0.10)}.",
          f"- Jours-groupes retenus : {len(D)} (taille médiane {np.median(tailles):.0f} districts, de "
          f"{tailles.min()} à {tailles.max()}) ; part médiane de districts où les méthodes diffèrent : "
          f"{np.median(non_nuls):.0%}, part moyenne {non_nuls.mean():.1%} (toutes unités : "
@@ -241,8 +274,9 @@ def main() -> None:
          f"- Plis hors tolérance de charge (± {TOLERANCE:.0%}) : {int(P.hors_tolerance.sum())} sur {len(P)}.", "",
          "**Réserves.** Transportabilité non démontrée (relecture Codex du 11/11, 14:37) : la CCI des jours témoins "
          "peut différer de celle des épisodes d'impact. Les jours-groupes consécutifs se recouvrent (mêmes "
-         "initialisations, groupes qui partagent des districts) : l'estimation ponctuelle les pondère tous, "
-         "l'intervalle ne tient compte que de la dépendance entre saisons. H1 reste exploratoire par défaut ; le "
+         "initialisations, groupes qui partagent des districts) : l'estimation ponctuelle les pondère tous. Le bootstrap "
+         "rééchantillonne des saisons entières : il préserve les dépendances au sein de chaque saison et suppose les "
+         "saisons indépendantes entre elles. H1 reste exploratoire par défaut ; le "
          "porteur décide du statut avant les scores.", "",
          "## Plis (saison testée)", "",
          "| Saison | pi | Charge cible | Charge ensemble (app.) | Écart | Contrôle (test) | Ensemble (test) | "

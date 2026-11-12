@@ -34,8 +34,15 @@ INDISPONIBLES = {(2015, 3)}
 NOMS = {12: "déc.", 1: "jan.", 2: "fév.", 3: "mars"}
 
 
+COLONNES_FICHE = ["type", "date", "adm2_actuel", "date_douteuse"]
+COLONNES_DOMMAGES = ["touches", "maisons_endommagees", "maisons_detruites"]
+
+
 def fiches(slug, filtre_dommages=True):
-    df = pd.read_csv(country_data_dir(slug) / "external" / "desinventar.csv", dtype=str)
+    """Fiches DesInventar de cyclone ou d'inondation par district. Sans filtre de dommages, seules les colonnes de
+    type, date et district sont lues : aucune colonne d'impact n'est chargée (relecture Codex du 11/11, 20:50)."""
+    colonnes = COLONNES_FICHE + (COLONNES_DOMMAGES if filtre_dommages else [])
+    df = pd.read_csv(country_data_dir(slug) / "external" / "desinventar.csv", dtype=str, usecols=colonnes)
     df = df[df.type.isin(["cyclone", "inondation"]) & df.date.notna() & df.adm2_actuel.notna()
             & (df.date_douteuse != "1")].copy()
     if filtre_dommages:
