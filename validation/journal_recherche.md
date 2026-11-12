@@ -1279,3 +1279,10 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
   (4) Commentaire de fin d'épisode aligné sur le code et la fiche : un épisode se termine après 3 jours sans alerte.
   Calcul relancé (graine fixe) : résultats identiques, CCI 0,045 [0,035 ; 0,054] ; éligibilité inchangée (425 unités,
   22 épisodes).
+
+## 12/11/2026
+
+### R-21 — Scores de H1, exploratoire (`validation/r21_scores.md`)
+- 📌 Statut exploratoire décidé par le porteur avant les scores ; méthode figée (fiche, sections 2 à 5), script `r21_scores.py`.
+- 📊 Détection 1 à 3 jours avant, à charge d'alerte égale (12 plis, aucun hors tolérance) : ensemble 16,0 % (68 unités sur 425), contrôle 14,8 % (63) ; discordances 8 contre 3 ; test A p = 0,31 : **pas de gain mis en évidence**. CCI observée sur épisodes 0,065. La simulation supposait un contrôle à 40 % et un gain de 30 points : avec 11 unités discordantes, la puissance réelle pour un gain plausible est bien plus faible ; absence de gain démontré ≠ absence de gain. Détection nulle des deux méthodes dans 5 saisons sur 12.
+- ❌ **H1 non soutenue** (exploratoire). Lecture : à ce niveau de détection (15 %), la comparaison repose sur 11 unités ; piste éventuelle, sous nouveau protocole déclaré d'avance : autres saisons ou pays, ou unité plus fine que le district.

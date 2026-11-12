@@ -181,3 +181,4 @@ Un résultat négatif (aucune compétence démontrable) est un résultat publiab
     des événements indépendants. Si l'effectif ne permet pas de conclure, l'analyse reste exploratoire.
   - Maintenir le verrou de calcul tant que ces choix, l'analyse de puissance et leur traduction dans le code
     n'ont pas été documentés et relus.
+- **12/11/2026 — Statut de H1 : exploratoire** (décision du porteur du projet, avant tout score, au vu de la sensibilité sur jours témoins : transportabilité de la CCI non démontrée). Scores calculés selon la fiche de méthode ([résultat](r21_scores.md)).
