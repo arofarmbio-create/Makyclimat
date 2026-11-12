@@ -65,17 +65,23 @@ jours étendus de 3 jours de part et d'autre :
 | Priorité | Classe | Règle (fixée avant calcul) |
 |---|---|---|
 | 1 | a. Sans rivière | Aucune maille de rivière retenue dans le district |
-| 2 | e. Détecté | R(j) ≥ 1 pour un jour j de J (alerte R-21) |
-| 3 | d. Hors fenêtre | R(j) ≥ 1 pour un jour de J±3, aucun dans J |
-| 4 | n. Non évaluable | Aucun jour de J couvert par une initialisation, ou donnée manquante (réanalyse absente, valeur non finie) sur tous les jours couverts de J±3 |
-| 5 | c. Signal sous le seuil | max de R sur les jours couverts de J±3 entre 0,5 inclus et 1 exclu |
-| 6 | b. Aucun signal | max de R sur les jours couverts de J±3 < 0,5 |
+| 1 bis | n. Non évaluable | Aucun jour de J avec une valeur R(j) valide (jour couvert par une initialisation et donnée présente et finie), même si J±3 en contient |
+| 2 | e. Détecté | R(j) ≥ 1 pour un jour valide j de J (alerte R-21) |
+| 3 | d. Hors fenêtre | R(j) ≥ 1 pour un jour valide de J±3 hors de J, aucun dans J |
+| 4 | c. Signal sous le seuil | max de R sur les jours valides de J±3 entre 0,5 inclus et 1 exclu |
+| 5 | b. Aucun signal | max de R sur les jours valides de J±3 < 0,5 |
 
-**Non évaluable** (relecture Codex du 12/11, 16:24) : une donnée absente n'est jamais comptée comme une absence de
-signal. Son effectif est publié pour chaque méthode ; les parts des classes b, c, d et e sont calculées **hors**
-unités non évaluables (dénominateur publié) et les unités non évaluables pour l'une des méthodes forment une ligne
-et une colonne à part dans les croisements. Pour les reprévisions, les 425 unités ont par construction une
-initialisation de 1 à 3 jours avant l'une de leurs dates ; la classe n vise surtout la réanalyse.
+**Non évaluable** (relectures Codex du 12/11, 16:24 et 16:28) : une donnée absente n'est jamais comptée comme une
+absence de signal. Les classes b, c, d et e exigent **au moins un jour valide dans J** ; une valeur valide dans J±3
+seulement ne suffit pas. **Couverture partielle** : seuls les jours valides comptent, et la part de jours valides de J
+est publiée par unité et par méthode ; une unité dont moins de la moitié des jours de J sont valides est signalée.
+
+**Mêmes unités pour toutes les comparaisons** : les comparaisons entre méthodes (contrôle, ensemble, réanalyse) se font
+sur l'ensemble **commun** des unités évaluables pour toutes les méthodes comparées. Le taux du contrôle y est
+recalculé (descriptif), au lieu de reprendre les 14,8 % de R-21 sur 425 unités. Les exclusions sont publiées par
+méthode et par motif ; les unités non évaluables pour l'une des méthodes forment une ligne et une colonne à part dans
+les croisements. Pour les reprévisions, les 425 unités ont par construction une initialisation de 1 à 3 jours avant
+l'une de leurs dates ; la classe n vise surtout la réanalyse.
 
 Sorties : effectifs par classe et par méthode (contrôle, ensemble, réanalyse), par saison et par épisode.
 
@@ -99,8 +105,8 @@ modèle « voit » lorsque la météo est connue. Ce n'est **pas une borne supé
   écart toléré de ± 20 %. Un pli hors tolérance est signalé. Les charges obtenues en test sont publiées.
 - **Détection** : classe e de D1 (dépassement du seuil ajusté un jour de l'unité) ; sensibilité : à ± 1 jour (dates
   imprécises). La détection au seuil non ajusté (k = 1) est publiée à titre descriptif seulement.
-- **Lecture fixée avant calcul**, P = détection de la réanalyse à charge comparable, P_c = celle du contrôle (R-21,
-  14,8 %) ; les attributions sont des **hypothèses privilégiées**, pas des conclusions :
+- **Lecture fixée avant calcul**, P = détection de la réanalyse à charge comparable et P_c = celle du contrôle,
+  **toutes deux sur les mêmes unités évaluables** (section 4) ; les attributions sont des **hypothèses privilégiées**, pas des conclusions :
   - **P ≤ 25 %** : référence basse. Hypothèses privilégiées : (A), ou erreur du modèle hydrologique, ou (B) ; ces
     impacts renseignent peu sur la compétence de prévision, et R-21 se lit « peu informatif » plutôt que « GloFAS
     sans compétence ».
@@ -151,6 +157,9 @@ cartographiées par satellite, indépendantes des déclarations) pour les activa
 - 12/11/2026, 3e version avant tout calcul (relecture Codex de 16:24) : ordre des opérations de R-21 repris exactement
   (maximum de fenêtre par initialisation, puis membres, puis initialisations couvrant le jour) ; réanalyse construite
   aux mêmes initialisations ; classe « non évaluable » séparée de « aucun signal » ; apport formulé sous hypothèses.
+- 12/11/2026, 4e version avant tout calcul (relecture Codex de 16:28) : jour valide exigé dans J pour toute classe
+  autre que « non évaluable » ; couverture partielle publiée ; comparaisons sur les mêmes unités évaluables, taux du
+  contrôle recalculé ; section 11 présentée comme décisions acquises.
 - **12/11/2026 — Décisions du porteur du projet** : protocole validé (sous réserve de la relecture de Codex de cette
   version) ; téléchargement de la réanalyse GloFAS autorisé ; observations communales Copernicus EMS réservées au
   test confirmatoire par sous-bassin (section 8).
@@ -164,8 +173,8 @@ puis qui raisonne par unité hydrologique plutôt qu'administrative. Les travaux
 et al. 2026) s'appuient sur des stations hydrométriques. Aucune évaluation publiée pour Madagascar n'a été trouvée
 le 29/10/2026.
 
-## 11. Décisions demandées au porteur du projet
+## 11. Décisions du porteur du projet (acquises le 12/11/2026)
 
-1. Valider ce protocole (après relecture de Codex).
-2. Autoriser le téléchargement de la réanalyse GloFAS (D2), environ 14 demandes Copernicus, une à la fois, après R-40.
-3. Confirmer que les observations communales EMS restent réservées au test confirmatoire (section 8).
+1. Protocole validé, sous réserve de la relecture de Codex de la version en vigueur.
+2. Téléchargement de la réanalyse GloFAS (D2) autorisé : environ 14 demandes Copernicus (EWDS), une à la fois.
+3. Observations communales Copernicus EMS réservées au test confirmatoire par sous-bassin (section 8).
