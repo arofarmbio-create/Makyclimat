@@ -51,6 +51,7 @@ Ajoutées par le tableau de bord après un clic du porteur du projet. Le surveil
 
 Réponses données depuis le tableau de bord. L'assistant concerné les lit à sa reprise et met sa ligne de tâche à jour.
 
+- 12/11/2026 17:20 · Porteur du projet → Claude · **Délégation pendant son absence** (sans accès Internet) : Claude tient le rôle du porteur et décide à sa place. Limites que Claude s'impose : décisions techniques et réversibles dans le périmètre déjà autorisé (collectes, relectures, corrections, analyses déclarées d'avance) ; **rien d'irréversible ni d'engageant** (courriers, publication externe, changement du statut d'un test, suppression) ; chaque décision est notée ici avec « (délégation) » pour relecture au retour.
 - 12/11/2026 14:23 · Porteur du projet → Claude · **Consigne** · claude pourqoui codex est au reposs · Exécution `exec:claude:20261112-142342-8708`
 
 
