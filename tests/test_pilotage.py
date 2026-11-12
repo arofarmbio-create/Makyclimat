@@ -387,6 +387,10 @@ def test_crochet_codex_programme_sans_arguments():
     g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash",
                       "tool_input": {"command": ["powershell.exe", "-File", "SECRET.ps1"]}})
     assert t == "Commande locale lancée", t           # forme non reconnue : libellé générique
+    for commande in (["bash", "-c", "", "SECRET"], ["sh", "-c", "git status", "SECRET", "AUTRE"], ["bash", "-lc"]):
+        g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash", "tool_input": {"command": commande}})
+        assert "secret" not in t.lower() and "autre" not in t.lower(), (commande, t)   # relecture Codex 12/11, 14:27
+        assert t == ("Lance git status" if commande[2:3] == ["git status"] else "Commande locale lancée"), (commande, t)
     g, t = H.decrire({"hook_event_name": "PreToolUse", "tool_name": "Bash", "tool_input": {"command": "\"unterminated"}})
     assert g == "commande" and "unterminated" not in t or t.startswith("Lance")
 

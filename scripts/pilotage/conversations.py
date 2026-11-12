@@ -164,41 +164,55 @@ def lien_codex() -> str:
 
 
 VERROU_DELAI = 5.0          # attente maximale du verrou d'état (s)
-VERROU_PERIME = 30.0        # un verrou plus ancien vient d'un processus tué : il est repris
 
 
 class verrou_etat:
-    """Verrou commun au crochet (noter) et au changement de conversation (relecture Codex du 12/11, 13:10) : la
-    lecture conditionnelle puis l'effacement de l'état ne peuvent plus être entrelacés avec l'écriture du crochet.
-    Fichier créé en exclusif (O_EXCL), donc valable entre processus ; repris s'il est périmé."""
+    """Verrou commun au crochet (noter) et au changement de conversation (relectures Codex du 12/11, 13:10 et 14:29) :
+    la lecture conditionnelle puis l'effacement de l'état ne peuvent pas être entrelacés avec l'écriture du crochet.
+    Verrou du système sur un fichier permanent (msvcrt sous Windows, flock ailleurs), valable entre processus et entre
+    fils : il est libéré par le système à la mort du processus, donc jamais repris « à l'ancienneté » ni retiré à un
+    propriétaire vivant. `tenu` est faux si le verrou n'est pas obtenu dans le délai : l'appelant abandonne alors son
+    opération sur l'état."""
 
-    def __init__(self, agent: str = "claude", sommeil=time.sleep):
+    def __init__(self, agent: str = "claude", sommeil=time.sleep, delai: float | None = None):
         self.chemin = ETAT / f"session_{agent}.verrou"
-        self.sommeil = sommeil
-        self.tenu = False
+        self.sommeil, self.delai = sommeil, VERROU_DELAI if delai is None else delai
+        self.tenu, self.fd = False, None
+
+    @staticmethod
+    def _prendre(fd) -> bool:
+        try:
+            if os.name == "nt":
+                import msvcrt
+                os.lseek(fd, 0, os.SEEK_SET)
+                msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return True
+        except OSError:
+            return False
 
     def __enter__(self):
-        fin = time.monotonic() + VERROU_DELAI
         self.chemin.parent.mkdir(parents=True, exist_ok=True)
-        while True:
-            try:
-                os.close(os.open(self.chemin, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
-                self.tenu = True
-                return self
-            except FileExistsError:
-                try:
-                    if time.time() - self.chemin.stat().st_mtime > VERROU_PERIME:
-                        self.chemin.unlink(missing_ok=True)
-                        continue
-                except OSError:
-                    continue
-                if time.monotonic() >= fin:
-                    return self          # suivi facultatif : on n'arrête jamais le travail sur un verrou
-                self.sommeil(0.05)
+        self.fd = os.open(self.chemin, os.O_CREAT | os.O_RDWR)
+        fin = time.monotonic() + self.delai
+        while not (tenu := self._prendre(self.fd)) and time.monotonic() < fin:
+            self.sommeil(0.05)
+        self.tenu = tenu
+        return self
 
     def __exit__(self, *exc):
         if self.tenu:
-            self.chemin.unlink(missing_ok=True)
+            if os.name == "nt":
+                import msvcrt
+                os.lseek(self.fd, 0, os.SEEK_SET)
+                msvcrt.locking(self.fd, msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(self.fd, fcntl.LOCK_UN)
+        os.close(self.fd)
+        self.tenu, self.fd = False, None
         return False
 
 
@@ -221,7 +235,9 @@ def lire(agent: str) -> dict:
 def noter(ev: dict) -> None:
     """Appelé par le crochet de Claude (UserPromptSubmit, SessionStart, Stop)."""
     sid = ev.get("session_id") or ""
-    with verrou_etat("claude"):
+    with verrou_etat("claude") as verrou:
+        if not verrou.tenu:
+            return                           # suivi facultatif : le prochain événement du crochet mettra l'état à jour
         avant = lire("claude")
         if avant.get("session_id") == sid and avant.get("pid"):
             pid, auto = avant["pid"], False
@@ -447,9 +463,10 @@ def nouvelle_conversation(exe: Path | None, forcer: bool = False) -> dict:
                        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     # Relecture Codex (11/11, 21:00) : pendant l'attente, le crochet de la nouvelle session a pu déjà écrire son état
     # (PID, journal, « au travail ») ; on ne remet à zéro que l'état de l'ancienne session, jamais celui de la nouvelle.
-    with verrou_etat("claude"):
-        actuel = lire("claude")
-        if not actuel.get("session_id") or actuel.get("session_id") == d.get("session_id"):
+    with verrou_etat("claude") as verrou:
+        # Sans verrou, rien n'est effacé : le crochet de la nouvelle session remplacera l'ancien état.
+        actuel = lire("claude") if verrou.tenu else {}
+        if verrou.tenu and (not actuel.get("session_id") or actuel.get("session_id") == d.get("session_id")):
             ecrire_etat("claude", {"maj": dt.datetime.now().isoformat(timespec="seconds")})
     return {"ok": "Nouvelle conversation Claude ouverte" + (" ; l'ancienne est fermée (son journal est conservé)." if ancien
                                                              else " ; aucune ancienne conversation ouverte à fermer.")}

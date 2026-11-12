@@ -46,13 +46,18 @@ OPTION_COMMANDE = {"powershell": {"-command", "-c"}, "pwsh": {"-command", "-c"},
 
 def interieur(enveloppe, mots):
     """Commande portée par une enveloppe : argument de -Command (PowerShell), de /c (cmd) ou de -c, -lc… (bash, sh).
-    None si la forme n'est pas reconnue : le panneau garde alors le libellé générique."""
+    None si la forme n'est pas reconnue ou la commande vide : le panneau garde alors le libellé générique.
+    Bash et sh (relecture Codex du 12/11, 14:27) : seul l'argument qui suit -c est la commande ; les suivants sont $0,
+    $1… et ne doivent jamais être lus."""
     for i, mot in enumerate(mots[1:], 1):
         bas = mot.lower()
-        if bas in OPTION_COMMANDE.get(enveloppe, set()) or (
-                enveloppe in {"bash", "sh"} and re.fullmatch(r"-[a-z]*c", bas)):
-            reste = mots[i + 1:]
-            return " ".join(reste) if reste else None
+        if enveloppe in {"bash", "sh"} and re.fullmatch(r"-[a-z]*c", bas):
+            texte = mots[i + 1] if i + 1 < len(mots) else ""
+        elif bas in OPTION_COMMANDE.get(enveloppe, set()):
+            texte = " ".join(mots[i + 1:])
+        else:
+            continue
+        return texte if texte.strip() else None
     return None
 
 
