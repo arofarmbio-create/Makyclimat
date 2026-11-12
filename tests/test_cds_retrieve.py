@@ -100,6 +100,8 @@ import cds_menage as M  # noqa: E402
 jobs = [job("a", "seasonal", "accepted", 5), job("b", "era5", "accepted", 0.2), job("c", "era5", "running", 9)]
 st = M.stale_jobs(jobs, NOW, 30)
 check("ménage : demande en file depuis 5 h annulée, récente et en cours épargnées", [j["jobID"] for j in st] == ["a"])
+check("ménage : demande gardée (collecte reprenable des rafales) jamais annulée",
+      M.stale_jobs(jobs, NOW, 30, garder={"a"}) == [])
 
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)

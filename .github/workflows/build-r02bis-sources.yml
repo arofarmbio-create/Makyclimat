@@ -72,8 +72,24 @@ jobs:
           EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
           GH_TOKEN: ${{ github.token }}
+        # Rafales, collecte reprenable (12/11/2026, EMSR564 resté en file au-delà de 5 h 40) : la demande Copernicus est
+        # notée dans la release dès sa soumission (rafales_<EMSR>.demande.json), épargnée par le ménage et reprise au
+        # lancement suivant si elle est encore en file à l'échéance (code 75 : avertissement, pas d'échec).
         run: |
-          p="${{ github.event.inputs.part }}"
-          [ "$p" = "rafales" ] && { python scripts/cds_menage.py --age-min 30 || true; }
-          python scripts/build_r02bis_sources.py --country "$COUNTRY" --part "$p" --event "${{ matrix.event }}"
-          gh release upload "$TAG" "data/$COUNTRY/r02bis/${p}_${{ matrix.event }}.npz" --clobber
+          p="${{ github.event.inputs.part }}"; ev="${{ matrix.event }}"; d="data/$COUNTRY/r02bis"
+          if [ "$p" = "rafales" ]; then
+            mkdir -p "$d"
+            gh release download "$TAG" -p "rafales_${ev}.demande.json" -D "$d" --clobber 2>/dev/null || true
+            garder=$(jq -r '.jobID // empty' "$d/rafales_${ev}.demande.json" 2>/dev/null || true)
+            python scripts/cds_menage.py --age-min 30 ${garder:+--garder "$garder"} || true
+            rc=0
+            python scripts/build_r02bis_sources.py --country "$COUNTRY" --part rafales --event "$ev" \
+              --delai-min 320 --publier-demande "$TAG" || rc=$?
+            [ "$rc" = 75 ] && exit 0
+            [ "$rc" = 0 ] || exit "$rc"
+          else
+            python scripts/build_r02bis_sources.py --country "$COUNTRY" --part "$p" --event "$ev"
+          fi
+          gh release upload "$TAG" "$d/${p}_${ev}.npz" --clobber
+          [ "$p" = "rafales" ] && { gh release delete-asset "$TAG" "rafales_${ev}.demande.json" -y || true; }
+          true

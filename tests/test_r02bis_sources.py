@@ -29,5 +29,91 @@ check("distance : 1° de latitude vaut environ 111 km", abs(R.haversine_km(47, -
 b = R.imerg_box(43.05, 43.25, -25.95, -25.75)
 check("emprise IMERG : indices de la grille 0,1°", b == (2230, 2232, 640, 642))
 
+# Collecte reprenable des rafales (12/11/2026, EMSR564 resté en file au-delà de 5 h 40) : fausse API Copernicus
+import json  # noqa: E402
+import tempfile  # noqa: E402
+
+
+class Rep:
+    def __init__(self, code=200, data=None):
+        self.status_code, self.data, self.text = code, data or {}, json.dumps(data or {})
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise RuntimeError(self.status_code)
+
+    def json(self):
+        return self.data
+
+
+class FausseAPI:
+    """Chaque demande suit une liste d'états, un par consultation ; la dernière valeur se répète."""
+    def __init__(self, etats=None):
+        self.etats, self.soumises = dict(etats or {}), []
+
+    def post(self, url, json=None, headers=None, timeout=None):
+        job = f"j{len(self.soumises) + 1}"
+        self.soumises.append((url.split("/processes/")[1], json["inputs"]))
+        self.etats.setdefault(job, ["accepted"])
+        return Rep(201, {"jobID": job})
+
+    def get(self, url, headers=None, timeout=None):
+        job, _, suite = url.split("/jobs/")[1].partition("/")
+        if job not in self.etats:
+            return Rep(404)
+        if suite == "results":
+            return Rep(200, {"asset": {"value": {"href": f"https://resultat/{job}.nc"}}})
+        e = self.etats[job]
+        return Rep(200, {"status": e.pop(0) if len(e) > 1 else e[0]})
+
+
+class Horloge:
+    def __init__(self):
+        self.t = 0.0
+
+    def __call__(self):
+        return self.t
+
+    def dormir(self, s):
+        self.t += s
+
+
+def collecte(api, fichier, requete, delai=600):
+    h, publies = Horloge(), []
+    href = R.demande_reprenable(api, {}, "era5", requete, fichier, delai, publier=publies.append, horloge=h,
+                                dormir=h.dormir)
+    return href, publies
+
+
+REQ = {"day": ["01"]}
+with tempfile.TemporaryDirectory() as d:
+    f = Path(d) / "rafales_X.demande.json"
+    api = FausseAPI()
+    href, publies = collecte(api, f, REQ)
+    check("demande encore en file à l'échéance : rien rendu, demande notée et publiée dès la soumission",
+          href is None and publies == [f] and json.loads(f.read_text(encoding="utf-8"))["jobID"] == "j1")
+    api.etats["j1"] = ["running", "successful"]
+    href, publies = collecte(api, f, REQ)
+    check("lancement suivant : la même demande est reprise, aucune nouvelle soumission",
+          href == "https://resultat/j1.nc" and len(api.soumises) == 1 and publies == [])
+    api.etats["j1"] = ["dismissed"]
+    api.etats["j2"] = ["successful"]
+    href, _ = collecte(api, f, REQ)
+    check("demande notée annulée chez Copernicus : nouvelle soumission",
+          href == "https://resultat/j2.nc" and len(api.soumises) == 2)
+    collecte(api, f, {"day": ["02"]})
+    check("requête différente (fenêtre changée) : la note n'est pas réutilisée", len(api.soumises) == 3)
+    f.unlink()
+    api = FausseAPI({"j1": ["accepted", "failed"]})
+    try:
+        collecte(api, f, REQ)
+        ok = False
+    except RuntimeError as e:
+        ok = "failed" in str(e)
+    check("échec pendant le suivi : erreur visible (la note sera écartée au lancement suivant)", ok)
+check("requête ERA5 : un jour par date de la fenêtre, 24 heures",
+      R.requete_rafales(type("W", (), {"debut": dt.date(2022, 1, 31), "fin": dt.date(2022, 2, 2)})())["day"]
+      == ["01", "02", "31"])
+
 print(f"\n{FAILS} échec(s)")
 sys.exit(1 if FAILS else 0)
