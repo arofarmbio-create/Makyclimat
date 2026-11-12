@@ -18,7 +18,7 @@ from pathlib import Path
 import yaml
 
 from parcours import rendu_parcours
-from surveiller_coordination import cle_message, nom_fichier, relecture_auto
+from surveiller_coordination import TOURS_MAX, cle_message, lire_relecteurs, nom_fichier, relecture_auto
 
 ROOT = Path(__file__).resolve().parents[2]
 PIL = ROOT / "pilotage"
@@ -405,6 +405,31 @@ def lancements_recents() -> str:
             '<tr><th>Lancement</th><th>Statut</th><th>Créneau</th><th>Tokens</th></tr>' + lignes + "</table></div>")
 
 
+def relecteurs_attitres() -> str:
+    """Un relecteur Codex par document de méthode, du premier tour à la validation (porteur, 12/11/2026)."""
+    lignes = ""
+    for doc, suivi in sorted(lire_relecteurs().items()):
+        tours = suivi.get("tours", 0)
+        hist = suivi.get("historique") or []
+        dernier = hist[-1] if hist else {}
+        if suivi.get("en_cours"):
+            activite = f"en relecture depuis {suivi['en_cours'][11:]}"
+        elif tours >= TOURS_MAX:
+            activite = "tours épuisés : le porteur tranche"
+        else:
+            activite = "en attente de la prochaine version"
+        detail = " · ".join(f"{h.get('version')} : {h.get('verdict')}" for h in hist)
+        lignes += (f'<tr><td><a href="../{esc(doc)}">{esc(doc.rsplit("/", 1)[-1])}</a></td>'
+                   f'<td class="muted">{esc((suivi.get("session") or "—")[:8])}</td><td>{tours} / {TOURS_MAX}</td>'
+                   f'<td>{esc(activite)}</td><td class="muted">{esc(detail or "—")}</td>'
+                   f'<td class="muted">{esc(dernier.get("tokens", "—"))}</td></tr>')
+    if not lignes:
+        return ""
+    return ('<h3 style="margin:16px 0 8px">Relecteurs attitrés (une session Codex par document)</h3>'
+            '<div class="card pad"><table class="t"><tr><th>Document</th><th>Session</th><th>Tours</th>'
+            '<th>Activité</th><th>Versions et verdicts</th><th>Tokens du dernier tour</th></tr>' + lignes + "</table></div>")
+
+
 def carte(titre: str, sous: str = "", etat: str = "") -> str:
     return f'<div class="item"><div class="i-top"><span class="i-title">{esc(titre)}</span>{statut(etat)}</div>{f"<div class=i-sub>{esc(sous)}</div>" if sous else ""}</div>'
 
@@ -590,7 +615,7 @@ ul.steps{{list-style:none;margin:8px 0 0;padding:0}} ul.steps li{{display:flex;j
 <main>{errs}
 <div class="lead"><div class="q">{esc(th.get("question_en_cours", ""))}</div><div class="t">{esc(th.get("titre", ""))}</div></div>
 <section id="parcours"><h2>Parcours des chantiers</h2>{gantt}</section>
-<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div id="act-live" class="act-live" hidden></div><div id="gh-live" class="card pad gh-live" hidden></div><div class="lanes">{equipe}</div>{lancements_recents()}</section>
+<section id="equipe"><h2>Répartition du travail</h2><p><a href="etat/coordination/notifications.html">Alertes de coordination</a></p><div id="act-live" class="act-live" hidden></div><div id="gh-live" class="card pad gh-live" hidden></div><div class="lanes">{equipe}</div>{relecteurs_attitres()}{lancements_recents()}</section>
 <section id="protocole"><h2>Avancement par rapport au protocole doctoral et au prompt maître</h2>{proto}</section>
 <section id="objectifs" class="cols"><div><h2>Objectifs</h2><div class="card">{objs}</div></div>
 <div><h2>Blocages</h2><div class="card pad"><table class="t"><tr><th>Blocage</th><th>Effet</th><th>Qui peut débloquer</th></tr>{bloc_}</table></div></div></section>

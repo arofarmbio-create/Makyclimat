@@ -561,6 +561,48 @@ def test_pilotage_gele_sans_relecture_automatique():
         assert C.a_relire(mixte, "codex") is not None
 
 
+
+def test_relecteur_attitre():
+    """Décision du porteur (12/11/2026) : un protocole a un seul relecteur Codex, dont la session est reprise à chaque
+    version, avec le diff depuis sa dernière relecture ; au-delà de 4 tours, plus de relecture automatique. Le code
+    garde des sessions neuves et éphémères."""
+    registre = Path(tempfile.mkdtemp()) / "relecteurs.json"
+    proto = "| R-99 bis | Claude | À relire | [protocole](validation/protocole_r21_diagnostic.md) | x. | — | — |"
+    code = "| R-99 | Claude | À relire | [script](scripts/r21_scores.py) | x. | — | — |"
+    with patch.object(C, "RELECTEURS", registre), patch.object(C, "commit_cite", return_value="abc1234"), \
+            patch.object(C, "resoudre", side_effect=lambda c: c + "0" * 33), \
+            patch.object(C, "contexte_diff", return_value="+tout\n"), \
+            patch.object(C, "git", return_value="+depuis la dernière relecture\n"):
+        (_, _, consigne), = C.relecture_auto(code, "codex")
+        assert not C.MARQUE_ATTITRE.search(consigne)
+        (_, _, consigne), = C.relecture_auto(proto, "codex")
+        marque = C.MARQUE_ATTITRE.search(consigne)
+        assert marque[1] == "validation/protocole_r21_diagnostic.md" and "+tout" in consigne
+        # 1er tour : session gardée (pas --ephemeral), puis notée au registre
+        commande, _ = C.commande_agent("codex", "codex", Path("r.md"), False, None, True)
+        assert "--ephemeral" not in commande and "resume" not in commande
+        assert "--ephemeral" in C.commande_agent("codex", "codex", Path("r.md"), False)[0]
+        flux = '{"type":"thread.started","thread_id":"s-1"}\n{"type":"turn.completed"}'
+        C.noter_tour(marque[1], marque[2], "Réponse reçue", "…\nVerdict : corrections demandées", "x",
+                     "12/11/2026 17:00", flux)
+        suivi = C.lire_relecteurs()[marque[1]]
+        assert suivi["session"] == "s-1" and suivi["tours"] == 1 and suivi["historique"][0]["verdict"] == "corrections demandées"
+        # 2e tour : reprise de la même session, diff depuis la dernière relecture, rôle rappelé
+        (_, _, consigne), = C.relecture_auto(proto, "codex")
+        assert "+depuis la dernière relecture" in consigne and "+tout" not in consigne
+        commande, _ = C.commande_agent("codex", "codex", Path("r.md"), False, "s-1", True)
+        assert commande[1:3] == ["exec", "resume"] and "s-1" in commande and 'sandbox_mode="read-only"' in commande
+        assert "Tour 2 sur 4" in C.consigne_attitree(marque[1], suivi)
+        assert "erreur grave" in C.consigne_attitree(marque[1], {"tours": 2})
+        # reprise échouée : session oubliée, tour non compté
+        C.noter_tour(marque[1], marque[2], "Échec", "", "x", "12/11/2026 17:05")
+        suivi = C.lire_relecteurs()[marque[1]]
+        assert "session" not in suivi and suivi["tours"] == 1
+        # tours épuisés : plus de relecture automatique, le porteur tranche
+        C.ecrire_relecteurs({marque[1]: {"tours": C.TOURS_MAX, "session": "s-1"}})
+        assert list(C.relecture_auto(proto, "codex")) == []
+
+
 if __name__ == "__main__":
     for nom, fonction in list(globals().items()):
         if nom.startswith("test_"):

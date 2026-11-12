@@ -313,6 +313,57 @@ def a_relire(ligne, relecteur):
     return {"tache": tache, "responsable": responsable, "suite": suite, "chemins": chemins, "commit": commit}
 
 
+# Relecteur attitré (décision du porteur du projet, 12/11/2026). Le protocole R-21 bis a été relu par 4 sessions
+# Codex neuves (16:21, 16:24, 16:28, 16:40), chacune sans le contexte des précédentes : ~660 000 jetons d'entrée et un
+# risque de boucle (points rouverts, avis divergents). Un document de méthode (protocole, rapport) a désormais un seul
+# relecteur Codex, dont la session est reprise (`codex exec resume`) à chaque nouvelle version, avec le seul diff depuis
+# sa dernière relecture. Convergence : à partir du tour 3, seule une erreur grave bloque ; au-delà de 4 tours, plus de
+# relecture automatique, le porteur tranche. Le code garde des relectures neuves (l'indépendance y coûte peu).
+RELECTEURS = ROOT / "pilotage" / "etat" / "relecteurs.json"
+TOURS_MAX = 4
+TOUR_GRAVE = 3
+DOC_ATTITRE = re.compile(r"validation/(?:protocole_[\w-]+|[\w-]*rapport[\w-]*)\.md")
+MARQUE_ATTITRE = re.compile(r"^Relecteur attitré : (\S+) · version ([0-9a-f]{7,40})$", re.M)
+
+
+def document_attitre(chemins):
+    """Premier document de méthode cité (protocole ou rapport sous validation/), sinon ''."""
+    return next((c for c in chemins if DOC_ATTITRE.fullmatch(c)), "")
+
+
+def lire_relecteurs(chemin=None):
+    try:
+        donnees = json.loads((chemin or RELECTEURS).read_text(encoding="utf-8"))
+        return donnees if isinstance(donnees, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def ecrire_relecteurs(donnees, chemin=None):
+    chemin = chemin or RELECTEURS
+    chemin.parent.mkdir(parents=True, exist_ok=True)
+    provisoire = chemin.with_suffix(".tmp")
+    provisoire.write_text(json.dumps(donnees, ensure_ascii=False, indent=2), encoding="utf-8")
+    provisoire.replace(chemin)
+
+
+def consigne_attitree(doc, suivi):
+    """Préambule du relecteur attitré : rôle, tour, règles de convergence."""
+    tour = suivi.get("tours", 0) + 1
+    texte = (f"Tu es le relecteur attitré de {doc} jusqu'à sa validation (décision du porteur du projet, 12/11/2026) : "
+             f"ta session est reprise à chaque nouvelle version. Tour {tour} sur {TOURS_MAX}. "
+             "Règles de convergence : ne rouvre pas un point que tu as déjà accepté ou vu corrigé, sauf erreur grave ; "
+             "ne soulève un point nouveau que s'il change un résultat ou une conclusion. ")
+    if tour >= TOUR_GRAVE:
+        texte += ("À ce tour, seule une erreur grave (résultat faux, conclusion trompeuse, règle fixée après les "
+                  "données) justifie « corrections demandées » ; le reste est une recommandation non bloquante. ")
+    if tour >= TOURS_MAX:
+        texte += "C'est le dernier tour automatique : s'il reste un désaccord, résume-le pour que le porteur tranche. "
+    if suivi.get("dernier"):
+        texte += f"Les modifications ci-dessous partent de ta dernière relecture (version {suivi['dernier'][:7]}). "
+    return texte + "\n\n"
+
+
 def resoudre(commit):
     """Empreinte complète d'un commit cité (préfixe court accepté) ; le texte cité tel quel si Git ne le connaît pas."""
     return git("rev-parse", "--verify", "-q", f"{commit}^{{commit}}").strip() or commit
@@ -341,8 +392,18 @@ def relecture_groupee(lignes, relecteur="claude"):
     suite = " / ".join(item["suite"] for item in items)
     empreinte = hashlib.sha256(resoudre(commit).encode()).hexdigest()[:12]
     identifiant = f"relecture-{empreinte}" if relecteur == "claude" else f"codex/relecture-{empreinte}"
+    marque = ""
+    if relecteur == "codex" and (doc := document_attitre(chemins)):
+        suivi = lire_relecteurs().get(doc) or {}
+        if suivi.get("tours", 0) >= TOURS_MAX:
+            return             # plus de relecture automatique : le porteur tranche (tableau de bord)
+        if suivi.get("session") and suivi.get("dernier"):
+            depuis = git("diff", f"{suivi['dernier']}..{commit}", "--", *chemins)
+            if depuis.strip():
+                diff = depuis
+        marque = f"Relecteur attitré : {doc} · version {resoudre(commit)}\n"
     diff = tronquer(diff)
-    yield relecteur, identifiant, (
+    yield relecteur, identifiant, marque + (
         f"Relecture automatique de la tâche « {tache} » (responsable : {responsable}), passée à « À relire » dans "
         f"COORDINATION.md. Point à contrôler : {suite}\n\nFichiers concernés : {', '.join(chemins)}.\n"
         f"Base-toi d'abord sur les modifications ci-dessous ; n'ouvre un fichier que pour vérifier un point précis "
@@ -390,11 +451,16 @@ def contexte_github(chemin=None, maintenant=None):
     return "\n".join(lignes)
 
 
-def commande_agent(agent, executable, sortie, ecriture):
-    """Commande et délai. Sorties JSON pour relever la consommation de tokens."""
+def commande_agent(agent, executable, sortie, ecriture, session=None, persistante=False):
+    """Commande et délai. Sorties JSON pour relever la consommation de tokens.
+    Relecteur attitré : session gardée (persistante) puis reprise (session), toujours en lecture seule."""
     if agent == "codex":
+        if session and not ecriture:
+            return ([str(executable), "exec", "resume", "-c", 'sandbox_mode="read-only"', "--skip-git-repo-check",
+                     "--json", "-o", str(sortie), session, "-"], 300)
         bac = ["-s", "workspace-write", "-c", "sandbox_workspace_write.network_access=true"] if ecriture else ["-s", "read-only"]
-        return ([str(executable), "exec", *bac, "-C", str(ROOT), "--ephemeral", "--skip-git-repo-check", "--json",
+        ephemere = [] if persistante and not ecriture else ["--ephemeral"]
+        return ([str(executable), "exec", *bac, "-C", str(ROOT), *ephemere, "--skip-git-repo-check", "--json",
                  "-o", str(sortie), "-"], 1800 if ecriture else 300)
     if ecriture:
         return ([str(executable), "-p", "--output-format", "json", "--permission-mode", "acceptEdits",
@@ -632,16 +698,27 @@ def lancer_claude(db, dossier, demandes, executables):
     prompt = (ecrire if ecriture else CONSIGNE_LECTURE) + consigne
     if agent == "codex" and not ecriture:      # lecture seule = sans réseau : l'état GitHub lui est fourni
         prompt += contexte_github()
+    attitre = MARQUE_ATTITRE.search(consigne) if agent == "codex" and not ecriture else None
+    session = None
+    if attitre:
+        relecteurs = lire_relecteurs()
+        suivi = relecteurs.setdefault(attitre[1], {"tours": 0, "historique": []})
+        session = suivi.get("session")
+        suivi["en_cours"] = debut
+        ecrire_relecteurs(relecteurs)
+        prompt = consigne_attitree(attitre[1], suivi) + prompt
     consommation = "non communiquée"
+    flux = ""
     with tempfile.TemporaryDirectory() as temporaire:
         sortie = Path(temporaire) / "reponse.md"
-        commande, delai = commande_agent(agent, executables[agent], sortie, ecriture)
+        commande, delai = commande_agent(agent, executables[agent], sortie, ecriture, session, bool(attitre))
         try:
             retour = subprocess.run(
                 commande, input=prompt, capture_output=True, encoding="utf-8", errors="replace",
                 timeout=delai, cwd=ROOT, check=False,
                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
             )
+            flux = retour.stdout or ""
             texte, consommation = lire_sortie(agent, retour.stdout, sortie)
             statut = "Réponse reçue" if retour.returncode == 0 and texte else "Échec"
             if statut == "Réponse reçue" and "relecture impossible" in texte.casefold():
@@ -655,6 +732,8 @@ def lancer_claude(db, dossier, demandes, executables):
             statut, resultat = "Échec", f"Lancement impossible ({type(erreur).__name__})."
 
     fin = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
+    if attitre:
+        noter_tour(attitre[1], attitre[2], statut, resultat, consommation, fin, flux)
     if (db.execute("SELECT statut FROM lancements WHERE id = ?", (identifiant,)).fetchone() or ("",))[0] == ARRETE:
         statut, resultat = ARRETE, "Session arrêtée depuis le poste de pilotage." + SAUT + resultat[:2000]
     court = identifiant.rpartition("/")[2]
@@ -671,6 +750,33 @@ def lancer_claude(db, dossier, demandes, executables):
                    (f"lancement:{identifiant}", fin, json.dumps(list(DESTINATAIRES)),
                     f"{nom} · {court} · {statut} · tokens : {consommation}. Résultat dans les lancements du tableau des alertes."))
     return 1
+
+
+def noter_tour(doc, version, statut, resultat, consommation, fin, stdout="", chemin=None):
+    """Registre du relecteur attitré après un tour : session gardée, tour compté seulement si la réponse est reçue.
+    Une reprise échouée oublie la session : la retente repart d'une session neuve avec le diff complet."""
+    relecteurs = lire_relecteurs(chemin)
+    suivi = relecteurs.setdefault(doc, {"tours": 0, "historique": []})
+    suivi.pop("en_cours", None)
+    session = None
+    for ligne in stdout.splitlines():
+        try:
+            evenement = json.loads(ligne)
+        except ValueError:
+            continue
+        if isinstance(evenement, dict) and evenement.get("type") == "thread.started":
+            session = evenement.get("thread_id")
+            break
+    if statut == "Réponse reçue":
+        suivi["session"] = session or suivi.get("session")
+        suivi["tours"] = suivi.get("tours", 0) + 1
+        suivi["dernier"] = version
+        verdict = (re.findall(r"Verdict\s*:\s*([^\n.]+)", resultat) or ["—"])[-1].strip(" *")
+        suivi.setdefault("historique", []).append({"fin": fin, "version": version[:7], "verdict": verdict,
+                                                   "tokens": consommation})
+    else:
+        suivi.pop("session", None)
+    ecrire_relecteurs(relecteurs, chemin)
 
 
 RETENTE_MIN = 20
