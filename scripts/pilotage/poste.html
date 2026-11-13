@@ -159,6 +159,14 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .surv-ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .surv-ctl label{font-size:13px;color:var(--gris);display:flex;gap:6px;align-items:center}
 /* ---------- onglets, situation et journal (porteur, 13/11/2026) ---------- */
+.resultat .entete{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline} .resultat .entete b{font-size:17px}
+.chaine{display:flex;gap:10px;align-items:stretch;overflow-x:auto;padding:10px 2px 4px}
+.niveau{display:flex;flex-direction:column;gap:8px;min-width:210px;max-width:260px}
+.fleche{align-self:center;color:var(--cyan);font:700 20px var(--mono)}
+.boite{border:1px solid var(--bord);border-left:4px solid var(--gris);border-radius:10px;padding:7px 9px;font-size:14px;background:rgba(0,0,0,.25)}
+.boite.porteur{border-left-color:var(--violet)} .boite.claude{border-left-color:#ffb38a} .boite.codex{border-left-color:#9fd0ff}
+.boite.fait{opacity:.6} .boite .id{font:600 11px var(--mono);color:var(--gris)}
+.boite .bl{color:var(--rouge);font-size:13px;margin-top:3px} .boite .lv{font:12px var(--mono);color:var(--gris);margin-top:2px;overflow-wrap:anywhere}
 .macons{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
 .macon{border:1px solid var(--bord);border-radius:12px;padding:10px 12px;background:rgba(0,229,255,.03)}
 .macon .t{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:baseline} .macon .t b{font-size:15px;margin-right:4px}
@@ -193,7 +201,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <span class="horloge" id="horloge">--:--:--</span>
   </div>
 </header>
-<nav class="onglets" aria-label="Onglets"><button class="onglet actif" data-onglet="pilotage">PILOTAGE</button><button class="onglet" data-onglet="situation">SITUATION</button></nav>
+<nav class="onglets" aria-label="Onglets"><button class="onglet actif" data-onglet="pilotage">PILOTAGE</button><button class="onglet" data-onglet="situation">SITUATION</button><button class="onglet" data-onglet="organigramme">FIL DES TÂCHES</button></nav>
 <div class="alerte-serveur" id="alerte-serveur">Le serveur du poste ne répond plus : les chiffres ci-dessous sont figés. Relancer <code>pilotage.cmd</code> à la racine du dépôt.</div>
 
 <div class="grille" id="onglet-situation" hidden>
@@ -204,6 +212,15 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
   <section class="p s4"><h2>Thèse <span class="n" id="n-these">0</span></h2><div id="sit-these"></div></section>
   <section class="p s4"><h2>MakyClimat <span class="n" id="n-makyclimat">0</span></h2><div id="sit-makyclimat"></div></section>
   <section class="p s4"><h2>Audit de Codex <span class="n" id="n-audit">0</span></h2><div id="sit-audit"></div></section>
+</div>
+
+<div class="grille" id="onglet-organigramme" hidden>
+  <section class="p s12"><h2>Fil des tâches<span class="droite" id="org-maj"></span></h2>
+    <div class="petit">Pour chaque résultat visé, la chaîne des tâches, de gauche à droite : une tâche ne commence que lorsque celles dont elle dépend sont faites. Source : <span class="mono">pilotage/fil.yml</span> (local), tenu par le coordinateur ; démarches externes en premier.</div>
+    <div class="legende"><span><span class="etq violet">porteur</span>données externes, décisions</span><span><span class="etq claude">claude</span>protocoles, puissance, rapports</span><span><span class="etq codex">codex</span>code, calculs, vérifications</span><span><span class="etq ko">bloqué</span>il manque une donnée</span></div>
+    <div id="org-filtres" class="filtres" style="margin-top:10px"></div>
+  </section>
+  <div class="s12" id="org-resultats" style="grid-column:1/-1;display:grid;gap:16px"></div>
 </div>
 
 <div class="grille" id="onglet-pilotage">
@@ -449,6 +466,35 @@ function rendreMacons(){
       }).join("")+'</ol>':'<div class="vide">Aucune tâche encore.</div>')+'</div>';
   }).join(""):'<div class="vide">Aucun maçon pour le moment.</div>');
 }
+var filtreOrg="tous";
+function niveaux(taches){
+  var par={}, niv={}; taches.forEach(function(t){par[t.id]=t;});
+  function calc(id,vus){ if(niv[id]!=null) return niv[id]; if(vus[id]) return 0; vus[id]=1;
+    var d=(par[id]&&par[id].depend_de)||[], n=0; d.forEach(function(x){ if(par[x]) n=Math.max(n,calc(x,vus)+1); }); return niv[id]=n; }
+  taches.forEach(function(t){calc(t.id,{});});
+  var cols=[]; taches.forEach(function(t){ (cols[niv[t.id]]=cols[niv[t.id]]||[]).push(t); }); return cols;
+}
+function rendreOrganigramme(){
+  var o=D.organigramme||{}, l=o.resultats||[];
+  $("org-maj").textContent=o.absent?"fil absent sur ce poste":(o.mis_a_jour?"mis à jour le "+o.mis_a_jour:"");
+  poser("org-filtres",[["tous","Tous"],["porteur","Mes tâches (porteur)"],["claude","Claude"],["codex","Codex"],["bloque","Bloquées"]].map(function(b){
+    return '<button class="filtre'+(filtreOrg===b[0]?" actif":"")+'" data-org="'+b[0]+'">'+b[1]+'</button>';}).join(""));
+  var ET={fait:["ok","fait"],clos:["neutre","clos"],en_cours:["info","en cours"],a_relire:["info","à relire"],pret:["ok","prêt"],a_faire:["neutre","à faire"],en_attente:["warn","en attente"],decision:["warn","décision"],bloque:["ko","bloqué"]};
+  poser("org-resultats",l.length?l.map(function(r){
+    var ts=r.taches||[], garde=function(t){return filtreOrg==="tous"||(filtreOrg==="bloque"?(t.etat==="bloque"||!!t.bloquant):filtreOrg==="porteur"?(t.qui==="porteur"||t.qui==="partenaire"):t.qui===filtreOrg);};
+    if(filtreOrg!=="tous"&&!ts.some(garde)) return "";
+    var faites=ts.filter(function(t){return t.etat==="fait";}).length;
+    var cols=niveaux(ts).map(function(col){ return '<div class="niveau">'+col.map(function(t){
+      var et=ET[t.etat]||["neutre",t.etat||"?"], q=t.qui==="porteur"?"violet":t.qui;
+      return '<div class="boite '+e(t.qui)+(t.etat==="fait"?" fait":"")+'"'+(garde(t)?'':' style="opacity:.25"')+'><div class="id">'+e(t.id)+'</div><b>'+e(t.nom)+'</b><div><span class="etq '+e(q)+'">'+e(t.qui)+'</span><span class="etq '+et[0]+'">'+e(et[1])+'</span></div>'+
+        (t.livrable?'<div class="lv">→ '+e(t.livrable)+'</div>':'')+(t.bloquant?'<div class="bl">Bloquant : '+e(t.bloquant)+'</div>':'')+'</div>';
+    }).join("")+'</div>'; }).join('<div class="fleche">→</div>');
+    return '<section class="p resultat"><div class="entete"><span class="etq info">'+e(r.id)+'</span><b>'+e(r.nom)+'</b><span class="etq neutre">priorité '+e(r.priorite||"?")+'</span>'+
+      '<span class="etq warn">'+e(r.fiabilite_actuelle||"?")+'</span>→<span class="etq ok">'+e(r.fiabilite_visee||"?")+'</span><span class="petit">'+faites+' / '+ts.length+' tâches faites</span></div>'+
+      (r.pourquoi?'<div class="petit" style="margin-top:4px">'+e(r.pourquoi)+'</div>':'')+'<div class="chaine">'+cols+'<div class="fleche">→</div><div class="niveau"><div class="boite" style="border-left-color:var(--vert)"><b>'+e(r.nom)+'</b><div><span class="etq ok">'+e(r.fiabilite_visee||"")+'</span></div></div></div></div></section>';
+  }).join(""):'<section class="p"><div class="vide">'+(o.absent?"Fil absent : pilotage/fil.yml.":"Aucun résultat visé.")+'</div></section>');
+}
+$("org-filtres").addEventListener("click",function(ev){ var b=ev.target.closest("button"); if(b&&b.dataset.org){ filtreOrg=b.dataset.org; rendreOrganigramme(); } });
 function rendreJournal(){
   var l=D.journal||[]; $("n-journal").textContent=l.length; $("n-journal").className="n"+(l.length?"":" zero");
   poser("journal",l.length?l.map(function(x){
@@ -496,17 +542,17 @@ function lire(){
   fetch("/api/poste",{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
     D=d; jeton=d.jeton||jeton; dernierOk=Date.now();
     if(!construit){ construireMere("claude"); construireMere("codex"); construit=true; }
-    [rendreDecisions,rendreSurveillant,function(){rendreMere("claude");},function(){rendreMere("codex");},rendreEnfants,rendreMacons,rendreJournal,rendreRuns,rendreSituation]
+    [rendreDecisions,rendreSurveillant,function(){rendreMere("claude");},function(){rendreMere("codex");},rendreEnfants,rendreMacons,rendreJournal,rendreRuns,rendreSituation,rendreOrganigramme]
       .forEach(function(f){ try{f();}catch(x){ console.error(x); } });
   }).catch(function(){});
 }
 function montrerOnglet(nom){
-  ["pilotage","situation"].forEach(function(n){ $("onglet-"+n).hidden=(n!==nom); });
+  ["pilotage","situation","organigramme"].forEach(function(n){ $("onglet-"+n).hidden=(n!==nom); });
   Array.prototype.forEach.call(document.querySelectorAll(".onglet"),function(b){ b.classList.toggle("actif",b.getAttribute("data-onglet")===nom); });
   try{ localStorage.setItem("poste-onglet",nom); }catch(x){}
 }
 Array.prototype.forEach.call(document.querySelectorAll(".onglet"),function(b){ b.addEventListener("click",function(){ montrerOnglet(b.getAttribute("data-onglet")); }); });
-try{ var o=localStorage.getItem("poste-onglet"); if(o==="situation") montrerOnglet(o); }catch(x){}
+try{ var o=localStorage.getItem("poste-onglet"); if(o==="situation"||o==="organigramme") montrerOnglet(o); }catch(x){}
 lire(); setInterval(lire,10000);
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) lire(); });
 })();

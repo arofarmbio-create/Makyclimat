@@ -392,6 +392,37 @@ def situation(chemin: Path | None = None) -> dict:
                          for d in DOMAINES}}
 
 
+FIL_TACHES = ROOT / "pilotage" / "fil.yml"
+
+
+def organigramme(chemin: Path | None = None) -> dict:
+    """Onglet « Fil » (porteur, 13/11/2026) : objectifs et démarches du fil des tâches (pilotage/fil.yml, local), chacun
+    avec ses étapes ; une donnée non disponible dont dépend une étape est affichée comme bloquante."""
+    try:
+        import yaml
+        donnees = yaml.safe_load((chemin or FIL_TACHES).read_text(encoding="utf-8")) or {}
+    except Exception:
+        return {"absent": True, "resultats": []}
+    if not isinstance(donnees, dict):
+        donnees = {}
+    infos = {d["id"]: d for d in donnees.get("donnees") or [] if isinstance(d, dict) and d.get("id")}
+
+    def etape(t: dict) -> dict:
+        manque = [f"{infos[r].get('nom', r)} ({infos[r].get('etat')})" for r in t.get("depend_de") or []
+                  if r in infos and infos[r].get("etat") != "disponible"]
+        return {**t, "nom": t.get("quoi", ""), "bloquant": " ; ".join(manque),
+                "depend_de": [r for r in t.get("depend_de") or [] if r not in infos]}
+
+    resultats = []
+    for groupe, prio in [(d, 0) for d in donnees.get("demarches") or []] +                         [(o, o.get("priorite", 9)) for o in donnees.get("objectifs") or []]:
+        if isinstance(groupe, dict) and groupe.get("id"):
+            resultats.append({**groupe, "nom": groupe.get("nom") or groupe.get("objet", ""), "priorite": prio,
+                              "pourquoi": "Démarche externe" if "objet" in groupe else "",
+                              "taches": [etape(t) for t in groupe.get("etapes") or [] if isinstance(t, dict) and t.get("id")]})
+    resultats.sort(key=lambda r: (9 if r.get("priorite") is None else int(r["priorite"]), str(r.get("id", ""))))
+    return {"absent": False, "mis_a_jour": str(donnees.get("mis_a_jour", "")), "resultats": resultats}
+
+
 def _commits(jours: int = 3) -> list[dict]:
     import subprocess
     try:
@@ -519,7 +550,8 @@ def instantane(actions: dict | None = None, github: dict | None = None) -> dict:
             "en_cours": [e for e in liste if e["statut"] == "En cours"], "consommation": conso,
             "plafonds": plafonds(conso), "fil": fil(), "github": github if github and github.get("runs") else github_instantane(),
             "porteur_taches": [t for t in coord["taches"] if "porteur" in t["responsable"].casefold()],
-            "situation": situation(), "journal": journal(liste), "macons": macons}
+            "situation": situation(), "journal": journal(liste), "macons": macons,
+            "organigramme": organigramme()}
 
 
 def main() -> None:
