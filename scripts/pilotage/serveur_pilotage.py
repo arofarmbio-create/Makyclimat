@@ -483,12 +483,27 @@ def echecs_resolus(lignes: list[str], runs: list[dict]) -> list[int]:
     return retirer
 
 
+def runs_du_workflow(nom: str) -> list[dict]:
+    """Derniers runs réussis d'un workflow, demandés à GitHub : l'instantané ne garde que les 12 derniers runs, tous
+    workflows confondus, et les réussites plus anciennes en sortent (13/11, run 43230289148 resté affiché)."""
+    try:
+        liste = github_direct.gh("run", "list", "--workflow", nom, "--status", "success", "--limit", "1",
+                                 "--json", "databaseId") or []
+    except (RuntimeError, ValueError, subprocess.TimeoutExpired, OSError):
+        return []
+    return [{"id": r["databaseId"], "workflow": nom, "conclusion": "success"} for r in liste]
+
+
 def retirer_echecs_resolus(runs: list[dict]) -> int:
     try:
-        if not echecs_resolus(COORD.read_text(encoding="utf-8-sig").splitlines(), runs):
-            return 0                     # rien à retirer : pas d'écriture ni de régénération du tableau
+        lignes = COORD.read_text(encoding="utf-8-sig").splitlines()
     except OSError:
         return 0
+    connus = {r.get("workflow") for r in runs}
+    for nom in {m[2] for l in lignes if (m := MESSAGE_ECHEC.match(l))} - connus:
+        runs = runs + runs_du_workflow(nom)          # rare : seulement pour un message en attente
+    if not echecs_resolus(lignes, runs):
+        return 0                         # rien à retirer : pas d'écriture ni de régénération du tableau
     retires = []
 
     def modifier(lignes):
