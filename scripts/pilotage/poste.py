@@ -368,6 +368,81 @@ def reseau() -> dict:
     return d if isinstance(d, dict) else {}
 
 
+# ------------------------------------------------------------------ situation et journal (porteur, 13/11/2026)
+# Onglet « Situation » : ce qui est fait, avec quelle fiabilité, et ce qui reste, en trois domaines (thèse,
+# MakyClimat, audit de Codex). Source unique : pilotage/situation.yml (local), tenu à jour par Claude.
+# Journal unique « Qui a fait quoi » : remplace le fil avec les sessions mères et les messages entre assistants,
+# qui restaient presque toujours vides (le travail passe par les exécutions autorisées et les commits).
+SITUATION = ROOT / "pilotage" / "situation.yml"
+DOMAINES = ("these", "makyclimat", "audit")
+GENRES_TXT = {"relecture": "relecture", "exec": "exécution", "reveil": "réveil", "ponctuel": "lancement"}
+
+
+def situation(chemin: Path | None = None) -> dict:
+    """Contenu de situation.yml, filtré aux éléments lisibles ; {'absent': True} si le fichier manque ou est illisible."""
+    try:
+        import yaml
+        donnees = yaml.safe_load((chemin or SITUATION).read_text(encoding="utf-8")) or {}
+    except Exception:          # fichier absent, YAML invalide ou module manquant : l'onglet le dit
+        return {"absent": True, "domaines": {d: [] for d in DOMAINES}}
+    if not isinstance(donnees, dict):
+        donnees = {}
+    return {"absent": False, "mis_a_jour": str(donnees.get("mis_a_jour", "")),
+            "domaines": {d: [e for e in (donnees.get(d) or []) if isinstance(e, dict) and e.get("nom")]
+                         for d in DOMAINES}}
+
+
+def _commits(jours: int = 3) -> list[dict]:
+    import subprocess
+    try:
+        sortie = subprocess.run(["git", "log", f"--since={jours}.days",
+                                 "--format=%h%x1f%an%x1f%ad%x1f%s%x1f%(trailers:key=Co-Authored-By,valueonly,separator=%x2C)",
+                                 "--date=format:%d/%m/%Y %H:%M"], cwd=ROOT, capture_output=True, text=True,
+                                encoding="utf-8", errors="replace", timeout=10).stdout
+    except (OSError, subprocess.SubprocessError):
+        return []
+    liste = []
+    for ligne in sortie.splitlines():
+        h, auteur, quand, sujet, coauteur = (ligne.split("\x1f") + [""] * 5)[:5]
+        if sujet.startswith("Merge "):
+            continue
+        if "claude" not in coauteur.casefold():      # sans co-auteur Claude : l'auteur réel (robot, porteur…)
+            qui = "GitHub (robot)" if "bot" in auteur.casefold() else auteur
+        elif "(codex" in sujet.casefold():
+            qui = "Codex → Claude"
+        else:
+            qui = "Claude"
+        liste.append({"quand": quand, "qui": qui, "quoi": f"commit {h} · {sujet}", "etat": "commité"})
+    return liste
+
+
+def _verdict(e: dict) -> str:
+    """Verdict d'une relecture terminée, lu dans son compte rendu (« Verdict : … »)."""
+    if e.get("genre") != "relecture" or e.get("statut") != "Réponse reçue":
+        return ""
+    try:
+        texte = (COORD_DIR / e["fichier"]).read_text(encoding="utf-8", errors="replace")[-3000:]
+    except OSError:
+        return ""
+    trouve = re.findall(r"Verdict\s*:\s*([^\n.]+)", texte)
+    return trouve[-1].strip(" *") if trouve else ""
+
+
+def journal(liste: list[dict], n: int = 80) -> list[dict]:
+    """Qui a fait quoi, du plus récent au plus ancien : lancements, commits et messages du porteur."""
+    ev = [{"quand": e["fin"] or e["debut"], "qui": NOMS.get(e["agent"], e["agent"]),
+           "quoi": f"{GENRES_TXT.get(e['genre'], e['genre'])} · {e['sujet']}",
+           "etat": _verdict(e) or e["statut"] or "", "fichier": e["fichier"]} for e in liste]
+    ev += _commits()
+    for m in fil():
+        de = "Vous → " + NOMS.get(m.get("a"), str(m.get("a"))) if m.get("de") == "porteur" else \
+            NOMS.get(m.get("de"), str(m.get("de"))) + " → vous"
+        ev.append({"quand": m.get("quand", ""), "qui": de, "quoi": m.get("texte", ""), "etat": m.get("etat", "")})
+    plancher = datetime(2000, 1, 1, tzinfo=NAIROBI)
+    ev.sort(key=lambda x: _date(x["quand"]) or plancher, reverse=True)
+    return ev[:n]
+
+
 def instantane(actions: dict | None = None, github: dict | None = None) -> dict:
     liste = enfants()
     conso = consommation(liste)
@@ -396,7 +471,8 @@ def instantane(actions: dict | None = None, github: dict | None = None) -> dict:
             "executions": coord["executions"], "meres": meres, "enfants": liste[:60], "sous_agents": sous_agents()[:30],
             "en_cours": [e for e in liste if e["statut"] == "En cours"], "consommation": conso,
             "plafonds": plafonds(conso), "fil": fil(), "github": github if github and github.get("runs") else github_instantane(),
-            "porteur_taches": [t for t in coord["taches"] if "porteur" in t["responsable"].casefold()]}
+            "porteur_taches": [t for t in coord["taches"] if "porteur" in t["responsable"].casefold()],
+            "situation": situation(), "journal": journal(liste)}
 
 
 def main() -> None:

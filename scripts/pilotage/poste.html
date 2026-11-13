@@ -158,6 +158,22 @@ summary{cursor:pointer;color:var(--cyan-doux);font-weight:600}
 footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .surv-ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .surv-ctl label{font-size:13px;color:var(--gris);display:flex;gap:6px;align-items:center}
+/* ---------- onglets, situation et journal (porteur, 13/11/2026) ---------- */
+.onglets{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.onglet{border:1px solid var(--bord);background:transparent;border-radius:10px;padding:7px 18px;cursor:pointer;
+  font:700 13px var(--titre);letter-spacing:.12em;color:var(--gris)}
+.onglet.actif{color:var(--cyan);border-color:var(--bord-fort);background:rgba(0,229,255,.08);box-shadow:var(--lueur)}
+.legende{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--gris);margin-top:6px}
+.compteurs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:4px 0 10px}
+.compteurs div{border:1px solid var(--bord);border-radius:10px;padding:6px 8px;text-align:center}
+.compteurs b{display:block;font:700 20px var(--titre)} .compteurs span{font-size:11px;color:var(--gris);letter-spacing:.06em}
+.groupe{font:600 12px var(--mono);letter-spacing:.08em;color:var(--cyan-doux);text-transform:uppercase;margin:12px 0 4px}
+.elt{padding:8px 0;border-bottom:1px dashed rgba(0,229,255,.12)}
+.elt .t{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:baseline} .elt .t b{font-size:15px;margin-right:4px}
+.elt .r{font-size:14px;margin-top:3px} .elt .pr{font:12px var(--mono);color:var(--gris);margin-top:2px;overflow-wrap:anywhere}
+.ev{display:grid;grid-template-columns:118px 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(0,229,255,.1);font-size:14px}
+.ev time{font:12px var(--mono);color:var(--gris);padding-top:2px}
+@media (max-width:560px){.ev{grid-template-columns:1fr} .compteurs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -173,9 +189,20 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <span class="horloge" id="horloge">--:--:--</span>
   </div>
 </header>
+<nav class="onglets" aria-label="Onglets"><button class="onglet actif" data-onglet="pilotage">PILOTAGE</button><button class="onglet" data-onglet="situation">SITUATION</button></nav>
 <div class="alerte-serveur" id="alerte-serveur">Le serveur du poste ne répond plus : les chiffres ci-dessous sont figés. Relancer <code>pilotage.cmd</code> à la racine du dépôt.</div>
 
-<div class="grille">
+<div class="grille" id="onglet-situation" hidden>
+  <section class="p s12"><h2>Situation du projet<span class="droite" id="sit-maj"></span></h2>
+    <div class="petit">Ce qui est fait, avec quelle fiabilité, et ce qui reste. Source : <span class="mono">pilotage/situation.yml</span>, tenu à jour par Claude.</div>
+    <div class="legende"><span><span class="etq ok">confirmé</span>test déclaré d'avance, puissance suffisante, relu</span><span><span class="etq info">exploratoire</span>calculé et relu, statut exploratoire</span><span><span class="etq warn">provisoire</span>non relu ou données partielles</span><span><span class="etq neutre">aucune</span>pas encore fait</span></div>
+  </section>
+  <section class="p s4"><h2>Thèse <span class="n" id="n-these">0</span></h2><div id="sit-these"></div></section>
+  <section class="p s4"><h2>MakyClimat <span class="n" id="n-makyclimat">0</span></h2><div id="sit-makyclimat"></div></section>
+  <section class="p s4"><h2>Audit de Codex <span class="n" id="n-audit">0</span></h2><div id="sit-audit"></div></section>
+</div>
+
+<div class="grille" id="onglet-pilotage">
   <section class="p s8" id="sec-decisions"><h2>À décider <span class="n" id="n-dec">0</span><span class="droite" id="maj-dec"></span></h2><div id="decisions"></div></section>
   <section class="p s4"><h2>Surveillant<span class="droite" id="surv-info"></span></h2>
     <div class="petit" id="surv-texte">—</div>
@@ -198,10 +225,8 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <div class="defile"><table class="enfants"><thead><tr><th>État</th><th>Agent</th><th>Genre</th><th>Sujet</th><th class="col-cache">Créneau</th><th class="col-cache">Durée</th><th>Jetons</th></tr></thead><tbody id="enfants"></tbody></table></div>
   </section>
 
-  <section class="p s6"><h2>Fil avec les sessions mères <span class="n zero" id="n-fil">0</span></h2><div id="fil" class="defile" style="max-height:420px"></div></section>
-  <section class="p s6"><h2>Runs GitHub<span class="droite" id="gh-maj"></span></h2><div id="runs" class="runs defile" style="max-height:420px"></div></section>
-
-  <section class="p s12"><h2>Messages entre Claude et Codex <span class="n zero" id="n-entre">0</span></h2><div id="entre"></div></section>
+  <section class="p s6"><h2>Journal : qui a fait quoi <span class="n zero" id="n-journal">0</span><span class="droite">3 derniers jours</span></h2><div id="journal" class="defile" style="max-height:520px"></div></section>
+  <section class="p s6"><h2>Runs GitHub<span class="droite" id="gh-maj"></span></h2><div id="runs" class="runs defile" style="max-height:520px"></div></section>
 </div>
 <footer>Données lues toutes les 10 s sans recharger la page · <a href="/tableau_de_bord.html">Recherche : protocole, hypothèses, bibliographie</a> · <a href="/etat/coordination/notifications.html">Historique des alertes</a></footer>
 </div>
@@ -404,12 +429,14 @@ $("kpis").addEventListener("click",function(ev){
 $("t-arreter").onclick=function(){ if(ouvert&&confirm("Arrêter cette session enfant ?")) post("/api/enfant/arreter",{id:ouvert}).then(function(r){retour($("t-retour"),r);lire();}); };
 
 /* ----- fil, runs, messages entre assistants ----- */
-function rendreFil(){
-  var f=D.fil||[]; $("n-fil").textContent=f.length; $("n-fil").className="n"+(f.length?"":" zero");
-  poser("fil",f.length?f.map(function(m){
-    var de=m.de==="porteur"?"Vous → "+NOMS[m.a]:NOMS[m.de]+" → vous";
-    return '<div class="bulle '+e(m.de)+'"><div class="m">'+e(de)+' · '+e(m.quand)+(m.etat?' · '+e(m.etat):'')+'</div>'+e(m.texte)+'</div>';
-  }).join(""):'<div class="vide">Aucun message. Écrire à Claude ou à Codex dans leur panneau.</div>');
+function rendreJournal(){
+  var l=D.journal||[]; $("n-journal").textContent=l.length; $("n-journal").className="n"+(l.length?"":" zero");
+  poser("journal",l.length?l.map(function(x){
+    var qui=x.qui||"", cl=qui.toLowerCase().indexOf("codex")===0?"codex":qui.toLowerCase().indexOf("claude")===0?"claude":qui.toLowerCase().indexOf("vous")===0?"violet":"neutre";
+    var et=(x.etat||"").toLowerCase(), ce=et.indexOf("sans blocage")>=0||et==="commité"||et.indexOf("réponse")===0?"ok":et.indexOf("correction")>=0||et.indexOf("cours")>=0||et.indexOf("attente")>=0?"warn":et.indexOf("échec")>=0||et.indexOf("impossible")>=0||et.indexOf("arrêt")>=0?"ko":"neutre";
+    var quoi=x.fichier?'<a href="/etat/coordination/'+e(x.fichier)+'" target="_blank" rel="noopener">'+e(x.quoi)+'</a>':e(x.quoi);
+    return '<div class="ev"><time>'+e(x.quand)+'</time><div><span class="etq '+cl+'">'+e(qui)+'</span>'+(x.etat?'<span class="etq '+ce+'">'+e(x.etat)+'</span>':'')+quoi+'</div></div>';
+  }).join(""):'<div class="vide">Rien depuis 3 jours.</div>');
 }
 function rendreRuns(){
   var g=D.github||{}, r=g.runs||[];
@@ -422,9 +449,25 @@ function rendreRuns(){
   poser("runs",h||'<div class="vide">Aucun relevé GitHub pour l\'instant.</div>');
   if(g.release&&g.release.mois) poser("gh-maj",$("gh-maj").textContent+" · release R-21 : "+g.release.mois+" mois");
 }
-function rendreEntre(){
-  var l=D.messages_assistants||[]; $("n-entre").textContent=l.length; $("n-entre").className="n"+(l.length?"":" zero");
-  poser("entre",l.length?l.map(function(d){return '<div class="tache"><span class="etq '+(d.auteur.toLowerCase().indexOf("codex")>=0?"codex":"claude")+'">'+e(d.auteur)+' → '+e(d.destinataire)+'</span><b>'+e(d.objet)+'</b> <span class="petit">'+e(d.date)+'</span><div class="petit">'+e(d.detail)+'</div></div>';}).join(""):'<div class="vide">Aucun.</div>');
+var FIAB={confirme:["ok","confirmé"],exploratoire:["info","exploratoire"],provisoire:["warn","provisoire"],aucune:["neutre","aucune"]};
+var ETAT={fait:["ok","fait"],en_cours:["info","en cours"],a_faire:["neutre","à faire"],bloque:["ko","bloqué"]};
+function rendreSituation(){
+  var s=D.situation||{}, dom=s.domaines||{};
+  $("sit-maj").textContent=s.absent?"fichier absent : inventaire en cours":(s.mis_a_jour?"mis à jour le "+s.mis_a_jour:"");
+  ["these","makyclimat","audit"].forEach(function(k){
+    var l=dom[k]||[], c={confirme:0,exploratoire:0,provisoire:0,reste:0};
+    l.forEach(function(x){ if(x.etat!=="fait") c.reste++; else if(c[x.fiabilite]!==undefined) c[x.fiabilite]++; });
+    $("n-"+k).textContent=l.length;
+    var groupes={}, ordre=[];
+    l.forEach(function(x){ var g=x.groupe||"Divers"; if(!groupes[g]){groupes[g]=[];ordre.push(g);} groupes[g].push(x); });
+    var h='<div class="compteurs"><div><b style="color:var(--vert)">'+c.confirme+'</b><span>CONFIRMÉ</span></div><div><b style="color:var(--cyan)">'+c.exploratoire+'</b><span>EXPLORATOIRE</span></div><div><b style="color:var(--or)">'+c.provisoire+'</b><span>PROVISOIRE</span></div><div><b>'+c.reste+'</b><span>RESTE À FAIRE</span></div></div>';
+    h+=ordre.map(function(g){ return '<div class="groupe">'+e(g)+'</div>'+groupes[g].map(function(x){
+      var f=FIAB[x.fiabilite]||["neutre",x.fiabilite||"?"], t=ETAT[x.etat]||["neutre",x.etat||"?"];
+      return '<div class="elt"><div class="t"><b>'+e(x.nom)+'</b><span class="etq '+t[0]+'">'+e(t[1])+'</span><span class="etq '+f[0]+'">'+e(f[1])+'</span>'+(x.qui?'<span class="etq neutre">'+e(x.qui)+'</span>':'')+'</div>'+
+        (x.reste?'<div class="r">Reste : '+e(x.reste)+'</div>':'')+(x.preuve?'<div class="pr">'+e(x.preuve)+'</div>':'')+'</div>';
+    }).join(""); }).join("");
+    poser("sit-"+k,l.length?h:'<div class="vide">'+(s.absent?"Inventaire en cours par Codex.":"Aucun élément.")+'</div>');
+  });
 }
 
 /* ----- boucle ----- */
@@ -433,10 +476,17 @@ function lire(){
   fetch("/api/poste",{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
     D=d; jeton=d.jeton||jeton; dernierOk=Date.now();
     if(!construit){ construireMere("claude"); construireMere("codex"); construit=true; }
-    [rendreDecisions,rendreSurveillant,function(){rendreMere("claude");},function(){rendreMere("codex");},rendreEnfants,rendreFil,rendreRuns,rendreEntre]
+    [rendreDecisions,rendreSurveillant,function(){rendreMere("claude");},function(){rendreMere("codex");},rendreEnfants,rendreJournal,rendreRuns,rendreSituation]
       .forEach(function(f){ try{f();}catch(x){ console.error(x); } });
   }).catch(function(){});
 }
+function montrerOnglet(nom){
+  ["pilotage","situation"].forEach(function(n){ $("onglet-"+n).hidden=(n!==nom); });
+  Array.prototype.forEach.call(document.querySelectorAll(".onglet"),function(b){ b.classList.toggle("actif",b.getAttribute("data-onglet")===nom); });
+  try{ localStorage.setItem("poste-onglet",nom); }catch(x){}
+}
+Array.prototype.forEach.call(document.querySelectorAll(".onglet"),function(b){ b.addEventListener("click",function(){ montrerOnglet(b.getAttribute("data-onglet")); }); });
+try{ var o=localStorage.getItem("poste-onglet"); if(o==="situation") montrerOnglet(o); }catch(x){}
 lire(); setInterval(lire,10000);
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) lire(); });
 })();
