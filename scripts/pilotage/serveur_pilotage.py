@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import os
 import secrets
 import shutil
@@ -464,6 +465,45 @@ def avis_windows(texte: str) -> None:
                      env=dict(os.environ, MAKYCLIMAT_AVIS=texte[:200]), creationflags=subprocess.CREATE_NO_WINDOW)
 
 
+# Échecs déjà réglés (porteur, 13/11/2026) : un message « Échec GitHub à examiner » restait dans « À décider » après
+# la réussite d'un run plus récent du même workflow (le 13/11, run 43236237171, collecte GloFAS déjà complète).
+# Il est retiré dès qu'un run plus récent (identifiant plus grand) du même workflow a réussi.
+MESSAGE_ECHEC = re.compile(r"^- \*\*[^*]*Surveillant → porteur du projet · Échec GitHub à examiner\.\*\* "
+                           r"run (\d+) \((.+?), [a-z_]+\)")
+
+
+def echecs_resolus(lignes: list[str], runs: list[dict]) -> list[int]:
+    """Indices des messages d'échec qu'un run plus récent et réussi du même workflow a rendus caducs."""
+    retirer = []
+    for k, ligne in enumerate(lignes):
+        m = MESSAGE_ECHEC.match(ligne)
+        if m and any(r.get("workflow") == m[2] and r.get("conclusion") == "success" and int(r.get("id", 0)) > int(m[1])
+                     for r in runs):
+            retirer.append(k)
+    return retirer
+
+
+def retirer_echecs_resolus(runs: list[dict]) -> int:
+    try:
+        if not echecs_resolus(COORD.read_text(encoding="utf-8-sig").splitlines(), runs):
+            return 0                     # rien à retirer : pas d'écriture ni de régénération du tableau
+    except OSError:
+        return 0
+    retires = []
+
+    def modifier(lignes):
+        indices = echecs_resolus(lignes, runs)
+        retires[:] = [lignes[k] for k in indices]
+        for k in reversed(indices):
+            del lignes[k]
+        return {"ok": f"{len(indices)} échec(s) réglé(s) retiré(s)"}
+
+    ecrire_coordination(modifier)
+    for ligne in retires:
+        print("Échec déjà réglé, message retiré :", ligne[:160], flush=True)
+    return len(retires)
+
+
 GH_ACTIF_S, GH_REPOS_S, RELEASE_S = 60, 300, 600   # allègement du PC (porteur, 11/11/2026) : avant, 20 s en continu
 
 
@@ -476,7 +516,12 @@ def suivre_github():
         github_direct.actualiser(avis=avis_windows, avec_release=avec_release, echec=echec_run)
         if avec_release:
             derniere_release = time.monotonic()
-        actifs = any(r.get("statut") != "completed" for r in (github_direct.etat().get("runs") or []))
+        runs = github_direct.etat().get("runs") or []
+        try:
+            retirer_echecs_resolus(runs)
+        except Exception as erreur:          # le suivi GitHub ne doit jamais s'arrêter sur un incident d'écriture
+            print("Nettoyage des échecs réglés impossible :", erreur, flush=True)
+        actifs = any(r.get("statut") != "completed" for r in runs)
         time.sleep(GH_ACTIF_S if actifs else GH_REPOS_S)
 
 

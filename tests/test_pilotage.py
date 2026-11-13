@@ -603,6 +603,22 @@ def test_relecteur_attitre():
         assert list(C.relecture_auto(proto, "codex")) == []
 
 
+
+def test_echec_github_regle_retire():
+    """Porteur, 13/11/2026 : un message « Échec GitHub à examiner » est retiré dès qu'un run plus récent du même
+    workflow a réussi (run 43236237171 signalé alors que la collecte GloFAS était complète)."""
+    wf = "R-21 bis - Réanalyse GloFAS v4"
+    msg = (f"- **12/11/2026 · Surveillant → porteur du projet · Échec GitHub à examiner.** run 43236237171 ({wf}, "
+           f"failure) https://github.com/x/actions/runs/43236237171 ; aucune tâche ouverte. Répondre ou autoriser une relance.")
+    autre = msg.replace("43236237171", "500").replace(wf, "Autre workflow")
+    lignes = ["## Messages et décisions en attente", "", msg, autre, "- question du porteur"]
+    runs = [{"id": 43253431222, "workflow": wf, "conclusion": "success"},
+            {"id": 400, "workflow": "Autre workflow", "conclusion": "success"},      # plus ancien : ne règle rien
+            {"id": 600, "workflow": "Autre workflow", "conclusion": "failure"}]      # plus récent mais en échec
+    assert S.echecs_resolus(lignes, runs) == [2]
+    assert S.echecs_resolus(lignes, runs[1:]) == []
+
+
 if __name__ == "__main__":
     for nom, fonction in list(globals().items()):
         if nom.startswith("test_"):
