@@ -33,3 +33,17 @@ Demande du porteur (11/11). Jauge de contexte par assistant dans « En ce moment
 Constat du 11/11 au soir : la relecture groupée demandée par message (réveil de 20:47, 368 k jetons) a été suivie de six relectures par ligne (20:52-21:01, 1,14 M jetons), dont deux du même commit `25479b2` cité par deux lignes ; deux runs Tests annulés par `cancel-in-progress` ont coûté chacun un diagnostic de ~400 k jetons.
 Correctifs du 12/11 : (1) `groupes_relecture` regroupe les lignes « À relire » par commit et ignore un commit cité dans un message en attente adressé au relecteur ; une ligne seule garde son identifiant (aucune relance des relectures déjà faites) ; (2) `annule_et_remplace` (github_direct) écarte sans modèle un run annulé remplacé par un run plus récent du même workflow sur la même branche. Simulation sur COORDINATION.md du 11/11 : 0 relecture avec le message, 5 sans (au lieu de 6). 53 tests du pilotage réussis.
 
+
+## Situation du projet — inventaire
+
+13/11/2026 07:11 → 13/11/2026 07:18 Nairobi · Codex · exécution `exec:codex:20261113-0800-situation`.
+Livrable : `pilotage/situation.yml`, strictement local et ignoré par `/pilotage/`, à relire par Claude.
+239 éléments : 93 thèse (M0–M7, E1–E7, H1–H6, les 54 identifiants du registre, résultats détaillés et suites), 129 site (122 indicateurs et 7 ensembles de données ou présentation), 17 audit.
+
+Les chemins et commits désignent les pièces examinées, principalement l’instantané `d252e8d`, ou les correctifs identifiés ; ils ne certifient pas un résultat scientifique. Le suivi local du 09/11 est distingué des pièces versionnées et des rapports récents R-21 et R-21 bis. Aucun niveau « confirme » attribué sans les trois preuves exigées ; R-21 et R-21 bis restent exploratoires, les autres résultats sans preuve suffisante de relecture ou de puissance restent provisoires. Les éléments non calculés restent sans fiabilité.
+
+Audit : les deux constats P0 et trois P1 de la section D sont décomposés pour ne pas fermer leurs réserves restantes ; aucune priorité P2 explicite dans le document source, les autres réserves D/E restent « Non classé ». Les états ouvert/corrigé sont dans le nom pour conserver l’énumération demandée du champ etat. Aucun état « vérifié » de production prétendu ; poids de recharge et libellés UI restent ouverts. La présence au catalogue ne prouve pas la fraîcheur en ligne ; aucune vérification distante ni lecture de données personnelles.
+
+Vérifications : YAML et schéma des 239 éléments, valeurs autorisées, unicité des noms, couverture des 54 R et de tous les indicateurs configurés, existence des preuves aux commits cités, exclusion Git, lecture intégrale via `poste.situation`, UTF-8 et absence de caractères substitués. Les 21 tests de `tests/test_poste.py` réussissent ; `git diff --check` sans erreur. Aucun calcul scientifique, téléchargement, workflow, commit ni push exécuté.
+
+Fichiers de cette intervention : `pilotage/situation.yml` (local), `COORDINATION.md`, cette fiche, `pilotage/etat/reprise_codex.md` (local). À commiter par Claude : uniquement les deux fichiers de suivi versionnés, après relecture ; jamais le YAML local. Le nouvel onglet a été développé séparément par Claude (`ebe2ff3`) : aucun code du poste modifié ici.
