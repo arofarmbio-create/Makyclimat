@@ -47,17 +47,47 @@ def voyant(stop: bool, instance: dict | None, en_cours: dict, fil_: dict, aujour
     return {"couleur": "vert", "phrase": "Le système est en veille", "detail": detail, "stop": False, "notes": notes}
 
 
+def contributions(fil_: dict, refs: set[str]) -> dict:
+    """Ce qu'une action débloque : les étapes non finies qui dépendent de `refs` (données ou étapes), regroupées par
+    grand thème avec le titre de leurs objectifs (porteur, 13/11 : dire à quoi sert chaque action)."""
+    themes_noms = {t["id"]: t["nom"] for t in fil_.get("themes", [])}
+    objectifs = {o["id"]: o for o in fil_.get("objectifs", [])}
+    par_theme: dict[str, list[str]] = {}
+    debloquees = []
+    for e in fil.etapes(fil_):
+        if e.get("etat") in fil.FINIS or not refs & set(e.get("depend_de", []) + e.get("donnees", [])):
+            continue
+        o = objectifs.get(e["_groupe"])
+        if not o:
+            continue
+        debloquees.append(e.get("quoi", ""))
+        titres = par_theme.setdefault(themes_noms.get(o.get("theme"), "Autre"), [])
+        titre = o.get("titre") or o.get("nom", "")
+        if titre not in titres:
+            titres.append(titre)
+    return {"themes": [{"theme": t, "objectifs": v} for t, v in par_theme.items()], "etapes": debloquees}
+
+
 def vous_attend(fil_: dict, decisions: list[dict]) -> list[dict]:
     titres = {o["id"]: o.get("titre") or o.get("nom", "") for o in fil_.get("objectifs", [])}
     titres.update({d["id"]: d.get("objet", "") for d in fil_.get("demarches", [])})
     p = fil.pour_porteur(fil_)
+    apporte = {g["id"]: g.get("apporte", "") for g in fil_.get("demarches", []) + fil_.get("objectifs", [])}
+    donnees_de = {}
+    for d in fil_.get("donnees", []):
+        if d.get("demarche"):
+            donnees_de.setdefault(d["demarche"], set()).add(d["id"])
     sortie = [{"type": "valider", "id": e["id"], "titre": f"Valider : {e.get('quoi', '')}",
-               "detail": titres.get(e["_groupe"], "") + (f" — livrable : {e['preuve']}" if e.get("preuve") else "")}
+               "detail": titres.get(e["_groupe"], "") + (f" — livrable : {e['preuve']}" if e.get("preuve") else ""),
+               "apporte": "Votre accord autorise le calcul que ce protocole fixe.",
+               "contribue": contributions(fil_, {e["id"]})}
               for e in p["valider"]]
     sortie += [{"type": "decision", "cle": d["cle"], "titre": d["objet"], "detail": d.get("detail", "")[:400]}
                for d in decisions]
     sortie += [{"type": "faire", "id": e["id"], "titre": titres.get(e["_groupe"]) or e.get("quoi", ""),
-                "detail": e.get("quoi", "") + (f" — {e['prochaine_action']}" if e.get("prochaine_action") else "")}
+                "detail": e.get("quoi", "") + (f" — {e['prochaine_action']}" if e.get("prochaine_action") else ""),
+                "apporte": e.get("apporte") or apporte.get(e["_groupe"], ""),
+                "contribue": contributions(fil_, donnees_de.get(e["_groupe"], set()) | {e["id"]})}
                for e in p["faire"]]
     return sortie
 

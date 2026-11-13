@@ -79,3 +79,15 @@ def test_evenements_en_clair(env):
     ev = accueil.evenements(fil.charger())
     assert len(ev) == 1 and ev[0]["texte"] == "Validé par vous : Protocole" and ev[0]["theme"] == "Nappes"
     json.dumps(accueil.construire(False, {"pid": 1}, {}, []))  # sérialisable
+
+
+def test_chaque_action_dit_a_quoi_elle_sert(env):
+    f = fil.charger()
+    f["demarches"][0]["apporte"] = "Tranche la question centrale"
+    f["donnees"][0]["demarche"] = "X-A"
+    a = next(x for x in accueil.vous_attend(f, []) if x["type"] == "faire")
+    assert a["apporte"] == "Tranche la question centrale"
+    assert a["contribue"]["themes"] == [{"theme": "Nappes", "objectifs": ["Recharge des nappes"]}]
+    assert a["contribue"]["etapes"] == ["Test"]
+    v = next(x for x in accueil.vous_attend(f, []) if x["type"] == "valider")
+    assert v["contribue"]["etapes"] == ["Test"]

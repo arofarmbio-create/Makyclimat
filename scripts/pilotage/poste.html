@@ -206,6 +206,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .detail-theme{margin-top:8px;border-top:1px dashed rgba(0,229,255,.2);padding-top:6px;cursor:default}
 .obj{margin:8px 0} .obj b{font-size:15px} .obj ul{margin:4px 0;padding-left:18px;font-size:14px}
 .info-mot{border-bottom:1px dotted var(--gris);cursor:help}
+.carte-act .pour{font-size:14px;margin-top:5px;line-height:1.45} .carte-act .pour b{display:inline;font-size:14px;color:var(--cyan-doux)}
 @media (max-width:760px){
   .principal{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;gap:0;background:rgba(3,7,13,.97);border-top:1px solid var(--bord)}
   .principal .onglet{flex:1;border:0;border-radius:0;padding:12px 2px;font-size:11px;letter-spacing:.04em}
@@ -607,7 +608,11 @@ function carteAction(a){
   var b = a.type==="valider" ? '<button class="b vert" data-valider="'+e(a.id)+'">Valider</button>'
         : a.type==="decision" ? '<button class="b vert" data-dec="'+e(a.cle)+'" data-act="autoriser">Autoriser</button> <button class="b rouge" data-dec="'+e(a.cle)+'" data-act="refuser">Refuser</button>'
         : '<span class="etq violet">démarche</span>';
-  return '<div class="carte-act"><div class="q"><b>'+e(a.titre)+'</b><span>'+e(a.detail)+'</span></div><div>'+b+'</div></div>';
+  var c=a.contribue||{themes:[],etapes:[]}, pour="";
+  if(a.apporte) pour+='<div class="pour"><b>À quoi ça sert :</b> '+e(a.apporte)+'</div>';
+  if(c.themes.length) pour+='<div class="pour"><b>Fait avancer :</b> '+c.themes.map(function(t){return '<span class="etq info">'+e(t.theme)+'</span> '+e(t.objectifs.join(" ; "));}).join(" · ")+
+    (c.etapes.length?' <span class="petit">('+c.etapes.length+' étape'+(c.etapes.length>1?"s":"")+' débloquée'+(c.etapes.length>1?"s":"")+')</span>':'')+'</div>';
+  return '<div class="carte-act"><div class="q"><b>'+e(a.titre)+'</b><span>'+e(a.detail)+'</span>'+pour+'</div><div>'+b+'</div></div>';
 }
 function carteTheme(t,prefixe){
   var cle=prefixe+t.id, ouvert=!!ouverts[cle], rf=t.resultats_par_fiabilite||{}, nres=Object.keys(rf).reduce(function(s,k){return s+rf[k];},0);
