@@ -91,3 +91,21 @@ def test_chaque_action_dit_a_quoi_elle_sert(env):
     assert a["contribue"]["etapes"] == ["Test"]
     v = next(x for x in accueil.vous_attend(f, []) if x["type"] == "valider")
     assert v["contribue"]["etapes"] == ["Test"]
+
+
+def test_page_de_theme_relie_situation_preuves_donnees_actions(env, tmp_path, monkeypatch):
+    sit = tmp_path / "situation.yml"
+    sit.write_text("these:\n- nom: R-1 — Puits à sec\n  fiabilite: exploratoire\n  preuve: validation/puits.md @ abc\n"
+                   "  reste: Gain non établi\n", encoding="utf-8")
+    monkeypatch.setattr(accueil, "SITUATION", sit)
+    f = fil.charger()
+    f["donnees"][0]["demarche"] = "X-A"
+    t = accueil.themes(f, accueil.vous_attend(f, []))[0]
+    p = t["page"]
+    r1 = next(r for r in p["resultats"] if r["ref"] == "R-1")
+    assert r1["reste"] == "Gain non établi" and r1["preuves"][0]["lien"].endswith("validation/puits.md")
+    assert p["resultats"][0]["ref"] == "R-1"                    # le plus fiable d'abord
+    assert p["donnees"][0]["nom"] == "Chlorure de la pluie" and p["donnees"][0]["obtenue_par"] == "Ministère de l'Eau"
+    test = next(x for c in p["chemins"] for x in c["etapes"] if x["id"] == "T-A.2")
+    assert test["depend_de"] == ["T-A.1"] and "manquante" in test["bloquant"]
+    assert [a["type"] for a in p["actions"]] == ["valider", "faire"]

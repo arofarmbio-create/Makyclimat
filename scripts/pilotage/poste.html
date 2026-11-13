@@ -206,6 +206,14 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .detail-theme{margin-top:8px;border-top:1px dashed rgba(0,229,255,.2);padding-top:6px;cursor:default}
 .obj{margin:8px 0} .obj b{font-size:15px} .obj ul{margin:4px 0;padding-left:18px;font-size:14px}
 .info-mot{border-bottom:1px dotted var(--gris);cursor:help}
+.pli{border:1px solid var(--bord);border-radius:12px;margin:10px 0;background:rgba(0,229,255,.025)}
+.pli>summary{cursor:pointer;padding:11px 14px;font-size:16px;list-style:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pli>summary::-webkit-details-marker{display:none}
+.pli>summary::before{content:"▸";color:var(--cyan);font-size:14px;transition:transform .15s}
+.pli[open]>summary::before{transform:rotate(90deg)}
+.pli-corps{padding:0 14px 12px} .pli .pli{margin:8px 0}
+.res{padding:8px 0;border-bottom:1px dashed rgba(0,229,255,.12);font-size:15px} .res b{font-weight:600}
+.page-theme .dit{color:var(--gris)}
 .carte-act .pour{font-size:14px;margin-top:5px;line-height:1.45} .carte-act .pour b{display:inline;font-size:14px;color:var(--cyan-doux)}
 @media (max-width:760px){
   .principal{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;gap:0;background:rgba(3,7,13,.97);border-top:1px solid var(--bord)}
@@ -236,7 +244,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
   <section class="p s12"><h2>Où en est la thèse</h2><div class="petit">Chaque grand thème avec son meilleur niveau de <span class="info-mot" title="aucune → provisoire (chiffre non entièrement vérifié) → exploratoire (piste, sans règle fixée d'avance ou trop peu de données) → soutenue (test fixé d'avance, réussi, relu) → confirmée (reproduit sur des données neuves)">fiabilité</span> et ce qui lui manque. Touchez un thème pour le détail.</div><div id="a-themes"></div></section>
 </div>
 <div class="grille" id="principal-these" hidden>
-  <section class="p s12"><h2>La thèse, thème par thème</h2><div class="petit">Résultats obtenus (avec leur fiabilité), prochaines étapes et ce qui bloque. Touchez un thème pour l'ouvrir.</div><div id="t-themes"></div></section>
+  <section class="p s12"><div id="t-intro"><h2>La thèse, thème par thème</h2><div class="petit">Touchez un thème : ses résultats et leurs preuves, le chemin des étapes vers « confirmé », les données et vos actions, au même endroit.</div></div><div id="t-themes"></div></section>
 </div>
 <div class="grille" id="principal-actions" hidden>
   <section class="p s12"><h2>Mes actions <span class="n" id="m-n">0</span></h2><div class="petit">Tout ce qui ne dépend que de vous : valider, décider, faire une démarche. Le reste avance sans vous.</div><div id="m-liste"></div><div class="retour" id="m-retour"></div></section>
@@ -598,12 +606,16 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-onglet]"),function
 try{ var o=localStorage.getItem("poste-onglet"); if(o==="situation"||o==="organigramme") montrerOnglet(o); }catch(x){}
 
 /* ----- accueil, thèse, mes actions (porteur, 13/11/2026) ----- */
-var A=null, ouverts={}, CLE_VISITE="poste-derniere-visite", visitePrec=null;
+var A=null, themeOuvert=null, plis={}, CLE_VISITE="poste-derniere-visite", visitePrec=null;
 try{ visitePrec=localStorage.getItem(CLE_VISITE); }catch(x){}
 if(!visitePrec) visitePrec=new Date(Date.now()-86400000).toISOString();
 function echelle(rang){ var h='<div class="echelle">'; for(var i=1;i<5;i++) h+='<i class="'+(i<=rang?"on":"")+'"></i>'; return h+'</div><div class="echelle-noms"><span>provisoire</span><span>exploratoire</span><span>soutenue</span><span>confirmée</span></div>'; }
 function couleurFiab(f){ return f==="confirmée"||f==="soutenue"?"ok":f==="exploratoire"?"info":f==="provisoire"?"warn":"neutre"; }
 function quand(iso){ try{ return new Date(iso).toLocaleString("fr-FR",{timeZone:"Africa/Nairobi",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}); }catch(x){ return iso; } }
+function pli(cle,ouvertParDefaut,resume,corps){
+  var o = cle in plis ? plis[cle] : ouvertParDefaut;
+  return '<details class="pli" data-pli="'+e(cle)+'"'+(o?" open":"")+'><summary>'+resume+'</summary><div class="pli-corps">'+corps+'</div></details>';
+}
 function carteAction(a){
   var b = a.type==="valider" ? '<button class="b vert" data-valider="'+e(a.id)+'">Valider</button>'
         : a.type==="decision" ? '<button class="b vert" data-dec="'+e(a.cle)+'" data-act="autoriser">Autoriser</button> <button class="b rouge" data-dec="'+e(a.cle)+'" data-act="refuser">Refuser</button>'
@@ -614,22 +626,54 @@ function carteAction(a){
     (c.etapes.length?' <span class="petit">('+c.etapes.length+' étape'+(c.etapes.length>1?"s":"")+' débloquée'+(c.etapes.length>1?"s":"")+')</span>':'')+'</div>';
   return '<div class="carte-act"><div class="q"><b>'+e(a.titre)+'</b><span>'+e(a.detail)+'</span>'+pour+'</div><div>'+b+'</div></div>';
 }
-function carteTheme(t,prefixe){
-  var cle=prefixe+t.id, ouvert=!!ouverts[cle], rf=t.resultats_par_fiabilite||{}, nres=Object.keys(rf).reduce(function(s,k){return s+rf[k];},0);
-  var h='<div class="theme" data-theme="'+e(cle)+'"><div class="t"><b>'+e(t.nom)+'</b><span class="etq '+couleurFiab(t.meilleure)+'">au mieux : '+e(t.meilleure)+'</span></div>'+
+function carteTheme(t){
+  var rf=t.resultats_par_fiabilite||{}, nres=Object.keys(rf).reduce(function(s,k){return s+rf[k];},0);
+  return '<div class="theme" data-ouvrir="'+e(t.id)+'" role="button" tabindex="0"><div class="t"><b>'+e(t.nom)+' ›</b><span class="etq '+couleurFiab(t.meilleure)+'">au mieux : '+e(t.meilleure)+'</span></div>'+
     '<div class="dit">'+e(t.dit)+'</div>'+echelle(t.rang)+
     '<div class="l">'+nres+' résultat'+(nres>1?"s":"")+(nres?' ('+Object.keys(rf).map(function(k){return rf[k]+" "+k;}).join(", ")+')':'')+'</div>'+
     (t.en_cours.length?'<div class="l">En cours : '+e(t.en_cours[0])+'</div>':'')+
     (t.prochaine?'<div class="l">Prochaine étape : '+e(t.prochaine)+'</div>':'')+
-    (t.manque.length?'<div class="l" style="color:var(--or)">Il manque : '+e(t.manque.join(" ; "))+'</div>':'');
-  if(ouvert){
-    h+='<div class="detail-theme">'+t.objectifs.map(function(o){
-      return '<div class="obj"><b>'+e(o.titre)+'</b> <span class="petit">visé : '+e(o.visee)+'</span>'+
-        (o.resultats.length?'<ul>'+o.resultats.map(function(r){return '<li><span class="etq '+couleurFiab(r.fiabilite)+'">'+e(r.fiabilite)+'</span> '+e(r.verdict)+' <span class="petit">'+e(r.ref)+'</span></li>';}).join("")+'</ul>':'<div class="petit">Pas encore de résultat.</div>')+
-        '<div class="petit">Étapes : '+o.etapes.slice(0,6).map(function(x){return e(x.etat)+' — '+e(x.quoi);}).join(" · ")+(o.etapes.length>6?" …":"")+'</div></div>';
-    }).join("")+'</div>';
-  }
-  return h+'</div>';
+    (t.manque.length?'<div class="l" style="color:var(--or)">Il manque : '+e(t.manque.join(" ; "))+'</div>':'')+'</div>';
+}
+var QUI={porteur:"vous",partenaire:"partenaire",claude:"Claude",codex:"Codex",coordinateur:"coordinateur",agent:"téléchargement",github:"GitHub"};
+function diagramme(etapes){
+  var cols=niveaux(etapes.map(function(x){return {id:x.id,depend_de:x.depend_de};}));
+  var par={}; etapes.forEach(function(x){par[x.id]=x;});
+  return '<div class="chaine">'+cols.map(function(col){ return '<div class="niveau">'+col.map(function(t){
+    var x=par[t.id], fait=x.etat==="fait"||x.etat==="clos", q=x.qui==="porteur"||x.qui==="partenaire"?"porteur":x.qui;
+    var etq=fait?"ok":x.etat==="en_cours"||x.etat==="a_relire"?"info":x.etat==="decision"?"warn":x.bloquant?"ko":"neutre";
+    return '<div class="boite '+e(q)+(fait?" fait":"")+'"><b>'+e(x.quoi)+'</b><div><span class="etq '+etq+'">'+e(x.libelle)+'</span> <span class="petit">'+e(QUI[x.qui]||x.qui)+'</span>'+
+      (x.autorisation?' <span class="etq violet">votre accord</span>':'')+'</div>'+(x.bloquant&&!fait?'<div class="bl">Attend : '+e(x.bloquant)+'</div>':'')+'</div>';
+  }).join("")+'</div>'; }).join('<div class="fleche">→</div>')+'</div>';
+}
+function pageTheme(t){
+  var p=t.page||{resultats:[],donnees:[],chemins:[],actions:[]}, cle="th-"+t.id;
+  var res=p.resultats.map(function(r){
+    return '<div class="res"><div><span class="etq '+couleurFiab(r.fiabilite)+'">'+e(r.fiabilite)+'</span> <b>'+e(r.verdict)+'</b></div>'+
+      '<div class="petit">'+e(r.titre||r.ref)+' · '+e(r.objectif)+'</div>'+
+      (r.reste?'<div class="petit">Reste : '+e(r.reste)+'</div>':'')+
+      (r.preuves.length?'<div class="petit">Preuve : '+r.preuves.map(function(f){return '<a href="'+e(f.lien)+'" target="_blank" rel="noopener">'+e(f.chemin)+'</a>';}).join(", ")+'</div>':'')+'</div>';
+  }).join("")||'<div class="vide">Pas encore de résultat.</div>';
+  var nEt=0,nFaites=0,nBloq=0; p.chemins.forEach(function(c){ c.etapes.forEach(function(x){ nEt++; if(x.etat==="fait"||x.etat==="clos") nFaites++; else if(x.bloquant) nBloq++; }); });
+  var chemins=p.chemins.map(function(c,i){
+    var f=c.etapes.filter(function(x){return x.etat==="fait"||x.etat==="clos";}).length;
+    return pli(cle+"-c"+i,p.chemins.length===1,'<b>'+e(c.titre)+'</b> <span class="petit">visé : '+e(c.visee)+' · '+f+'/'+c.etapes.length+' étapes faites</span>',
+      '<div class="petit">De gauche à droite : une étape commence quand celles dont elle dépend sont faites.</div>'+diagramme(c.etapes));
+  }).join("");
+  var nDispo=p.donnees.filter(function(d){return d.etat==="disponible";}).length;
+  var donnees=p.donnees.map(function(d){
+    var ok=d.etat==="disponible";
+    return '<div class="res"><div><span class="etq '+(ok?"ok":d.etat==="partielle"||d.etat==="en_cours"?"warn":"ko")+'">'+e(ok?"✓ disponible":d.etat)+'</span> <b>'+e(d.nom)+'</b></div>'+
+      (d.couverture?'<div class="petit">Couverture : '+e(d.couverture)+'</div>':'')+(d.manque?'<div class="petit">Manque : '+e(d.manque)+'</div>':'')+
+      (!ok&&d.obtenue_par?'<div class="petit">Obtenue par : '+e(QUI[d.obtenue_par]||d.obtenue_par)+'</div>':'')+'</div>';
+  }).join("")||'<div class="vide">Aucune donnée rattachée.</div>';
+  var actions=p.actions.map(carteAction).join("")||'<div class="vide">Rien ne vous attend pour ce thème.</div>';
+  return '<div class="page-theme"><button class="b" data-retour>‹ Tous les thèmes</button>'+
+    '<h2 style="margin-top:12px">'+e(t.nom)+' <span class="etq '+couleurFiab(t.meilleure)+'">au mieux : '+e(t.meilleure)+'</span></h2><div class="dit">'+e(t.dit)+'</div>'+echelle(t.rang)+
+    pli(cle+"-res",true,'Résultats obtenus <span class="n">'+p.resultats.length+'</span>',res)+
+    pli(cle+"-ch",false,'Le chemin vers « confirmé » <span class="n">'+nEt+'</span> <span class="petit">'+nFaites+' faites · '+nBloq+' attendent une donnée</span>',chemins)+
+    pli(cle+"-do",false,'Les données <span class="n">'+p.donnees.length+'</span> <span class="petit">'+nDispo+' disponibles · '+(p.donnees.length-nDispo)+' à obtenir</span>',donnees)+
+    pli(cle+"-ac",p.actions.length>0,'Vos actions pour ce thème <span class="n">'+p.actions.length+'</span>',actions)+'</div>';
 }
 function rendreAccueil(){
   if(!A) return;
@@ -643,8 +687,10 @@ function rendreAccueil(){
   var evs=(A.evenements||[]).filter(function(x){ return new Date(x.quand)>new Date(visitePrec); });
   $("a-depuis-quand").textContent="Depuis le "+quand(visitePrec)+".";
   poser("a-depuis", evs.length?evs.slice(0,8).map(function(x){return '<div class="ev"><time>'+e(quand(x.quand))+'</time><div>'+e(x.texte)+(x.theme?' <span class="petit">· '+e(x.theme)+'</span>':'')+'</div></div>';}).join(""):'<div class="vide">Rien de nouveau depuis.</div>');
-  poser("a-themes",(A.themes||[]).map(function(t){return carteTheme(t,"a-");}).join(""));
-  poser("t-themes",(A.themes||[]).map(function(t){return carteTheme(t,"t-");}).join(""));
+  poser("a-themes",(A.themes||[]).map(carteTheme).join(""));
+  var t=(A.themes||[]).filter(function(x){return x.id===themeOuvert;})[0];
+  poser("t-themes", t?pageTheme(t):(A.themes||[]).map(carteTheme).join(""));
+  $("t-intro").hidden=!!t;
   $("m-n").textContent=att.length;
   poser("m-liste", att.length?att.map(carteAction).join(""):'<div class="vide">Rien ne vous attend.</div>');
 }
@@ -653,9 +699,13 @@ function lireAccueil(){
     A=d; jeton=d.jeton||jeton; dernierOk=Date.now(); rendreAccueil();
   }).catch(function(){});
 }
+function ouvrirTheme(id){ themeOuvert=id; montrerPrincipal("these"); rendreAccueil(); }
+document.addEventListener("toggle",function(ev){ var d=ev.target; if(d.getAttribute&&d.getAttribute("data-pli")){ plis[d.getAttribute("data-pli")]=d.open; cache={}; } },true);
+document.addEventListener("keydown",function(ev){ var th=ev.target.closest&&ev.target.closest("[data-ouvrir]"); if(th&&(ev.key==="Enter"||ev.key===" ")){ ev.preventDefault(); ouvrirTheme(th.getAttribute("data-ouvrir")); } });
 document.addEventListener("click",function(ev){
-  var th=ev.target.closest("[data-theme]");
-  if(th && !ev.target.closest(".detail-theme")){ var c=th.getAttribute("data-theme"); ouverts[c]=!ouverts[c]; rendreAccueil(); return; }
+  var th=ev.target.closest("[data-ouvrir]");
+  if(th){ ouvrirTheme(th.getAttribute("data-ouvrir")); return; }
+  if(ev.target.closest("[data-retour]")){ themeOuvert=null; rendreAccueil(); window.scrollTo(0,0); return; }
   var bv=ev.target.closest("[data-valider]"), bd=ev.target.closest("[data-dec]"), sortie=$("a-retour");
   if(bv){ if(!confirm("Valider : vous autorisez le calcul qui en dépend. Confirmer ?")) return;
     post("/api/valider",{etape:bv.getAttribute("data-valider")}).then(function(r){ retour(sortie,r); retour($("m-retour"),r); lireAccueil(); }); }
@@ -671,12 +721,14 @@ function montrerPrincipal(nom){
   try{ localStorage.setItem("poste-principal",nom); }catch(x){}
   window.scrollTo(0,0);
 }
-Array.prototype.forEach.call(document.querySelectorAll("[data-principal]"),function(b){ b.addEventListener("click",function(){ montrerPrincipal(b.getAttribute("data-principal")); }); });
+Array.prototype.forEach.call(document.querySelectorAll("[data-principal]"),function(b){ b.addEventListener("click",function(){
+  if(b.getAttribute("data-principal")==="these" && !$("principal-these").hidden){ themeOuvert=null; rendreAccueil(); }
+  montrerPrincipal(b.getAttribute("data-principal")); }); });
 try{ var op=localStorage.getItem("poste-principal"); if(op) montrerPrincipal(op); }catch(x){}
 function noterVisite(){ try{ localStorage.setItem(CLE_VISITE,new Date().toISOString()); }catch(x){} }
 document.addEventListener("visibilitychange",function(){ if(document.hidden) noterVisite(); });
 window.addEventListener("pagehide",noterVisite);
-lireAccueil(); setInterval(lireAccueil,10000);
+lireAccueil(); setInterval(lireAccueil,15000);
 lire(); setInterval(lire,10000);
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) lire(); });
 })();
