@@ -491,7 +491,14 @@ class Bot:
     def courriels(self) -> None:
         """Relève toutes les 5 minutes (sans jetons) ; avis sans expéditeur ni contenu."""
         import courriel
-        if not courriel.CONFIG.exists() or time.time() - self.memoire.get("releve", 0) < RELEVE_S:
+        if not courriel.CONFIG.exists():
+            return
+        prets = {e["cle"] for e in courriel.vue() if e["etat"] == "brouillon"}   # à chaque passage, même sans relève
+        vus = set(self.memoire.get("brouillons_vus", []))
+        if prets - vus and self.dire(f"{len(prets - vus)} brouillon{'s' if len(prets - vus) > 1 else ''} de réponse "
+                                     "à relire et envoyer : tableau de bord, onglet Courriels."):
+            self.memoire["brouillons_vus"] = sorted(vus | prets)[-300:]
+        if time.time() - self.memoire.get("releve", 0) < RELEVE_S:
             return
         self.memoire["releve"] = time.time()
         try:
@@ -503,14 +510,9 @@ class Bot:
                 if self.dire("Relève des courriels impossible (réseau ou mot de passe d'application). Détail dans le journal."):
                     self.memoire["releve_erreur"] = jour
             return
-        if nouveaux and self.dire(f"{len(nouveaux)} nouveau{'x' if len(nouveaux) > 1 else ''} courriel"
-                                  f"{'s' if len(nouveaux) > 1 else ''} : tableau de bord, onglet Courriels."):
-            pass
-        prets = {e["cle"] for e in courriel.vue() if e["etat"] == "brouillon"}
-        vus = set(self.memoire.get("brouillons_vus", []))
-        if prets - vus and self.dire(f"{len(prets - vus)} brouillon{'s' if len(prets - vus) > 1 else ''} de réponse "
-                                     "à relire et envoyer : tableau de bord, onglet Courriels."):
-            self.memoire["brouillons_vus"] = sorted(vus | prets)[-300:]
+        if nouveaux:
+            self.dire(f"{len(nouveaux)} nouveau{'x' if len(nouveaux) > 1 else ''} courriel"
+                      f"{'s' if len(nouveaux) > 1 else ''} : tableau de bord, onglet Courriels.")
 
     def surveiller(self) -> None:
         for etape in (self.pousser_decisions, self.pousser_validations, self.pousser_reponses, self.courriels,

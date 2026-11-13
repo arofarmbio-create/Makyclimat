@@ -219,7 +219,9 @@ def compte() -> dict:
 
 
 def consigne_brouillon(cle: str, demande: str = "") -> str:
-    return (f"[courriel {cle}] Le porteur du projet demande une réponse à un courriel reçu. Lis-le : "
+    nom = config().get("nom") or "le porteur du projet"
+    return (f"[courriel {cle}] Le porteur du projet demande une réponse à un courriel reçu. Tu écris AU NOM DU PORTEUR : "
+            f"signe « {nom} » (jamais du nom de l'expéditeur, qui est ton correspondant). Lis-le : "
             f".venv/Scripts/python.exe -B -X utf8 scripts/pilotage/courriel.py lire {cle} . Rédige en français (ou dans "
             f"la langue du courriel) une réponse courte, polie et exacte, au nom du porteur, sans rien promettre "
             f"qu'il n'a pas décidé ; appuie-toi sur le projet (COORDINATION.md, pilotage/fil.yml, courriers/) si utile."

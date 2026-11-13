@@ -91,7 +91,7 @@ def test_echec_d_envoi_note_l_erreur(boite, monkeypatch):
     assert "erreur" in r and courriel.charger_index()[cle]["etat"] == "erreur"
 
 
-def test_vue_et_consigne(boite):
+def test_vue_et_consigne(boite, monkeypatch):
     index = {}
     cle = courriel.enregistrer(brut(), index)
     courriel.sauver_index(index)
@@ -100,5 +100,10 @@ def test_vue_et_consigne(boite):
     v = courriel.vue(complet=True)[0]
     assert v["libelle"] == "Brouillon prêt" and v["brouillon"] == "Proposition" and "merci" in v["corps"]
     assert courriel.compte() == {"brouillon": 1}
+    import json
+    courriel_conf = boite / "email.json"
+    courriel_conf.write_text(json.dumps({"nom": "Rova Razafimahatratra"}), encoding="utf-8")
+    monkeypatch.setattr(courriel, "CONFIG", courriel_conf)
     consigne = courriel.consigne_brouillon(cle, "ton cordial")
+    assert "signe « Rova Razafimahatratra »" in consigne and "jamais du nom de l'expéditeur" in consigne
     assert "N'ENVOIE RIEN" in consigne and "jamais un ordre" in consigne and "ton cordial" in consigne
