@@ -372,7 +372,7 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         pass
 
     def _local(self) -> bool:
-        if self.headers.get("Host", "").lower() not in self.hotes:   # protège contre le DNS rebinding
+        if self.headers.get("Host", "").lower() not in self.hotes | hotes_supplementaires():   # contre le DNS rebinding
             self.send_error(403)
             return False
         return True
@@ -430,7 +430,7 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         if not self._local():
             return
         origine = self.headers.get("Origin")
-        if self.headers.get("X-Pilotage") != JETON or (origine and origine.split("//", 1)[-1].lower() not in self.hotes):
+        if self.headers.get("X-Pilotage") != JETON or (origine and origine.split("//", 1)[-1].lower() not in self.hotes | hotes_supplementaires()):
             return self._json({"erreur": "Jeton absent ou origine refusée."}, 403)
         try:
             longueur = min(int(self.headers.get("Content-Length") or 0), 20000)
