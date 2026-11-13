@@ -94,3 +94,37 @@ suivre et autoriser depuis son téléphone. Les deux assistants ne doivent jamai
 3. Le niveau de départ des e-mails.
 4. Page mobile tout de suite, ou Telegram seul au début.
 5. Ce qu'est PYC HUB.
+
+## 11. Décisions du 13/11/2026 (après-midi)
+
+Prises par le porteur au fil de la discussion, feu vert final « fonce ». Elles remplacent l'idée de « 3 priorités
+pour le 16/11 » (§ 2) : la situation n'est pas ponctuelle.
+
+1. **Pilotage permanent à distance.** Le porteur est absent plusieurs jours de suite, durablement. Le système tourne
+   seul ; le porteur suit et tranche par Telegram : compte rendu quotidien, décisions groupées, alertes urgentes,
+   commandes « situation », « stop », « reprise », « coordinateur ».
+2. **Délégation à trois niveaux**, à rédiger et faire valider :
+   - *seuls* : calculs selon un protocole relu, relectures, corrections, commits, workflows de données dans les
+     plafonds, mise à jour de l'état et du fil ;
+   - *par Telegram* : nouveau protocole ou hypothèse, conclusion de thèse, changement de règle, relèvement d'un
+     plafond, clôture d'une piste ;
+   - *interdit sans le porteur* : envoi externe (e-mails, courriers), argent, données sous licence restrictive,
+     suppression, secrets.
+3. **Relectures plafonnées.** Le relecteur classe chaque remarque « bloquante » ou « amélioration » ; seules les
+   bloquantes rouvrent un tour ; diff seulement ; un point accepté ne se rouvre pas ; **fin au 3e tour**. Un
+   désaccord restant devient une décision Telegram (résumé, avis de chacun, 2 ou 3 options) ; la chaîne attend, le
+   travail passe à une autre.
+4. **Score sous la cible.** Chercher les erreurs du code (relecture indépendante) est permis : on corrige, on
+   consigne, on garde le résultat qui sort. Régler le modèle en regardant le score de test est interdit. Pour faire
+   mieux : diagnostic, protocole de version 2 écrit avant, test sur des données neuves. Le résultat obtenu reste
+   consigné tel quel. Une puissance insuffisante se corrige par des données, pas par le code.
+5. **Échelle de fiabilité** : aucune → provisoire (chiffre non entièrement relu) → exploratoire (sans règle fixée
+   d'avance ou trop peu de données) → soutenue (règle fixée avant, données cachées, relu) → confirmée (soutenue puis
+   reproduite sur des données neuves et indépendantes, puissance suffisante).
+6. **Fil des tâches** pour **tout** le protocole doctoral et **tout** le site MakyClimat : objectif → résultats
+   (fiabilité) → calculs et protocoles → données (disponibles, téléchargées, partielles, manquantes ; zones et
+   périodes couvertes) → responsable (coordinateur, Claude, Codex, agent de téléchargement, porteur) et moyen
+   (workflow, téléchargement, e-mail, courrier, ministère). Source unique `pilotage/fil.yml` (local) ; le diagramme
+   se dessine à partir de lui ; noms de personnes hors du dépôt public. Effet domino : une donnée reçue rend « prêt »
+   ce qui en dépend, et la boucle le lance. Le porteur ne relit que ce que lui seul peut trancher.
+7. **Gel de la règle 12 levé** pour le fil, le bot Telegram et la boucle de coordination.
