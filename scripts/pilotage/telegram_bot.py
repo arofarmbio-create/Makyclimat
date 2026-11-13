@@ -474,8 +474,22 @@ class Bot:
             if self.dire(texte_rapport(), REPRISE if STOP.exists() else MENU):
                 self.memoire["rapport"] = jour
 
+    def pousser_reponses(self) -> None:
+        """Une réponse de Claude dans le poste : avis sans son contenu (il peut être privé ; il se lit dans le tableau
+        de bord, par le réseau privé)."""
+        vues = self.memoire.get("reponses_vues")
+        reponses = [f"{m['id']}|{m['quand']}" for m in poste.fil(80) if m.get("de") == "claude" and m.get("a") == "porteur"]
+        if vues is None:                                  # premier passage : l'historique n'est pas renvoyé
+            self.memoire["reponses_vues"] = reponses
+            return
+        nouvelles = [r for r in reponses if r not in vues]
+        if nouvelles and self.dire(f"Claude vous a répondu ({len(nouvelles)} message{'s' if len(nouvelles) > 1 else ''}). "
+                                   "Lisez-le dans le tableau de bord : Accueil, « Écrire à Claude »."):
+            self.memoire["reponses_vues"] = (vues + nouvelles)[-300:]
+
     def surveiller(self) -> None:
-        for etape in (self.pousser_decisions, self.pousser_validations, self.echecs, self.rapport_du_jour):
+        for etape in (self.pousser_decisions, self.pousser_validations, self.pousser_reponses, self.echecs,
+                      self.rapport_du_jour):
             try:
                 etape()
             except Exception as err:                         # une étape en panne n'arrête pas les autres

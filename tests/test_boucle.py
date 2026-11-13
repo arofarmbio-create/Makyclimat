@@ -137,3 +137,34 @@ def test_codex_mis_de_cote(env, monkeypatch, tmp_path):
     fil.changer("S-X.1", etat="fait")                       # ne reste que l'étape de Codex
     tb.tick()
     assert env == []                                         # Codex mis de côté : rien ne part
+
+
+def test_urgent_en_tete_de_file():
+    lignes = ["## Exécutions autorisées", "", "Texte.", "", "- [ ] `exec:claude:a` tâche A", "- [ ] `exec:codex:b` tâche B",
+              "", "## Décisions du porteur du projet"]
+    sp.execution(lignes, "claude", "urgent X", en_tete=True)
+    execs = [l for l in lignes if l.startswith("- [ ]")]
+    assert "urgent X" in execs[0] and "tâche A" in execs[1]
+    sp.execution(lignes, "claude", "normale Y")
+    assert "normale Y" in [l for l in lignes if l.startswith("- [ ]")][-1]
+
+
+def test_message_urgent_attend_la_tache_en_cours(monkeypatch, tmp_path):
+    import poste
+    monkeypatch.setattr(poste, "MESSAGES", tmp_path / "messages.jsonl")
+    monkeypatch.setattr(fil, "STOP", tmp_path / "stop.txt")
+    ecrit = {}
+
+    def ecrire(modifier):
+        lignes = ["## Exécutions autorisées", "", "- [ ] `exec:codex:b` tâche B", ""]
+        r = modifier(lignes)
+        ecrit["lignes"] = lignes
+        return r
+    monkeypatch.setattr(sp, "ecrire_coordination", ecrire)
+    monkeypatch.setattr(sp, "lancer_si_besoin", lambda r, cree: r)
+    monkeypatch.setattr(sp, "lancement_en_cours", lambda: {"id": "x", "sujet": "Bilan R-40"})
+    r = sp.message_urgent("Réponds au mail de la DGM")
+    assert "termine d'abord" in r["ok"] and "Bilan R-40" in r["ok"]
+    premiere = next(l for l in ecrit["lignes"] if l.startswith("- [ ]"))
+    assert "[urgent]" in premiere and "DGM" in premiere
+    assert poste.a_remettre("claude") == []                   # pas remis une seconde fois à la session mère

@@ -217,14 +217,19 @@ def propre(texte: str, n: int = 1500) -> str:
     return " ".join(str(texte or "").split()).replace("`", "'")[:n]
 
 
-def inserer(lignes: list[str], titre: str, nouvelle: str) -> None:
-    """Ajoute une puce à la fin d'une section, créée au besoin avant « Lancements ponctuels autorisés »."""
+def inserer(lignes: list[str], titre: str, nouvelle: str, en_tete: bool = False) -> None:
+    """Ajoute une puce à la fin d'une section (au début si `en_tete` : demande urgente du porteur, exécutée juste après
+    la tâche en cours), section créée au besoin avant « Lancements ponctuels autorisés »."""
     entete = f"## {titre}"
     if entete not in lignes:
         position = next((i for i, l in enumerate(lignes) if l.startswith("## Lancements ponctuels")), len(lignes))
         lignes[position:position] = [entete, "", SECTIONS[titre], ""]
     i = lignes.index(entete) + 1
     j = next((k for k in range(i, len(lignes)) if lignes[k].startswith("## ")), len(lignes))
+    premiere = next((k for k in range(i, j) if lignes[k].startswith("- ")), None)
+    if en_tete and premiere is not None:
+        lignes.insert(premiere, nouvelle)
+        return
     while j > i and not lignes[j - 1].strip():      # remonter au-dessus des lignes vides de fin de section
         j -= 1
     if lignes[j - 1].strip() and not lignes[j - 1].startswith("- "):   # une liste après un paragraphe : ligne vide
@@ -261,10 +266,37 @@ def ecrire_coordination(modifier) -> dict:
     return reponse
 
 
-def execution(lignes, agent: str, demande: str) -> str:
+def execution(lignes, agent: str, demande: str, en_tete: bool = False) -> str:
     identifiant = datetime.now(NAIROBI).strftime("%Y%m%d-%H%M%S-") + secrets.token_hex(2)
-    inserer(lignes, "Exécutions autorisées", f"- [ ] `exec:{agent}:{identifiant}` {propre(demande, 3900)}")
+    inserer(lignes, "Exécutions autorisées", f"- [ ] `exec:{agent}:{identifiant}` {propre(demande, 3900)}", en_tete)
     return identifiant
+
+
+def message_urgent(texte: str) -> dict:
+    """Demande urgente du porteur (13/11/2026) : Claude est réveillé tout de suite s'il est au repos ; s'il travaille,
+    il finit d'abord la tâche en cours, puis traite celle-ci avant toutes les autres (tête de file)."""
+    depot = poste.envoyer("claude", texte)
+    if "erreur" in depot:
+        return depot
+    ident = depot["id"]
+    poste.marquer_remis("claude", [ident])            # traité par la session réveillée, pas par la session mère
+    consigne_ = (f"[urgent] Demande urgente du porteur du projet, envoyée depuis le tableau de bord (message {ident}) : "
+                 f"« {texte} ». Traite-la en priorité, dans les limites de coordination/delegation.md (aucun envoi "
+                 f"externe sans le porteur : prépare, il valide). Réponds-lui ensuite dans le poste : "
+                 f".venv/Scripts/python.exe -B -X utf8 scripts/pilotage/poste.py repondre claude {ident} "
+                 f"\"ta réponse\". S'il te manque un accès ou une information, dis-le-lui dans cette réponse.")
+    occupe = lancement_en_cours()
+
+    def modifier(lignes):
+        execution(lignes, "claude", consigne_, en_tete=True)
+        return {"ok": ("Claude termine d'abord « " + (occupe.get("sujet") or occupe.get("id") or "sa tâche") +
+                       " », puis passe à votre demande, avant tout le reste.") if occupe else
+                      "Claude est réveillé pour votre demande."}
+
+    reponse = lancer_si_besoin(ecrire_coordination(modifier), True)
+    if fil.STOP.exists():
+        reponse["ok"] = "STOP en cours : votre demande est en tête de file et partira dès la reprise."
+    return reponse
 
 
 def decision(cle: str, action: str, texte: str) -> dict:
@@ -496,7 +528,10 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         elif self.path == "/api/consigne":
             reponse = consigne(str(corps.get("agent", "")), str(corps.get("texte", "")))
         elif self.path == "/api/message":
-            reponse = poste.envoyer(str(corps.get("agent", "")), str(corps.get("texte", "")))
+            if corps.get("urgent") and str(corps.get("agent", "")) == "claude":
+                reponse = message_urgent(str(corps.get("texte", "")))
+            else:
+                reponse = poste.envoyer(str(corps.get("agent", "")), str(corps.get("texte", "")))
         elif self.path == "/api/plafonds/effacer":
             reponse = poste.effacer_plafonds(str(corps.get("agent", "")))
         elif self.path == "/api/enfant/arreter":

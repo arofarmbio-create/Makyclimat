@@ -253,7 +253,8 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <div class="petit">Claude lit votre message à sa prochaine action et vous répond ici. S'il est au repos, la réponse peut prendre un peu de temps.</div>
     <div id="a-conv" class="conv"></div>
     <textarea id="a-msg" rows="2" placeholder="Votre message à Claude…" style="width:100%;margin-top:8px"></textarea>
-    <div class="ligne-btn"><button class="b vert" id="a-envoyer">Envoyer</button></div><div class="retour" id="a-msg-retour"></div></section>
+    <div class="ligne-btn"><label style="display:flex;gap:6px;align-items:center;font-size:15px"><input type="checkbox" id="a-urgent"> Urgent : réveiller Claude (après sa tâche en cours, avant tout le reste)</label>
+    <button class="b vert" id="a-envoyer">Envoyer</button></div><div class="retour" id="a-msg-retour"></div></section>
   <section class="p s12"><h2>Où en est la thèse</h2><div class="petit">Chaque grand thème avec son meilleur niveau de <span class="info-mot" title="aucune → provisoire (chiffre non entièrement vérifié) → exploratoire (piste, sans règle fixée d'avance ou trop peu de données) → soutenue (test fixé d'avance, réussi, relu) → confirmée (reproduit sur des données neuves)">fiabilité</span> et ce qui lui manque. Touchez un thème pour le détail.</div><div id="a-themes"></div></section>
 </div>
 <div class="grille" id="principal-these" hidden>
@@ -730,7 +731,9 @@ document.addEventListener("click",function(ev){
 });
 $("a-envoyer").addEventListener("click",function(){
   var t=$("a-msg").value.trim(); if(!t){ retour($("a-msg-retour"),{erreur:"Écrire un message d'abord."}); return; }
-  post("/api/message",{agent:"claude",texte:t}).then(function(r){ retour($("a-msg-retour"),r); if(!r.erreur){ $("a-msg").value=""; lireAccueil(); } });
+  var urg=$("a-urgent").checked;
+  if(urg&&!confirm("Urgent : Claude sera réveillé pour cette demande (après sa tâche en cours s'il en a une). Confirmer ?")) return;
+  post("/api/message",{agent:"claude",texte:t,urgent:urg}).then(function(r){ retour($("a-msg-retour"),r); if(!r.erreur){ $("a-msg").value=""; $("a-urgent").checked=false; lireAccueil(); } });
 });
 $("a-stop").addEventListener("click",function(){ if(!confirm("STOP : plus aucun lancement tant que vous n'avez pas repris. Confirmer ?")) return;
   post("/api/stop",{}).then(function(r){ retour($("a-retour"),r); lireAccueil(); }); });
