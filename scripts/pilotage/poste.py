@@ -416,6 +416,49 @@ def _commits(jours: int = 3) -> list[dict]:
     return liste
 
 
+def _json(chemin: Path) -> dict:
+    try:
+        donnees = json.loads(chemin.read_text(encoding="utf-8"))
+        return donnees if isinstance(donnees, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def equipe(liste: list[dict]) -> tuple[list[dict], dict]:
+    """Maçons (une session Codex par chantier : auteur, ou relecteur attitré d'un document) et étiquette de chaque
+    lancement : « Maçon … », « Relecteur … » ou, pour les sessions ponctuelles du jour, « Fille n » (porteur, 13/11)."""
+    import hashlib
+    from surveiller_coordination import resoudre
+    macons, etiquettes = [], {}
+    for chantier, s in _json(ETAT / "macons.json").items():
+        nom = f"Maçon {chantier}"
+        taches = s.get("taches") or []
+        en = s.get("en_cours") or {}
+        for t in taches + ([en] if en else []):
+            etiquettes[t.get("id", "")] = nom
+        macons.append({"nom": nom, "role": "auteur", "session": (s.get("session") or "")[:8],
+                       "en_cours": en.get("sujet", ""),
+                       "taches": [{"sujet": t.get("sujet", ""), "statut": t.get("statut", ""),
+                                   "quand": t.get("fin") or t.get("debut", ""), "tokens": t.get("tokens", ""),
+                                   "fichier": nom_fichier(t.get("id", ""))} for t in taches]})
+    for doc, s in _json(ETAT / "relecteurs.json").items():
+        nom = "Relecteur " + Path(doc).stem
+        taches = []
+        for i, h in enumerate(s.get("historique") or [], 1):
+            # identifiant du lancement : empreinte du commit relu, comme dans le surveillant
+            ident = "codex/relecture-" + hashlib.sha256(resoudre(h.get("version", "")).encode()).hexdigest()[:12]
+            etiquettes[ident] = nom
+            taches.append({"sujet": f"tour {i} · version {h.get('version', '')}", "statut": h.get("verdict", ""),
+                           "quand": h.get("fin", ""), "tokens": h.get("tokens", ""), "fichier": nom_fichier(ident)})
+        macons.append({"nom": nom, "role": "relecteur attitré", "session": (s.get("session") or "")[:8],
+                       "en_cours": "relecture en cours" if s.get("en_cours") else "", "taches": taches})
+    filles = sorted((e for e in liste if e.get("du_jour") and e["id"] not in etiquettes),
+                    key=lambda e: _date(e["debut"]) or datetime(2000, 1, 1, tzinfo=NAIROBI))
+    for n, e in enumerate(filles, 1):
+        etiquettes[e["id"]] = f"Fille {n}"
+    return macons, etiquettes
+
+
 def _verdict(e: dict) -> str:
     """Verdict d'une relecture terminée, lu dans son compte rendu (« Verdict : … »)."""
     if e.get("genre") != "relecture" or e.get("statut") != "Réponse reçue":
@@ -430,7 +473,8 @@ def _verdict(e: dict) -> str:
 
 def journal(liste: list[dict], n: int = 80) -> list[dict]:
     """Qui a fait quoi, du plus récent au plus ancien : lancements, commits et messages du porteur."""
-    ev = [{"quand": e["fin"] or e["debut"], "qui": NOMS.get(e["agent"], e["agent"]),
+    ev = [{"quand": e["fin"] or e["debut"],
+           "qui": NOMS.get(e["agent"], e["agent"]) + (f" · {e['session']}" if e.get("session") else ""),
            "quoi": f"{GENRES_TXT.get(e['genre'], e['genre'])} · {e['sujet']}",
            "etat": _verdict(e) or e["statut"] or "", "fichier": e["fichier"]} for e in liste]
     ev += _commits()
@@ -445,6 +489,9 @@ def journal(liste: list[dict], n: int = 80) -> list[dict]:
 
 def instantane(actions: dict | None = None, github: dict | None = None) -> dict:
     liste = enfants()
+    macons, etiquettes = equipe(liste)
+    for e in liste:
+        e["session"] = etiquettes.get(e["id"], "")
     conso = consommation(liste)
     coord = coordination()
     surveillant = lire_instance(COORD_DIR)
@@ -472,7 +519,7 @@ def instantane(actions: dict | None = None, github: dict | None = None) -> dict:
             "en_cours": [e for e in liste if e["statut"] == "En cours"], "consommation": conso,
             "plafonds": plafonds(conso), "fil": fil(), "github": github if github and github.get("runs") else github_instantane(),
             "porteur_taches": [t for t in coord["taches"] if "porteur" in t["responsable"].casefold()],
-            "situation": situation(), "journal": journal(liste)}
+            "situation": situation(), "journal": journal(liste), "macons": macons}
 
 
 def main() -> None:

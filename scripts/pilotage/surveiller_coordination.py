@@ -324,6 +324,11 @@ TOURS_MAX = 4
 TOUR_GRAVE = 3
 DOC_ATTITRE = re.compile(r"validation/(?:protocole_[\w-]+|[\w-]*rapport[\w-]*)\.md")
 MARQUE_ATTITRE = re.compile(r"^Relecteur attitré : (\S+) · version ([0-9a-f]{7,40})$", re.M)
+# Maçon auteur (porteur, 13/11/2026) : une exécution Codex dont la consigne commence par « [maçon : <chantier>] »
+# reprend la session d'écriture de ce chantier (même session pour le code, ses corrections, son branchement).
+# Le relecteur attitré reste une autre session : on ne relit pas son propre travail.
+MARQUE_MACON = re.compile(r"^\[maçon : ([^\]]{1,60})\]")
+MACONS = ROOT / "pilotage" / "etat" / "macons.json"
 
 
 def document_attitre(chemins):
@@ -455,11 +460,13 @@ def commande_agent(agent, executable, sortie, ecriture, session=None, persistant
     """Commande et délai. Sorties JSON pour relever la consommation de tokens.
     Relecteur attitré : session gardée (persistante) puis reprise (session), toujours en lecture seule."""
     if agent == "codex":
-        if session and not ecriture:
-            return ([str(executable), "exec", "resume", "-c", 'sandbox_mode="read-only"', "--skip-git-repo-check",
-                     "--json", "-o", str(sortie), session, "-"], 300)
+        if session:              # relecteur attitré (lecture seule) ou maçon auteur (écriture, testé le 13/11)
+            bac = (["-c", 'sandbox_mode="workspace-write"', "-c", "sandbox_workspace_write.network_access=true"]
+                   if ecriture else ["-c", 'sandbox_mode="read-only"'])
+            return ([str(executable), "exec", "resume", *bac, "--skip-git-repo-check",
+                     "--json", "-o", str(sortie), session, "-"], 1800 if ecriture else 300)
         bac = ["-s", "workspace-write", "-c", "sandbox_workspace_write.network_access=true"] if ecriture else ["-s", "read-only"]
-        ephemere = [] if persistante and not ecriture else ["--ephemeral"]
+        ephemere = [] if persistante else ["--ephemeral"]
         return ([str(executable), "exec", *bac, "-C", str(ROOT), *ephemere, "--skip-git-repo-check", "--json",
                  "-o", str(sortie), "-"], 1800 if ecriture else 300)
     if ecriture:
@@ -699,6 +706,7 @@ def lancer_claude(db, dossier, demandes, executables):
     if agent == "codex" and not ecriture:      # lecture seule = sans réseau : l'état GitHub lui est fourni
         prompt += contexte_github()
     attitre = MARQUE_ATTITRE.search(consigne) if agent == "codex" and not ecriture else None
+    macon = MARQUE_MACON.match(consigne) if agent == "codex" and ecriture else None
     session = None
     if attitre:
         relecteurs = lire_relecteurs()
@@ -707,11 +715,20 @@ def lancer_claude(db, dossier, demandes, executables):
         suivi["en_cours"] = debut
         ecrire_relecteurs(relecteurs)
         prompt = consigne_attitree(attitre[1], suivi) + prompt
+    if macon:
+        macons = lire_relecteurs(MACONS)
+        suivi = macons.setdefault(macon[1], {"taches": []})
+        session = suivi.get("session")
+        suivi["en_cours"] = {"id": identifiant, "debut": debut, "sujet": sujet}
+        ecrire_relecteurs(macons, MACONS)
+        prompt = (f"Tu es le maçon auteur du chantier « {macon[1]} » (décision du porteur du projet, 13/11/2026) : "
+                  f"ta session est reprise pour chaque nouvelle tâche de ce chantier, tâche n° {len(suivi['taches']) + 1}. "
+                  "Appuie-toi sur ce que tu as déjà fait ; ne refais pas un travail livré.\n\n" + prompt)
     consommation = "non communiquée"
     flux = ""
     with tempfile.TemporaryDirectory() as temporaire:
         sortie = Path(temporaire) / "reponse.md"
-        commande, delai = commande_agent(agent, executables[agent], sortie, ecriture, session, bool(attitre))
+        commande, delai = commande_agent(agent, executables[agent], sortie, ecriture, session, bool(attitre or macon))
         try:
             retour = subprocess.run(
                 commande, input=prompt, capture_output=True, encoding="utf-8", errors="replace",
@@ -734,6 +751,8 @@ def lancer_claude(db, dossier, demandes, executables):
     fin = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
     if attitre:
         noter_tour(attitre[1], attitre[2], statut, resultat, consommation, fin, flux)
+    if macon:
+        noter_macon(macon[1], identifiant, sujet, debut, statut, consommation, fin, flux)
     if (db.execute("SELECT statut FROM lancements WHERE id = ?", (identifiant,)).fetchone() or ("",))[0] == ARRETE:
         statut, resultat = ARRETE, "Session arrêtée depuis le poste de pilotage." + SAUT + resultat[:2000]
     court = identifiant.rpartition("/")[2]
@@ -750,6 +769,32 @@ def lancer_claude(db, dossier, demandes, executables):
                    (f"lancement:{identifiant}", fin, json.dumps(list(DESTINATAIRES)),
                     f"{nom} · {court} · {statut} · tokens : {consommation}. Résultat dans les lancements du tableau des alertes."))
     return 1
+
+
+def session_lancee(stdout):
+    """Identifiant de session Codex (événement thread.started de la sortie JSON), sinon None."""
+    for ligne in (stdout or "").splitlines():
+        try:
+            evenement = json.loads(ligne)
+        except ValueError:
+            continue
+        if isinstance(evenement, dict) and evenement.get("type") == "thread.started":
+            return evenement.get("thread_id")
+    return None
+
+
+def noter_macon(chantier, identifiant, sujet, debut, statut, consommation, fin, stdout="", chemin=None):
+    """Registre du maçon auteur : session gardée, chaque tâche notée ; une reprise échouée oublie la session."""
+    macons = lire_relecteurs(chemin or MACONS)
+    suivi = macons.setdefault(chantier, {"taches": []})
+    suivi.pop("en_cours", None)
+    suivi.setdefault("taches", []).append({"id": identifiant, "sujet": sujet[:200], "debut": debut, "fin": fin,
+                                           "statut": statut, "tokens": consommation})
+    if statut == "Réponse reçue":
+        suivi["session"] = session_lancee(stdout) or suivi.get("session")
+    else:
+        suivi.pop("session", None)
+    ecrire_relecteurs(macons, chemin or MACONS)
 
 
 def noter_tour(doc, version, statut, resultat, consommation, fin, stdout="", chemin=None):

@@ -159,6 +159,10 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .surv-ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .surv-ctl label{font-size:13px;color:var(--gris);display:flex;gap:6px;align-items:center}
 /* ---------- onglets, situation et journal (porteur, 13/11/2026) ---------- */
+.macons{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.macon{border:1px solid var(--bord);border-radius:12px;padding:10px 12px;background:rgba(0,229,255,.03)}
+.macon .t{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:baseline} .macon .t b{font-size:15px;margin-right:4px}
+.taches-macon{margin:8px 0 0;padding-left:20px;font-size:14px} .taches-macon li{margin:3px 0}
 .onglets{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .onglet{border:1px solid var(--bord);background:transparent;border-radius:10px;padding:7px 18px;cursor:pointer;
   font:700 13px var(--titre);letter-spacing:.12em;color:var(--gris)}
@@ -219,10 +223,13 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
   <section class="p s6" id="mere-codex"></section>
 
   <section class="p s12" id="sec-enfants">
-    <h2>Sessions enfants <span class="n" id="n-vivants">0</span><span class="droite">en cours · journée du <span id="jour"></span></span></h2>
+    <h2>Équipe : une session, ses tâches <span class="n" id="n-vivants">0</span><span class="droite">en cours · journée du <span id="jour"></span></span></h2>
     <div class="kpis" id="kpis"></div>
+    <h3 class="groupe" style="margin-top:14px">Maçons : une seule session par chantier, du début à la fin</h3>
+    <div class="macons" id="macons"></div>
+    <h3 class="groupe" style="margin-top:14px">Sessions ponctuelles : une tâche chacune</h3>
     <div class="filtres" id="filtres"></div>
-    <div class="defile"><table class="enfants"><thead><tr><th>État</th><th>Agent</th><th>Genre</th><th>Sujet</th><th class="col-cache">Créneau</th><th class="col-cache">Durée</th><th>Jetons</th></tr></thead><tbody id="enfants"></tbody></table></div>
+    <div class="defile"><table class="enfants"><thead><tr><th>Session</th><th>État</th><th>Agent</th><th>Genre</th><th>Sujet</th><th class="col-cache">Créneau</th><th class="col-cache">Durée</th><th>Jetons</th></tr></thead><tbody id="enfants"></tbody></table></div>
   </section>
 
   <section class="p s6"><h2>Journal : qui a fait quoi <span class="n zero" id="n-journal">0</span><span class="droite">3 derniers jours</span></h2><div id="journal" class="defile" style="max-height:520px"></div></section>
@@ -390,16 +397,16 @@ function rendreEnfants(){
   var boutons=[["tous","Tous"],["claude","Claude"],["codex","Codex"]], genres=[["tous","Tous genres"],["relecture","Relectures"],["exec","Exécutions"],["reveil","Réveils"],["sous-agent","Sous-agents"]];
   poser("filtres",boutons.map(function(b){return '<button class="filtre'+(filtreAgent===b[0]?" actif":"")+'" data-fa="'+b[0]+'">'+b[1]+'</button>';}).join("")+'<span style="width:14px"></span>'+
     genres.map(function(b){return '<button class="filtre'+(filtreGenre===b[0]?" actif":"")+'" data-fg="'+b[0]+'">'+b[1]+'</button>';}).join(""));
-  var vus=l.filter(function(x){return (filtreAgent==="tous"||x.agent===filtreAgent)&&(filtreGenre==="tous"||x.genre===filtreGenre);});
+  var vus=l.filter(function(x){return !/^(Maçon|Relecteur) /.test(x.session||"")&&(filtreAgent==="tous"||x.agent===filtreAgent)&&(filtreGenre==="tous"||x.genre===filtreGenre);});
   vus.sort(function(a,b){return (b.statut==="En cours")-(a.statut==="En cours");});
   poser("enfants",vus.length?vus.map(function(x){
     var j=x.jetons||{}, cs=couleurStatut(x.statut), sa=x.genre==="sous-agent";
     var creneau=sa?(x.debut+" → "+(x.fin||"…")):(String(x.debut).slice(0,5)===String(D.date).slice(0,5)?String(x.debut).slice(11):x.debut)+" → "+(x.fin?String(x.fin).slice(11):"…");
-    return '<tr class="'+(sa?"":"cl")+(cs==="vivant"?" vivant":"")+'" '+(sa?"":'data-id="'+e(x.id)+'"')+'><td><span class="point '+cs+'"></span>'+e(x.statut)+'</td>'+
+    return '<tr class="'+(sa?"":"cl")+(cs==="vivant"?" vivant":"")+'" '+(sa?"":'data-id="'+e(x.id)+'"')+'><td><b>'+e(x.session||(sa?"sous-agent":"—"))+'</b></td><td><span class="point '+cs+'"></span>'+e(x.statut)+'</td>'+
       '<td><span class="etq '+x.agent+'">'+NOMS[x.agent]+'</span></td><td><span class="etq '+(sa?"violet":"neutre")+'">'+e(GENRES[x.genre]||x.genre)+'</span></td>'+
       '<td class="sujet">'+(x.sujet?e(x.sujet):'<span class="petit">sujet non enregistré (avant le 11/11, 17 h) · '+e(String(x.id).slice(0,40))+'</span>')+'</td><td class="col-cache mono petit">'+e(creneau)+'</td>'+
       '<td class="col-cache mono petit">'+(x.duree_min!=null?x.duree_min+" min":"")+'</td><td class="mono petit">'+(j.entree?k(j.entree)+" / "+k(j.sortie):sa?"non mesuré":"—")+'</td></tr>';
-  }).join(""):'<tr><td colspan="7" class="vide">Aucune session pour ce filtre.</td></tr>');
+  }).join(""):'<tr><td colspan="8" class="vide">Aucune session pour ce filtre.</td></tr>');
 }
 $("filtres").addEventListener("click",function(ev){
   var b=ev.target.closest("button"); if(!b) return;
@@ -429,6 +436,19 @@ $("kpis").addEventListener("click",function(ev){
 $("t-arreter").onclick=function(){ if(ouvert&&confirm("Arrêter cette session enfant ?")) post("/api/enfant/arreter",{id:ouvert}).then(function(r){retour($("t-retour"),r);lire();}); };
 
 /* ----- fil, runs, messages entre assistants ----- */
+function rendreMacons(){
+  var l=D.macons||[];
+  poser("macons",l.length?l.map(function(m){
+    var t=m.taches||[];
+    return '<div class="macon"><div class="t"><b>'+e(m.nom)+'</b><span class="etq codex">Codex</span><span class="etq '+(m.role==="auteur"?"violet":"info")+'">'+e(m.role)+'</span>'+
+      (m.session?'<span class="petit mono">session '+e(m.session)+'</span>':'<span class="petit">session à créer à la prochaine tâche</span>')+'</div>'+
+      (m.en_cours?'<div class="r"><span class="point vivant"></span> en ce moment : '+e(m.en_cours)+'</div>':'')+
+      (t.length?'<ol class="taches-macon">'+t.map(function(x){
+        var st=(x.statut||"").toLowerCase(), c=st.indexOf("sans blocage")>=0||st.indexOf("réponse")===0?"ok":st.indexOf("correction")>=0?"warn":st?"ko":"neutre";
+        return '<li><span class="etq '+c+'">'+e(x.statut||"—")+'</span>'+(x.fichier?'<a href="/etat/coordination/'+e(x.fichier)+'" target="_blank" rel="noopener">'+e(x.sujet)+'</a>':e(x.sujet))+' <span class="petit mono">'+e(x.quand||"")+'</span></li>';
+      }).join("")+'</ol>':'<div class="vide">Aucune tâche encore.</div>')+'</div>';
+  }).join(""):'<div class="vide">Aucun maçon pour le moment.</div>');
+}
 function rendreJournal(){
   var l=D.journal||[]; $("n-journal").textContent=l.length; $("n-journal").className="n"+(l.length?"":" zero");
   poser("journal",l.length?l.map(function(x){
@@ -476,7 +496,7 @@ function lire(){
   fetch("/api/poste",{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
     D=d; jeton=d.jeton||jeton; dernierOk=Date.now();
     if(!construit){ construireMere("claude"); construireMere("codex"); construit=true; }
-    [rendreDecisions,rendreSurveillant,function(){rendreMere("claude");},function(){rendreMere("codex");},rendreEnfants,rendreJournal,rendreRuns,rendreSituation]
+    [rendreDecisions,rendreSurveillant,function(){rendreMere("claude");},function(){rendreMere("codex");},rendreEnfants,rendreMacons,rendreJournal,rendreRuns,rendreSituation]
       .forEach(function(f){ try{f();}catch(x){ console.error(x); } });
   }).catch(function(){});
 }

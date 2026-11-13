@@ -604,6 +604,27 @@ def test_relecteur_attitre():
 
 
 
+def test_macon_auteur():
+    """Porteur, 13/11/2026 : une exécution Codex marquée « [maçon : chantier] » reprend la session d'écriture du
+    chantier ; chaque tâche est notée ; une reprise échouée oublie la session."""
+    registre = Path(tempfile.mkdtemp()) / "macons.json"
+    m = C.MARQUE_MACON.match("[maçon : R-21 bis] écrire le code")
+    assert m and m[1] == "R-21 bis" and not C.MARQUE_MACON.match("écrire [maçon : X]")
+    commande, delai = C.commande_agent("codex", "codex", Path("r.md"), True, "s-9", True)
+    assert commande[1:3] == ["exec", "resume"] and 'sandbox_mode="workspace-write"' in commande and delai == 1800
+    assert "--ephemeral" not in C.commande_agent("codex", "codex", Path("r.md"), True, None, True)[0]
+    assert "--ephemeral" in C.commande_agent("codex", "codex", Path("r.md"), True)[0]
+    flux = '{"type":"thread.started","thread_id":"s-9"}'
+    C.noter_macon("R-21 bis", "codex/exec-a", "code", "13/11/2026 08:00", "Réponse reçue", "x", "13/11/2026 08:10",
+                  flux, registre)
+    C.noter_macon("R-21 bis", "codex/exec-b", "branchement", "13/11/2026 09:00", "Réponse reçue", "x",
+                  "13/11/2026 09:10", "", registre)
+    suivi = C.lire_relecteurs(registre)["R-21 bis"]
+    assert suivi["session"] == "s-9" and [t["id"] for t in suivi["taches"]] == ["codex/exec-a", "codex/exec-b"]
+    C.noter_macon("R-21 bis", "codex/exec-c", "x", "", "Échec", "", "", "", registre)
+    assert "session" not in C.lire_relecteurs(registre)["R-21 bis"]
+
+
 def test_echec_github_regle_retire():
     """Porteur, 13/11/2026 : un message « Échec GitHub à examiner » est retiré dès qu'un run plus récent du même
     workflow a réussi (run 43236237171 signalé alors que la collecte GloFAS était complète)."""
