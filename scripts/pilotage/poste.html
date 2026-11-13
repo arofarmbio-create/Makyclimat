@@ -214,6 +214,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .pli-corps{padding:0 14px 12px} .pli .pli{margin:8px 0}
 .res{padding:8px 0;border-bottom:1px dashed rgba(0,229,255,.12);font-size:15px} .res b{font-weight:600}
 .page-theme .dit{color:var(--gris)}
+.conv{max-height:360px;overflow-y:auto;display:flex;flex-direction:column}
 #principal-coulisses section>h2{cursor:pointer;user-select:none}
 #principal-coulisses section>h2::before{content:"▾ ";color:var(--cyan)}
 #principal-coulisses section.replie>h2::before{content:"▸ "}
@@ -248,6 +249,11 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <button class="b rouge gros" id="a-stop">STOP</button><button class="b vert gros" id="a-reprise" hidden>Reprise</button></div><div class="retour" id="a-retour"></div></section>
   <section class="p s6"><h2>Ce qui vous attend <span class="n" id="a-n">0</span></h2><div id="a-attend"></div><div class="petit" id="a-plus"></div></section>
   <section class="p s6"><h2>Depuis votre dernière visite</h2><div class="petit" id="a-depuis-quand"></div><div id="a-depuis"></div></section>
+  <section class="p s12"><h2>Écrire à Claude</h2>
+    <div class="petit">Claude lit votre message à sa prochaine action et vous répond ici. S'il est au repos, la réponse peut prendre un peu de temps.</div>
+    <div id="a-conv" class="conv"></div>
+    <textarea id="a-msg" rows="2" placeholder="Votre message à Claude…" style="width:100%;margin-top:8px"></textarea>
+    <div class="ligne-btn"><button class="b vert" id="a-envoyer">Envoyer</button></div><div class="retour" id="a-msg-retour"></div></section>
   <section class="p s12"><h2>Où en est la thèse</h2><div class="petit">Chaque grand thème avec son meilleur niveau de <span class="info-mot" title="aucune → provisoire (chiffre non entièrement vérifié) → exploratoire (piste, sans règle fixée d'avance ou trop peu de données) → soutenue (test fixé d'avance, réussi, relu) → confirmée (reproduit sur des données neuves)">fiabilité</span> et ce qui lui manque. Touchez un thème pour le détail.</div><div id="a-themes"></div></section>
 </div>
 <div class="grille" id="principal-these" hidden>
@@ -695,6 +701,9 @@ function rendreAccueil(){
   $("a-depuis-quand").textContent="Depuis le "+quand(visitePrec)+".";
   poser("a-depuis", evs.length?evs.slice(0,8).map(function(x){return '<div class="ev"><time>'+e(quand(x.quand))+'</time><div>'+e(x.texte)+(x.theme?' <span class="petit">· '+e(x.theme)+'</span>':'')+'</div></div>';}).join(""):'<div class="vide">Rien de nouveau depuis.</div>');
   poser("a-themes",(A.themes||[]).map(carteTheme).join(""));
+  var conv=(A.conversation||[]).slice().reverse();
+  poser("a-conv", conv.length?conv.map(function(m){ var moi=m.de==="porteur";
+    return '<div class="bulle '+(moi?"porteur":"claude")+'"><div class="m">'+(moi?"Vous":"Claude")+' · '+e(m.quand)+(moi&&m.etat?' · '+e(m.etat):'')+'</div>'+e(m.texte)+'</div>'; }).join(""):'<div class="vide">Pas encore d’échange.</div>');
   var t=(A.themes||[]).filter(function(x){return x.id===themeOuvert;})[0];
   poser("t-themes", t?pageTheme(t):(A.themes||[]).map(carteTheme).join(""));
   $("t-intro").hidden=!!t;
@@ -718,6 +727,10 @@ document.addEventListener("click",function(ev){
     post("/api/valider",{etape:bv.getAttribute("data-valider")}).then(function(r){ retour(sortie,r); retour($("m-retour"),r); lireAccueil(); }); }
   if(bd && !bd.closest("#decisions")){ var act=bd.getAttribute("data-act"); if(!confirm((act==="autoriser"?"Autoriser":"Refuser")+" cette décision ?")) return;
     post("/api/decision",{cle:bd.getAttribute("data-dec"),action:act,texte:""}).then(function(r){ retour(sortie,r); retour($("m-retour"),r); lireAccueil(); }); }
+});
+$("a-envoyer").addEventListener("click",function(){
+  var t=$("a-msg").value.trim(); if(!t){ retour($("a-msg-retour"),{erreur:"Écrire un message d'abord."}); return; }
+  post("/api/message",{agent:"claude",texte:t}).then(function(r){ retour($("a-msg-retour"),r); if(!r.erreur){ $("a-msg").value=""; lireAccueil(); } });
 });
 $("a-stop").addEventListener("click",function(){ if(!confirm("STOP : plus aucun lancement tant que vous n'avez pas repris. Confirmer ?")) return;
   post("/api/stop",{}).then(function(r){ retour($("a-retour"),r); lireAccueil(); }); });

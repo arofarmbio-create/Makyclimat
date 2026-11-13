@@ -196,8 +196,9 @@ def valider_porteur(etape: str, canal: str) -> dict:
 
 def donnees_accueil() -> dict:
     decisions = [d for d in poste.coordination()["decisions"] if d["pour_porteur"]]
+    conversation = [m for m in poste.fil(60) if "claude" in (m.get("de"), m.get("a"))][:20]
     return {**accueil.construire(fil.STOP.exists(), lire_instance(ETAT), lancement_en_cours(), decisions),
-            "jeton": JETON}
+            "conversation": conversation, "jeton": JETON}
 
 
 # ------------------------------------------------------------------ décisions et consignes du porteur (option C)
