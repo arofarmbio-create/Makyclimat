@@ -62,9 +62,19 @@ def test_protocole_relu_n_autorise_pas_le_calcul(fichier):
     f = fil.charger(fichier)
     assert "T-A.2" not in ids(fil.pretes(f))
     assert ids(fil.a_valider(f)) == ["T-A.1"]
-    assert fil.changer("T-A.1", valide_le="13/11/2026 20:00")
+    assert fil.valider("T-A.1", "13/11/2026 20:00")
     f = fil.charger(fichier)
     assert "T-A.2" in ids(fil.pretes(f)) and fil.a_valider(f) == []
+
+
+def test_validation_seulement_apres_livraison_et_liee_a_la_version(fichier):
+    assert not fil.valider("T-A.1", "13/11/2026 20:00")             # pas encore livrée
+    fil.changer("T-A.1", etat="fait", preuve="commit-1")
+    assert fil.valider("T-A.1", "13/11/2026 20:05")
+    assert not fil.valider("T-A.1", "13/11/2026 20:06")             # déjà validée
+    fil.changer("T-A.1", preuve="commit-2")                         # protocole modifié après validation
+    f = fil.charger(fichier)
+    assert "T-A.2" not in ids(fil.pretes(f)) and ids(fil.a_valider(f)) == ["T-A.1"]
 
 
 def test_pause_des_calculs_et_priorite(fichier):
@@ -80,7 +90,12 @@ def test_boucle_ignore_porteur_et_partenaire(fichier):
     f = fil.charger(fichier)
     p = fil.pour_porteur(f)
     assert ids(p["faire"]) == ["X-A.1"]
-    assert all(e["qui"] not in ("porteur", "partenaire") for e in fil.pretes(f) if e is fil.prochaine(f, date(2027, 1, 1)))
+    choisies = []
+    while (e := fil.prochaine(fil.charger(fichier), date(2027, 1, 1))):
+        choisies.append(e)
+        fil.changer(e["id"], etat="en_cours")
+    assert choisies and all(e["qui"] not in ("porteur", "partenaire") for e in choisies)
+    assert "X-A.1" not in [e["id"] for e in choisies]
 
 
 def test_changer_garde_commentaires_et_lisibilite(fichier):

@@ -28,6 +28,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import conversations  # noqa: E402
+import fil  # noqa: E402
 import github_direct  # noqa: E402
 import poste  # noqa: E402
 import tableau_de_bord  # noqa: E402
@@ -80,6 +81,10 @@ def etat() -> dict:
 
 
 def demarrer(duree: int, relectures: bool) -> dict:
+    """Démarre le surveillant, sauf après un STOP du porteur (seule la reprise l'efface ; relecture Codex du 13/11 :
+    une consigne ou une autorisation ne doit pas redémarrer ce que le porteur a arrêté)."""
+    if fil.STOP.exists():
+        return {"erreur": "STOP du porteur en cours : rien ne démarre avant la reprise."}
     with _verrou:
         if lire_instance(ETAT):
             return {"erreur": "Le surveillant est déjà actif."}
@@ -196,7 +201,7 @@ def ecrire_coordination(modifier) -> dict:
     """Lecture, modification puis remplacement atomique. Relecture Codex du 10/11 : un assistant peut écrire le fichier
     entre la lecture et le remplacement. On relit juste avant d'écrire ; si le contenu a changé, la modification est
     rejouée sur la nouvelle version (trois essais), au lieu d'écraser l'écriture de l'autre."""
-    with _verrou:
+    with _verrou, fil.verrou("coordination"):        # verrou aussi entre processus (serveur, bot, sessions)
         for _ in range(3):
             brut = COORD.read_text(encoding="utf-8-sig")
             fin_ligne = "\r\n" if "\r\n" in brut else "\n"

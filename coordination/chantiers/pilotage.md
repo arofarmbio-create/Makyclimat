@@ -47,3 +47,25 @@ Audit : les deux constats P0 et trois P1 de la section D sont décomposés pour 
 Vérifications : YAML et schéma des 239 éléments, valeurs autorisées, unicité des noms, couverture des 54 R et de tous les indicateurs configurés, existence des preuves aux commits cités, exclusion Git, lecture intégrale via `poste.situation`, UTF-8 et absence de caractères substitués. Les 21 tests de `tests/test_poste.py` réussissent ; `git diff --check` sans erreur. Aucun calcul scientifique, téléchargement, workflow, commit ni push exécuté.
 
 Fichiers de cette intervention : `pilotage/situation.yml` (local), `COORDINATION.md`, cette fiche, `pilotage/etat/reprise_codex.md` (local). À commiter par Claude : uniquement les deux fichiers de suivi versionnés, après relecture ; jamais le YAML local. Le nouvel onglet a été développé séparément par Claude (`ebe2ff3`) : aucun code du poste modifié ici.
+
+## Pilotage permanent : relecture unique de Codex de la boucle (13/11/2026)
+
+Avis local : `pilotage/etat/coordination/codex-relecture-boucle-20261113.md` (12 bloquants, 1 amélioration, ~57 500
+jetons). Corrigé par Claude le même jour ; 79 tests (`tests/test_boucle.py`, `test_canal_ntfy.py`, `test_fil.py`,
+`test_poste.py`, `test_pilotage.py`).
+
+| Point | Suite |
+|---|---|
+| 1. Code statique en clair sur le sujet des ordres | Code supprimé ; texte tapé limité à la lecture et à /stop ; actions par boutons signés seulement |
+| 2. Antirejeu sauvé après l'action, sans expiration | Ordre réservé sur disque avant exécution ; boutons datés, valables 7 jours |
+| 3. STOP contourné par une consigne ou une autorisation | `serveur_pilotage.demarrer` refuse tout démarrage sous STOP ; autorisation refusée sous STOP |
+| 4. Deux instances possibles | Instance unique (port local tenu) |
+| 5. Exécution publiée avant l'état et le compteur | Réservation durable et compteur avant l'écriture ; réservation soldée au passage suivant ; mémoire illisible = aucun lancement |
+| 6. Erreur d'écriture ignorée | `lancer_etape` ne rend l'identifiant qu'après écriture confirmée |
+| 7. `en_attente` sélectionnable, autorisation propre | **Non retenu** : `en_attente` dont l'amont devient disponible est l'effet domino voulu ; clôtures et changements de règle ne sont pas des étapes du fil ; l'application d'un protocole exige la validation (point 11) |
+| 8. Orphelines, tours non contrôlés | Étape en cours plus de 12 h sans lancement → « decision » et avis ; relance de relecture comptée, 3e tour → « decision » |
+| 9. Écritures concurrentes | Verrou entre processus (fil et COORDINATION.md côté serveur et boucle) ; écriture atomique. Les sessions qui éditent COORDINATION.md directement restent hors verrou (risque réduit, non nul) |
+| 10. Réseau qui bloque la boucle, curseur avancé avant traitement | Réception, surveillance et ordonnanceur séparés ; curseur sauvé après chaque ordre traité ; erreurs journalisées |
+| 11. Validation avant livraison, non liée à la version | Validation seulement d'une étape faite, liée à sa preuve ; preuve changée = validation à refaire |
+| 12. Notifications marquées vues même en échec | Marquées seulement si l'envoi réussit ; décisions rappelées dans le compte rendu quotidien |
+| 13. Test vide, scénarios de panne absents | Test corrigé ; tests de STOP, plafond, réservation, échec d'écriture, tours, rejeu après redémarrage, expiration |

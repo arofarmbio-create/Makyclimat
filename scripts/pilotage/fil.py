@@ -8,9 +8,12 @@ Usage : .venv/Scripts/python.exe -B -X utf8 scripts/pilotage/fil.py [--porteur |
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
+import os
 import re
 import sys
+import time
 from datetime import date
 from pathlib import Path
 
@@ -19,14 +22,63 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 FIL = ROOT / "pilotage" / "fil.yml"
 COORDINATEUR = ROOT / "pilotage" / "etat" / "coordinateur.txt"
+STOP = ROOT / "pilotage" / "etat" / "stop_porteur.txt"   # STOP du porteur : aucun lancement ni démarrage jusqu'à /reprise
+VERROUS = ROOT / "pilotage" / "etat" / "verrous"
 FIN_PAUSE = date(2026, 11, 16)        # pause des calculs de recherche décidée par le porteur (13/11/2026)
 AUTONOMES = {"claude", "codex", "coordinateur", "agent", "github"}
 FINIS = {"fait", "clos"}
 ACTIFS = {"en_cours", "a_relire", "decision"}
 
 
-def charger(chemin: Path = FIL) -> dict:
-    return yaml.safe_load(chemin.read_text(encoding="utf-8")) or {}
+@contextlib.contextmanager
+def verrou(nom: str, delai: float = 30.0):
+    """Verrou partagé entre processus (serveur, bot, sessions) : un fichier verrouillé par le système. Relecture de
+    Codex du 13/11 : sans lui, deux écrivains pouvaient perdre ou tronquer une modification."""
+    VERROUS.mkdir(parents=True, exist_ok=True)
+    f = open(VERROUS / f"{nom}.lock", "a+b")
+    fin = time.monotonic() + delai
+    try:
+        while True:
+            try:
+                if os.name == "nt":
+                    import msvcrt
+                    f.seek(0)
+                    msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+                    fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() > fin:
+                    raise TimeoutError(f"verrou {nom} occupé")
+                time.sleep(0.2)
+        yield
+    finally:
+        try:
+            if os.name == "nt":
+                import msvcrt
+                f.seek(0)
+                msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+        except OSError:
+            pass
+        f.close()
+
+
+def ecrire_atomique(chemin: Path, texte: str) -> None:
+    """Fichier temporaire puis remplacement ; quelques essais si Windows le tient ouvert (antivirus, éditeur)."""
+    tmp = chemin.with_name(chemin.name + ".tmp")
+    tmp.write_text(texte, encoding="utf-8")
+    for essai in range(10):
+        try:
+            return tmp.replace(chemin)
+        except PermissionError:
+            if essai == 9:
+                raise
+            time.sleep(0.5)
+
+
+def charger(chemin: Path | None = None) -> dict:
+    return yaml.safe_load((chemin or FIL).read_text(encoding="utf-8")) or {}
 
 
 def etapes(fil: dict) -> list[dict]:
@@ -50,7 +102,12 @@ def _termine(ref: str, par_id: dict, donnees: dict, etape_id: str) -> bool:
         return False
     if e.get("etat") not in FINIS:
         return False
-    return e.get("autorisation") != "porteur" or bool(e.get("valide_le"))     # protocole relu ≠ calcul autorisé
+    return e.get("autorisation") != "porteur" or valide(e)          # protocole relu ≠ calcul autorisé
+
+
+def valide(e: dict) -> bool:
+    """Validation du porteur attachée à la version livrée : une preuve changée depuis l'annule (relecture Codex 13/11)."""
+    return bool(e.get("valide_le")) and e.get("valide_preuve") == e.get("preuve")
 
 
 def pretes(fil: dict) -> list[dict]:
@@ -64,8 +121,14 @@ def pretes(fil: dict) -> list[dict]:
 
 def a_valider(fil: dict) -> list[dict]:
     """Étapes faites qui exigent la validation du porteur et ne l'ont pas encore."""
-    return [e for e in etapes(fil) if e.get("autorisation") == "porteur" and e.get("etat") in FINIS
-            and not e.get("valide_le")]
+    return [e for e in etapes(fil) if e.get("autorisation") == "porteur" and e.get("etat") == "fait"
+            and not valide(e)]
+
+
+def valider(etape_id: str, quand: str) -> bool:
+    """Validation par le porteur : seulement une étape livrée (faite) qui l'attend ; liée à sa preuve actuelle."""
+    e = next((x for x in a_valider(charger()) if x["id"] == etape_id), None)
+    return bool(e) and changer(etape_id, valide_le=quand, valide_preuve=e.get("preuve"))
 
 
 def coordinateur() -> str:
@@ -112,6 +175,11 @@ def resume(fil: dict) -> dict:
 def changer(etape_id: str, **champs) -> bool:
     """Change des champs simples (etat, preuve, valide_le…) sur la ligne de l'étape, sans réécrire le reste du fichier
     (commentaires et mise en forme conservés). Chaque étape tient sur une ligne « - {id: …} »."""
+    with verrou("fil"):
+        return _changer(etape_id, champs)
+
+
+def _changer(etape_id: str, champs: dict) -> bool:
     texte = FIL.read_text(encoding="utf-8")
     motif = re.compile(r"^(\s*- \{id: " + re.escape(etape_id) + r",.*)\}\s*$", re.M)
     m = motif.search(texte)
@@ -126,7 +194,7 @@ def changer(etape_id: str, **champs) -> bool:
     relu = next((e for e in etapes(yaml.safe_load(nouveau)) if e["id"] == etape_id), {})
     if any(relu.get(cle) != valeur for cle, valeur in champs.items()):   # relecture : valeur écrite exacte, sinon rien
         raise ValueError(f"Écriture refusée pour {etape_id} : {champs}")
-    FIL.write_text(nouveau, encoding="utf-8")
+    ecrire_atomique(FIL, nouveau)
     return True
 
 
