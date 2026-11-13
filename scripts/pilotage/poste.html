@@ -214,6 +214,12 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .pli-corps{padding:0 14px 12px} .pli .pli{margin:8px 0}
 .res{padding:8px 0;border-bottom:1px dashed rgba(0,229,255,.12);font-size:15px} .res b{font-weight:600}
 .page-theme .dit{color:var(--gris)}
+#principal-coulisses section>h2{cursor:pointer;user-select:none}
+#principal-coulisses section>h2::before{content:"▾ ";color:var(--cyan)}
+#principal-coulisses section.replie>h2::before{content:"▸ "}
+#principal-coulisses section.replie>:not(h2){display:none!important}
+#principal-coulisses section.replie{padding-bottom:6px}
+
 .carte-act .pour{font-size:14px;margin-top:5px;line-height:1.45} .carte-act .pour b{display:inline;font-size:14px;color:var(--cyan-doux)}
 @media (max-width:760px){
   .principal{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;gap:0;background:rgba(3,7,13,.97);border-top:1px solid var(--bord)}
@@ -235,6 +241,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <span class="horloge" id="horloge">--:--:--</span>
   </div>
 </header>
+<div class="alerte-serveur" id="alerte-serveur">Le serveur du poste ne répond plus : les chiffres ci-dessous sont figés. Relancer <code>pilotage.cmd</code> à la racine du dépôt.</div>
 <nav class="onglets principal" aria-label="Onglets"><button class="onglet actif" data-principal="accueil">ACCUEIL</button><button class="onglet" data-principal="these">THÈSE</button><button class="onglet" data-principal="actions">MES ACTIONS</button><button class="onglet" data-principal="coulisses">COULISSES</button></nav>
 <div class="grille" id="principal-accueil">
   <section class="p s12"><div class="voyant"><span class="lampe orange" id="a-lampe"></span><div class="txt"><b id="a-phrase">Chargement…</b><span id="a-detail"></span><div class="petit" id="a-notes"></div></div>
@@ -250,21 +257,11 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
   <section class="p s12"><h2>Mes actions <span class="n" id="m-n">0</span></h2><div class="petit">Tout ce qui ne dépend que de vous : valider, décider, faire une démarche. Le reste avance sans vous.</div><div id="m-liste"></div><div class="retour" id="m-retour"></div></section>
 </div>
 <div id="principal-coulisses" hidden>
-<div class="petit" style="margin-top:10px">Coulisses : le fonctionnement interne (moteur, sessions de Claude et Codex, journal, GitHub). Utile pour vérifier, pas nécessaire au quotidien.</div>
-<nav class="onglets sous" aria-label="Onglets"><button class="onglet actif" data-onglet="pilotage">PILOTAGE</button><button class="onglet" data-onglet="situation">SITUATION</button><button class="onglet" data-onglet="organigramme">FIL DES TÂCHES</button></nav>
-<div class="alerte-serveur" id="alerte-serveur">Le serveur du poste ne répond plus : les chiffres ci-dessous sont figés. Relancer <code>pilotage.cmd</code> à la racine du dépôt.</div>
+<div class="petit" style="margin-top:10px">Coulisses : la machinerie (moteur, Claude, Codex, sessions, journal, GitHub), l'inventaire du site et l'audit. Touchez un titre pour ouvrir ou fermer un bloc. Les résultats de la thèse et vos actions sont dans <b>Thèse</b> et <b>Mes actions</b>.</div>
 
-<div class="grille" id="onglet-situation" hidden>
-  <section class="p s12"><h2>Situation du projet<span class="droite" id="sit-maj"></span></h2>
-    <div class="petit">Ce qui est fait, avec quelle fiabilité, et ce qui reste. Source : <span class="mono">pilotage/situation.yml</span>, tenu à jour par Claude.</div>
-    <div class="legende"><span><span class="etq ok">confirmé</span>test déclaré d'avance, puissance suffisante, relu</span><span><span class="etq info">exploratoire</span>calculé et relu, statut exploratoire</span><span><span class="etq warn">provisoire</span>non relu ou données partielles</span><span><span class="etq neutre">aucune</span>pas encore fait</span></div>
-  </section>
-  <section class="p s4"><h2>Thèse <span class="n" id="n-these">0</span></h2><div id="sit-these"></div></section>
-  <section class="p s4"><h2>MakyClimat <span class="n" id="n-makyclimat">0</span></h2><div id="sit-makyclimat"></div></section>
-  <section class="p s4"><h2>Audit de Codex <span class="n" id="n-audit">0</span></h2><div id="sit-audit"></div></section>
-</div>
 
-<div class="grille" id="onglet-organigramme" hidden>
+
+<div class="grille" id="onglet-organigramme" hidden data-retire="fil complet : voir Thèse">
   <section class="p s12"><h2>Fil des tâches<span class="droite" id="org-maj"></span></h2>
     <div class="petit">Pour chaque résultat visé, la chaîne des tâches, de gauche à droite : une tâche ne commence que lorsque celles dont elle dépend sont faites. Source : <span class="mono">pilotage/fil.yml</span> (local), tenu par le coordinateur ; démarches externes en premier.</div>
     <div class="legende"><span><span class="etq violet">porteur</span>données externes, décisions</span><span><span class="etq claude">claude</span>protocoles, puissance, rapports</span><span><span class="etq codex">codex</span>code, calculs, vérifications</span><span><span class="etq ko">bloqué</span>il manque une donnée</span></div>
@@ -274,8 +271,8 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 </div>
 
 <div class="grille" id="onglet-pilotage">
-  <section class="p s8" id="sec-decisions"><h2>À décider <span class="n" id="n-dec">0</span><span class="droite" id="maj-dec"></span></h2><div id="decisions"></div></section>
-  <section class="p s4"><h2>Surveillant<span class="droite" id="surv-info"></span></h2>
+  <section class="p s8" id="sec-decisions" hidden><h2>À décider <span class="n" id="n-dec">0</span><span class="droite" id="maj-dec"></span></h2><div id="decisions"></div></section>
+  <section class="p s12" id="sec-moteur"><h2>Moteur (surveillant)<span class="droite" id="surv-info"></span></h2>
     <div class="petit" id="surv-texte">—</div>
     <div class="surv-ctl" style="margin-top:10px">
       <label>Durée <select id="surv-duree"></select></label>
@@ -302,6 +299,16 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
   <section class="p s6"><h2>Journal : qui a fait quoi <span class="n zero" id="n-journal">0</span><span class="droite">3 derniers jours</span></h2><div id="journal" class="defile" style="max-height:520px"></div></section>
   <section class="p s6"><h2>Runs GitHub<span class="droite" id="gh-maj"></span></h2><div id="runs" class="runs defile" style="max-height:520px"></div></section>
 </div>
+<div class="grille" id="onglet-situation">
+  <section class="p s12" hidden><h2>Situation du projet<span class="droite" id="sit-maj"></span></h2>
+    <div class="petit">Ce qui est fait, avec quelle fiabilité, et ce qui reste. Source : <span class="mono">pilotage/situation.yml</span>, tenu à jour par Claude.</div>
+    <div class="legende"><span><span class="etq ok">confirmé</span>test déclaré d'avance, puissance suffisante, relu</span><span><span class="etq info">exploratoire</span>calculé et relu, statut exploratoire</span><span><span class="etq warn">provisoire</span>non relu ou données partielles</span><span><span class="etq neutre">aucune</span>pas encore fait</span></div>
+  </section>
+  <section class="p s4" hidden><h2>Thèse <span class="n" id="n-these">0</span></h2><div id="sit-these"></div></section>
+  <section class="p s6"><h2>Inventaire du site MakyClimat <span class="n" id="n-makyclimat">0</span></h2><div id="sit-makyclimat"></div></section>
+  <section class="p s6"><h2>Audit de Codex <span class="n" id="n-audit">0</span></h2><div id="sit-audit"></div></section>
+</div>
+
 </div>
 <footer>Données lues toutes les 10 s sans recharger la page · <a href="/tableau_de_bord.html">Recherche : protocole, hypothèses, bibliographie</a> · <a href="/etat/coordination/notifications.html">Historique des alertes</a></footer>
 </div>
@@ -603,7 +610,7 @@ function montrerOnglet(nom){
   try{ localStorage.setItem("poste-onglet",nom); }catch(x){}
 }
 Array.prototype.forEach.call(document.querySelectorAll("[data-onglet]"),function(b){ b.addEventListener("click",function(){ montrerOnglet(b.getAttribute("data-onglet")); }); });
-try{ var o=localStorage.getItem("poste-onglet"); if(o==="situation"||o==="organigramme") montrerOnglet(o); }catch(x){}
+
 
 /* ----- accueil, thèse, mes actions (porteur, 13/11/2026) ----- */
 var A=null, themeOuvert=null, plis={}, CLE_VISITE="poste-derniere-visite", visitePrec=null;
@@ -729,6 +736,24 @@ function noterVisite(){ try{ localStorage.setItem(CLE_VISITE,new Date().toISOStr
 document.addEventListener("visibilitychange",function(){ if(document.hidden) noterVisite(); });
 window.addEventListener("pagehide",noterVisite);
 lireAccueil(); setInterval(lireAccueil,15000);
+/* ----- coulisses : blocs repliables (porteur, 13/11/2026) ----- */
+var CLE_PLIS_C="poste-coulisses-ouverts", ouvertsC=null;
+try{ ouvertsC=JSON.parse(localStorage.getItem(CLE_PLIS_C)||"null"); }catch(x){}
+if(!ouvertsC) ouvertsC={"sec-moteur":true};
+function cleSection(sec,i){ return sec.id||("c"+i); }
+function appliquerPlis(){
+  Array.prototype.forEach.call(document.querySelectorAll("#principal-coulisses section"),function(sec,i){
+    if(!sec.querySelector(":scope>h2")) return;
+    sec.classList.toggle("replie",!ouvertsC[cleSection(sec,i)]);
+  });
+}
+document.addEventListener("click",function(ev){
+  var h=ev.target.closest("#principal-coulisses section>h2"); if(!h||ev.target.closest("button,a,select,input,label")) return;
+  var secs=Array.prototype.slice.call(document.querySelectorAll("#principal-coulisses section")), sec=h.parentNode, c=cleSection(sec,secs.indexOf(sec));
+  ouvertsC[c]=!ouvertsC[c]; try{ localStorage.setItem(CLE_PLIS_C,JSON.stringify(ouvertsC)); }catch(x){} appliquerPlis();
+});
+appliquerPlis(); setInterval(appliquerPlis,2000);
+
 lire(); setInterval(lire,10000);
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) lire(); });
 })();
