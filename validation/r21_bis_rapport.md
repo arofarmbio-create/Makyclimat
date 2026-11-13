@@ -2,7 +2,8 @@
 
 *13/11/2026, 01:30 (Nairobi). Rédigé par Claude pendant la délégation du porteur du projet (12-13/11). Statut :
 **exploratoire**, comme le protocole ([protocole](protocole_r21_diagnostic.md), 7e version `c60baf1`, relu sans
-blocage par le relecteur attitré le 12/11 à 21:43). Calcul : run GitHub `43282884932` (6e tentative, après une
+blocage par le relecteur attitré le 12/11 à 21:43). Version corrigée le 13/11 à 05:55 après la relecture
+attitrée du rapport (01:14) : causes présentées comme non établies ; test EMS présenté comme une dérogation. Calcul : run GitHub `43282884932` (6e tentative, après une
 indisponibilité de DesInventar), code [`scripts/r21_diagnostic.py`](../scripts/r21_diagnostic.py). Sorties
 complètes : [r21_diagnostic.md](r21_diagnostic.md) et les fichiers `r21_diagnostic_*.csv`.*
 
@@ -36,8 +37,8 @@ hydrologique, ou (B). L'hypothèse (C), une perte de compétence de la prévisio
 dépasse pas P_c. Le passage au bassin hydrologique ne change pas la lecture.
 
 Conséquence pour R-21 : son résultat se lit **« peu informatif sur la compétence de prévision »** plutôt que
-« GloFAS sans compétence ». Pour la plupart de ces unités, les impacts déclarés ne correspondent pas à une crue
-fluviale que GloFAS puisse voir, même quand la météo est connue.
+« GloFAS sans compétence ». La plupart des unités ne sont pas détectées par la réanalyse dans les conditions
+évaluées (modèle, seuils, dates des fiches) ; les causes restent indéterminées.
 
 ## 4. Contexte cyclonique (D4, descriptif)
 
@@ -52,9 +53,9 @@ Distance minimale entre le centre démographique du district et une position IBT
 
 La détection dépend fortement du contexte. Près d'un cyclone, près de la moitié des unités sont détectées. Loin
 de tout cyclone, ce sont les deux tiers de l'échantillon (279 sur 425), et la détection tombe à 5-8 %, **réanalyse
-comprise**. Ces impacts éloignés relèvent probablement de pluies locales, de ruissellement ou de crues de petits
-bassins, sous la résolution de GloFAS, ou de dates et de lieux imprécis dans les fiches : c'est l'hypothèse (B) ou
-(A). Ce tableau est descriptif ; il n'a pas de règle de lecture propre (protocole, section 7).
+comprise**. Pistes possibles, non établies par ce diagnostic : pluies locales, ruissellement ou crues de petits
+bassins sous la résolution de GloFAS, dates ou lieux imprécis dans les fiches, erreur du modèle ou des seuils. Ce
+tableau est descriptif ; il n'a pas de règle de lecture propre (protocole, section 7).
 
 ## 5. Limites
 
@@ -66,8 +67,10 @@ bassins, sous la résolution de GloFAS, ou de dates et de lieux imprécis dans l
 
 ## 6. Suite proposée (à décider par le porteur)
 
-1. **Test confirmatoire par sous-bassin avec EMS** (protocole, section 8) : il départagerait (A) et (B) sur des
-   impacts cartographiés indépendamment des fiches.
+1. **Test par sous-bassin avec les observations EMS** : *nouvelle proposition*. La section 8 du protocole ne
+   l'engageait que si la référence dépassait 25 %, condition non remplie (14,6 %). Elle y dérogerait donc et doit
+   être décidée par le porteur avant tout calcul. Des impacts cartographiés indépendamment des fiches aideraient à
+   départager (A) et (B), sans garantir cette séparation.
 2. **Restreindre la vérification par l'impact aux épisodes cycloniques** (< 300 km), où GloFAS « voit » les impacts.
    Toute hypothèse sur ce sous-ensemble doit être déclarée **avant** un nouveau calcul ; les chiffres ci-dessus ne
    peuvent pas servir à la fixer.
