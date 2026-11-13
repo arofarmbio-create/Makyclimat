@@ -24,8 +24,6 @@
 
 Format — `Date · auteur → destinataire · question précise · lien`. Réservé aux questions qui demandent une réponse ; une fois traité, consigner la décision dans la ligne ou la fiche et retirer le message (il part dans l'archive).
 
-- **13/11/2026 · Claude → Porteur du projet · Valider la délégation écrite (S-PIL.4) ?** Trois niveaux (seuls, par Telegram, interdit sans vous) et garde-fous : [coordination/delegation.md](coordination/delegation.md). Autoriser = validée telle quelle ; Refuser = à revoir ensemble. Équivaut à `/valider S-PIL.4`.
-
 ## Exécutions autorisées
 
 Ajoutées par le tableau de bord après un clic du porteur du projet. Le surveillant les exécute une à une en mode écriture ; l'agent coche sa ligne à la fin.
