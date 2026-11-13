@@ -114,3 +114,11 @@ def test_demarrage_refuse_apres_stop(tmp_path, monkeypatch):
     monkeypatch.setattr(fil, "STOP", tmp_path / "stop.txt")
     fil.STOP.write_text("x", encoding="utf-8")
     assert "erreur" in sp.demarrer(60, True)
+
+
+def test_hotes_supplementaires(tmp_path, monkeypatch):
+    f = tmp_path / "hotes.txt"
+    monkeypatch.setattr(sp, "HOTES", f)
+    assert sp.hotes_supplementaires() == set()
+    f.write_text("# commentaire\nPC.tail1234.ts.net\n\n", encoding="utf-8")
+    assert sp.hotes_supplementaires() == {"pc.tail1234.ts.net"}

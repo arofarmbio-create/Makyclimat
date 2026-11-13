@@ -372,7 +372,7 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         pass
 
     def _local(self) -> bool:
-        if self.headers.get("Host", "") not in self.hotes:   # protège contre le DNS rebinding
+        if self.headers.get("Host", "").lower() not in self.hotes:   # protège contre le DNS rebinding
             self.send_error(403)
             return False
         return True
@@ -430,7 +430,7 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         if not self._local():
             return
         origine = self.headers.get("Origin")
-        if self.headers.get("X-Pilotage") != JETON or (origine and origine.split("//", 1)[-1] not in self.hotes):
+        if self.headers.get("X-Pilotage") != JETON or (origine and origine.split("//", 1)[-1].lower() not in self.hotes):
             return self._json({"erreur": "Jeton absent ou origine refusée."}, 403)
         try:
             longueur = min(int(self.headers.get("Content-Length") or 0), 20000)
@@ -578,6 +578,20 @@ def regenerer():
                 print("Tableau de bord :", erreur, flush=True)
 
 
+HOTES = Path.home() / ".makyclimat" / "hotes_autorises.txt"
+
+
+def hotes_supplementaires() -> set[str]:
+    """Noms d'hôte acceptés en plus de 127.0.0.1 (porteur, 13/11/2026 : tableau de bord sur le téléphone par Tailscale,
+    réseau privé ; `tailscale serve` relaie vers 127.0.0.1). Un nom par ligne, hors du dépôt. Le serveur continue de
+    n'écouter que sur 127.0.0.1 : seul le relais Tailscale du PC peut l'atteindre."""
+    try:
+        lignes = HOTES.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return set()
+    return {l.strip().lower() for l in lignes if l.strip() and not l.lstrip().startswith("#")}
+
+
 class ServeurExclusif(ThreadingHTTPServer):
     """Un seul serveur par port. Sous Windows, SO_REUSEADDR (défaut de http.server) laisse un 2e serveur se lier au
     même port : chaque lancement ajoutait un serveur, un onglet et des avis GitHub en double."""
@@ -643,7 +657,7 @@ def main():
         if not a.sans_navigateur:
             webbrowser.open(adresse)
         return
-    Gestionnaire.hotes = {f"127.0.0.1:{a.port}", f"localhost:{a.port}"}
+    Gestionnaire.hotes = {f"127.0.0.1:{a.port}", f"localhost:{a.port}"} | hotes_supplementaires()
     tableau_de_bord.generer()
     threading.Thread(target=regenerer, daemon=True).start()
     threading.Thread(target=suivre_github, daemon=True).start()
