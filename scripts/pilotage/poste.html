@@ -215,6 +215,8 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .res{padding:8px 0;border-bottom:1px dashed rgba(0,229,255,.12);font-size:15px} .res b{font-weight:600}
 .page-theme .dit{color:var(--gris)}
 .conv{max-height:360px;overflow-y:auto;display:flex;flex-direction:column}
+.lettre{white-space:pre-wrap;font-size:15px;max-height:340px;overflow-y:auto;border-left:3px solid var(--bord);padding:6px 10px;margin:6px 0;background:rgba(0,0,0,.2)}
+#principal-courriels textarea{width:100%;margin-top:6px}
 #principal-coulisses section>h2{cursor:pointer;user-select:none}
 #principal-coulisses section>h2::before{content:"▾ ";color:var(--cyan)}
 #principal-coulisses section.replie>h2::before{content:"▸ "}
@@ -243,7 +245,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
   </div>
 </header>
 <div class="alerte-serveur" id="alerte-serveur">Le serveur du poste ne répond plus : les chiffres ci-dessous sont figés. Relancer <code>pilotage.cmd</code> à la racine du dépôt.</div>
-<nav class="onglets principal" aria-label="Onglets"><button class="onglet actif" data-principal="accueil">ACCUEIL</button><button class="onglet" data-principal="these">THÈSE</button><button class="onglet" data-principal="actions">MES ACTIONS</button><button class="onglet" data-principal="coulisses">COULISSES</button></nav>
+<nav class="onglets principal" aria-label="Onglets"><button class="onglet actif" data-principal="accueil">ACCUEIL</button><button class="onglet" data-principal="these">THÈSE</button><button class="onglet" data-principal="actions">ACTIONS</button><button class="onglet" data-principal="courriels">COURRIELS</button><button class="onglet" data-principal="coulisses">COULISSES</button></nav>
 <div class="grille" id="principal-accueil">
   <section class="p s12"><div class="voyant"><span class="lampe orange" id="a-lampe"></span><div class="txt"><b id="a-phrase">Chargement…</b><span id="a-detail"></span><div class="petit" id="a-notes"></div></div>
     <button class="b rouge gros" id="a-stop">STOP</button><button class="b vert gros" id="a-reprise" hidden>Reprise</button></div><div class="retour" id="a-retour"></div></section>
@@ -262,6 +264,12 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 </div>
 <div class="grille" id="principal-actions" hidden>
   <section class="p s12"><h2>Mes actions <span class="n" id="m-n">0</span></h2><div class="petit">Tout ce qui ne dépend que de vous : valider, décider, faire une démarche. Le reste avance sans vous.</div><div id="m-liste"></div><div class="retour" id="m-retour"></div></section>
+</div>
+<div class="grille" id="principal-courriels" hidden>
+  <section class="p s12"><h2>Courriels <span class="n" id="c-n">0</span></h2>
+    <div class="petit">Reçu → Claude rédige → vous relisez et corrigez → vous envoyez. Rien ne part sans votre bouton ; la réponse va seulement à l'expéditeur. Les courriels restent sur le PC (lus par votre réseau privé).</div>
+    <div id="c-compte" class="legende" style="margin-top:8px"></div><div id="c-filtres" class="filtres" style="margin-top:8px"></div>
+    <div id="c-liste"></div><div class="retour" id="c-retour"></div></section>
 </div>
 <div id="principal-coulisses" hidden>
 <div class="petit" style="margin-top:10px">Coulisses : la machinerie (moteur, Claude, Codex, sessions, journal, GitHub), l'inventaire du site et l'audit. Touchez un titre pour ouvrir ou fermer un bloc. Les résultats de la thèse et vos actions sont dans <b>Thèse</b> et <b>Mes actions</b>.</div>
@@ -633,6 +641,7 @@ function pli(cle,ouvertParDefaut,resume,corps){
 function carteAction(a){
   var b = a.type==="valider" ? '<button class="b vert" data-valider="'+e(a.id)+'">Valider</button>'
         : a.type==="decision" ? '<button class="b vert" data-dec="'+e(a.cle)+'" data-act="autoriser">Autoriser</button> <button class="b rouge" data-dec="'+e(a.cle)+'" data-act="refuser">Refuser</button>'
+        : a.type==="courriel" ? '<button class="b" data-aller="courriels">Voir</button>'
         : '<span class="etq violet">démarche</span>';
   var c=a.contribue||{themes:[],etapes:[]}, pour="";
   if(a.apporte) pour+='<div class="pour"><b>À quoi ça sert :</b> '+e(a.apporte)+'</div>';
@@ -711,9 +720,65 @@ function rendreAccueil(){
   $("m-n").textContent=att.length;
   poser("m-liste", att.length?att.map(carteAction).join(""):'<div class="vide">Rien ne vous attend.</div>');
 }
+
+/* ----- courriels (porteur, 13/11/2026) : reçu → rédigé → validé → envoyé ----- */
+var filtreC="actifs";
+var COUL_C={nouveau:"info",a_rediger:"warn",brouillon:"ok",envoye:"neutre",ignore:"neutre",erreur:"ko"};
+function rendreCourriels(){
+  if(!A) return;
+  var c=A.courriels||{liste:[],compte:{},configure:false};
+  if(!c.configure){ poser("c-liste",'<div class="vide">Messagerie non configurée. Sur le PC, dans une fenêtre PowerShell : <code>.venv\\Scripts\\python.exe scripts\\pilotage\\courriel.py --configurer</code></div>'); return; }
+  var k=c.compte||{}, actifs=(k.nouveau||0)+(k.a_rediger||0)+(k.brouillon||0)+(k.erreur||0);
+  $("c-n").textContent=actifs;
+  poser("c-compte",["nouveau","a_rediger","brouillon","envoye","ignore","erreur"].filter(function(x){return k[x];}).map(function(x){
+    return '<span><span class="etq '+COUL_C[x]+'">'+({nouveau:"nouveaux",a_rediger:"Claude rédige",brouillon:"brouillons prêts",envoye:"envoyés",ignore:"ignorés",erreur:"erreurs"})[x]+'</span>'+k[x]+'</span>';}).join(""));
+  poser("c-filtres",[["actifs","À traiter"],["envoye","Envoyés"],["ignore","Ignorés"],["tous","Tous"]].map(function(b){
+    return '<button class="filtre'+(filtreC===b[0]?" actif":"")+'" data-filtre-c="'+b[0]+'">'+b[1]+'</button>';}).join(""));
+  var zone=$("c-liste"), ecrit=zone.contains(document.activeElement)&&/TEXTAREA|INPUT/.test(document.activeElement.tagName);
+  if(ecrit||zone.querySelector("textarea[data-modifie]")) return;      // ne jamais écraser ce que vous écrivez
+  var l=(c.liste||[]).filter(function(m){ return filtreC==="tous"||(filtreC==="actifs"?["nouveau","a_rediger","brouillon","erreur"].indexOf(m.etat)>=0:m.etat===filtreC); });
+  poser("c-liste", l.length?l.map(function(m){
+    var corps='<div class="petit">De : '+e(m.de)+' · '+e(quand(m.date))+(m.pieces_jointes&&m.pieces_jointes.length?' · '+m.pieces_jointes.length+' pièce(s) jointe(s), non gérées':'')+'</div>'+
+      '<div class="lettre">'+e(m.corps||m.extrait)+'</div>';
+    if(m.etat==="nouveau"||m.etat==="erreur"||m.etat==="ignore"){
+      corps+=(m.erreur?'<div class="bl">'+e(m.erreur)+'</div>':'')+
+        '<textarea data-consigne="'+e(m.cle)+'" rows="2" placeholder="Consigne pour Claude (facultatif) : ton, points à dire…"></textarea>'+
+        '<div class="ligne-btn"><button class="b vert" data-rediger="'+e(m.cle)+'">Rédiger une réponse</button>'+
+        (m.etat!=="ignore"?'<button class="b" data-ignorer="'+e(m.cle)+'">Ignorer</button>':'')+'</div>';
+    } else if(m.etat==="a_rediger"){
+      corps+='<div class="petit">Claude rédige'+(m.consigne?' (votre consigne : '+e(m.consigne)+')':'')+'. Vous serez prévenu sur ntfy.</div>';
+    } else if(m.etat==="brouillon"){
+      corps+='<div class="petit" style="margin-top:8px"><b>Réponse proposée</b> — corrigez librement avant d’envoyer :</div>'+
+        '<textarea data-texte="'+e(m.cle)+'" rows="10">'+e(m.brouillon)+'</textarea>'+
+        '<div class="ligne-btn"><button class="b vert" data-envoyer="'+e(m.cle)+'">Envoyer</button>'+
+        '<button class="b" data-rediger="'+e(m.cle)+'">Autre version</button><button class="b" data-ignorer="'+e(m.cle)+'">Ignorer</button></div>'+
+        '<textarea data-consigne="'+e(m.cle)+'" rows="1" placeholder="Pour « Autre version » : ce qu’il faut changer"></textarea>';
+    } else if(m.etat==="envoye"){
+      corps+='<div class="petit" style="margin-top:8px"><b>Envoyé</b> à '+e(m.envoye_a)+' le '+e(quand(m.envoye_le))+'</div><div class="lettre">'+e(m.brouillon)+'</div>';
+    }
+    return pli("mail-"+m.cle, m.etat==="brouillon",
+      '<span class="etq '+(COUL_C[m.etat]||"neutre")+'">'+e(m.libelle)+'</span> <b>'+e(m.objet)+'</b> <span class="petit">'+e(String(m.de).replace(/<.*>/,""))+'</span>', corps);
+  }).join(""):'<div class="vide">Aucun courriel ici.</div>');
+}
+document.addEventListener("input",function(ev){ if(ev.target.closest&&ev.target.closest("#c-liste")) ev.target.setAttribute("data-modifie","1"); });
+document.addEventListener("click",function(ev){
+  var t=ev.target, cle, r=$("c-retour");
+  if(t.closest("[data-aller]")){ montrerPrincipal(t.closest("[data-aller]").getAttribute("data-aller")); return; }
+  if(t.closest("[data-filtre-c]")){ filtreC=t.closest("[data-filtre-c]").getAttribute("data-filtre-c"); rendreCourriels(); return; }
+  if((cle=t.getAttribute&&t.getAttribute("data-rediger"))){
+    var cs=document.querySelector('[data-consigne="'+cle+'"]');
+    post("/api/courriel/rediger",{cle:cle,demande:cs?cs.value:""}).then(function(x){ retour(r,x); Array.prototype.forEach.call(document.querySelectorAll("#c-liste [data-modifie]"),function(z){z.removeAttribute("data-modifie");}); lireAccueil(); }); return; }
+  if((cle=t.getAttribute&&t.getAttribute("data-ignorer"))){
+    post("/api/courriel/ignorer",{cle:cle}).then(function(x){ retour(r,x); lireAccueil(); }); return; }
+  if((cle=t.getAttribute&&t.getAttribute("data-envoyer"))){
+    var tx=document.querySelector('[data-texte="'+cle+'"]'), m=((A.courriels||{}).liste||[]).filter(function(x){return x.cle===cle;})[0]||{};
+    if(!confirm("Envoyer cette réponse à "+String(m.de||"l'expéditeur")+" ?")) return;
+    t.disabled=true;
+    post("/api/courriel/envoyer",{cle:cle,texte:tx?tx.value:""}).then(function(x){ retour(r,x); t.disabled=false; if(!x.erreur) Array.prototype.forEach.call(document.querySelectorAll("#c-liste [data-modifie]"),function(z){z.removeAttribute("data-modifie");}); lireAccueil(); }); return; }
+});
 function lireAccueil(){
   fetch("/api/accueil",{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
-    A=d; jeton=d.jeton||jeton; dernierOk=Date.now(); rendreAccueil();
+    A=d; jeton=d.jeton||jeton; dernierOk=Date.now(); rendreAccueil(); try{ rendreCourriels(); }catch(x){ console.error(x); }
   }).catch(function(){});
 }
 function ouvrirTheme(id){ themeOuvert=id; montrerPrincipal("these"); rendreAccueil(); }
@@ -739,7 +804,7 @@ $("a-stop").addEventListener("click",function(){ if(!confirm("STOP : plus aucun 
   post("/api/stop",{}).then(function(r){ retour($("a-retour"),r); lireAccueil(); }); });
 $("a-reprise").addEventListener("click",function(){ post("/api/reprise",{}).then(function(r){ retour($("a-retour"),r); lireAccueil(); }); });
 function montrerPrincipal(nom){
-  ["accueil","these","actions","coulisses"].forEach(function(n){ $("principal-"+n).hidden=(n!==nom); });
+  ["accueil","these","actions","courriels","coulisses"].forEach(function(n){ $("principal-"+n).hidden=(n!==nom); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-principal]"),function(b){ b.classList.toggle("actif",b.getAttribute("data-principal")===nom); });
   try{ localStorage.setItem("poste-principal",nom); }catch(x){}
   window.scrollTo(0,0);

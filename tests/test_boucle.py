@@ -11,6 +11,8 @@ import fil  # noqa: E402
 import serveur_pilotage as sp  # noqa: E402
 import telegram_bot as tb  # noqa: E402
 
+DEMARRER = sp.demarrer          # la vraie fonction (un autre fichier de tests la remplace sans la rétablir)
+
 FIL = """\
 donnees: []
 objectifs:
@@ -115,7 +117,7 @@ def test_relecture_plafonnee_a_trois_tours(env, monkeypatch):
 def test_demarrage_refuse_apres_stop(tmp_path, monkeypatch):
     monkeypatch.setattr(fil, "STOP", tmp_path / "stop.txt")
     fil.STOP.write_text("x", encoding="utf-8")
-    assert "erreur" in sp.demarrer(60, True)
+    assert "erreur" in DEMARRER(60, True)
 
 
 def test_hotes_supplementaires(tmp_path, monkeypatch):

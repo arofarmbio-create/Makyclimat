@@ -29,6 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import accueil  # noqa: E402
 import conversations  # noqa: E402
+import courriel  # noqa: E402
 import fil  # noqa: E402
 import github_direct  # noqa: E402
 import poste  # noqa: E402
@@ -194,11 +195,46 @@ def valider_porteur(etape: str, canal: str) -> dict:
     return ecrire_coordination(noter)
 
 
+def courriel_rediger(cle: str, demande: str) -> dict:
+    """Le porteur demande une réponse : une session de Claude rédige le brouillon (tête de file, après la tâche en
+    cours). Rien n'est envoyé sans son bouton."""
+    try:
+        courriel.changer(cle, etat="a_rediger", consigne=" ".join(demande.split())[:500])
+    except KeyError:
+        return {"erreur": "Courriel introuvable."}
+    occupe = lancement_en_cours()
+
+    def modifier(lignes):
+        execution(lignes, "claude", courriel.consigne_brouillon(cle, demande), en_tete=True)
+        return {"ok": "Claude rédige la réponse" + (" après sa tâche en cours." if occupe else ".")}
+
+    reponse = lancer_si_besoin(ecrire_coordination(modifier), True)
+    if fil.STOP.exists():
+        reponse["ok"] = "STOP en cours : la rédaction partira dès la reprise."
+    return reponse
+
+
+def courriels_attente() -> list[dict]:
+    """Courriels qui attendent le porteur, pour « Ce qui vous attend » (sans contenu : titre générique)."""
+    c = courriel.compte()
+    sortie = []
+    if c.get("brouillon"):
+        sortie.append({"type": "courriel", "titre": f"{c['brouillon']} brouillon{'s' if c['brouillon'] > 1 else ''} de réponse à relire",
+                       "detail": "Relisez, corrigez si besoin, puis envoyez (onglet Courriels).",
+                       "apporte": "Répondre à vos interlocuteurs sans écrire vous-même : vous gardez la main sur l'envoi."})
+    if c.get("nouveau"):
+        sortie.append({"type": "courriel", "titre": f"{c['nouveau']} nouveau{'x' if c['nouveau'] > 1 else ''} courriel{'s' if c['nouveau'] > 1 else ''}",
+                       "detail": "À lire : demander une réponse à Claude, ou ignorer (onglet Courriels).", "apporte": ""})
+    return sortie
+
+
 def donnees_accueil() -> dict:
     decisions = [d for d in poste.coordination()["decisions"] if d["pour_porteur"]]
     conversation = [m for m in poste.fil(60) if "claude" in (m.get("de"), m.get("a"))][:20]
-    return {**accueil.construire(fil.STOP.exists(), lire_instance(ETAT), lancement_en_cours(), decisions),
-            "conversation": conversation, "jeton": JETON}
+    donnees = accueil.construire(fil.STOP.exists(), lire_instance(ETAT), lancement_en_cours(), decisions)
+    donnees["attend"] = courriels_attente() + donnees["attend"]
+    return {**donnees, "conversation": conversation, "jeton": JETON,
+            "courriels": {"configure": courriel.CONFIG.exists(), "liste": courriel.vue(complet=True), "compte": courriel.compte()}}
 
 
 # ------------------------------------------------------------------ décisions et consignes du porteur (option C)
@@ -519,6 +555,16 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             reponse = arreter(immediat=bool(corps.get("immediat")))
         elif self.path == "/api/decision":
             reponse = decision(str(corps.get("cle", "")), str(corps.get("action", "")), str(corps.get("texte", "")))
+        elif self.path == "/api/courriel/rediger":
+            reponse = courriel_rediger(str(corps.get("cle", "")), str(corps.get("demande", "")))
+        elif self.path == "/api/courriel/envoyer":
+            reponse = courriel.envoyer(str(corps.get("cle", "")), str(corps.get("texte", "")))
+        elif self.path == "/api/courriel/ignorer":
+            try:
+                courriel.changer(str(corps.get("cle", "")), etat="ignore")
+                reponse = {"ok": "Ignoré."}
+            except KeyError:
+                reponse = {"erreur": "Courriel introuvable."}
         elif self.path == "/api/valider":
             reponse = valider_porteur(str(corps.get("etape", "")), "tableau de bord")
         elif self.path == "/api/stop":

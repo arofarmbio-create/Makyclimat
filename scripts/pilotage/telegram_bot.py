@@ -51,6 +51,7 @@ TOURS_MAX = 3
 ORPHELINE_H = 12
 RESERVATION_MAX_S = 600
 DUREE_SURVEILLANT = 480
+RELEVE_S = 300
 PORT_INSTANCE = 8767                        # instance unique : ce port local est tenu tant que la boucle tourne
 MENU = [[{"text": "Situation", "callback_data": "c:/situation"}, {"text": "Ce qui m'attend", "callback_data": "c:/porteur"},
          {"text": "STOP", "callback_data": "c:/stop"}]]
@@ -487,9 +488,33 @@ class Bot:
                                    "Lisez-le dans le tableau de bord : Accueil, « Écrire à Claude »."):
             self.memoire["reponses_vues"] = (vues + nouvelles)[-300:]
 
+    def courriels(self) -> None:
+        """Relève toutes les 5 minutes (sans jetons) ; avis sans expéditeur ni contenu."""
+        import courriel
+        if not courriel.CONFIG.exists() or time.time() - self.memoire.get("releve", 0) < RELEVE_S:
+            return
+        self.memoire["releve"] = time.time()
+        try:
+            nouveaux = courriel.relever()
+        except Exception as err:                      # réseau, mot de passe révoqué… : signalé une fois par jour
+            jour = maintenant().strftime("%Y-%m-%d")
+            if self.memoire.get("releve_erreur") != jour:
+                journal("courriel_erreur", erreur=repr(err)[:300])
+                if self.dire("Relève des courriels impossible (réseau ou mot de passe d'application). Détail dans le journal."):
+                    self.memoire["releve_erreur"] = jour
+            return
+        if nouveaux and self.dire(f"{len(nouveaux)} nouveau{'x' if len(nouveaux) > 1 else ''} courriel"
+                                  f"{'s' if len(nouveaux) > 1 else ''} : tableau de bord, onglet Courriels."):
+            pass
+        prets = {e["cle"] for e in courriel.vue() if e["etat"] == "brouillon"}
+        vus = set(self.memoire.get("brouillons_vus", []))
+        if prets - vus and self.dire(f"{len(prets - vus)} brouillon{'s' if len(prets - vus) > 1 else ''} de réponse "
+                                     "à relire et envoyer : tableau de bord, onglet Courriels."):
+            self.memoire["brouillons_vus"] = sorted(vus | prets)[-300:]
+
     def surveiller(self) -> None:
-        for etape in (self.pousser_decisions, self.pousser_validations, self.pousser_reponses, self.echecs,
-                      self.rapport_du_jour):
+        for etape in (self.pousser_decisions, self.pousser_validations, self.pousser_reponses, self.courriels,
+                      self.echecs, self.rapport_du_jour):
             try:
                 etape()
             except Exception as err:                         # une étape en panne n'arrête pas les autres
