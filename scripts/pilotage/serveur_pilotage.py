@@ -320,7 +320,8 @@ def message_urgent(texte: str) -> dict:
                  f"« {texte} ». Traite-la en priorité, dans les limites de coordination/delegation.md (aucun envoi "
                  f"externe sans le porteur : prépare, il valide). Réponds-lui ensuite dans le poste : "
                  f".venv/Scripts/python.exe -B -X utf8 scripts/pilotage/poste.py repondre claude {ident} "
-                 f"\"ta réponse\". S'il te manque un accès ou une information, dis-le-lui dans cette réponse.")
+                 f"\"ta réponse\" (en français, en vouvoyant le porteur). S'il te manque un accès ou une information, "
+                 f"dis-le-lui dans cette réponse.")
     occupe = lancement_en_cours()
 
     def modifier(lignes):
