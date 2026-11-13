@@ -617,6 +617,13 @@ def test_echec_github_regle_retire():
             {"id": 600, "workflow": "Autre workflow", "conclusion": "failure"}]      # plus récent mais en échec
     assert S.echecs_resolus(lignes, runs) == [2]
     assert S.echecs_resolus(lignes, runs[1:]) == []
+    # Diagnostic en file d'un run relancé qui a fini par réussir (même identifiant, 13/11, run 43282884932).
+    diag = ("- [ ] `exec:claude:20261112-214819-18a6` Diagnostic d'échec automatique · run 43282884932 "
+            "(R-21 bis - Diagnostic exploratoire, failure) https://x · tâche « R-21 bis ».")
+    fait = diag.replace("- [ ]", "- [x]", 1)
+    relance = [{"id": 43282884932, "workflow": "R-21 bis - Diagnostic exploratoire", "conclusion": "success"}]
+    assert S.echecs_resolus([diag, fait], relance) == [0]          # une exécution déjà cochée n'est pas touchée
+    assert S.echecs_resolus([diag], [{**relance[0], "conclusion": "failure"}]) == []
 
 
 if __name__ == "__main__":

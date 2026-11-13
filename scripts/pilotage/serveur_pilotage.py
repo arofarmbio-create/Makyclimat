@@ -470,14 +470,22 @@ def avis_windows(texte: str) -> None:
 # Il est retiré dès qu'un run plus récent (identifiant plus grand) du même workflow a réussi.
 MESSAGE_ECHEC = re.compile(r"^- \*\*[^*]*Surveillant → porteur du projet · Échec GitHub à examiner\.\*\* "
                            r"run (\d+) \((.+?), [a-z_]+\)")
+# Même défaut pour les diagnostics automatiques en file : un run relancé garde son identifiant (13/11, run
+# 43282884932 réussi à la 6e tentative, son diagnostic restait en file et aurait consommé une session de Claude).
+DIAG_ECHEC = re.compile(r"^- \[ \] `exec:(?:claude|codex):[\w-]+` Diagnostic d'échec automatique · "
+                        r"run (\d+) \((.+?), [a-z_]+\)")
+
+
+def _echec(ligne: str):
+    return MESSAGE_ECHEC.match(ligne) or DIAG_ECHEC.match(ligne)
 
 
 def echecs_resolus(lignes: list[str], runs: list[dict]) -> list[int]:
     """Indices des messages d'échec qu'un run plus récent et réussi du même workflow a rendus caducs."""
     retirer = []
     for k, ligne in enumerate(lignes):
-        m = MESSAGE_ECHEC.match(ligne)
-        if m and any(r.get("workflow") == m[2] and r.get("conclusion") == "success" and int(r.get("id", 0)) > int(m[1])
+        m = _echec(ligne)              # réglé : le même run relancé, ou un run plus récent du workflow, a réussi
+        if m and any(r.get("workflow") == m[2] and r.get("conclusion") == "success" and int(r.get("id", 0)) >= int(m[1])
                      for r in runs):
             retirer.append(k)
     return retirer
@@ -500,8 +508,15 @@ def retirer_echecs_resolus(runs: list[dict]) -> int:
     except OSError:
         return 0
     connus = {r.get("workflow") for r in runs}
-    for nom in {m[2] for l in lignes if (m := MESSAGE_ECHEC.match(l))} - connus:
+    signales = [m for l in lignes if (m := _echec(l))]
+    for nom in {m[2] for m in signales} - connus:
         runs = runs + runs_du_workflow(nom)          # rare : seulement pour un message en attente
+    for m in signales:                               # état actuel du run signalé (relancé depuis ?)
+        try:
+            etat_run = github_direct.gh("run", "view", m[1], "--json", "conclusion") or {}
+            runs = runs + [{"id": int(m[1]), "workflow": m[2], "conclusion": etat_run.get("conclusion")}]
+        except (RuntimeError, ValueError, subprocess.TimeoutExpired, OSError):
+            pass
     if not echecs_resolus(lignes, runs):
         return 0                         # rien à retirer : pas d'écriture ni de régénération du tableau
     retires = []
