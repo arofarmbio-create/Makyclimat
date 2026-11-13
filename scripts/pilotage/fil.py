@@ -14,7 +14,7 @@ import os
 import re
 import sys
 import time
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import yaml
@@ -24,6 +24,8 @@ FIL = ROOT / "pilotage" / "fil.yml"
 COORDINATEUR = ROOT / "pilotage" / "etat" / "coordinateur.txt"
 STOP = ROOT / "pilotage" / "etat" / "stop_porteur.txt"   # STOP du porteur : aucun lancement ni démarrage jusqu'à /reprise
 VERROUS = ROOT / "pilotage" / "etat" / "verrous"
+AGENTS = ROOT / "pilotage" / "etat" / "agents.json"   # {"codex": {"indisponible_jusqu_au": "2026-11-17T00:00:00+03:00"}}
+NAIROBI = timezone(timedelta(hours=3))
 FIN_PAUSE = date(2026, 11, 16)        # pause des calculs de recherche décidée par le porteur (13/11/2026)
 AUTONOMES = {"claude", "codex", "coordinateur", "agent", "github"}
 FINIS = {"fait", "clos"}
@@ -139,6 +141,16 @@ def coordinateur() -> str:
     return nom if nom in ("claude", "codex") else "claude"
 
 
+def disponible(agent: str, maintenant: datetime | None = None) -> bool:
+    """Faux si l'assistant est mis de côté jusqu'à une date (limite d'usage ; porteur, 13/11/2026 : Codex à 97 %,
+    pas avant le 17/11 00:00). Fichier illisible : disponible (le surveillant garde ses propres plafonds)."""
+    try:
+        fin = json.loads(AGENTS.read_text(encoding="utf-8")).get(agent, {}).get("indisponible_jusqu_au")
+        return not fin or (maintenant or datetime.now(NAIROBI)) >= datetime.fromisoformat(fin)
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
 def agent_de(etape: dict) -> str:
     """Qui exécute : Codex pour ses étapes, sinon le coordinateur (il lance aussi workflows et téléchargements)."""
     return "codex" if etape.get("qui") == "codex" else coordinateur() if etape.get("qui") != "claude" else "claude"
@@ -149,7 +161,7 @@ def prochaine(fil: dict, aujourd_hui: date | None = None) -> dict | None:
     étapes du système avancent."""
     jour = aujourd_hui or date.today()
     candidates = [e for e in pretes(fil) if e.get("qui") in AUTONOMES
-                  and (jour >= FIN_PAUSE or e["_domaine"] == "systeme")]
+                  and (jour >= FIN_PAUSE or e["_domaine"] == "systeme") and disponible(agent_de(e))]
     candidates.sort(key=lambda e: e["_priorite"])            # tri stable : l'ordre du fichier départage
     return candidates[0] if candidates else None
 

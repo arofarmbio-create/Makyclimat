@@ -301,7 +301,9 @@ def test_codex_transmis_sans_relectures():
         raise Arret
 
     originaux = (S.subprocess.Popen, S.binaire_codex, S.binaire_claude, S.lire_instance, S.ETAT)
+    agents, stop = S.fil.AGENTS, S.fil.STOP
     try:
+        S.fil.AGENTS = S.fil.STOP = Path(tempfile.mkdtemp()) / "absent"   # Codex disponible, pas de STOP
         S.subprocess.Popen, S.lire_instance = popen, (lambda d: None)
         S.binaire_codex = lambda: Path("codex.exe")
         S.binaire_claude = lambda: Path("claude.exe")
@@ -312,6 +314,7 @@ def test_codex_transmis_sans_relectures():
             pass
     finally:
         S.subprocess.Popen, S.binaire_codex, S.binaire_claude, S.lire_instance, S.ETAT = originaux
+        S.fil.AGENTS, S.fil.STOP = agents, stop
     assert "--codex-exe" in vus[0] and "--relectures-auto" not in vus[0], vus
 
 

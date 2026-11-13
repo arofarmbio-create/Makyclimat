@@ -6,6 +6,8 @@
 
 > **Pause des calculs de recherche jusqu'au lundi 16/11** (porteur). D'ici là, seules les étapes du système avancent (bot Telegram, boucle, ménage). Rôles : le porteur collecte les données externes ; Claude, Codex et leurs sessions font le modèle, les hypothèses, les calculs et les vérifications.
 
+> **Codex mis de côté jusqu'au 17/11/2026 00:00** (porteur, 13/11 : limite d'usage à 97 %). Ni la boucle ni le surveillant ne l'appellent (`pilotage/etat/agents.json`, local) ; ses étapes et ses relectures attendent, le travail continue avec Claude.
+
 **États** — À faire · En cours · En attente (dépendance ou run) · Bloqué (action nécessaire) · À relire · Prêt à publier · Fait · Clos. **Horaires** — Nairobi (UTC+3), `JJ/MM/AAAA HH:mm`.
 
 ## Tâches

@@ -122,3 +122,16 @@ def test_hotes_supplementaires(tmp_path, monkeypatch):
     assert sp.hotes_supplementaires() == set()
     f.write_text("# commentaire\nPC.tail1234.ts.net\n\n", encoding="utf-8")
     assert sp.hotes_supplementaires() == {"pc.tail1234.ts.net"}
+
+
+def test_codex_mis_de_cote(env, monkeypatch, tmp_path):
+    from datetime import datetime
+    monkeypatch.setattr(fil, "AGENTS", tmp_path / "agents.json")
+    (tmp_path / "agents.json").write_text('{"codex": {"indisponible_jusqu_au": "2026-11-17T00:00:00+03:00"}}',
+                                          encoding="utf-8")
+    assert not fil.disponible("codex", datetime.fromisoformat("2026-11-16T23:59:00+03:00"))
+    assert fil.disponible("codex", datetime.fromisoformat("2026-11-17T00:00:00+03:00"))
+    assert fil.disponible("claude")
+    fil.changer("S-X.1", etat="fait")                       # ne reste que l'étape de Codex
+    tb.tick()
+    assert env == []                                         # Codex mis de côté : rien ne part

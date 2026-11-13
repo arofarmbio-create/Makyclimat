@@ -93,7 +93,7 @@ def demarrer(duree: int, relectures: bool) -> dict:
         exe = binaire_claude()
         commande = [sys.executable, "-B", "-X", "utf8", str(SURVEILLANT), "--boucle",
                     "--duree-minutes", str(duree), "--windows"]
-        codex = binaire_codex()
+        codex = binaire_codex() if fil.disponible("codex") else None   # Codex mis de côté : ni relecture ni réveil
         if exe:
             commande += ["--claude-exe", str(exe)]
         if codex:            # toujours : les consignes et autorisations confiées à Codex en dépendent (relecture Codex)

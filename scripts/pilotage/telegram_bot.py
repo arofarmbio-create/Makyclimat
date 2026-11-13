@@ -295,7 +295,7 @@ def tick(bot=None) -> None:
     tours = memoire.setdefault("tours", {})
     cible = None
     for e in fil.etapes(f):                       # relecture qui traîne : tour suivant, 3 au plus
-        if e.get("etat") == "a_relire" and time.time() - depuis.get(e["id"], time.time()) > RELECTURE_LENTE_H * 3600:
+        if e.get("etat") == "a_relire" and time.time() - depuis.get(e["id"], time.time()) > RELECTURE_LENTE_H * 3600                 and fil.disponible(e.get("relu_par") or "claude"):        # relecteur mis de côté : on attend
             if tours.get(e["id"], 1) >= TOURS_MAX:
                 fil.changer(e["id"], etat="decision")
                 journal("relecture_au_plafond", etape=e["id"])
