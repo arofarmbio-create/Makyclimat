@@ -43,6 +43,8 @@ def fichier(tmp_path, monkeypatch):
     chemin.write_text(FIL, encoding="utf-8")
     monkeypatch.setattr(fil, "FIL", chemin)
     monkeypatch.setattr(fil, "COORDINATEUR", tmp_path / "coordinateur.txt")
+    monkeypatch.setattr(fil, "EVENEMENTS", tmp_path / "evenements.jsonl")
+    monkeypatch.setattr(fil, "VERROUS", tmp_path / "verrous")
     return chemin
 
 

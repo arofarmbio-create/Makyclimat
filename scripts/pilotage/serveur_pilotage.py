@@ -27,6 +27,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import accueil  # noqa: E402
 import conversations  # noqa: E402
 import fil  # noqa: E402
 import github_direct  # noqa: E402
@@ -161,6 +162,42 @@ def arreter(immediat: bool = False, attente: float = 3.0) -> dict:
                            (datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M"), tache["id"]))
         return {**etat(), "ok": "Surveillant arrêté immédiatement" + (
             f" ; « {tache.get('sujet') or tache['id']} » interrompu, non relancé." if tache else ".")}
+
+
+# ------------------------------------------------------------------ STOP, reprise et validation (porteur, 13/11/2026)
+def stop_porteur(immediat: bool = False) -> dict:
+    """STOP du porteur : plus aucun lancement ni démarrage jusqu'à la reprise (téléphone ou tableau de bord)."""
+    fil.STOP.parent.mkdir(parents=True, exist_ok=True)
+    fil.STOP.write_text(datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M"), encoding="utf-8")
+    r = arreter(immediat=immediat)
+    return {"ok": "STOP enregistré : plus aucun lancement. " + r.get("ok", r.get("erreur", ""))}
+
+
+def reprise_porteur() -> dict:
+    fil.STOP.unlink(missing_ok=True)
+    r = demarrer(240, True) if not lire_instance(ETAT) else {"actif": True}
+    return {"ok": "Reprise : moteur actif."} if r.get("actif") else {"erreur": "Reprise notée, moteur non démarré : "
+                                                                       + r.get("erreur", "")}
+
+
+def valider_porteur(etape: str, canal: str) -> dict:
+    """Validation d'une étape livrée (fil.valider la lie à sa version) et trace dans COORDINATION.md."""
+    quand = datetime.now(NAIROBI).strftime("%d/%m/%Y %H:%M")
+    if not etape or not fil.valider(etape, quand):
+        return {"erreur": "Cette étape n'attend pas de validation (pas encore livrée, déjà validée, ou inconnue)."}
+
+    def noter(lignes):
+        inserer(lignes, "Décisions du porteur du projet", f"- {quand} · Porteur du projet → Claude et Codex · "
+                f"**Validé ({canal})** · étape {etape} du fil des tâches")
+        return {"ok": "Validé : les étapes qui en dépendent deviennent prêtes."}
+
+    return ecrire_coordination(noter)
+
+
+def donnees_accueil() -> dict:
+    decisions = [d for d in poste.coordination()["decisions"] if d["pour_porteur"]]
+    return {**accueil.construire(fil.STOP.exists(), lire_instance(ETAT), lancement_en_cours(), decisions),
+            "jeton": JETON}
 
 
 # ------------------------------------------------------------------ décisions et consignes du porteur (option C)
@@ -403,6 +440,12 @@ class Gestionnaire(SimpleHTTPRequestHandler):
         if self.path == "/api/surveillant":
             Gestionnaire.derniere_visite = time.monotonic()
             return self._json(etat())
+        if self.path == "/api/accueil":
+            Gestionnaire.derniere_visite = time.monotonic()
+            try:
+                return self._json(donnees_accueil())
+            except Exception as err:                       # l'accueil ne doit jamais casser le reste du poste
+                return self._json({"erreur": f"Accueil indisponible : {err!r}"}, 500)
         if self.path == "/api/actions":
             return self._json(actions())
         if self.path == "/api/github":
@@ -443,6 +486,12 @@ class Gestionnaire(SimpleHTTPRequestHandler):
             reponse = arreter(immediat=bool(corps.get("immediat")))
         elif self.path == "/api/decision":
             reponse = decision(str(corps.get("cle", "")), str(corps.get("action", "")), str(corps.get("texte", "")))
+        elif self.path == "/api/valider":
+            reponse = valider_porteur(str(corps.get("etape", "")), "tableau de bord")
+        elif self.path == "/api/stop":
+            reponse = stop_porteur(bool(corps.get("immediat")))
+        elif self.path == "/api/reprise":
+            reponse = reprise_porteur()
         elif self.path == "/api/consigne":
             reponse = consigne(str(corps.get("agent", "")), str(corps.get("texte", "")))
         elif self.path == "/api/message":

@@ -186,6 +186,31 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 .ev{display:grid;grid-template-columns:118px 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(0,229,255,.1);font-size:14px}
 .ev time{font:12px var(--mono);color:var(--gris);padding-top:2px}
 @media (max-width:560px){.ev{grid-template-columns:1fr} .compteurs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* ---------- accueil pour le porteur (13/11/2026) : quatre questions, thèmes, actions, coulisses ---------- */
+.principal{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.principal .onglet{font-size:14px;padding:9px 20px}
+.sous{margin-top:4px}
+.voyant{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.voyant .lampe{width:22px;height:22px;border-radius:50%;flex:none}
+.voyant .lampe.vert{background:var(--vert);box-shadow:0 0 14px var(--vert)} .voyant .lampe.orange{background:var(--or);box-shadow:0 0 14px var(--or)}
+.voyant .lampe.rouge{background:var(--rouge);box-shadow:0 0 14px var(--rouge)}
+.voyant .txt{flex:1;min-width:200px} .voyant .txt b{display:block;font:700 19px var(--corps)} .voyant .txt span{color:var(--gris);font-size:15px}
+.gros{font-size:16px;padding:9px 18px}
+.carte-act{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 0;border-bottom:1px dashed rgba(0,229,255,.14)}
+.carte-act .q{flex:1;min-width:220px} .carte-act .q b{display:block;font-size:16px} .carte-act .q span{font-size:14px;color:var(--gris)}
+.theme{border:1px solid var(--bord);border-radius:12px;padding:10px 12px;margin:8px 0;background:rgba(0,229,255,.03);cursor:pointer}
+.theme .t{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline} .theme .t b{font-size:17px}
+.theme .dit{font-size:14px;color:var(--gris)} .theme .l{font-size:14px;margin-top:4px}
+.echelle{display:flex;gap:3px;margin:6px 0 2px} .echelle i{flex:1;height:7px;border-radius:4px;background:rgba(124,151,168,.25)}
+.echelle i.on{background:var(--cyan)} .echelle-noms{display:flex;justify-content:space-between;font-size:10px;color:var(--gris)}
+.detail-theme{margin-top:8px;border-top:1px dashed rgba(0,229,255,.2);padding-top:6px;cursor:default}
+.obj{margin:8px 0} .obj b{font-size:15px} .obj ul{margin:4px 0;padding-left:18px;font-size:14px}
+.info-mot{border-bottom:1px dotted var(--gris);cursor:help}
+@media (max-width:760px){
+  .principal{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;gap:0;background:rgba(3,7,13,.97);border-top:1px solid var(--bord)}
+  .principal .onglet{flex:1;border:0;border-radius:0;padding:12px 2px;font-size:11px;letter-spacing:.04em}
+  .enveloppe{padding-bottom:70px} header .etats{display:none}
+}
 </style>
 </head>
 <body>
@@ -201,7 +226,23 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
     <span class="horloge" id="horloge">--:--:--</span>
   </div>
 </header>
-<nav class="onglets" aria-label="Onglets"><button class="onglet actif" data-onglet="pilotage">PILOTAGE</button><button class="onglet" data-onglet="situation">SITUATION</button><button class="onglet" data-onglet="organigramme">FIL DES TÂCHES</button></nav>
+<nav class="onglets principal" aria-label="Onglets"><button class="onglet actif" data-principal="accueil">ACCUEIL</button><button class="onglet" data-principal="these">THÈSE</button><button class="onglet" data-principal="actions">MES ACTIONS</button><button class="onglet" data-principal="coulisses">COULISSES</button></nav>
+<div class="grille" id="principal-accueil">
+  <section class="p s12"><div class="voyant"><span class="lampe orange" id="a-lampe"></span><div class="txt"><b id="a-phrase">Chargement…</b><span id="a-detail"></span><div class="petit" id="a-notes"></div></div>
+    <button class="b rouge gros" id="a-stop">STOP</button><button class="b vert gros" id="a-reprise" hidden>Reprise</button></div><div class="retour" id="a-retour"></div></section>
+  <section class="p s6"><h2>Ce qui vous attend <span class="n" id="a-n">0</span></h2><div id="a-attend"></div><div class="petit" id="a-plus"></div></section>
+  <section class="p s6"><h2>Depuis votre dernière visite</h2><div class="petit" id="a-depuis-quand"></div><div id="a-depuis"></div></section>
+  <section class="p s12"><h2>Où en est la thèse</h2><div class="petit">Chaque grand thème avec son meilleur niveau de <span class="info-mot" title="aucune → provisoire (chiffre non entièrement vérifié) → exploratoire (piste, sans règle fixée d'avance ou trop peu de données) → soutenue (test fixé d'avance, réussi, relu) → confirmée (reproduit sur des données neuves)">fiabilité</span> et ce qui lui manque. Touchez un thème pour le détail.</div><div id="a-themes"></div></section>
+</div>
+<div class="grille" id="principal-these" hidden>
+  <section class="p s12"><h2>La thèse, thème par thème</h2><div class="petit">Résultats obtenus (avec leur fiabilité), prochaines étapes et ce qui bloque. Touchez un thème pour l'ouvrir.</div><div id="t-themes"></div></section>
+</div>
+<div class="grille" id="principal-actions" hidden>
+  <section class="p s12"><h2>Mes actions <span class="n" id="m-n">0</span></h2><div class="petit">Tout ce qui ne dépend que de vous : valider, décider, faire une démarche. Le reste avance sans vous.</div><div id="m-liste"></div><div class="retour" id="m-retour"></div></section>
+</div>
+<div id="principal-coulisses" hidden>
+<div class="petit" style="margin-top:10px">Coulisses : le fonctionnement interne (moteur, sessions de Claude et Codex, journal, GitHub). Utile pour vérifier, pas nécessaire au quotidien.</div>
+<nav class="onglets sous" aria-label="Onglets"><button class="onglet actif" data-onglet="pilotage">PILOTAGE</button><button class="onglet" data-onglet="situation">SITUATION</button><button class="onglet" data-onglet="organigramme">FIL DES TÂCHES</button></nav>
 <div class="alerte-serveur" id="alerte-serveur">Le serveur du poste ne répond plus : les chiffres ci-dessous sont figés. Relancer <code>pilotage.cmd</code> à la racine du dépôt.</div>
 
 <div class="grille" id="onglet-situation" hidden>
@@ -251,6 +292,7 @@ footer{margin:18px 0 6px;text-align:center;color:var(--gris);font-size:13px}
 
   <section class="p s6"><h2>Journal : qui a fait quoi <span class="n zero" id="n-journal">0</span><span class="droite">3 derniers jours</span></h2><div id="journal" class="defile" style="max-height:520px"></div></section>
   <section class="p s6"><h2>Runs GitHub<span class="droite" id="gh-maj"></span></h2><div id="runs" class="runs defile" style="max-height:520px"></div></section>
+</div>
 </div>
 <footer>Données lues toutes les 10 s sans recharger la page · <a href="/tableau_de_bord.html">Recherche : protocole, hypothèses, bibliographie</a> · <a href="/etat/coordination/notifications.html">Historique des alertes</a></footer>
 </div>
@@ -548,11 +590,88 @@ function lire(){
 }
 function montrerOnglet(nom){
   ["pilotage","situation","organigramme"].forEach(function(n){ $("onglet-"+n).hidden=(n!==nom); });
-  Array.prototype.forEach.call(document.querySelectorAll(".onglet"),function(b){ b.classList.toggle("actif",b.getAttribute("data-onglet")===nom); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-onglet]"),function(b){ b.classList.toggle("actif",b.getAttribute("data-onglet")===nom); });
   try{ localStorage.setItem("poste-onglet",nom); }catch(x){}
 }
-Array.prototype.forEach.call(document.querySelectorAll(".onglet"),function(b){ b.addEventListener("click",function(){ montrerOnglet(b.getAttribute("data-onglet")); }); });
+Array.prototype.forEach.call(document.querySelectorAll("[data-onglet]"),function(b){ b.addEventListener("click",function(){ montrerOnglet(b.getAttribute("data-onglet")); }); });
 try{ var o=localStorage.getItem("poste-onglet"); if(o==="situation"||o==="organigramme") montrerOnglet(o); }catch(x){}
+
+/* ----- accueil, thèse, mes actions (porteur, 13/11/2026) ----- */
+var A=null, ouverts={}, CLE_VISITE="poste-derniere-visite", visitePrec=null;
+try{ visitePrec=localStorage.getItem(CLE_VISITE); }catch(x){}
+if(!visitePrec) visitePrec=new Date(Date.now()-86400000).toISOString();
+function echelle(rang){ var h='<div class="echelle">'; for(var i=1;i<5;i++) h+='<i class="'+(i<=rang?"on":"")+'"></i>'; return h+'</div><div class="echelle-noms"><span>provisoire</span><span>exploratoire</span><span>soutenue</span><span>confirmée</span></div>'; }
+function couleurFiab(f){ return f==="confirmée"||f==="soutenue"?"ok":f==="exploratoire"?"info":f==="provisoire"?"warn":"neutre"; }
+function quand(iso){ try{ return new Date(iso).toLocaleString("fr-FR",{timeZone:"Africa/Nairobi",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}); }catch(x){ return iso; } }
+function carteAction(a){
+  var b = a.type==="valider" ? '<button class="b vert" data-valider="'+e(a.id)+'">Valider</button>'
+        : a.type==="decision" ? '<button class="b vert" data-dec="'+e(a.cle)+'" data-act="autoriser">Autoriser</button> <button class="b rouge" data-dec="'+e(a.cle)+'" data-act="refuser">Refuser</button>'
+        : '<span class="etq violet">démarche</span>';
+  return '<div class="carte-act"><div class="q"><b>'+e(a.titre)+'</b><span>'+e(a.detail)+'</span></div><div>'+b+'</div></div>';
+}
+function carteTheme(t,prefixe){
+  var cle=prefixe+t.id, ouvert=!!ouverts[cle], rf=t.resultats_par_fiabilite||{}, nres=Object.keys(rf).reduce(function(s,k){return s+rf[k];},0);
+  var h='<div class="theme" data-theme="'+e(cle)+'"><div class="t"><b>'+e(t.nom)+'</b><span class="etq '+couleurFiab(t.meilleure)+'">au mieux : '+e(t.meilleure)+'</span></div>'+
+    '<div class="dit">'+e(t.dit)+'</div>'+echelle(t.rang)+
+    '<div class="l">'+nres+' résultat'+(nres>1?"s":"")+(nres?' ('+Object.keys(rf).map(function(k){return rf[k]+" "+k;}).join(", ")+')':'')+'</div>'+
+    (t.en_cours.length?'<div class="l">En cours : '+e(t.en_cours[0])+'</div>':'')+
+    (t.prochaine?'<div class="l">Prochaine étape : '+e(t.prochaine)+'</div>':'')+
+    (t.manque.length?'<div class="l" style="color:var(--or)">Il manque : '+e(t.manque.join(" ; "))+'</div>':'');
+  if(ouvert){
+    h+='<div class="detail-theme">'+t.objectifs.map(function(o){
+      return '<div class="obj"><b>'+e(o.titre)+'</b> <span class="petit">visé : '+e(o.visee)+'</span>'+
+        (o.resultats.length?'<ul>'+o.resultats.map(function(r){return '<li><span class="etq '+couleurFiab(r.fiabilite)+'">'+e(r.fiabilite)+'</span> '+e(r.verdict)+' <span class="petit">'+e(r.ref)+'</span></li>';}).join("")+'</ul>':'<div class="petit">Pas encore de résultat.</div>')+
+        '<div class="petit">Étapes : '+o.etapes.slice(0,6).map(function(x){return e(x.etat)+' — '+e(x.quoi);}).join(" · ")+(o.etapes.length>6?" …":"")+'</div></div>';
+    }).join("")+'</div>';
+  }
+  return h+'</div>';
+}
+function rendreAccueil(){
+  if(!A) return;
+  var v=A.voyant||{};
+  $("a-lampe").className="lampe "+(v.couleur||"orange"); $("a-phrase").textContent=v.phrase||""; $("a-detail").textContent=v.detail||"";
+  $("a-notes").textContent=(v.notes||[]).join(" "); $("a-stop").hidden=!!v.stop; $("a-reprise").hidden=!v.stop;
+  var att=A.attend||[];
+  $("a-n").textContent=att.length;
+  poser("a-attend", att.length?att.slice(0,5).map(carteAction).join(""):'<div class="vide">Rien ne vous attend.</div>');
+  $("a-plus").innerHTML=att.length>5?'… et '+(att.length-5)+' autres dans <b>Mes actions</b>.':'';
+  var evs=(A.evenements||[]).filter(function(x){ return new Date(x.quand)>new Date(visitePrec); });
+  $("a-depuis-quand").textContent="Depuis le "+quand(visitePrec)+".";
+  poser("a-depuis", evs.length?evs.slice(0,8).map(function(x){return '<div class="ev"><time>'+e(quand(x.quand))+'</time><div>'+e(x.texte)+(x.theme?' <span class="petit">· '+e(x.theme)+'</span>':'')+'</div></div>';}).join(""):'<div class="vide">Rien de nouveau depuis.</div>');
+  poser("a-themes",(A.themes||[]).map(function(t){return carteTheme(t,"a-");}).join(""));
+  poser("t-themes",(A.themes||[]).map(function(t){return carteTheme(t,"t-");}).join(""));
+  $("m-n").textContent=att.length;
+  poser("m-liste", att.length?att.map(carteAction).join(""):'<div class="vide">Rien ne vous attend.</div>');
+}
+function lireAccueil(){
+  fetch("/api/accueil",{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
+    A=d; jeton=d.jeton||jeton; dernierOk=Date.now(); rendreAccueil();
+  }).catch(function(){});
+}
+document.addEventListener("click",function(ev){
+  var th=ev.target.closest("[data-theme]");
+  if(th && !ev.target.closest(".detail-theme")){ var c=th.getAttribute("data-theme"); ouverts[c]=!ouverts[c]; rendreAccueil(); return; }
+  var bv=ev.target.closest("[data-valider]"), bd=ev.target.closest("[data-dec]"), sortie=$("a-retour");
+  if(bv){ if(!confirm("Valider : vous autorisez le calcul qui en dépend. Confirmer ?")) return;
+    post("/api/valider",{etape:bv.getAttribute("data-valider")}).then(function(r){ retour(sortie,r); retour($("m-retour"),r); lireAccueil(); }); }
+  if(bd && !bd.closest("#decisions")){ var act=bd.getAttribute("data-act"); if(!confirm((act==="autoriser"?"Autoriser":"Refuser")+" cette décision ?")) return;
+    post("/api/decision",{cle:bd.getAttribute("data-dec"),action:act,texte:""}).then(function(r){ retour(sortie,r); retour($("m-retour"),r); lireAccueil(); }); }
+});
+$("a-stop").addEventListener("click",function(){ if(!confirm("STOP : plus aucun lancement tant que vous n'avez pas repris. Confirmer ?")) return;
+  post("/api/stop",{}).then(function(r){ retour($("a-retour"),r); lireAccueil(); }); });
+$("a-reprise").addEventListener("click",function(){ post("/api/reprise",{}).then(function(r){ retour($("a-retour"),r); lireAccueil(); }); });
+function montrerPrincipal(nom){
+  ["accueil","these","actions","coulisses"].forEach(function(n){ $("principal-"+n).hidden=(n!==nom); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-principal]"),function(b){ b.classList.toggle("actif",b.getAttribute("data-principal")===nom); });
+  try{ localStorage.setItem("poste-principal",nom); }catch(x){}
+  window.scrollTo(0,0);
+}
+Array.prototype.forEach.call(document.querySelectorAll("[data-principal]"),function(b){ b.addEventListener("click",function(){ montrerPrincipal(b.getAttribute("data-principal")); }); });
+try{ var op=localStorage.getItem("poste-principal"); if(op) montrerPrincipal(op); }catch(x){}
+function noterVisite(){ try{ localStorage.setItem(CLE_VISITE,new Date().toISOString()); }catch(x){} }
+document.addEventListener("visibilitychange",function(){ if(document.hidden) noterVisite(); });
+window.addEventListener("pagehide",noterVisite);
+lireAccueil(); setInterval(lireAccueil,10000);
 lire(); setInterval(lire,10000);
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) lire(); });
 })();

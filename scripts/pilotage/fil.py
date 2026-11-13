@@ -26,6 +26,7 @@ STOP = ROOT / "pilotage" / "etat" / "stop_porteur.txt"   # STOP du porteur : auc
 VERROUS = ROOT / "pilotage" / "etat" / "verrous"
 AGENTS = ROOT / "pilotage" / "etat" / "agents.json"   # {"codex": {"indisponible_jusqu_au": "2026-11-17T00:00:00+03:00"}}
 NAIROBI = timezone(timedelta(hours=3))
+EVENEMENTS = ROOT / "pilotage" / "etat" / "evenements.jsonl"   # changements d'état (accueil : « depuis votre visite »)
 FIN_PAUSE = date(2026, 11, 16)        # pause des calculs de recherche décidée par le porteur (13/11/2026)
 AUTONOMES = {"claude", "codex", "coordinateur", "agent", "github"}
 FINIS = {"fait", "clos"}
@@ -188,7 +189,22 @@ def changer(etape_id: str, **champs) -> bool:
     """Change des champs simples (etat, preuve, valide_le…) sur la ligne de l'étape, sans réécrire le reste du fichier
     (commentaires et mise en forme conservés). Chaque étape tient sur une ligne « - {id: …} »."""
     with verrou("fil"):
-        return _changer(etape_id, champs)
+        avant = next((e for e in etapes(charger()) if e["id"] == etape_id), {})
+        fait = _changer(etape_id, champs)
+    if fait and (("etat" in champs and champs["etat"] != avant.get("etat")) or "valide_le" in champs):
+        noter_evenement({"etape": etape_id, "quoi": avant.get("quoi", ""), "groupe": avant.get("_groupe", ""),
+                         "etat": "valide" if "valide_le" in champs else champs["etat"], "avant": avant.get("etat")})
+    return fait
+
+
+def noter_evenement(evenement: dict) -> None:
+    try:
+        EVENEMENTS.parent.mkdir(parents=True, exist_ok=True)
+        with EVENEMENTS.open("a", encoding="utf-8") as f:
+            f.write(json.dumps({"quand": datetime.now(NAIROBI).isoformat(timespec="seconds"), **evenement},
+                               ensure_ascii=False) + "\n")
+    except OSError:
+        pass
 
 
 def _changer(etape_id: str, champs: dict) -> bool:

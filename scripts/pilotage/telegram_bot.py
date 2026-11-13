@@ -386,26 +386,14 @@ class Bot:
         elif mot == "/decisions":
             self.pousser_decisions(toutes=True)
         elif mot == "/valider":
-            etape = reste.strip()
-            if etape and fil.valider(etape, maintenant().strftime("%d/%m/%Y %H:%M")):
-                def noter(lignes):
-                    sp.inserer(lignes, "Décisions du porteur du projet",
-                               f"- {maintenant():%d/%m/%Y %H:%M} · Porteur du projet → Claude et Codex · "
-                               f"**Validé ({self.canal})** · étape {etape} du fil des tâches")
-                    return {"ok": "noté"}
-                sp.ecrire_coordination(noter)
-                self.dire(f"{etape} validée : les étapes qui en dépendent deviennent prêtes.")
-            else:
-                self.dire(f"{etape} n'attend pas de validation (pas encore livrée, déjà validée, ou inconnue).")
+            r = sp.valider_porteur(reste.strip(), self.canal)
+            self.dire(r.get("ok") or r.get("erreur", ""))
         elif mot in ("/stop", "/stop_net"):
-            STOP.write_text(maintenant().strftime("%d/%m/%Y %H:%M"), encoding="utf-8")
-            r = sp.arreter(immediat=(mot == "/stop_net"))
-            self.dire("STOP enregistré : plus aucun lancement. " + r.get("ok", r.get("erreur", "")), REPRISE)
+            r = sp.stop_porteur(immediat=(mot == "/stop_net"))
+            self.dire(r.get("ok") or r.get("erreur", ""), REPRISE)
         elif mot == "/reprise":
-            STOP.unlink(missing_ok=True)
-            r = sp.demarrer(DUREE_SURVEILLANT, True) if not lire_instance(sp.ETAT) else {"actif": True}
-            self.dire("Reprise : surveillant " + ("actif." if r.get("actif") else "non démarré : " + r.get("erreur", "")),
-                      MENU)
+            r = sp.reprise_porteur()
+            self.dire(r.get("ok") or r.get("erreur", ""), MENU)
         elif mot == "/coordinateur" and reste.strip().lower() in ("claude", "codex"):
             fil.COORDINATEUR.write_text(reste.strip().lower(), encoding="utf-8")
             self.dire(f"Coordinateur : {reste.strip().lower()}.")

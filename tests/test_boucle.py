@@ -29,6 +29,8 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setattr(fil, "FIL", tmp_path / "fil.yml")
     monkeypatch.setattr(fil, "VERROUS", tmp_path / "verrous")
     monkeypatch.setattr(fil, "COORDINATEUR", tmp_path / "coordinateur.txt")
+    monkeypatch.setattr(fil, "EVENEMENTS", tmp_path / "evenements.jsonl")
+    monkeypatch.setattr(fil, "VERROUS", tmp_path / "verrous")
     monkeypatch.setattr(tb, "BOUCLE", tmp_path / "boucle.json")
     monkeypatch.setattr(tb, "JOURNAL", tmp_path / "journal.jsonl")
     monkeypatch.setattr(tb, "STOP", tmp_path / "stop.txt")
