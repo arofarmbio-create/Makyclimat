@@ -114,3 +114,10 @@ def test_onglet_du_poste_lit_le_fil(fichier):
     assert [r["id"] for r in o["resultats"]][:2] == ["S-B", "X-A"]           # priorité 0 d'abord
     t_a4 = next(t for r in o["resultats"] for t in r["taches"] if t["id"] == "T-A.4")
     assert "manquante" in t_a4["bloquant"] and t_a4["depend_de"] == []      # donnée affichée comme bloquante
+
+
+def test_changer_valeur_avec_virgule_et_liste(fichier):
+    assert fil.changer("T-A.3", prochaine_action="relire, compléter, envoyer", etat="a_relire")
+    assert fil.changer("T-A.3", prochaine_action="autre, texte")
+    e = next(e for e in fil.etapes(fil.charger(fichier)) if e["id"] == "T-A.3")
+    assert e["prochaine_action"] == "autre, texte" and e["etat"] == "a_relire" and e["depend_de"] == ["D-PART"]

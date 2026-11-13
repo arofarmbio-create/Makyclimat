@@ -8,6 +8,7 @@ Usage : .venv/Scripts/python.exe -B -X utf8 scripts/pilotage/fil.py [--porteur |
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from datetime import date
@@ -118,12 +119,13 @@ def changer(etape_id: str, **champs) -> bool:
         return False
     ligne = m.group(1)
     for cle, valeur in champs.items():
-        rendu = yaml.safe_dump(valeur, allow_unicode=True, default_flow_style=True, width=10**6).strip()
-        rendu = rendu.removesuffix("\n...").strip()
-        champ = re.compile(r"(, " + cle + r": )(\"[^\"]*\"|[^,{}]*)")
+        rendu = json.dumps(valeur, ensure_ascii=False)       # JSON = YAML valide dans un mapping en ligne
+        champ = re.compile(r"(, " + cle + r": )(\"(?:[^\"\\]|\\.)*\"|\[[^\]]*\]|[^,{}]*)")
         ligne = champ.sub(lambda x: x.group(1) + rendu, ligne, count=1) if champ.search(ligne) else f"{ligne}, {cle}: {rendu}"
     nouveau = texte[:m.start(1)] + ligne + texte[m.end(1):]
-    yaml.safe_load(nouveau)                                  # refuse d'écrire un fichier devenu illisible
+    relu = next((e for e in etapes(yaml.safe_load(nouveau)) if e["id"] == etape_id), {})
+    if any(relu.get(cle) != valeur for cle, valeur in champs.items()):   # relecture : valeur écrite exacte, sinon rien
+        raise ValueError(f"Écriture refusée pour {etape_id} : {champs}")
     FIL.write_text(nouveau, encoding="utf-8")
     return True
 
