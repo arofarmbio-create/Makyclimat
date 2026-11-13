@@ -48,6 +48,8 @@ TICK_S = 600
 HEURE_RAPPORT = 19
 RELECTURE_LENTE_H = 6
 DUREE_SURVEILLANT = 480
+MENU = [[{"text": "Situation", "callback_data": "c:/situation"}, {"text": "Ce qui m'attend", "callback_data": "c:/porteur"},
+         {"text": "STOP", "callback_data": "c:/stop"}]]
 
 
 # ------------------------------------------------------------------ petits outils
@@ -253,6 +255,8 @@ class Bot:
         self.chat = config.get("chat_id")
         self.memoire = lire_json(MEMOIRE, {})
 
+    canal = "Telegram"
+
     def dire(self, texte: str, boutons: list | None = None) -> None:
         if self.chat:
             try:
@@ -287,7 +291,7 @@ class Bot:
         if mot in ("/aide", "/start", "/help"):
             self.dire(__doc__.split("\n\n")[1])
         elif mot == "/situation":
-            self.dire(texte_situation())
+            self.dire(texte_situation(), MENU)
         elif mot == "/porteur":
             self.dire(texte_porteur())
         elif mot == "/rapport":
@@ -300,7 +304,7 @@ class Bot:
                 def noter(lignes):
                     sp.inserer(lignes, "Décisions du porteur du projet",
                                f"- {maintenant():%d/%m/%Y %H:%M} · Porteur du projet → Claude et Codex · "
-                               f"**Validé (Telegram)** · étape {etape} du fil des tâches")
+                               f"**Validé ({self.canal})** · étape {etape} du fil des tâches")
                     return {"ok": "noté"}
                 sp.ecrire_coordination(noter)
                 self.dire(f"{etape} validée : les étapes qui en dépendent deviennent prêtes.")
@@ -309,7 +313,8 @@ class Bot:
         elif mot == "/stop" or mot == "/stop_net":
             STOP.write_text(maintenant().strftime("%d/%m/%Y %H:%M"), encoding="utf-8")
             r = sp.arreter(immediat=(mot == "/stop_net"))
-            self.dire("STOP enregistré. " + r.get("ok", r.get("erreur", "")) + " /reprise pour relancer.")
+            self.dire("STOP enregistré. " + r.get("ok", r.get("erreur", "")) + " /reprise pour relancer.",
+                      [[{"text": "Reprise", "callback_data": "c:/reprise"}]])
         elif mot == "/reprise":
             STOP.unlink(missing_ok=True)
             r = sp.demarrer(DUREE_SURVEILLANT, True) if not lire_instance(sp.ETAT) else {"actif": True}
@@ -343,16 +348,33 @@ class Bot:
         self.memoire["decisions_vues"] = sorted(vues)[-500:]
         ecrire_json(MEMOIRE, self.memoire)
 
-    def bouton(self, rappel: dict) -> None:
-        action, _, court = (rappel.get("data") or "").partition(":")
-        cle = self.memoire.get("cles", {}).get(court)
+    def pousser_validations(self) -> None:
+        """Protocoles faits qui attendent la validation du porteur : une fois chacun, avec un bouton Valider."""
+        vues = set(self.memoire.get("validations_vues", []))
+        for e in fil.a_valider(fil.charger()):
+            if e["id"] not in vues:
+                self.dire(f"À valider : {fil.ligne_etape(e)}" + (f"\nPreuve : {e['preuve']}" if e.get("preuve") else ""),
+                          [[{"text": "Valider", "callback_data": f"v:{e['id']}"}]])
+                vues.add(e["id"])
+        self.memoire["validations_vues"] = sorted(vues)[-500:]
+
+    def accuser(self, rappel: dict) -> None:
         try:
             self.tg.appel("answerCallbackQuery", callback_query_id=rappel["id"])
         except (OSError, RuntimeError):
             pass
+
+    def bouton(self, rappel: dict) -> None:
+        action, _, court = (rappel.get("data") or "").partition(":")
+        self.accuser(rappel)
+        if action == "c" and court.startswith("/"):
+            return self.commande(court)
+        if action == "v":
+            return self.commande(f"/valider {court}")
+        cle = self.memoire.get("cles", {}).get(court)
         if not cle or action not in ("a", "r"):
             return self.dire("Décision introuvable.")
-        r = sp.decision(cle, "autoriser" if action == "a" else "refuser", "Réponse donnée par Telegram.")
+        r = sp.decision(cle, "autoriser" if action == "a" else "refuser", f"Réponse donnée par {self.canal}.")
         journal("decision", cle=cle, action=action, resultat=r.get("ok") or r.get("erreur"))
         self.dire(r.get("ok") or r.get("erreur", ""))
 
@@ -371,8 +393,14 @@ class Bot:
     def rapport_du_jour(self) -> None:
         jour = maintenant().strftime("%Y-%m-%d")
         if maintenant().hour >= HEURE_RAPPORT and self.memoire.get("rapport") != jour:
-            self.dire(texte_rapport())
+            self.dire(texte_rapport(), MENU)
             self.memoire["rapport"] = jour
+
+    def surveiller(self) -> None:
+        self.pousser_decisions()
+        self.pousser_validations()
+        self.echecs()
+        self.rapport_du_jour()
 
     # --- boucle principale
     def tourner(self) -> None:
@@ -394,9 +422,7 @@ class Bot:
                     # tout autre expéditeur est ignoré (canal unique)
                 self.memoire["decalage"] = decalage
                 if self.chat:
-                    self.pousser_decisions()
-                    self.echecs()
-                    self.rapport_du_jour()
+                    self.surveiller()
                 if time.monotonic() >= prochain_tick:
                     tick(self if self.chat else None)
                     prochain_tick = time.monotonic() + TICK_S
@@ -419,6 +445,9 @@ def main():
         return print(f"Jeton enregistré dans {CONFIG}.")
     if a.tick:
         return tick(None)
+    import canal_ntfy                                   # ntfy (gratuit, sans compte) prime s'il est configuré
+    if canal_ntfy.CONFIG.exists():
+        return canal_ntfy.NtfyBot(lire_json(canal_ntfy.CONFIG, {})).tourner()
     config = lire_json(CONFIG, {})
     if not config.get("token"):
         sys.exit(f"Pas de jeton : créer le bot avec @BotFather puis lancer ce script avec --jeton <TOKEN> ({CONFIG}).")
