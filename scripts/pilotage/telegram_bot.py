@@ -52,6 +52,20 @@ ORPHELINE_H = 12
 RESERVATION_MAX_S = 600
 DUREE_SURVEILLANT = 480
 RELEVE_S = 300
+RELEVE_PANNE_S = 3600          # panne réseau signalée seulement après une heure d'échecs continus
+
+
+def cause_echec_releve(err: Exception) -> str:
+    """Classe l'échec de la relève : mot_de_passe, dns, reseau ou autre."""
+    import imaplib
+    texte = str(err).lower()
+    if isinstance(err, imaplib.IMAP4.error) and ("authenticationfailed" in texte or "credentials" in texte):
+        return "mot_de_passe"
+    if isinstance(err, socket.gaierror):
+        return "dns"
+    if isinstance(err, (OSError, imaplib.IMAP4.abort)):
+        return "reseau"
+    return "autre"
 PORT_INSTANCE = 8767                        # instance unique : ce port local est tenu tant que la boucle tourne
 MENU = [[{"text": "Situation", "callback_data": "c:/situation"}, {"text": "Ce qui m'attend", "callback_data": "c:/porteur"},
          {"text": "STOP", "callback_data": "c:/stop"}]]
@@ -503,16 +517,42 @@ class Bot:
         self.memoire["releve"] = time.time()
         try:
             nouveaux = courriel.relever()
-        except Exception as err:                      # réseau, mot de passe révoqué… : signalé une fois par jour
-            jour = maintenant().strftime("%Y-%m-%d")
-            if self.memoire.get("releve_erreur") != jour:
-                journal("courriel_erreur", erreur=repr(err)[:300])
-                if self.dire("Relève des courriels impossible (réseau ou mot de passe d'application). Détail dans le journal."):
-                    self.memoire["releve_erreur"] = jour
+        except Exception as err:
+            self.echec_releve(err)
             return
+        self.memoire.pop("releve_echec_depuis", None)
+        if self.memoire.pop("releve_alerte", None):
+            self.dire("Relève des courriels rétablie.")
         if nouveaux:
             self.dire(f"{len(nouveaux)} nouveau{'x' if len(nouveaux) > 1 else ''} courriel"
                       f"{'s' if len(nouveaux) > 1 else ''} : tableau de bord, onglet Courriels.")
+
+    def echec_releve(self, err: Exception) -> None:
+        """Mot de passe refusé : avis immédiat. Panne réseau : avis seulement après RELEVE_PANNE_S d'échecs continus
+        (une coupure de quelques minutes ne dérange pas le porteur). Au plus un avis par jour et par cause."""
+        cause = cause_echec_releve(err)
+        maintenant_s = time.time()
+        depuis = self.memoire.setdefault("releve_echec_depuis", maintenant_s)
+        journal("courriel_erreur", cause=cause, erreur=repr(err)[:300])
+        if cause != "mot_de_passe" and maintenant_s - depuis < RELEVE_PANNE_S:
+            return
+        cle = f"{maintenant().strftime('%Y-%m-%d')}|{cause}"
+        if self.memoire.get("releve_erreur") == cle:
+            return
+        duree = max(1, round((maintenant_s - depuis) / 3600))
+        textes = {
+            "mot_de_passe": "Gmail refuse le mot de passe d'application : il faut en créer un nouveau (compte Google, "
+                            "Sécurité, Mots de passe des applications), puis lancer courriel.py --configurer.",
+            "dns": f"Relève des courriels impossible depuis environ {duree} h : le PC ne trouve pas l'adresse de Gmail "
+                   "(Internet coupé ou DNS de la box). Le mot de passe n'est pas en cause ; la relève reprendra seule.",
+            "reseau": f"Relève des courriels impossible depuis environ {duree} h : connexion à Gmail coupée ou trop "
+                      "lente. Le mot de passe n'est pas en cause ; la relève reprendra seule.",
+            "autre": f"Relève des courriels en échec depuis environ {duree} h ({type(err).__name__}). "
+                     "Détail dans le journal.",
+        }
+        if self.dire(textes[cause]):
+            self.memoire["releve_erreur"] = cle
+            self.memoire["releve_alerte"] = True
 
     def surveiller(self) -> None:
         for etape in (self.pousser_decisions, self.pousser_validations, self.pousser_reponses, self.courriels,
