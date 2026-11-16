@@ -1,0 +1,145 @@
+verite,sig_e,sig_u,n,puissance_HI1,puissance_HI2
+"blocs R-50, bas",0.100,0.100,6,0.983,0.000
+"blocs R-50, bas",0.100,0.100,8,1.000,0.000
+"blocs R-50, bas",0.100,0.100,10,0.998,0.000
+"blocs R-50, bas",0.100,0.100,12,1.000,0.000
+"blocs R-50, bas",0.100,0.100,15,1.000,0.000
+"blocs R-50, bas",0.100,0.100,18,1.000,0.000
+"blocs R-50, bas",0.100,0.100,24,1.000,0.000
+"blocs R-50, bas",0.100,0.100,30,1.000,0.000
+"blocs R-50, bas",0.200,0.100,6,0.926,0.000
+"blocs R-50, bas",0.200,0.100,8,0.991,0.001
+"blocs R-50, bas",0.200,0.100,10,0.988,0.000
+"blocs R-50, bas",0.200,0.100,12,1.000,0.000
+"blocs R-50, bas",0.200,0.100,15,1.000,0.000
+"blocs R-50, bas",0.200,0.100,18,1.000,0.000
+"blocs R-50, bas",0.200,0.100,24,1.000,0.000
+"blocs R-50, bas",0.200,0.100,30,1.000,0.000
+"blocs R-50, bas",0.300,0.100,6,0.838,0.000
+"blocs R-50, bas",0.300,0.100,8,0.977,0.000
+"blocs R-50, bas",0.300,0.100,10,0.965,0.000
+"blocs R-50, bas",0.300,0.100,12,0.995,0.000
+"blocs R-50, bas",0.300,0.100,15,0.999,0.000
+"blocs R-50, bas",0.300,0.100,18,1.000,0.000
+"blocs R-50, bas",0.300,0.100,24,1.000,0.000
+"blocs R-50, bas",0.300,0.100,30,1.000,0.000
+"blocs R-50, central",0.100,0.100,6,0.730,0.000
+"blocs R-50, central",0.100,0.100,8,0.911,0.000
+"blocs R-50, central",0.100,0.100,10,0.889,0.000
+"blocs R-50, central",0.100,0.100,12,0.963,0.000
+"blocs R-50, central",0.100,0.100,15,0.977,0.000
+"blocs R-50, central",0.100,0.100,18,0.997,0.000
+"blocs R-50, central",0.100,0.100,24,0.999,0.000
+"blocs R-50, central",0.100,0.100,30,1.000,0.000
+"blocs R-50, central",0.200,0.100,6,0.667,0.000
+"blocs R-50, central",0.200,0.100,8,0.877,0.000
+"blocs R-50, central",0.200,0.100,10,0.821,0.000
+"blocs R-50, central",0.200,0.100,12,0.921,0.000
+"blocs R-50, central",0.200,0.100,15,0.972,0.000
+"blocs R-50, central",0.200,0.100,18,0.992,0.000
+"blocs R-50, central",0.200,0.100,24,0.998,0.000
+"blocs R-50, central",0.200,0.100,30,0.999,0.000
+"blocs R-50, central",0.300,0.100,6,0.551,0.000
+"blocs R-50, central",0.300,0.100,8,0.801,0.000
+"blocs R-50, central",0.300,0.100,10,0.748,0.000
+"blocs R-50, central",0.300,0.100,12,0.882,0.000
+"blocs R-50, central",0.300,0.100,15,0.933,0.000
+"blocs R-50, central",0.300,0.100,18,0.981,0.000
+"blocs R-50, central",0.300,0.100,24,0.992,0.000
+"blocs R-50, central",0.300,0.100,30,0.998,0.000
+"blocs R-50, haut",0.100,0.100,6,0.011,0.000
+"blocs R-50, haut",0.100,0.100,8,0.021,0.000
+"blocs R-50, haut",0.100,0.100,10,0.004,0.000
+"blocs R-50, haut",0.100,0.100,12,0.013,0.000
+"blocs R-50, haut",0.100,0.100,15,0.010,0.000
+"blocs R-50, haut",0.100,0.100,18,0.016,0.000
+"blocs R-50, haut",0.100,0.100,24,0.017,0.000
+"blocs R-50, haut",0.100,0.100,30,0.022,0.000
+"blocs R-50, haut",0.200,0.100,6,0.010,0.000
+"blocs R-50, haut",0.200,0.100,8,0.020,0.000
+"blocs R-50, haut",0.200,0.100,10,0.007,0.000
+"blocs R-50, haut",0.200,0.100,12,0.010,0.000
+"blocs R-50, haut",0.200,0.100,15,0.011,0.000
+"blocs R-50, haut",0.200,0.100,18,0.029,0.000
+"blocs R-50, haut",0.200,0.100,24,0.014,0.000
+"blocs R-50, haut",0.200,0.100,30,0.026,0.000
+"blocs R-50, haut",0.300,0.100,6,0.004,0.000
+"blocs R-50, haut",0.300,0.100,8,0.027,0.000
+"blocs R-50, haut",0.300,0.100,10,0.005,0.000
+"blocs R-50, haut",0.300,0.100,12,0.011,0.000
+"blocs R-50, haut",0.300,0.100,15,0.015,0.000
+"blocs R-50, haut",0.300,0.100,18,0.028,0.000
+"blocs R-50, haut",0.300,0.100,24,0.017,0.000
+"blocs R-50, haut",0.300,0.100,30,0.025,0.000
+"paramétrique, structure 0 %",0.100,0.100,6,0.721,0.015
+"paramétrique, structure 0 %",0.100,0.100,8,0.913,0.007
+"paramétrique, structure 0 %",0.100,0.100,10,0.881,0.007
+"paramétrique, structure 0 %",0.100,0.100,12,0.952,0.008
+"paramétrique, structure 0 %",0.100,0.100,15,0.973,0.006
+"paramétrique, structure 0 %",0.100,0.100,18,0.999,0.005
+"paramétrique, structure 0 %",0.100,0.100,24,0.999,0.002
+"paramétrique, structure 0 %",0.100,0.100,30,1.000,0.001
+"paramétrique, structure 0 %",0.200,0.100,6,0.648,0.018
+"paramétrique, structure 0 %",0.200,0.100,8,0.885,0.011
+"paramétrique, structure 0 %",0.200,0.100,10,0.841,0.007
+"paramétrique, structure 0 %",0.200,0.100,12,0.928,0.006
+"paramétrique, structure 0 %",0.200,0.100,15,0.960,0.004
+"paramétrique, structure 0 %",0.200,0.100,18,0.994,0.004
+"paramétrique, structure 0 %",0.200,0.100,24,0.995,0.002
+"paramétrique, structure 0 %",0.200,0.100,30,0.999,0.002
+"paramétrique, structure 0 %",0.300,0.100,6,0.553,0.015
+"paramétrique, structure 0 %",0.300,0.100,8,0.807,0.005
+"paramétrique, structure 0 %",0.300,0.100,10,0.732,0.006
+"paramétrique, structure 0 %",0.300,0.100,12,0.886,0.004
+"paramétrique, structure 0 %",0.300,0.100,15,0.936,0.004
+"paramétrique, structure 0 %",0.300,0.100,18,0.979,0.003
+"paramétrique, structure 0 %",0.300,0.100,24,0.992,0.002
+"paramétrique, structure 0 %",0.300,0.100,30,0.999,0.002
+"paramétrique, structure 30 %",0.100,0.100,6,0.731,0.152
+"paramétrique, structure 30 %",0.100,0.100,8,0.917,0.155
+"paramétrique, structure 30 %",0.100,0.100,10,0.893,0.181
+"paramétrique, structure 30 %",0.100,0.100,12,0.964,0.205
+"paramétrique, structure 30 %",0.100,0.100,15,0.981,0.261
+"paramétrique, structure 30 %",0.100,0.100,18,0.997,0.305
+"paramétrique, structure 30 %",0.100,0.100,24,0.999,0.327
+"paramétrique, structure 30 %",0.100,0.100,30,1.000,0.348
+"paramétrique, structure 30 %",0.200,0.100,6,0.668,0.116
+"paramétrique, structure 30 %",0.200,0.100,8,0.873,0.119
+"paramétrique, structure 30 %",0.200,0.100,10,0.837,0.165
+"paramétrique, structure 30 %",0.200,0.100,12,0.931,0.190
+"paramétrique, structure 30 %",0.200,0.100,15,0.963,0.189
+"paramétrique, structure 30 %",0.200,0.100,18,0.992,0.231
+"paramétrique, structure 30 %",0.200,0.100,24,0.997,0.238
+"paramétrique, structure 30 %",0.200,0.100,30,1.000,0.257
+"paramétrique, structure 30 %",0.300,0.100,6,0.556,0.114
+"paramétrique, structure 30 %",0.300,0.100,8,0.814,0.095
+"paramétrique, structure 30 %",0.300,0.100,10,0.751,0.110
+"paramétrique, structure 30 %",0.300,0.100,12,0.870,0.138
+"paramétrique, structure 30 %",0.300,0.100,15,0.921,0.155
+"paramétrique, structure 30 %",0.300,0.100,18,0.986,0.156
+"paramétrique, structure 30 %",0.300,0.100,24,0.993,0.146
+"paramétrique, structure 30 %",0.300,0.100,30,1.000,0.166
+"paramétrique, structure 50 %",0.100,0.100,6,0.710,0.284
+"paramétrique, structure 50 %",0.100,0.100,8,0.919,0.349
+"paramétrique, structure 50 %",0.100,0.100,10,0.889,0.428
+"paramétrique, structure 50 %",0.100,0.100,12,0.953,0.535
+"paramétrique, structure 50 %",0.100,0.100,15,0.983,0.587
+"paramétrique, structure 50 %",0.100,0.100,18,0.997,0.701
+"paramétrique, structure 50 %",0.100,0.100,24,1.000,0.760
+"paramétrique, structure 50 %",0.100,0.100,30,1.000,0.824
+"paramétrique, structure 50 %",0.200,0.100,6,0.660,0.231
+"paramétrique, structure 50 %",0.200,0.100,8,0.870,0.268
+"paramétrique, structure 50 %",0.200,0.100,10,0.826,0.351
+"paramétrique, structure 50 %",0.200,0.100,12,0.921,0.404
+"paramétrique, structure 50 %",0.200,0.100,15,0.960,0.466
+"paramétrique, structure 50 %",0.200,0.100,18,0.991,0.572
+"paramétrique, structure 50 %",0.200,0.100,24,0.995,0.618
+"paramétrique, structure 50 %",0.200,0.100,30,1.000,0.672
+"paramétrique, structure 50 %",0.300,0.100,6,0.562,0.180
+"paramétrique, structure 50 %",0.300,0.100,8,0.815,0.186
+"paramétrique, structure 50 %",0.300,0.100,10,0.746,0.244
+"paramétrique, structure 50 %",0.300,0.100,12,0.881,0.293
+"paramétrique, structure 50 %",0.300,0.100,15,0.927,0.311
+"paramétrique, structure 50 %",0.300,0.100,18,0.987,0.376
+"paramétrique, structure 50 %",0.300,0.100,24,0.990,0.411
+"paramétrique, structure 50 %",0.300,0.100,30,0.999,0.454

@@ -1287,3 +1287,11 @@ Légende : ✅ réussite · ❌ échec · ⚠️ réussite partielle ou réserve
 - 📊 Détection 1 à 3 jours avant, à charge d'alerte égale (12 plis, aucun hors tolérance) : ensemble 16,0 % (68 unités sur 425), contrôle 14,8 % (63) ; discordances 8 contre 3 ; test A p = 0,31 : **pas de gain mis en évidence**. CCI observée sur épisodes 0,065. La simulation supposait un contrôle à 40 % et un gain de 30 points ; observé : 11 unités discordantes. Les puissances simulées ne sont pas directement transposables, et la puissance pour un autre gain n'a pas été évaluée (relecture Codex du 12/11, 15:41) ; absence de gain démontré ≠ absence de gain. Intervalles à 95 % (bootstrap des saisons) : ensemble [7,0 ; 26,8] %, contrôle [6,6 ; 25,5] %, écart [−1,0 ; 2,5] points. Détection nulle des deux méthodes dans 5 saisons sur 12.
 - ❌ **H1 non soutenue** (exploratoire). Lecture : à ce niveau de détection (15 %), la comparaison repose sur 11 unités discordantes ; piste éventuelle, sous nouveau protocole déclaré d'avance : autres saisons ou pays, ou unité plus fine que le district.
 - 📌 Rapport de clôture : `validation/r21_rapport.md` (décisions datées, limites, écart déclaré sur les analyses secondaires, suites possibles). Les deux méthodes ne détectent qu'environ 15 % des districts touchés : cohérent avec R-23 et le pilote GloFAS.
+
+## 16/11/2026
+
+### T-H2.1 — Protocole et puissance : T2 contre T2L, dépôt de chlorure mesuré, blocs neufs (`validation/protocole_chlorure_independant.md`)
+- 📌 Protocole écrit avant toute donnée du test (collecteurs non posés, aucun forage neuf) ; calcul T-H2.2 soumis à la validation du porteur.
+- ❌ Premier jet abandonné avant toute donnée : le critère d'écart absolu de R-50 (H-Cl2) est passé aussi bien par « T2 décalé » (T2 × 0,19, sans structure par roche) que par T2L dans les scénarios bas et central ; il testait le niveau, pas la correction par roche.
+- 📊 Sur les 33 blocs déjà vus, une fois le niveau retiré, l'écart centré de T2L est plus grand que celui de T2 (de 39 à 59 %) : l'avantage de T2L dans R-50 venait du niveau.
+- 📊 Puissance (`validation/puissance_chlorure_independant.md`, 2 000 tirages) : H-I1 (T2 surestime, dépôt × 1,5) 88 à 100 % à 12 blocs, faux positifs ≤ 3 % ; H-I2 (structure) 29 à 54 % à 12 blocs avec un gain de 50 % → exploratoire dès le départ. Plafond : 189 blocs neufs possibles dans le domaine T2L.
