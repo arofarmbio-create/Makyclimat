@@ -7,5 +7,6 @@
   fichier ignoré (colonnes pcode, indicateur, valeur requises) : vuln_cumul.csv
   indicateurs non déclarés dans config/indicators.yml (ignorés) : ['distance_forage_km', 'indice_exploitation', 'indice_exploitation_sans_reseau', 'niveau_statique_bas80_m', 'niveau_statique_erreur_attendue_m', 'niveau_statique_extrapolation', 'niveau_statique_haut80_m', 'niveau_statique_m', 'recharge_bas80_mm_an', 'recharge_haut80_mm_an', 'recharge_mm_an', 'renouvellement_ans', 'stock_bas_mm', 'stock_haut_mm', 'stock_mm']
   7 lignes ignorées (pcode inconnu), par exemple : ['MG32-XXX', 'MG52-XXX', 'MDG-XXX']
+Cascade prévision non appliquée : la prévision ne couvre pas le jour qui suit les dernières observations.
 Prévision saisonnière appliquée (144 zones fournies).
 Indicateurs écrits : données de pluie jusqu'au 2026-04-30 ; exposés au niveau national : 3,325,839 ; cibles : 519,460
