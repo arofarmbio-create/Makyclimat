@@ -1,8 +1,8 @@
 # SPI ou SPEI pour suivre le stress de la végétation (NDVI MODIS), par district
 
-Généré le 2026-11-03 par `scripts/validate_spei_ndvi.py`, selon `validation/protocole_spei_ndvi.md` (fixé avant les calculs).
+Généré le 2026-11-22 par `scripts/validate_spei_ndvi.py`, selon `validation/protocole_spei_ndvi.md` (fixé avant les calculs).
 
-- 120 districts (36 secs, 84 humides) ; indices calculés sur 1981-01 - 2026-09 ; NDVI 2001-2025, mois de décembre à mai.
+- 120 districts (36 secs, 84 humides) ; indices calculés sur 1981-01 - 2026-10 ; NDVI 2001-2025, mois de décembre à mai.
 - Pluie CHIRPS, ET0 Penman-Monteith FAO-56 depuis ERA5-Land (moyennes mensuelles), NDVI MOD13C2 (pixels fiables).
 
 ## 1. Hypothèses fixées à l'avance (test du signe unilatéral entre districts)
